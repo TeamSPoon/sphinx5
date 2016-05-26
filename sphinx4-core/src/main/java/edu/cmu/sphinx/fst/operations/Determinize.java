@@ -43,7 +43,7 @@ public class Determinize {
         }
 
         if (res == null) {
-            res = new Pair<State, Float>(state, zero);
+            res = new Pair<>(state, zero);
             queue.add(res);
         }
 
@@ -52,7 +52,7 @@ public class Determinize {
 
     private static ArrayList<Integer> getUniqueLabels(Fst fst,
             ArrayList<Pair<State, Float>> pa) {
-        ArrayList<Integer> res = new ArrayList<Integer>();
+        ArrayList<Integer> res = new ArrayList<>();
 
         for (Pair<State, Float> p : pa) {
             State s = p.getLeft();
@@ -74,9 +74,9 @@ public class Determinize {
 
         for (Pair<State, Float> p : pa) {
             if (sb.length() > 0) {
-                sb.append(",");
+                sb.append(',');
             }
-            sb.append("(" + p.getLeft() + "," + p.getRight() + ")");
+            sb.append("(").append(p.getLeft()).append(',').append(p.getRight()).append(")");
         }
         return stateMapper.get(sb.toString());
     }
@@ -103,14 +103,14 @@ public class Determinize {
         res.setOsyms(fst.getOsyms());
 
         // stores the queue (item in index 0 is next)
-        Queue<ArrayList<Pair<State, Float>>> queue = new LinkedList<ArrayList<Pair<State, Float>>>();
+        Queue<ArrayList<Pair<State, Float>>> queue = new LinkedList<>();
 
-        HashMap<String, State> stateMapper = new HashMap<String, State>();
+        HashMap<String, State> stateMapper = new HashMap<>();
 
         State s = new State(semiring.zero());
-        String stateString = "(" + fst.getStart() + "," + semiring.one() + ")";
-        queue.add(new ArrayList<Pair<State, Float>>());
-        queue.peek().add(new Pair<State, Float>(fst.getStart(), semiring.one()));
+        String stateString = "(" + fst.getStart() + ',' + semiring.one() + ")";
+        queue.add(new ArrayList<>());
+        queue.peek().add(new Pair<>(fst.getStart(), semiring.one()));
         res.addState(s);
         stateMapper.put(stateString, s);
         res.setStart(s);
@@ -137,7 +137,7 @@ public class Determinize {
 
                 // calc new states
                 // keep residual weights to variable forQueue
-                ArrayList<Pair<State, Float>> forQueue = new ArrayList<Pair<State, Float>>();
+                ArrayList<Pair<State, Float>> forQueue = new ArrayList<>();
                 for (Pair<State, Float> ps : p) {
                     State old = ps.getLeft();
                     Float u = ps.getRight();
@@ -162,10 +162,10 @@ public class Determinize {
                 for (Pair<State, Float> ps : forQueue) {
                     State old = ps.getLeft();
                     Float unew = ps.getRight();
-                    if (!qnewid.equals("")) {
-                        qnewid = qnewid + ",";
+                    if (!qnewid.isEmpty()) {
+                        qnewid = qnewid + ',';
                     }
-                    qnewid = qnewid + "(" + old + "," + unew + ")";
+                    qnewid = qnewid + '(' + old + "," + unew + ")";
                 }
 
                 if (stateMapper.get(qnewid) == null) {

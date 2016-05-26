@@ -72,11 +72,7 @@ public class SpectrogramPanel extends JPanel {
         audio = audioData;
         this.frontEnd = frontEnd;
         this.dataSource = dataSource;
-        audio.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                computeSpectrogram();
-            }
-        });
+        audio.addChangeListener(event -> computeSpectrogram());
     }
 
 
@@ -89,7 +85,7 @@ public class SpectrogramPanel extends JPanel {
             /* Run through all the spectra one at a time and convert
              * them to an log intensity value.
              */
-            ArrayList<double[]> intensitiesList = new ArrayList<double[]>();
+            ArrayList<double[]> intensitiesList = new ArrayList<>();
             double maxIntensity = Double.MIN_VALUE;
             Data spectrum = frontEnd.getData();
 

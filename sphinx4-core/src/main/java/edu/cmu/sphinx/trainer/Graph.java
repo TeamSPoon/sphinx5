@@ -35,8 +35,8 @@ public class Graph {
 
     /** Constructor for class. Creates lists of edges and nodes. */
     public Graph() {
-        edges = new ArrayList<Edge>();
-        nodes = new ArrayList<Node>();
+        edges = new ArrayList<>();
+        nodes = new ArrayList<>();
     }
 
 
@@ -262,8 +262,8 @@ public class Graph {
              graph.hasMoreEdges();) {
             addEdge(graph.nextEdge());
         }
-        setInitialNode(graph.getInitialNode());
-        setFinalNode(graph.getFinalNode());
+        setInitialNode(graph.initialNode);
+        setFinalNode(graph.finalNode);
     }
 
 
@@ -289,14 +289,14 @@ public class Graph {
              graph.hasMoreEdges();) {
             addEdge(graph.nextEdge());
         }
-        Node initialNode = graph.getInitialNode();
+        Node initialNode = graph.initialNode;
         for (node.startIncomingEdgeIterator();
              node.hasMoreIncomingEdges();) {
             Edge edge = node.nextIncomingEdge();
             edge.setDestination(initialNode);
             initialNode.addIncomingEdge(edge);
         }
-        Node finalNode = graph.getFinalNode();
+        Node finalNode = graph.finalNode;
         for (node.startOutgoingEdgeIterator();
              node.hasMoreOutgoingEdges();) {
             Edge edge = node.nextOutgoingEdge();

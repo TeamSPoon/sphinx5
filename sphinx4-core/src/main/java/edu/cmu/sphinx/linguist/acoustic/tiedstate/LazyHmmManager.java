@@ -67,7 +67,7 @@ public class LazyHmmManager extends HMMManager {
     private EventMap parseSplitEventMap(KaldiTextParser parser) {
         int key = parser.getInt();
         Collection<Integer> values;
-        values = new ArrayList<Integer>();
+        values = new ArrayList<>();
         for (Integer n : parser.getIntArray())
             values.add(n);
 
@@ -83,7 +83,7 @@ public class LazyHmmManager extends HMMManager {
     private EventMap parseTableEventMap(KaldiTextParser parser) {
         int key = parser.getInt();
         int size = parser.getInt();
-        List<EventMap> table = new ArrayList<EventMap>(size);
+        List<EventMap> table = new ArrayList<>(size);
         
         parser.expectToken("(");
 

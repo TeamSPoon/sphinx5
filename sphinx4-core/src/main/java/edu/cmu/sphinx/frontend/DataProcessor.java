@@ -39,7 +39,7 @@ public interface DataProcessor extends Configurable {
      *
      * This is typically called after the DataProcessor has been configured.
      */
-    public void initialize();
+    void initialize();
 
 
     /**
@@ -48,7 +48,7 @@ public interface DataProcessor extends Configurable {
      * @return an Data object that has been processed by this DataProcessor
      * @throws DataProcessingException if a data processor error occurs
      */
-    public abstract Data getData() throws DataProcessingException;
+    Data getData() throws DataProcessingException;
 
 
     /**
@@ -56,7 +56,7 @@ public interface DataProcessor extends Configurable {
      *
      * @return the predecessor
      */
-    public DataProcessor getPredecessor();
+    DataProcessor getPredecessor();
 
 
     /**
@@ -64,5 +64,5 @@ public interface DataProcessor extends Configurable {
      *
      * @param predecessor the new predecessor of this DataProcessor
      */
-    public void setPredecessor(DataProcessor predecessor);
+    void setPredecessor(DataProcessor predecessor);
 }

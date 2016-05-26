@@ -52,7 +52,7 @@ public class FrameDecoder extends AbstractDecoder implements DataProcessor {
     }
 
     public Data getData() throws DataProcessingException {
-        Data d = getPredecessor().getData();
+        Data d = predecessor.getData();
 
         if (isRecognizing && (d instanceof FloatData || d instanceof DoubleData || d instanceof SpeechEndSignal)) {
             result = decode(null);

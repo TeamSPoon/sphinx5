@@ -2,7 +2,6 @@ package edu.cmu.sphinx.tools.endpoint;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -15,7 +14,7 @@ import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
 
 public class Segmenter {
 
-    public static void main(String[] argv) throws MalformedURLException,
+    public static void main(String[] argv) throws
             IOException {
 
         String configFile = null;
@@ -74,15 +73,15 @@ public class Segmenter {
     }
 
     static private void processFile(String inputFile, String outputFile,
-            ConfigurationManager cm) throws MalformedURLException, IOException {
+            ConfigurationManager cm) {
 
-        FrontEnd frontend = (FrontEnd) cm.lookup("endpointer");
+        FrontEnd frontend = cm.lookup("endpointer");
 
-        AudioFileDataSource dataSource = (AudioFileDataSource) cm
+        AudioFileDataSource dataSource = cm
                 .lookup("audioFileDataSource");
         System.out.println(inputFile);
         dataSource.setAudioFile(new File(inputFile), null);
-        WavWriter wavWriter = (WavWriter) cm.lookup("wavWriter");
+        WavWriter wavWriter = cm.lookup("wavWriter");
         wavWriter.setOutFilePattern(outputFile);
 
         frontend.initialize();
@@ -95,13 +94,13 @@ public class Segmenter {
 
     static private void processCtl(String inputCtl, String inputFolder,
             String outputFolder, ConfigurationManager cm)
-            throws MalformedURLException, IOException {
+            throws IOException {
 
         Scanner scanner = new Scanner(new File(inputCtl));
         while (scanner.hasNext()) {
             String fileName = scanner.next();
-            String inputFile = inputFolder + "/" + fileName + ".wav";
-            String outputFile = outputFolder + "/" + fileName + ".wav";
+            String inputFile = inputFolder + '/' + fileName + ".wav";
+            String outputFile = outputFolder + '/' + fileName + ".wav";
             processFile(inputFile, outputFile, cm);
         }
         scanner.close();

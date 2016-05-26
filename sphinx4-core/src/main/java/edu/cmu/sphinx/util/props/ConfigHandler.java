@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** A SAX XML Handler implementation that builds up the map of raw property data objects */
@@ -44,55 +45,65 @@ public class ConfigHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (qName.equals("config")) {
-            // test if this configuration extends another one
-            String extendedConfigName = attributes.getValue("extends");
-            if (extendedConfigName != null) {
-                mergeConfigs(extendedConfigName, true);
-                replaceDuplicates = true;
+        switch (qName) {
+            case "config":
+                // test if this configuration extends another one
+                String extendedConfigName = attributes.getValue("extends");
+                if (extendedConfigName != null) {
+                    mergeConfigs(extendedConfigName, true);
+                    replaceDuplicates = true;
+                }
+                break;
+            case "include": {
+                String includeFileName = attributes.getValue("file");
+                mergeConfigs(includeFileName, false);
+                break;
             }
-        } else if (qName.equals("include")) {
-            String includeFileName = attributes.getValue("file");
-            mergeConfigs(includeFileName, false);
-        } else if (qName.equals("extendwith")) {
-            String includeFileName = attributes.getValue("file");
-            mergeConfigs(includeFileName, true);
-        } else if (qName.equals("component")) {
-            String curComponent = attributes.getValue("name");
-            String curType = attributes.getValue("type");
-            if (rpdMap.get(curComponent) != null && !replaceDuplicates) {
-                throw new SAXParseException("duplicate definition for " + curComponent, locator);
+            case "extendwith": {
+                String includeFileName = attributes.getValue("file");
+                mergeConfigs(includeFileName, true);
+                break;
             }
-            rpd = new RawPropertyData(curComponent, curType);
-        } else if (qName.equals("property")) {
-            String name = attributes.getValue("name");
-            String value = attributes.getValue("value");
-            if (attributes.getLength() != 2 || name == null || value == null) {
-                throw new SAXParseException("property element must only have 'name' and 'value' attributes", locator);
-            }
-            if (rpd == null) {
-                // we are not in a component so add this to the global
-                // set of symbols
+            case "component":
+                String curComponent = attributes.getValue("name");
+                String curType = attributes.getValue("type");
+                if (rpdMap.get(curComponent) != null && !replaceDuplicates) {
+                    throw new SAXParseException("duplicate definition for " + curComponent, locator);
+                }
+                rpd = new RawPropertyData(curComponent, curType);
+                break;
+            case "property":
+                String name = attributes.getValue("name");
+                String value = attributes.getValue("value");
+                if (attributes.getLength() != 2 || name == null || value == null) {
+                    throw new SAXParseException("property element must only have 'name' and 'value' attributes", locator);
+                }
+                if (rpd == null) {
+                    // we are not in a component so add this to the global
+                    // set of symbols
 //                    String symbolName = "${" + name + "}"; // why should we warp the global props here
-                globalProperties.put(name, value);
-            } else if (rpd.contains(name) && !replaceDuplicates) {
-                throw new SAXParseException("Duplicate property: " + name, locator);
-            } else {
-                rpd.add(name, value);
-            }
-        } else if (qName.equals("propertylist")) {
-            itemListName = attributes.getValue("name");
-            if (attributes.getLength() != 1 || itemListName == null) {
-                throw new SAXParseException("list element must only have the 'name'  attribute", locator);
-            }
-            itemList = new ArrayList<String>();
-        } else if (qName.equals("item")) {
-            if (attributes.getLength() != 0) {
-                throw new SAXParseException("unknown 'item' attribute", locator);
-            }
-            curItem = new StringBuilder();
-        } else {
-            throw new SAXParseException("Unknown element '" + qName + '\'', locator);
+                    globalProperties.put(name, value);
+                } else if (rpd.contains(name) && !replaceDuplicates) {
+                    throw new SAXParseException("Duplicate property: " + name, locator);
+                } else {
+                    rpd.add(name, value);
+                }
+                break;
+            case "propertylist":
+                itemListName = attributes.getValue("name");
+                if (attributes.getLength() != 1 || itemListName == null) {
+                    throw new SAXParseException("list element must only have the 'name'  attribute", locator);
+                }
+                itemList = new ArrayList<>();
+                break;
+            case "item":
+                if (attributes.getLength() != 0) {
+                    throw new SAXParseException("unknown 'item' attribute", locator);
+                }
+                curItem = new StringBuilder();
+                break;
+            default:
+                throw new SAXParseException("Unknown element '" + qName + '\'', locator);
         }
     }
 
@@ -105,21 +116,26 @@ public class ConfigHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXParseException {
-        if (qName.equals("component")) {
-            rpdMap.put(rpd.getName(), rpd);
-            rpd = null;
-        } else if (qName.equals("property")) {
-            // nothing to do
-        } else if (qName.equals("propertylist")) {
-            if (rpd.contains(itemListName)) {
-                throw new SAXParseException("Duplicate property: " + itemListName, locator);
-            } else {
-                rpd.add(itemListName, itemList);
-                itemList = null;
-            }
-        } else if (qName.equals("item")) {
-            itemList.add(curItem.toString().trim());
-            curItem = null;
+        switch (qName) {
+            case "component":
+                rpdMap.put(rpd.getName(), rpd);
+                rpd = null;
+                break;
+            case "property":
+                // nothing to do
+                break;
+            case "propertylist":
+                if (rpd.contains(itemListName)) {
+                    throw new SAXParseException("Duplicate property: " + itemListName, locator);
+                } else {
+                    rpd.add(itemListName, itemList);
+                    itemList = null;
+                }
+                break;
+            case "item":
+                itemList.add(curItem.toString().trim());
+                curItem = null;
+                break;
         }
     }
 
@@ -134,7 +150,9 @@ public class ConfigHandler extends DefaultHandler {
             URL fileURL = new File(parent.getPath() + File.separatorChar +  configFileName).toURI().toURL();
 
             Logger logger = Logger.getLogger(ConfigHandler.class.getSimpleName());
-            logger.fine((replaceDuplicates ? "extending" : "including") + " config:" + fileURL.toURI());
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine((replaceDuplicates ? "extending" : "including") + " config:" + fileURL.toURI());
+            }
 
             SaxLoader saxLoader = new SaxLoader(fileURL, globalProperties, rpdMap, replaceDuplicates);
             saxLoader.load();

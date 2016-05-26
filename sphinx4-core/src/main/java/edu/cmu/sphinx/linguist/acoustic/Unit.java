@@ -54,10 +54,10 @@ public class Unit {
      * @param context  the context for this unit
      */
     Unit(Unit baseUnit, boolean filler, Context context) {
-        this.name = baseUnit.getName();
+        this.name = baseUnit.name;
         this.filler = filler;
         this.silence = name.equals(UnitManager.SILENCE_NAME);
-        this.baseID = baseUnit.getBaseID();
+        this.baseID = baseUnit.baseID;
         this.baseUnit = baseUnit;
         this.context = context;
     }
@@ -122,7 +122,7 @@ public class Unit {
      * @return true if the unit is context dependent
      */
     public boolean isContextDependent() {
-        return getContext() != Context.EMPTY_CONTEXT;
+        return context != Context.EMPTY_CONTEXT;
     }
 
     /** gets the key for this unit
@@ -186,7 +186,7 @@ public class Unit {
      * @return true if this unit matches the name and non-null context
      */
     public boolean isPartialMatch(String name, Context context) {
-        return getName().equals(name) && context.isPartialMatch(this.context);
+        return this.name.equals(name) && context.isPartialMatch(this.context);
     }
 
     /**
@@ -216,7 +216,7 @@ public class Unit {
             return false;
         } else {
             for (int i = 0; i < a.length; i++) {
-                if (!a[i].getName().equals(b[i].getName())) {
+                if (!a[i].name.equals(b[i].getName())) {
                     return false;
                 }
             }

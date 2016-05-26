@@ -237,7 +237,7 @@ public class Microphone extends BaseDataProcessor {
     @Override
     public void initialize() {
         super.initialize();
-        audioList = new LinkedBlockingQueue<Data>();
+        audioList = new LinkedBlockingQueue<>();
 
         DataLine.Info info
                 = new DataLine.Info(TargetDataLine.class, desiredFormat);
@@ -336,11 +336,7 @@ public class Microphone extends BaseDataProcessor {
             /* Add a line listener that just traces
              * the line states.
              */
-            audioLine.addLineListener(new LineListener() {
-                public void update(LineEvent event) {
-                    logger.info("line listener " + event);
-                }
-            });
+            audioLine.addLineListener(event -> logger.info("line listener " + event));
         } catch (LineUnavailableException e) {
             logger.severe("microphone unavailable " + e.getMessage());
         }
@@ -488,7 +484,7 @@ public class Microphone extends BaseDataProcessor {
          * Starts the thread, and waits for recorder to be ready
          */
         @Override
-        public void start() {
+        public synchronized void start() {
             started = false;
             super.start();
             waitForStart();
@@ -675,22 +671,25 @@ public class Microphone extends BaseDataProcessor {
     private double[] convertStereoToMono(double[] samples, int channels) {
         assert (samples.length % channels == 0);
         double[] finalSamples = new double[samples.length / channels];
-        if (stereoToMono.equals("average")) {
-            for (int i = 0, j = 0; i < samples.length; j++) {
-                double sum = samples[i++];
-                for (int c = 1; c < channels; c++) {
-                    sum += samples[i++];
+        switch (stereoToMono) {
+            case "average":
+                for (int i = 0, j = 0; i < samples.length; j++) {
+                    double sum = samples[i++];
+                    for (int c = 1; c < channels; c++) {
+                        sum += samples[i++];
+                    }
+                    finalSamples[j] = sum / channels;
                 }
-                finalSamples[j] = sum / channels;
-            }
-        } else if (stereoToMono.equals("selectChannel")) {
-            for (int i = selectedChannel, j = 0; i < samples.length;
-                 i += channels, j++) {
-                finalSamples[j] = samples[i];
-            }
-        } else {
-            throw new Error("Unsupported stereo to mono conversion: " +
-                    stereoToMono);
+                break;
+            case "selectChannel":
+                for (int i = selectedChannel, j = 0; i < samples.length;
+                     i += channels, j++) {
+                    finalSamples[j] = samples[i];
+                }
+                break;
+            default:
+                throw new Error("Unsupported stereo to mono conversion: " +
+                        stereoToMono);
         }
         return finalSamples;
     }

@@ -168,6 +168,6 @@ public class Arc {
     @Override
     public String toString() {
         return "(" + iLabel + ", " + oLabel + ", " + weight + ", " + nextState
-                + ")";
+                + ')';
     }
 }

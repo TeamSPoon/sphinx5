@@ -139,7 +139,7 @@ public class Token {
      * @return the string representation of this object
      */
     public String toString() {
-        StringBuffer fullToken = new StringBuffer();
+        StringBuilder fullToken = new StringBuilder();
 
         if (whitespace != null) {
             fullToken.append(whitespace);

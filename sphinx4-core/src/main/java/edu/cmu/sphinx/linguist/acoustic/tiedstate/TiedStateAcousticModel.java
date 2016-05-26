@@ -83,7 +83,7 @@ public class TiedStateAcousticModel implements AcousticModel {
     // ----------------------------
     // internal variables
     // -----------------------------
-    final transient private Map<String, SenoneSequence> compositeSenoneSequenceCache = new HashMap<String, SenoneSequence>();
+    final transient private Map<String, SenoneSequence> compositeSenoneSequenceCache = new HashMap<>();
     private boolean allocated;
 
     public TiedStateAcousticModel( Loader loader, UnitManager unitManager, boolean useComposites) {
@@ -228,7 +228,7 @@ public class TiedStateAcousticModel implements AcousticModel {
      * @param unit the unit to test
      * @return true if the unit is missing a right context
      */
-    private boolean isComposite(Unit unit) {
+    private static boolean isComposite(Unit unit) {
 
         if (unit.isFiller()) {
             return false;
@@ -313,7 +313,7 @@ public class TiedStateAcousticModel implements AcousticModel {
 
         Context context = unit.getContext();
         List<SenoneSequence> senoneSequenceList;
-        senoneSequenceList = new ArrayList<SenoneSequence>();
+        senoneSequenceList = new ArrayList<>();
 
         // collect all senone sequences that match the pattern
         for (Iterator<HMM> i = getHMMIterator(); i.hasNext();) {
@@ -355,10 +355,10 @@ public class TiedStateAcousticModel implements AcousticModel {
         // QUESTION: is is possible to have different size senone
         // sequences. For now lets assume the worst case.
 
-        List<CompositeSenone> compositeSenones = new ArrayList<CompositeSenone>();
+        List<CompositeSenone> compositeSenones = new ArrayList<>();
         float logWeight = 0.0f;
         for (int i = 0; i < longestSequence; i++) {
-            Set<Senone> compositeSenoneSet = new HashSet<Senone>();
+            Set<Senone> compositeSenoneSet = new HashSet<>();
             for (SenoneSequence senoneSequence : senoneSequenceList) {
                 if (i < senoneSequence.getSenones().length) {
                     Senone senone = senoneSequence.getSenones()[i];
@@ -499,7 +499,7 @@ public class TiedStateAcousticModel implements AcousticModel {
      * @param units the units to check
      * @return true if the array contains a filler that is not the silence filler
      */
-    private boolean hasNonSilenceFiller(Unit[] units) {
+    private static boolean hasNonSilenceFiller(Unit[] units) {
         if (units == null) {
             return false;
         }
@@ -520,7 +520,7 @@ public class TiedStateAcousticModel implements AcousticModel {
      * @param context the context to check
      * @return true if the array contains a filler that is not the silence filler
      */
-    private Unit[] replaceNonSilenceFillerWithSilence(Unit[] context) {
+    private static Unit[] replaceNonSilenceFillerWithSilence(Unit[] context) {
         Unit[] replacementContext = new Unit[context.length];
         for (int i = 0; i < context.length; i++) {
             if (context[i].isFiller() &&

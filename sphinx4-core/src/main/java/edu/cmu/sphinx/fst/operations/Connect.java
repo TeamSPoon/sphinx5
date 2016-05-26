@@ -34,7 +34,7 @@ public class Connect {
     private static void calcCoAccessible(Fst fst, State state,
             ArrayList<ArrayList<State>> paths, HashSet<State> coaccessible) {
         // hold the coaccessible added in this loop
-        ArrayList<State> newCoAccessibles = new ArrayList<State>();
+        ArrayList<State> newCoAccessibles = new ArrayList<>();
         for (ArrayList<State> path : paths) {
             int index = path.lastIndexOf(state);
             if (index != -1) {
@@ -68,7 +68,7 @@ public class Connect {
         if (toIndex == -1) {
             toIndex = lastPath.size() - 1;
         }
-        ArrayList<State> newPath = new ArrayList<State>(lastPath.subList(
+        ArrayList<State> newPath = new ArrayList<>(lastPath.subList(
                 fromIndex, toIndex));
         paths.add(newPath);
     }
@@ -118,7 +118,7 @@ public class Connect {
     private static void addExploredArc(int stateId, Arc arc,
             ArrayList<Arc>[] exploredArcs) {
         if (exploredArcs[stateId] == null) {
-            exploredArcs[stateId] = new ArrayList<Arc>();
+            exploredArcs[stateId] = new ArrayList<>();
         }
         exploredArcs[stateId].add(arc);
 
@@ -159,17 +159,17 @@ public class Connect {
             return;
         }
 
-        HashSet<State> accessible = new HashSet<State>();
-        HashSet<State> coaccessible = new HashSet<State>();
+        HashSet<State> accessible = new HashSet<>();
+        HashSet<State> coaccessible = new HashSet<>();
         @SuppressWarnings("unchecked")
         ArrayList<Arc>[] exploredArcs = new ArrayList[fst.getNumStates()];
 
-        ArrayList<ArrayList<State>> paths = new ArrayList<ArrayList<State>>();
-        paths.add(new ArrayList<State>());
+        ArrayList<ArrayList<State>> paths = new ArrayList<>();
+        paths.add(new ArrayList<>());
 
         depthFirstSearch(fst, accessible, paths, exploredArcs, coaccessible);
 
-        HashSet<State> toDelete = new HashSet<State>();
+        HashSet<State> toDelete = new HashSet<>();
 
         for (int i = 0; i < fst.getNumStates(); i++) {
             State s = fst.getState(i);

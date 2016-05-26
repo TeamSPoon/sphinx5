@@ -54,7 +54,7 @@ import edu.cmu.sphinx.util.props.S4Integer;
  */
 public class LiveCMN extends BaseDataProcessor {
     
-    private DecimalFormat formatter = new DecimalFormat("0.00;-0.00", new DecimalFormatSymbols(Locale.US));;
+    private final DecimalFormat formatter = new DecimalFormat("0.00;-0.00", new DecimalFormatSymbols(Locale.US));
 
     /** The property for the live CMN initial window size. */
     @S4Integer(defaultValue = 200)
@@ -78,7 +78,7 @@ public class LiveCMN extends BaseDataProcessor {
     private double[] sum; // array of current sums
     private int numberFrame; // total number of input Cepstrum
 
-    List<Data> initialList = new LinkedList<Data>();
+    final List<Data> initialList = new LinkedList<>();
 
     public LiveCMN(double initialMean, int cmnWindow, int cmnShiftWindow, int initialCmnWindow) {
         initLogger();

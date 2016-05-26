@@ -26,7 +26,7 @@ public interface Senone extends Serializable {
      * @param feature the feature vector to score this senone against
      * @return the score for this senone in LogMath log base
      */
-    public float getScore(Data feature);
+    float getScore(Data feature);
 
 
     /**
@@ -35,7 +35,7 @@ public interface Senone extends Serializable {
      * @param feature the feature vector to score this senone against
      * @return the scores for this senone in LogMath log base
      */
-    public float[] calculateComponentScore(Data feature);
+    float[] calculateComponentScore(Data feature);
 
 
     /**
@@ -43,7 +43,7 @@ public interface Senone extends Serializable {
      *
      * @return the senone id
      */
-    public long getID();
+    long getID();
 
 
     /**
@@ -51,18 +51,18 @@ public interface Senone extends Serializable {
      *
      * @param msg an annotation for the dump
      */
-    public void dump(String msg);
+    void dump(String msg);
 
     /**
      * Returns the mixture components associated with this Gaussian
      *
      * @return the array of mixture components
      */
-    public MixtureComponent[] getMixtureComponents();
+    MixtureComponent[] getMixtureComponents();
 
     /**
      * 
      * @return the mixture weights vector
      */
-    public float[] getLogMixtureWeights();
+    float[] getLogMixtureWeights();
 }

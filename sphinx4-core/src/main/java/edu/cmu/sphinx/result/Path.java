@@ -25,7 +25,7 @@ public interface Path {
      *
      * @return the score for the path in the LogMath log domaain.
      */
-    public double getScore();
+    double getScore();
 
 
     /**
@@ -34,14 +34,14 @@ public interface Path {
      *
      * @return a log confidence score which linear value is between 0.0 and 1.0 (inclusive)
      */
-    public double getConfidence();
+    double getConfidence();
 
     /**
      * Gets the ordered set of words for this path
      *
      * @return an array containing zero or more words
      */
-    public WordResult[] getWords();
+    WordResult[] getWords();
 
 
     /**
@@ -49,17 +49,17 @@ public interface Path {
      *
      * @return the transcription of the path.
      */
-    public String getTranscription();
+    String getTranscription();
 
     /**
      * Gets the transcription of the path skipping the filler words
      *
      * @return the transcription of the path without fillers.
-     */    
-    public String getTranscriptionNoFiller();
+     */
+    String getTranscriptionNoFiller();
 
     /** Returns a string representation of this object */
-    public String toString();
+    String toString();
 
 
 }

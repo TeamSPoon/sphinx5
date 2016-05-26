@@ -49,7 +49,7 @@ public class ClusteredDensityFileData {
      *            - n-dimensional "b" point
      * @return the euclidean distance between a and b.
      */
-    private float euclidianDistance(float[] a, float[] b) {
+    private static float euclidianDistance(float[] a, float[] b) {
         double s = 0, d;
 
         for (int i = 0; i < a.length; i++) {
@@ -69,7 +69,7 @@ public class ClusteredDensityFileData {
      *            - float array b
      * @return true if values from a are equal to the ones in b, else false.
      */
-    private boolean isEqual(float[] a, float[] b) {
+    private static boolean isEqual(float[] a, float[] b) {
         if (a.length != b.length) {
             return false;
         }
@@ -91,9 +91,9 @@ public class ClusteredDensityFileData {
      */
     private void kMeansClustering(Loader loader, int maxIterations) {
         Pool<float[]> initialData = loader.getMeansPool();
-        ArrayList<float[]> oldCentroids = new ArrayList<float[]>(
+        ArrayList<float[]> oldCentroids = new ArrayList<>(
                 numberOfClusters);
-        ArrayList<float[]> centroids = new ArrayList<float[]>(numberOfClusters);
+        ArrayList<float[]> centroids = new ArrayList<>(numberOfClusters);
         int numberOfElements = initialData.size(), nrOfIterations = maxIterations, index;
         int[] count = new int[numberOfClusters];
         double distance, min;
@@ -122,11 +122,11 @@ public class ClusteredDensityFileData {
 
             for (int i = 0; i < initialData.size(); i++) {
                 currentValue = initialData.get(i);
-                min = this.euclidianDistance(oldCentroids.get(0), currentValue);
+                min = ClusteredDensityFileData.euclidianDistance(oldCentroids.get(0), currentValue);
                 index = 0;
 
                 for (int k = 1; k < numberOfClusters; k++) {
-                    distance = this.euclidianDistance(oldCentroids.get(k),
+                    distance = ClusteredDensityFileData.euclidianDistance(oldCentroids.get(k),
                             currentValue);
 
                     if (distance < min) {
@@ -164,7 +164,7 @@ public class ClusteredDensityFileData {
 
             for (int i = 0; i < numberOfClusters; i++) {
                 converged = converged
-                        && (this.isEqual(centroids.get(i), oldCentroids.get(i)));
+                        && (ClusteredDensityFileData.isEqual(centroids.get(i), oldCentroids.get(i)));
             }
 
             nrOfIterations--;

@@ -43,7 +43,7 @@ public class State {
      * Default Constructor
      */
     protected State() {
-        arcs = new ArrayList<Arc>();
+        arcs = new ArrayList<>();
     }
 
     /**
@@ -65,7 +65,7 @@ public class State {
     public State(int initialNumArcs) {
         this.initialNumArcs = initialNumArcs;
         if (initialNumArcs > 0) {
-            arcs = new ArrayList<Arc>(initialNumArcs);
+            arcs = new ArrayList<>(initialNumArcs);
         }
     }
 
@@ -175,7 +175,7 @@ public class State {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("(" + id + ", " + fnlWeight + ")");
+        sb.append("(").append(id).append(", ").append(fnlWeight).append(')');
         return sb.toString();
     }
 

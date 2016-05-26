@@ -28,10 +28,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -159,7 +156,7 @@ public class Sphinx3Loader implements Loader {
     public Sphinx3Loader(String location,
             UnitManager unitManager, float distFloor, float mixtureWeightFloor,
             float varianceFloor, int topGauNum, boolean useCDUnits)
-            throws MalformedURLException, ClassNotFoundException {
+            throws MalformedURLException {
 
         init(ConfigurationManagerUtils.resourceToURL(location),
                 unitManager, distFloor, mixtureWeightFloor,
@@ -228,8 +225,7 @@ public class Sphinx3Loader implements Loader {
     // ConfigurationManagerUtils.getResource
     // for compatibility reasons. By default it looks for the resources, not
     // for the files.
-    protected InputStream getDataStream(String path) throws IOException,
-            URISyntaxException {
+    protected InputStream getDataStream(String path) throws IOException {
         return new URL(Utilities.pathJoin(location.toString(), path)).openStream();
     }
 
@@ -238,7 +234,7 @@ public class Sphinx3Loader implements Loader {
             TimerPool.getTimer(this, "Load AM").start();
 
             hmmManager = new HMMManager();
-            contextIndependentUnits = new LinkedHashMap<String, Unit>();
+            contextIndependentUnits = new LinkedHashMap<>();
 
             // dummy pools for these elements
             meanTransformationMatrixPool = null;
@@ -336,7 +332,9 @@ public class Sphinx3Loader implements Loader {
         ExtendedStreamTokenizer est = new ExtendedStreamTokenizer(inputStream,
                 '#', false);
 
-        logger.fine("Loading HMM file from " + location);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Loading HMM file from " + location);
+        }
 
         est.expectString(MODEL_VERSION);
 
@@ -393,7 +391,7 @@ public class Sphinx3Loader implements Loader {
      * @return the senone pool
      */
     protected Pool<Senone> createSenonePool(float distFloor, float varianceFloor) {
-        Pool<Senone> pool = new Pool<Senone>("senones");
+        Pool<Senone> pool = new Pool<>("senones");
         
         int numMeans = meansPool.size();
         int numVariances = variancePool.size();
@@ -402,10 +400,12 @@ public class Sphinx3Loader implements Loader {
         int numStreams = mixtureWeights.getStreamsNum();
         int whichGaussian = 0;
 
-        logger.fine("Senones " + numSenones);
-        logger.fine("Gaussians Per Senone " + numGaussiansPerSenone);
-        logger.fine("Means " + numMeans);
-        logger.fine("Variances " + numVariances);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Senones " + numSenones);
+            logger.fine("Gaussians Per Senone " + numGaussiansPerSenone);
+            logger.fine("Means " + numMeans);
+            logger.fine("Variances " + numVariances);
+        }
 
         assert numGaussiansPerSenone > 0;
         assert numVariances == numSenones * numGaussiansPerSenone;
@@ -450,7 +450,7 @@ public class Sphinx3Loader implements Loader {
      * @return the senone pool
      */
     private Pool<Senone> createTiedSenonePool(float distFloor, float varianceFloor) {
-        Pool<Senone> pool = new Pool<Senone>("senones");
+        Pool<Senone> pool = new Pool<>("senones");
 
         int numMeans = meansPool.size();
         int numVariances = variancePool.size();
@@ -458,10 +458,12 @@ public class Sphinx3Loader implements Loader {
         int numSenones = mixtureWeights.getStatesNum();
         int numStreams = mixtureWeights.getStreamsNum();
 
-        logger.fine("Senones " + numSenones);
-        logger.fine("Gaussians Per State " + numGaussiansPerState);
-        logger.fine("Means " + numMeans);
-        logger.fine("Variances " + numVariances);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Senones " + numSenones);
+            logger.fine("Gaussians Per State " + numGaussiansPerState);
+            logger.fine("Means " + numMeans);
+            logger.fine("Variances " + numVariances);
+        }
 
         assert numGaussiansPerState > 0;
         assert numVariances == numBase * numGaussiansPerState * numStreams;
@@ -478,7 +480,7 @@ public class Sphinx3Loader implements Loader {
         
         phoneticTiedMixtures = new MixtureComponentSet[numBase];
         for (int i = 0; i < numBase; i++) {
-            ArrayList<PrunableMixtureComponent[]> mixtureComponents = new ArrayList<PrunableMixtureComponent[]>();
+            ArrayList<PrunableMixtureComponent[]> mixtureComponents = new ArrayList<>();
             for (int j = 0; j < numStreams; j++) {
             	PrunableMixtureComponent[] featMixtureComponents = new PrunableMixtureComponent[numGaussiansPerState];
                 for (int k = 0; k < numGaussiansPerState; k++) {
@@ -526,7 +528,7 @@ public class Sphinx3Loader implements Loader {
 
         String version = props.getProperty("version");
 
-        if (version == null || !version.equals(DENSITY_FILE_VERSION)) {
+        if (!Objects.equals(version, DENSITY_FILE_VERSION)) {
             throw new IOException("Unsupported version in " + path);
         }
 
@@ -545,11 +547,13 @@ public class Sphinx3Loader implements Loader {
 
         int rawLength = readInt(dis);
 
-        logger.fine("Number of states " + numStates);
-        logger.fine("Number of streams " + numStreams);
-        logger.fine("Number of gaussians per state " + numGaussiansPerState);
-        logger.fine("Vector length " + vectorLength.length);
-        logger.fine("Raw length " + rawLength);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Number of states " + numStates);
+            logger.fine("Number of streams " + numStreams);
+            logger.fine("Number of gaussians per state " + numGaussiansPerState);
+            logger.fine("Vector length " + vectorLength.length);
+            logger.fine("Raw length " + rawLength);
+        }
 
         for (int i = 0; i < numStreams; i++) {
             blockSize += vectorLength[i];
@@ -557,7 +561,7 @@ public class Sphinx3Loader implements Loader {
 
         assert rawLength == numGaussiansPerState * blockSize * numStates;
 
-        Pool<float[]> pool = new Pool<float[]>(path);
+        Pool<float[]> pool = new Pool<>(path);
         pool.setFeature(NUM_SENONES, numStates);
         pool.setFeature(NUM_STREAMS, numStreams);
         pool.setFeature(NUM_GAUSSIANS_PER_STATE, numGaussiansPerState);
@@ -623,10 +627,14 @@ public class Sphinx3Loader implements Loader {
         }
         int byteOrderMagic = dis.readInt();
         if (byteOrderMagic == BYTE_ORDER_MAGIC) {
-            logger.fine("Not swapping " + path);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Not swapping " + path);
+            }
             swap = false;
         } else if (Utilities.swapInteger(byteOrderMagic) == BYTE_ORDER_MAGIC) {
-            logger.fine("Swapping  " + path);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Swapping  " + path);
+            }
             swap = true;
         } else {
             throw new IOException("Corrupted S3 file " + path);
@@ -643,7 +651,7 @@ public class Sphinx3Loader implements Loader {
      * @throws IOException
      *             on error
      */
-    String readWord(DataInputStream dis) throws IOException {
+    static String readWord(DataInputStream dis) throws IOException {
         StringBuilder sb = new StringBuilder();
         char c;
         // skip leading whitespace
@@ -667,7 +675,7 @@ public class Sphinx3Loader implements Loader {
      * @throws IOException
      *             if an error occurs
      */
-    private char readChar(DataInputStream dis) throws IOException {
+    private static char readChar(DataInputStream dis) throws IOException {
         return (char) dis.readByte();
     }
 
@@ -782,7 +790,9 @@ public class Sphinx3Loader implements Loader {
         ExtendedStreamTokenizer est = new ExtendedStreamTokenizer(inputStream,
                 '#', false);
 
-        logger.fine("Loading HMM file from: " + location);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Loading HMM file from: " + location);
+        }
 
         est.expectString(MODEL_VERSION);
 
@@ -938,7 +948,7 @@ public class Sphinx3Loader implements Loader {
      * @return true if the given senone sequence IDs are the same, false
      *         otherwise
      */
-    protected boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
+    protected static boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
         if (ssid1.length == ssid2.length) {
             for (int i = 0; i < ssid1.length; i++) {
                 if (ssid1[i] != ssid2[i]) {
@@ -980,7 +990,9 @@ public class Sphinx3Loader implements Loader {
      */
     protected GaussianWeights loadMixtureWeights(String path, float floor)
             throws IOException, URISyntaxException {
-        logger.fine("Loading mixture weights from: " + path);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Loading mixture weights from: " + path);
+        }
 
         Properties props = new Properties();
 
@@ -988,7 +1000,7 @@ public class Sphinx3Loader implements Loader {
 
         String version = props.getProperty("version");
 
-        if (version == null || !version.equals(MIXW_FILE_VERSION)) {
+        if (!Objects.equals(version, MIXW_FILE_VERSION)) {
             throw new IOException("Unsupported version in " + path);
         }
 
@@ -1002,9 +1014,11 @@ public class Sphinx3Loader implements Loader {
         int numValues = readInt(dis);
         GaussianWeights mixtureWeights = new GaussianWeights(path, numStates, numGaussiansPerState, numStreams);
 
-        logger.fine("Number of states " + numStates);
-        logger.fine("Number of streams " + numStreams);
-        logger.fine("Number of gaussians per state " + numGaussiansPerState);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Number of states " + numStates);
+            logger.fine("Number of streams " + numStreams);
+            logger.fine("Number of gaussians per state " + numGaussiansPerState);
+        }
 
         assert numValues == numStates * numStreams * numGaussiansPerState;
 
@@ -1037,14 +1051,16 @@ public class Sphinx3Loader implements Loader {
      */
     protected Pool<float[][]> loadTransitionMatrices(String path)
             throws IOException, URISyntaxException {
-        logger.fine("Loading transition matrices from: " + path);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Loading transition matrices from: " + path);
+        }
 
         Properties props = new Properties();
         DataInputStream dis = readS3BinaryHeader(path, props);
 
         String version = props.getProperty("version");
 
-        if (version == null || !version.equals(TMAT_FILE_VERSION)) {
+        if (!Objects.equals(version, TMAT_FILE_VERSION)) {
             throw new IOException("Unsupported version in " + path);
         }
 
@@ -1052,7 +1068,7 @@ public class Sphinx3Loader implements Loader {
         boolean doCheckSum = (checksum != null && checksum.equals("yes"));
         resetChecksum();
 
-        Pool<float[][]> pool = new Pool<float[][]>(path);
+        Pool<float[][]> pool = new Pool<>(path);
 
         int numMatrices = readInt(dis);
         int numRows = readInt(dis);
@@ -1094,7 +1110,9 @@ public class Sphinx3Loader implements Loader {
      *             if an error occurs while loading the data
      */
     protected float[][] loadTransformMatrix(String path) throws IOException {
-        logger.fine("Loading transform matrix from: " + path);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Loading transform matrix from: " + path);
+        }
 
         Properties props = new Properties();
 
@@ -1109,7 +1127,7 @@ public class Sphinx3Loader implements Loader {
 
         String version = props.getProperty("version");
 
-        if (version == null || !version.equals(TRANSFORM_FILE_VERSION)) {
+        if (!Objects.equals(version, TRANSFORM_FILE_VERSION)) {
             throw new IOException("Unsupported version in " + path);
         }
 
@@ -1229,7 +1247,7 @@ public class Sphinx3Loader implements Loader {
     }
 
     protected Properties loadModelProps(String path)
-            throws MalformedURLException, IOException, URISyntaxException {
+            throws IOException, URISyntaxException {
         Properties props = new Properties();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 getDataStream(path)));
@@ -1244,13 +1262,13 @@ public class Sphinx3Loader implements Loader {
     public void update(Transform transform, ClusteredDensityFileData clusters) {
         for (int index = 0; index < meansPool.size(); index++) {
             int transformClass = clusters.getClassIndex(index);
-            float[] tmean = new float[getVectorLength()[0]];
+            float[] tmean = new float[vectorLength[0]];
             float[] mean = meansPool.get(index);
             
             for (int i = 0; i < numStreams; i++) {
-                for (int l = 0; l < getVectorLength()[i]; l++) {
+                for (int l = 0; l < vectorLength[i]; l++) {
                     tmean[l] = 0;
-                    for (int m = 0; m < getVectorLength()[i]; m++) {
+                    for (int m = 0; m < vectorLength[i]; m++) {
                         tmean[l] += transform.getAs()[transformClass][i][l][m]
                                 * mean[m];
                     }

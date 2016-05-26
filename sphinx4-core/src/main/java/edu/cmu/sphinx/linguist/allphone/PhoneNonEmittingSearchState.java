@@ -54,7 +54,7 @@ public class PhoneNonEmittingSearchState implements SearchState, SearchStateArc 
     }
 
     public float getProbability() {
-        return getLanguageProbability() + getInsertionProbability();
+        return languageProb + getInsertionProbability();
     }
 
     public float getLanguageProbability() {

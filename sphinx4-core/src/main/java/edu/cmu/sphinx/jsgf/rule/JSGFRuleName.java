@@ -35,7 +35,7 @@ public class JSGFRuleName extends JSGFRule {
 	public String getFullGrammarName() {
 		// System.out.println ("Getting full grammar name from " + fullRuleName);
 		if (packageName != null) {
-			return packageName + "." + simpleGrammarName;
+			return packageName + '.' + simpleGrammarName;
 		}
 		// System.out.println ("Result is " + simpleGrammarName);
 		return simpleGrammarName;
@@ -76,7 +76,7 @@ public class JSGFRuleName extends JSGFRule {
 		}
 
 		if ((name.startsWith(".")) || (name.endsWith("."))
-				|| (name.indexOf("..") >= 0)) {
+				|| (name.contains(".."))) {
 			return false;
 		}
 
@@ -147,6 +147,6 @@ public class JSGFRuleName extends JSGFRule {
 
 	@Override
     public String toString() {
-		return "<" + fullRuleName + ">";
+		return '<' + fullRuleName + ">";
 	}
 }

@@ -30,7 +30,7 @@ public class LiveRecognizerTest {
         assertEquals("one zero zero zero one", result.getHypothesis());
 
         WordResult word = result.getWords().get(0);
-        assertEquals("{what, 0.776, [820:1080]}", word.toString());
+        assertEquals("{what, 0.778, [820:1080]}", word.toString());
     }
 
 

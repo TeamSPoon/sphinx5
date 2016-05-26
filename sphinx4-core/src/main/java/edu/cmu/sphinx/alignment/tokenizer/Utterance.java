@@ -133,13 +133,16 @@ public class Utterance {
     public Item getItem(String relation, float time) {
         String pathName = null;
 
-        if (relation.equals(Relation.WORD)) {
-            pathName = "R:SylStructure.parent.parent.R:Word";
-        } else if (relation.equals(Relation.TOKEN)) {
-            pathName = "R:SylStructure.parent.parent.R:Token.parent";
-        } else {
-            throw new IllegalArgumentException(
-                    "Utterance.getItem(): relation cannot be " + relation);
+        switch (relation) {
+            case Relation.WORD:
+                pathName = "R:SylStructure.parent.parent.R:Word";
+                break;
+            case Relation.TOKEN:
+                pathName = "R:SylStructure.parent.parent.R:Token.parent";
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Utterance.getItem(): relation cannot be " + relation);
         }
 
         PathExtractor path = new PathExtractor(pathName, false);

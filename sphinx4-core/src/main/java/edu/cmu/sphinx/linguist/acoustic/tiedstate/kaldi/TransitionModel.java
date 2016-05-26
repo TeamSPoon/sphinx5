@@ -18,7 +18,7 @@ final class HmmState {
     public HmmState(int id, int pdfClass, Collection<Integer> transitions) {
         this.id = id;
         this.pdfClass = pdfClass;
-        this.transitions = new ArrayList<Integer>(transitions);
+        this.transitions = new ArrayList<>(transitions);
     }
 
     public int getId() {
@@ -98,7 +98,7 @@ public class TransitionModel {
         parseTopology(parser);
 
         parser.expectToken("<Triples>");
-        transitionStates = new HashMap<Triple, Integer>();
+        transitionStates = new HashMap<>();
         int numTriples = parser.getInt();
         int transitionId = 1;
 
@@ -126,18 +126,18 @@ public class TransitionModel {
     private void parseTopology(KaldiTextParser parser) {
         parser.expectToken("<Topology>");
 
-        phoneStates = new HashMap<Integer, List<HmmState>>();
+        phoneStates = new HashMap<>();
         String token;
 
         while ("<TopologyEntry>".equals(token = parser.getToken())) {
-            parser.assertToken("<TopologyEntry>", token);
+            KaldiTextParser.assertToken("<TopologyEntry>", token);
             parser.expectToken("<ForPhones>");
 
-            List<Integer> phones = new ArrayList<Integer>();
+            List<Integer> phones = new ArrayList<>();
             while (!"</ForPhones>".equals(token = parser.getToken()))
                 phones.add(Integer.parseInt(token));
 
-            List<HmmState> states = new ArrayList<HmmState>(3);
+            List<HmmState> states = new ArrayList<>(3);
             while ("<State>".equals(token = parser.getToken())) {
                 // Skip state number.
                 int id = parser.getInt();
@@ -145,14 +145,14 @@ public class TransitionModel {
 
                 if ("<PdfClass>".equals(token)) {
                     int pdfClass = parser.getInt();
-                    List<Integer> transitions = new ArrayList<Integer>();
+                    List<Integer> transitions = new ArrayList<>();
                     while ("<Transition>".equals(token = parser.getToken())) {
                         transitions.add(parser.getInt());
                         // Skip initial probability.
                         parser.getToken();
                     }
 
-                    parser.assertToken("</State>", token);
+                    KaldiTextParser.assertToken("</State>", token);
                     states.add(new HmmState(id, pdfClass, transitions));
                 }
             }
@@ -161,7 +161,7 @@ public class TransitionModel {
                 phoneStates.put(id, states);
         }
 
-        parser.assertToken("</Topology>", token);
+        KaldiTextParser.assertToken("</Topology>", token);
     }
 
     /**

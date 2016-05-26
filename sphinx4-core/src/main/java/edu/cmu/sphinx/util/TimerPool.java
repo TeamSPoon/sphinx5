@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class TimerPool {
 
-    private static final Map<Object, List<Timer>> weakRefTimerPool = new WeakHashMap<Object, List<Timer>>();
+    private static final Map<Object, List<Timer>> weakRefTimerPool = new WeakHashMap<>();
 
 
     // disable the constructor
@@ -32,7 +32,7 @@ public class TimerPool {
      */
     public static synchronized Timer getTimer(Object owner, String timerName) {
         if (!weakRefTimerPool.containsKey(owner))
-            weakRefTimerPool.put(owner, new ArrayList<Timer>());
+            weakRefTimerPool.put(owner, new ArrayList<>());
 
         List<Timer> ownerTimers = weakRefTimerPool.get(owner);
 

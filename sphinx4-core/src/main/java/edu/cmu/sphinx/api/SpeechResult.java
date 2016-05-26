@@ -67,7 +67,7 @@ public final class SpeechResult {
      */
     public Collection<String> getNbest(int n) {
         if (lattice == null)
-            return new HashSet<String>();
+            return new HashSet<>();
         return new Nbest(lattice).getNbest(n);
     }
 

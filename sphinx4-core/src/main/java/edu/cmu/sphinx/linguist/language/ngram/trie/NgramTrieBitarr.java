@@ -34,7 +34,7 @@ public class NgramTrieBitarr {
         int value = mem[idx++] & 0xFF;
         value |= (mem[idx++] << 8) & 0xFFFF;
         value |= (mem[idx++] << 16) & 0xFFFFFF;
-        value |= (mem[idx++] << 24) & 0xFFFFFFFF;
+        value |= (mem[idx++] << 24);
         value >>= (bitOffset & 7);
         value &= mask;
         return value;
@@ -48,7 +48,7 @@ public class NgramTrieBitarr {
      * @param bitOffset - offset from memPtr
      * @return float that was read from specified position
      */
-    public float readNegativeFloat(int memPtr, int bitOffset) {
+    public static float readNegativeFloat(int memPtr, int bitOffset) {
         //TODO cap
         return 0.0f;
     }
@@ -61,7 +61,7 @@ public class NgramTrieBitarr {
      * @param bitOffset - offset from memPtr
      * @return float that was read from specified position
      */
-    public float readFloat(int memPtr, int bitOffset) {
+    public static float readFloat(int memPtr, int bitOffset) {
         //TODO cap
         return 0.0f;
     }

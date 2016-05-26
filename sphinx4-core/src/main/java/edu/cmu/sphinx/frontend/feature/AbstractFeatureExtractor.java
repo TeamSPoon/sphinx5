@@ -69,7 +69,7 @@ public abstract class AbstractFeatureExtractor extends BaseDataProcessor {
         cepstraBufferSize = 256;
         cepstraBuffer = new DoubleData[cepstraBufferSize];
         cepstraBufferEdge = cepstraBufferSize - (window * 2 + 2);
-        outputQueue = new LinkedList<Data>();
+        outputQueue = new LinkedList<>();
         reset();
     }
 

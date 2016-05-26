@@ -112,15 +112,15 @@ public class AllphoneLinguist implements Linguist {
 
     private void createContextIndependentSuccessors() {
         Iterator<HMM> hmmIter = acousticModel.getHMMIterator();
-        ciHMMs = new ArrayList<HMM>();
-        senonesToUnits = new HashMap<SenoneSequence, ArrayList<Unit>>();
+        ciHMMs = new ArrayList<>();
+        senonesToUnits = new HashMap<>();
         while (hmmIter.hasNext()) {
             HMM hmm = hmmIter.next();
             if (!hmm.getUnit().isContextDependent()) {
                 ArrayList<Unit> sameSenonesUnits;
                 SenoneSequence senoneSeq = ((SenoneHMM)hmm).getSenoneSequence();
                 if ((sameSenonesUnits = senonesToUnits.get(senoneSeq)) == null) {
-                    sameSenonesUnits = new ArrayList<Unit>();
+                    sameSenonesUnits = new ArrayList<>();
                     senonesToUnits.put(senoneSeq, sameSenonesUnits);
                 }
                 sameSenonesUnits.add(hmm.getUnit());
@@ -130,17 +130,17 @@ public class AllphoneLinguist implements Linguist {
     }
     
     private void createContextDependentSuccessors() {
-        cdHMMs = new HashMap<Unit, HashMap<Unit, ArrayList<HMM>>>();
-        senonesToUnits = new HashMap<SenoneSequence, ArrayList<Unit>>();
-        fillerHMMs = new ArrayList<HMM>();
-        leftContextSilHMMs = new ArrayList<HMM>();
+        cdHMMs = new HashMap<>();
+        senonesToUnits = new HashMap<>();
+        fillerHMMs = new ArrayList<>();
+        leftContextSilHMMs = new ArrayList<>();
         Iterator<HMM> hmmIter = acousticModel.getHMMIterator();
         while (hmmIter.hasNext()) {
             HMM hmm = hmmIter.next();
             ArrayList<Unit> sameSenonesUnits;
             SenoneSequence senoneSeq = ((SenoneHMM)hmm).getSenoneSequence();
             if ((sameSenonesUnits = senonesToUnits.get(senoneSeq)) == null) {
-                sameSenonesUnits = new ArrayList<Unit>();
+                sameSenonesUnits = new ArrayList<>();
                 senonesToUnits.put(senoneSeq, sameSenonesUnits);
             }
             sameSenonesUnits.add(hmm.getUnit());
@@ -158,12 +158,12 @@ public class AllphoneLinguist implements Linguist {
                 Unit base = hmm.getUnit().getBaseUnit();
                 HashMap<Unit, ArrayList<HMM>> lcSuccessors; 
                 if ((lcSuccessors = cdHMMs.get(lc)) == null) {
-                    lcSuccessors = new HashMap<Unit, ArrayList<HMM>>();
+                    lcSuccessors = new HashMap<>();
                     cdHMMs.put(lc, lcSuccessors);
                 }
                 ArrayList<HMM> lcBaseSuccessors;
                 if ((lcBaseSuccessors = lcSuccessors.get(base)) == null) {
-                    lcBaseSuccessors = new ArrayList<HMM>();
+                    lcBaseSuccessors = new ArrayList<>();
                     lcSuccessors.put(base, lcBaseSuccessors);
                 }
                 lcBaseSuccessors.add(hmm);

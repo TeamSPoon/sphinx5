@@ -16,6 +16,7 @@ import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 
 /**
@@ -23,6 +24,9 @@ import java.io.IOException;
  * <code>Lattice.dumpAISee</code> method.
  */
 public class GDLLatticeFactory {
+
+    private static final Pattern COMPILE = Pattern.compile("\\s");
+
 
     private GDLLatticeFactory() {
     }
@@ -57,7 +61,7 @@ public class GDLLatticeFactory {
 
     private static void createNode(String line, Lattice lattice,
                                    Dictionary dictionary) {
-        String[] text = line.split("\\s");
+        String[] text = COMPILE.split(line);
         String id = text[3].substring(1, text[3].length() - 1);
         String contents = text[5].substring(1);
         String posterior = text[6].substring(2, text[6].length() - 2);
@@ -82,7 +86,7 @@ public class GDLLatticeFactory {
 
 
     private static void createEdge(String line, Lattice lattice) {
-        String[] text = line.split("\\s");
+        String[] text = COMPILE.split(line);
         String src = text[3].substring(1, text[3].length() - 1);
         String dest = text[5].substring(1, text[5].length() - 1);
         String contents = text[7].substring(1, text[7].length() - 1);

@@ -323,9 +323,9 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
             mapSize = 1;
         }
         growTimer.start();
-        bestTokenMap = new HashMap<SearchState, Token>(mapSize);
+        bestTokenMap = new HashMap<>(mapSize);
         ActiveList oldActiveList = activeList;
-        resultList = new LinkedList<Token>();
+        resultList = new LinkedList<>();
         activeList = activeListFactory.newInstance();
         threshold = oldActiveList.getBeamThreshold();
         wordThreshold = oldActiveList.getBestScore() + logRelativeWordBeamWidth;
@@ -526,7 +526,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
      * @param t the token to check
      * @return true if we've visited the search state since the last frame
      */
-    private boolean isVisited(Token t) {
+    private static boolean isVisited(Token t) {
         SearchState curState = t.getSearchState();
 
         t = t.getPredecessor();
@@ -544,7 +544,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
     /** Counts all the tokens in the active list (and displays them). This is an expensive operation. */
     protected void showTokenCount() {
         if (logger.isLoggable(Level.INFO)) {
-            Set<Token> tokenSet = new HashSet<Token>();
+            Set<Token> tokenSet = new HashSet<>();
             for (Token token : activeList) {
                 while (token != null) {
                     tokenSet.add(token);
@@ -552,7 +552,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
                 }
             }
             logger.info("Token Lattice size: " + tokenSet.size());
-            tokenSet = new HashSet<Token>();
+            tokenSet = new HashSet<>();
             for (Token token : resultList) {
                 while (token != null) {
                     tokenSet.add(token);

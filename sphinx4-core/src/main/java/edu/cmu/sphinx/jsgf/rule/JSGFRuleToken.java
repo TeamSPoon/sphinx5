@@ -18,7 +18,7 @@ public class JSGFRuleToken extends JSGFRule {
 		setText(text);
 	}
 
-	private boolean containsWhiteSpace(String text) {
+	private static boolean containsWhiteSpace(String text) {
 		for (int i = 0; i < text.length(); ++i) {
 			if (Character.isWhitespace(text.charAt(i)))
 				return true;

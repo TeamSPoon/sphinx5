@@ -10,7 +10,6 @@
 package edu.cmu.sphinx.api;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class SpeechAligner {
 
     private TextTokenizer tokenizer;
 
-    public SpeechAligner(String amPath, String dictPath, String g2pPath) throws MalformedURLException, IOException {
+    public SpeechAligner(String amPath, String dictPath, String g2pPath) throws IOException {
         Configuration configuration = new Configuration();
         configuration.setAcousticModelPath(amPath);
         configuration.setDictionaryPath(dictPath);
@@ -62,7 +61,7 @@ public class SpeechAligner {
     }
 
     public List<WordResult> align(URL audioUrl, String transcript) throws IOException {
-        return align(audioUrl, getTokenizer().expand(transcript));
+        return align(audioUrl, tokenizer.expand(transcript));
     }
 
     /**
@@ -78,10 +77,10 @@ public class SpeechAligner {
         List<String> transcript = sentenceToWords(sentenceTranscript);
 
         LongTextAligner aligner = new LongTextAligner(transcript, TUPLE_SIZE);
-        Map<Integer, WordResult> alignedWords = new TreeMap<Integer, WordResult>();
-        Queue<Range> ranges = new LinkedList<Range>();
-        Queue<List<String>> texts = new ArrayDeque<List<String>>();
-        Queue<TimeFrame> timeFrames = new ArrayDeque<TimeFrame>();
+        Map<Integer, WordResult> alignedWords = new TreeMap<>();
+        Queue<Range> ranges = new LinkedList<>();
+        Queue<List<String>> texts = new ArrayDeque<>();
+        Queue<TimeFrame> timeFrames = new ArrayDeque<>();
 
         ranges.offer(new Range(0, transcript.size()));
         texts.offer(transcript);
@@ -115,7 +114,7 @@ public class SpeechAligner {
 
                 context.setSpeechSource(audioUrl.openStream(), frame);
 
-                List<WordResult> hypothesis = new ArrayList<WordResult>();
+                List<WordResult> hypothesis = new ArrayList<>();
                 Result result;
                 while (null != (result = recognizer.recognize())) {
                     logger.info("Utterance result " + result.getTimedBestResult(true));
@@ -128,7 +127,7 @@ public class SpeechAligner {
                     }
                 }
 
-                List<String> words = new ArrayList<String>();
+                List<String> words = new ArrayList<>();
                 for (WordResult wr : hypothesis) {
                     words.add(wr.getWord().getSpelling());
                 }
@@ -153,11 +152,11 @@ public class SpeechAligner {
             scheduleNextAlignment(transcript, alignedWords, ranges, texts, timeFrames, lastFrame);
         }
 
-        return new ArrayList<WordResult>(alignedWords.values());
+        return new ArrayList<>(alignedWords.values());
     }
 
-    public List<String> sentenceToWords(List<String> sentenceTranscript) {
-        ArrayList<String> transcript = new ArrayList<String>();
+    public static List<String> sentenceToWords(List<String> sentenceTranscript) {
+        ArrayList<String> transcript = new ArrayList<>();
         for (String sentence : sentenceTranscript) {
             String[] words = sentence.split("\\s+");
             for (String word : words) {

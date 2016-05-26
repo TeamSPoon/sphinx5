@@ -16,7 +16,7 @@ public class TableEventMap extends EventMapWithKey {
      */
     public TableEventMap(int key, List<EventMap> table) {
         super(key);
-        this.table = new ArrayList<EventMap>(table);
+        this.table = new ArrayList<>(table);
     }
 
     /**

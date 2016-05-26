@@ -105,7 +105,7 @@ public class LatticeOptimizer {
     protected boolean optimizeNodeForward(Node n) {
         assert lattice.hasNode(n);
 
-        List<Edge> leavingEdges = new ArrayList<Edge>(n.getLeavingEdges());
+        List<Edge> leavingEdges = new ArrayList<>(n.getLeavingEdges());
         for (int j = 0; j < leavingEdges.size(); j++) {
             Edge e = leavingEdges.get(j);
             for (int k = j + 1; k < leavingEdges.size(); k++) {
@@ -258,7 +258,7 @@ public class LatticeOptimizer {
      * @return true if Node n required optimizing backwards
      */
     protected boolean optimizeNodeBackward(Node n) {
-        List<Edge> enteringEdges = new ArrayList<Edge>(n.getEnteringEdges());
+        List<Edge> enteringEdges = new ArrayList<>(n.getEnteringEdges());
         for (int j = 0; j < enteringEdges.size(); j++) {
             Edge e = enteringEdges.get(j);
             for (int k = j + 1; k < n.getEnteringEdges().size(); k++) {
@@ -312,7 +312,7 @@ public class LatticeOptimizer {
      * @param n2 second node
      * @return true if n1 and n2 have "equivalent labels"
      */
-    protected boolean equivalentNodeLabels(Node n1, Node n2) {
+    protected static boolean equivalentNodeLabels(Node n1, Node n2) {
         return (n1.getWord().equals(n2.getWord()) &&
                 (n1.getBeginTime() == n2.getBeginTime() &&
                         n1.getEndTime() == n2.getEndTime()));
@@ -403,7 +403,7 @@ public class LatticeOptimizer {
      * @param score2 the second acoustic score
      * @return the merged acoustic score
      */
-    private double mergeAcousticScores(double score1, double score2) {
+    private static double mergeAcousticScores(double score1, double score2) {
         // return lattice.getLogMath().addAsLinear(score1, score2);
         return Math.max(score1, score2);
     }
@@ -417,7 +417,7 @@ public class LatticeOptimizer {
      * @param score2 the second language score
      * @return the merged language score
      */
-    private double mergeLanguageScores(double score1, double score2) {
+    private static double mergeLanguageScores(double score1, double score2) {
         // return lattice.getLogMath().addAsLinear(score1, score2);
         return Math.max(score1, score2);
     }

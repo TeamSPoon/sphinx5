@@ -27,14 +27,14 @@ public interface ActiveList extends Iterable<Token> {
      * size
      */
     @S4Integer(defaultValue = 2000)
-    public final static String PROP_ABSOLUTE_BEAM_WIDTH = "absoluteBeamWidth";
+    String PROP_ABSOLUTE_BEAM_WIDTH = "absoluteBeamWidth";
 
     /**
      * Property that sets the minimum score relative to the maximum score in the list for pruning.  Tokens with a score
      * less than relativeBeamWidth * maximumScore will be pruned from the list
      */
     @S4Double(defaultValue = 0.0)
-    public final static String PROP_RELATIVE_BEAM_WIDTH = "relativeBeamWidth";
+    String PROP_RELATIVE_BEAM_WIDTH = "relativeBeamWidth";
     /**
      * Property that indicates whether or not the active list will implement 'strict pruning'.  When strict pruning is
      * enabled, the active list will not remove tokens from the active list until they have been completely scored.  If
@@ -43,21 +43,21 @@ public interface ActiveList extends Iterable<Token> {
      */
 
     @S4Boolean(defaultValue = true)
-    public final static String PROP_STRICT_PRUNING = "strictPruning";
+    String PROP_STRICT_PRUNING = "strictPruning";
 
     /**
      * Adds the given token to the list, keeping track of the lowest scoring token
      *
      * @param token the token to add
      */
-    public void add(Token token);
+    void add(Token token);
 
     /**
      * Purges the active list of excess members returning a (potentially new) active list
      *
      * @return a purged active list
      */
-    public ActiveList purge();
+    ActiveList purge();
 
 
     /**
@@ -65,7 +65,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the size
      */
-    public int size();
+    int size();
 
 
     /**
@@ -73,14 +73,14 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the set of tokens
      */
-    public List<Token> getTokens();
+    List<Token> getTokens();
 
     /**
      * gets the beam threshold best upon the best scoring token
      *
      * @return the beam threshold
      */
-    public float getBeamThreshold();
+    float getBeamThreshold();
 
 
     /**
@@ -88,7 +88,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the best score
      */
-    public float getBestScore();
+    float getBestScore();
 
 
     /**
@@ -96,7 +96,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @param token the best scoring token
      */
-    public void setBestToken(Token token);
+    void setBestToken(Token token);
 
 
     /**
@@ -104,7 +104,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the best scoring token
      */
-    public Token getBestToken();
+    Token getBestToken();
 
 
     /**
@@ -112,6 +112,6 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return a new active list.
      */
-    public ActiveList newInstance();
+    ActiveList newInstance();
 }
 

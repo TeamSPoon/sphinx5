@@ -31,11 +31,11 @@ public interface LanguageModel extends Configurable {
 
     /** The property specifying the location of the language model. */
     @S4String(defaultValue = ".")
-    public final static String PROP_LOCATION = "location";
+    String PROP_LOCATION = "location";
 
     /** The property specifying the unigram weight */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_UNIGRAM_WEIGHT = "unigramWeight";
+    String PROP_UNIGRAM_WEIGHT = "unigramWeight";
     /**
      * The property specifying the maximum depth reported by the language model
      * (from a getMaxDepth()) call. If this property is set to (-1) (the
@@ -47,25 +47,25 @@ public interface LanguageModel extends Configurable {
      * property are 1..N and -1.
      */
     @S4Integer(defaultValue = -1)
-    public final static String PROP_MAX_DEPTH = "maxDepth";
+    String PROP_MAX_DEPTH = "maxDepth";
 
     /** The property specifying the dictionary to use */
     @S4Component(type = Dictionary.class)
-    public final static String PROP_DICTIONARY = "dictionary";
+    String PROP_DICTIONARY = "dictionary";
 
     /**
      * Create the language model
      *
      * @throws java.io.IOException if error occurrs
      */
-    public void allocate() throws IOException;
+    void allocate() throws IOException;
 
     /**
      * Deallocate resources allocated to this language model
      *
      * @throws IOException if error occurrs
      */
-    public void deallocate() throws IOException;
+    void deallocate() throws IOException;
 
     /**
      * Gets the n-gram probability of the word sequence represented by the word
@@ -74,7 +74,7 @@ public interface LanguageModel extends Configurable {
      * @param wordSequence the wordSequence
      * @return the probability of the word sequence in log base
      */
-    public float getProbability(WordSequence wordSequence);
+    float getProbability(WordSequence wordSequence);
 
     /**
      * Gets the smear term for the given wordSequence. Used in
@@ -84,24 +84,24 @@ public interface LanguageModel extends Configurable {
      * @param wordSequence the word sequence
      * @return the smear term associated with this word sequence
      */
-    public float getSmear(WordSequence wordSequence);
+    float getSmear(WordSequence wordSequence);
 
     /**
      * Returns the set of words in the language model. The set is unmodifiable.
      *
      * @return the unmodifiable set of words
      */
-    public Set<String> getVocabulary();
+    Set<String> getVocabulary();
 
     /**
      * Returns the maximum depth of the language model
      *
      * @return the maximum depth of the language model
      */
-    public int getMaxDepth();
+    int getMaxDepth();
 
     /**
      * Called on utterance end to clear cache if needed
      */
-    public void onUtteranceEnd();
+    void onUtteranceEnd();
 }

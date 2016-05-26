@@ -118,8 +118,8 @@ public class SpeechMarker extends BaseDataProcessor {
         startSpeechFrames = startSpeechTime / 10;
         endSilenceFrames = endSilenceTime / 10;
         speechLeaderFrames = speechLeader / 10;
-        this.inputQueue = new LinkedList<Data>();
-        this.outputQueue = new LinkedList<Data>();
+        this.inputQueue = new LinkedList<>();
+        this.outputQueue = new LinkedList<>();
     }
 
     /**

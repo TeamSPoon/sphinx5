@@ -26,37 +26,37 @@ import java.io.IOException;
 public interface Dictionary extends Configurable {
 
     /** Spelling of the sentence start word. */
-    public static final String SENTENCE_START_SPELLING = "<s>";
+    String SENTENCE_START_SPELLING = "<s>";
     /** Spelling of the sentence end word. */
-    public static final String SENTENCE_END_SPELLING = "</s>";
+    String SENTENCE_END_SPELLING = "</s>";
     /** Spelling of the 'word' that marks a silence */
-    public static final String SILENCE_SPELLING = "<sil>";
+    String SILENCE_SPELLING = "<sil>";
 
     /** The property for the dictionary file path. */
     @S4String
-    public static final String PROP_DICTIONARY = "dictionaryPath";
+    String PROP_DICTIONARY = "dictionaryPath";
 
     /** The property for the g2p model file path. */
     @S4String(defaultValue = "")
-    public static final String PROP_G2P_MODEL_PATH = "g2pModelPath";
+    String PROP_G2P_MODEL_PATH = "g2pModelPath";
 
     /** The property for the g2p model file path. */
     @S4Integer(defaultValue = 1)
-    public static final String PROP_G2P_MAX_PRONUNCIATIONS = "g2pMaxPron";
+    String PROP_G2P_MAX_PRONUNCIATIONS = "g2pMaxPron";
 
     /** The property for the filler dictionary file path. */
     @S4String
-    public static final String PROP_FILLER_DICTIONARY = "fillerPath";
+    String PROP_FILLER_DICTIONARY = "fillerPath";
     /**
      * The property that specifies the word to substitute when a lookup fails to find the word in the
      * dictionary. If this is not set, no substitute is performed.
      */
     @S4String(mandatory = false)
-    public static final String PROP_WORD_REPLACEMENT = "wordReplacement";
+    String PROP_WORD_REPLACEMENT = "wordReplacement";
 
     /** The property that defines the name of the unit manager that is used to convert strings to Unit objects */
     @S4Component(type = UnitManager.class, defaultClass = UnitManager.class)
-    public static final String PROP_UNIT_MANAGER = "unitManager";
+    String PROP_UNIT_MANAGER = "unitManager";
 
     /**
      * The property for the custom dictionary file paths. This addenda property points to a possibly
@@ -75,7 +75,7 @@ public interface Dictionary extends Configurable {
      * </pre>
      */
     @S4String(mandatory = false)
-    public static final String PROP_ADDENDA = "addenda";
+    String PROP_ADDENDA = "addenda";
 
     /**
      * Returns a Word object based on the spelling and its classification. The behavior of this method is also affected
@@ -85,7 +85,7 @@ public interface Dictionary extends Configurable {
      * @return a Word object
      * @see edu.cmu.sphinx.linguist.dictionary.Pronunciation
      */
-    public Word getWord(String text);
+    Word getWord(String text);
 
 
     /**
@@ -93,7 +93,7 @@ public interface Dictionary extends Configurable {
      *
      * @return the sentence start word
      */
-    public Word getSentenceStartWord();
+    Word getSentenceStartWord();
 
 
     /**
@@ -101,7 +101,7 @@ public interface Dictionary extends Configurable {
      *
      * @return the sentence end word
      */
-    public Word getSentenceEndWord();
+    Word getSentenceEndWord();
 
 
     /**
@@ -109,14 +109,14 @@ public interface Dictionary extends Configurable {
      *
      * @return the silence word
      */
-    public Word getSilenceWord();
+    Word getSilenceWord();
 
     /**
      * Gets the set of all filler words in the dictionary
      *
      * @return an array (possibly empty) of all filler words
      */
-    public Word[] getFillerWords();
+    Word[] getFillerWords();
 
 
     /**
@@ -124,9 +124,9 @@ public interface Dictionary extends Configurable {
      *
      * @throws IOException if there is trouble loading the dictionary
      */
-    public void allocate() throws IOException;
+    void allocate() throws IOException;
 
 
     /** Deallocates the dictionary */
-    public void deallocate();
+    void deallocate();
 }

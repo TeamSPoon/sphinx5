@@ -46,7 +46,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         super.newProperties(ps);
         this.frontEnd = (BaseDataProcessor) ps.getComponent(FEATURE_FRONTEND);
         this.scoreNormalizer = (ScoreNormalizer) ps.getComponent(SCORE_NORMALIZER);
-        storedData = new LinkedList<Data>();
+        storedData = new LinkedList<>();
     }
 
     /**
@@ -61,7 +61,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         initLogger();
         this.frontEnd = frontEnd;
         this.scoreNormalizer = scoreNormalizer;
-        storedData = new LinkedList<Data>();
+        storedData = new LinkedList<>();
     }
 
     public SimpleAcousticScorer() {

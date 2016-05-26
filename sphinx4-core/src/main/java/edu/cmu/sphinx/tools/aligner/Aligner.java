@@ -34,8 +34,6 @@ import edu.cmu.sphinx.result.WordResult;
  */
 public class Aligner {
 
-    private static int MIN_FILLER_LENGTH = 200;
-
     /**
      * @param args acoustic model, dictionary, audio file, text
      * @throws Exception if error occurs
@@ -51,10 +49,11 @@ public class Aligner {
     {
         System.err.println(results.size());
 
-        List<List<WordResult>> utts = new ArrayList<List<WordResult>>();
+        List<List<WordResult>> utts = new ArrayList<>();
         List<WordResult> currentUtt = null;
         int fillerLength = 0;
 
+        int MIN_FILLER_LENGTH = 200;
         for (WordResult result : results) {
             if (result.isFiller()) {
                 fillerLength += result.getTimeFrame().length(); 
@@ -67,7 +66,7 @@ public class Aligner {
             } else {
                 fillerLength = 0;
                 if (currentUtt == null)
-                    currentUtt = new ArrayList<WordResult>();
+                    currentUtt = new ArrayList<>();
 
                 currentUtt.add(result);
             }
@@ -92,7 +91,7 @@ public class Aligner {
             String[] basename = inFile.getName().split("\\.wav$");
             String uttId = String.format("%03d0", count);
             String outPath = String.format("%s-%s.wav", basename[0], uttId); 
-            System.out.println("(" + uttId + ")");
+            System.out.println('(' + uttId + ")");
             count++;
 
             dumpStreamChunk(inFile, outPath, startFrame - MIN_FILLER_LENGTH,

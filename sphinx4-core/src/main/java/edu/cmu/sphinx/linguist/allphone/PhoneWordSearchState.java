@@ -19,7 +19,7 @@ public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements
     }
     
     public SearchStateArc[] getSuccessors() {
-        ArrayList<SearchStateArc> result = new ArrayList<SearchStateArc>();
+        ArrayList<SearchStateArc> result = new ArrayList<>();
         Unit rc = UnitManager.SILENCE;
         Unit base = unit.getBaseUnit();
         if (unit.isContextDependent())

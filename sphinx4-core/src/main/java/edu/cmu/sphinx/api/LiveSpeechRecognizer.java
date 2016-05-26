@@ -32,7 +32,7 @@ public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
     public LiveSpeechRecognizer(Configuration configuration) throws IOException
     {
         super(configuration);
-        microphone = speechSourceProvider.getMicrophone();
+        microphone = SpeechSourceProvider.getMicrophone();
         context.getInstance(StreamDataSource.class)
             .setInputStream(microphone.getStream());
     }

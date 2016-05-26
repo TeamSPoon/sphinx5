@@ -13,6 +13,7 @@ package edu.cmu.sphinx.alignment.tokenizer;
 import java.io.*;
 import java.net.URL;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -204,14 +205,14 @@ public class DecisionTree {
         out.close();
     }
 
-    protected String dumpDotNodeColor(Node n) {
+    protected static String dumpDotNodeColor(Node n) {
         if (n instanceof LeafNode) {
             return "green";
         }
         return "red";
     }
 
-    protected String dumpDotNodeShape(Node n) {
+    protected static String dumpDotNodeShape(Node n) {
         return "box";
     }
 
@@ -224,15 +225,19 @@ public class DecisionTree {
     protected void parseAndAdd(String line) {
         StringTokenizer tokenizer = new StringTokenizer(line, " ");
         String type = tokenizer.nextToken();
-        if (type.equals(LEAF) || type.equals(NODE)) {
-            cart[curNode] = getNode(type, tokenizer, curNode);
-            cart[curNode].setCreationLine(line);
-            curNode++;
-        } else if (type.equals(TOTAL)) {
-            cart = new Node[Integer.parseInt(tokenizer.nextToken())];
-            curNode = 0;
-        } else {
-            throw new Error("Invalid CART type: " + type);
+        switch (type) {
+            case LEAF:
+            case NODE:
+                cart[curNode] = getNode(type, tokenizer, curNode);
+                cart[curNode].setCreationLine(line);
+                curNode++;
+                break;
+            case TOTAL:
+                cart = new Node[Integer.parseInt(tokenizer.nextToken())];
+                curNode = 0;
+                break;
+            default:
+                throw new Error("Invalid CART type: " + type);
         }
     }
 
@@ -245,8 +250,8 @@ public class DecisionTree {
      *
      * @return the node
      */
-    protected Node getNode(String type, StringTokenizer tokenizer,
-            int currentNode) {
+    protected static Node getNode(String type, StringTokenizer tokenizer,
+                                  int currentNode) {
         if (type.equals(NODE)) {
             String feature = tokenizer.nextToken();
             String operand = tokenizer.nextToken();
@@ -273,28 +278,29 @@ public class DecisionTree {
      *
      * @return the value
      */
-    protected Object parseValue(String string) {
-        int openParen = string.indexOf("(");
+    protected static Object parseValue(String string) {
+        int openParen = string.indexOf('(');
         String type = string.substring(0, openParen);
         String value = string.substring(openParen + 1, string.length() - 1);
-        if (type.equals("String")) {
-            return value;
-        } else if (type.equals("Float")) {
-            return new Float(Float.parseFloat(value));
-        } else if (type.equals("Integer")) {
-            return new Integer(Integer.parseInt(value));
-        } else if (type.equals("List")) {
-            StringTokenizer tok = new StringTokenizer(value, ",");
-            int size = tok.countTokens();
+        switch (type) {
+            case "String":
+                return value;
+            case "Float":
+                return Float.parseFloat(value);
+            case "Integer":
+                return Integer.parseInt(value);
+            case "List":
+                StringTokenizer tok = new StringTokenizer(value, ",");
+                int size = tok.countTokens();
 
-            int[] values = new int[size];
-            for (int i = 0; i < size; i++) {
-                float fval = Float.parseFloat(tok.nextToken());
-                values[i] = Math.round(fval);
-            }
-            return values;
-        } else {
-            throw new Error("Unknown type: " + type);
+                int[] values = new int[size];
+                for (int i = 0; i < size; i++) {
+                    float fval = Float.parseFloat(tok.nextToken());
+                    values[i] = Math.round(fval);
+                }
+                return values;
+            default:
+                throw new Error("Unknown type: " + type);
         }
     }
 
@@ -313,8 +319,10 @@ public class DecisionTree {
             decision = (DecisionNode) cart[nodeIndex];
             nodeIndex = decision.getNextNode(item);
         }
-        logger.fine("LEAF " + cart[nodeIndex].getValue());
-        return ((LeafNode) cart[nodeIndex]).getValue();
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("LEAF " + cart[nodeIndex].getValue());
+        }
+        return cart[nodeIndex].getValue();
     }
 
     /**
@@ -347,14 +355,14 @@ public class DecisionTree {
             if (value == null) {
                 return "NULL()";
             } else if (value instanceof String) {
-                return "String(" + value.toString() + ")";
+                return "String(" + value.toString() + ')';
             } else if (value instanceof Float) {
-                return "Float(" + value.toString() + ")";
+                return "Float(" + value.toString() + ')';
             } else if (value instanceof Integer) {
-                return "Integer(" + value.toString() + ")";
+                return "Integer(" + value.toString() + ')';
             } else {
-                return value.getClass().toString() + "(" + value.toString()
-                        + ")";
+                return value.getClass().toString() + '(' + value.toString()
+                        + ')';
             }
         }
 
@@ -523,7 +531,9 @@ public class DecisionTree {
             } else {
                 ret = qfalse;
             }
-            logger.fine(trace(val, yes, ret));
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine(trace(val, yes, ret));
+            }
             return ret;
         }
 
@@ -537,8 +547,8 @@ public class DecisionTree {
          * Get a string representation of this Node.
          */
         public String toString() {
-            return "NODE " + getFeature() + " " + comparisonType + " "
-                    + getValueString() + " " + Integer.toString(qtrue) + " "
+            return "NODE " + getFeature() + ' ' + comparisonType + " "
+                    + getValueString() + ' ' + Integer.toString(qtrue) + " "
                     + Integer.toString(qfalse);
         }
     }
@@ -575,11 +585,11 @@ public class DecisionTree {
          * Get a string representation of this Node.
          */
         public String toString() {
-            StringBuffer buf =
-                    new StringBuffer(NODE + " " + getFeature() + " "
+            StringBuilder buf =
+                    new StringBuilder(NODE + ' ' + getFeature() + " "
                             + OPERAND_MATCHES);
-            buf.append(getValueString() + " ");
-            buf.append(Integer.toString(qtrue) + " ");
+            buf.append(getValueString()).append(' ');
+            buf.append(Integer.toString(qtrue)).append(' ');
             buf.append(Integer.toString(qfalse));
             return buf.toString();
         }

@@ -38,7 +38,7 @@ public class OVector implements Cloneable, Serializable {
 
     /** @return the dimension of this observation. */
     public int dimension() {
-        return getValues().length;
+        return values.length;
     }
 
 

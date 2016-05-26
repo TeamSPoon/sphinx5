@@ -25,19 +25,19 @@ public interface Utterance {
      * @param isExact       the default flag
      * @param wordSeparator the word separator characters
      */
-    public void add(String transcript, Dictionary dictionary,
-                    boolean isExact, String wordSeparator);
+    void add(String transcript, Dictionary dictionary,
+             boolean isExact, String wordSeparator);
 
 
     /** Gets the transcript iterator. */
-    public void startTranscriptIterator();
+    void startTranscriptIterator();
 
 
     /** @return whether there is a next transcript. */
-    public boolean hasMoreTranscripts();
+    boolean hasMoreTranscripts();
 
 
     /** @return next transcript. */
-    public Transcript nextTranscript();
+    Transcript nextTranscript();
 
 }

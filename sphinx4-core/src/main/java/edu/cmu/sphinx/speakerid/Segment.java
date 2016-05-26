@@ -60,7 +60,7 @@ public class Segment implements Comparable<Segment> {
 
     @Override
     public String toString() {
-        return this.startTime + " " + this.length + "\n";
+        return this.startTime + " " + this.length + '\n';
     }
 
     public int compareTo(Segment ref) {

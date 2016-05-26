@@ -28,7 +28,6 @@ public class LatticeRescorer {
     protected final Lattice lattice;
     protected final LanguageModel model;
     private int depth;
-    private float languageWeigth = 8.0f;
 
     /**
      * Create a new Lattice optimizer
@@ -47,20 +46,21 @@ public class LatticeRescorer {
         for (Edge edge : lattice.edges) {
 
             float maxProb = LogMath.LOG_ZERO;
-            if (lattice.isFillerNode(edge.getToNode())) {
+            if (Lattice.isFillerNode(edge.getToNode())) {
                 edge.setLMScore(maxProb);
                 continue;
             }
 
             List<String> paths = allPathsTo("", edge, depth);
             for (String path : paths) {
-                List<Word> wordList = new LinkedList<Word>();
+                List<Word> wordList = new LinkedList<>();
                 for (String pathWord : path.split(" ")) {
                     wordList.add(new Word(pathWord, null, false));
                 }
                 wordList.add(edge.getToNode().getWord());
 
                 WordSequence seq = new WordSequence(wordList);
+                float languageWeigth = 8.0f;
                 float prob = model.getProbability(seq) * languageWeigth;
                 if (maxProb < prob)
                     maxProb = prob;
@@ -70,9 +70,9 @@ public class LatticeRescorer {
     }
 
     protected List<String> allPathsTo(String path, Edge edge, int currentDepth) {
-        List<String> l = new LinkedList<String>();
+        List<String> l = new LinkedList<>();
         String p = path;
-        boolean isFiller = lattice.isFillerNode(edge.getFromNode());
+        boolean isFiller = Lattice.isFillerNode(edge.getFromNode());
         if (!isFiller)
             p = edge.getFromNode().getWord().toString() + ' ' + p;
 

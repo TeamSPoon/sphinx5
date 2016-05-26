@@ -24,7 +24,7 @@ public interface BatchManager {
      *
      * @throws IOException if an error occurs while processing the batch file
      */
-    public void start() throws IOException;
+    void start() throws IOException;
 
 
     /**
@@ -33,7 +33,7 @@ public interface BatchManager {
      * @return the next available batch item
      * @throws IOException if an error occurs while processing the batch file
      */
-    public BatchItem getNextItem() throws IOException;
+    BatchItem getNextItem() throws IOException;
 
 
     /**
@@ -41,7 +41,7 @@ public interface BatchManager {
      *
      * @throws IOException if an error occurs while processing the batch file
      */
-    public void stop() throws IOException;
+    void stop() throws IOException;
 
 
     /**
@@ -49,5 +49,5 @@ public interface BatchManager {
      *
      * @return the filename
      */
-    public String getFilename();
+    String getFilename();
 }

@@ -95,7 +95,7 @@ public class JSGFRuleAlternatives extends JSGFRule {
 				sb.append(" | ");
 
 			if (weights != null)
-				sb.append("/" + weights.get(i) + "/ ");
+				sb.append("/").append(weights.get(i)).append("/ ");
 
 			JSGFRule r = rules.get(i);
 			if (rules.get(i) instanceof JSGFRuleAlternatives)

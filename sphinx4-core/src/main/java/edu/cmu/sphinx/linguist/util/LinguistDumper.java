@@ -142,8 +142,8 @@ public class LinguistDumper extends LinguistProcessor {
      * @param startingState the initial state of the search space
      */
     private void dumpSearchGraph(PrintStream out, SearchState startingState) {
-        List<StateLevel> queue = new LinkedList<StateLevel>();
-        Set<String> visitedStates = new HashSet<String>();
+        List<StateLevel> queue = new LinkedList<>();
+        Set<String> visitedStates = new HashSet<>();
         startDump(out);
         queue.add(new StateLevel(startingState, 0));
         while (!queue.isEmpty()) {
@@ -172,8 +172,8 @@ public class LinguistDumper extends LinguistProcessor {
     }
 
 
-    final Cache<SearchState> eqStates = new Cache<SearchState>();
-    final Map<String, SearchState> eqSigs = new HashMap<String, SearchState>();
+    final Cache<SearchState> eqStates = new Cache<>();
+    final Map<String, SearchState> eqSigs = new HashMap<>();
 
 
     /**
@@ -281,7 +281,7 @@ class StateLevel {
      * @param state the state of interest
      * @return a label for the type of state (one of Unit, Word, HMM or other
      */
-    public String getTypeLabel(SearchState state) {
+    public static String getTypeLabel(SearchState state) {
         if (state instanceof UnitSearchState) {
             return "Unit";
         }

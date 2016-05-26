@@ -32,7 +32,7 @@ public class Tester {
     public static ArrayList<float[]> generateDistinctSpeakers(int vectorSize, int vectorsCount,
             int speakersCount) {
         Random rd = new Random();
-        ArrayList<float[]> ret = new ArrayList<float[]>();
+        ArrayList<float[]> ret = new ArrayList<>();
         float[] dummy = new float[vectorSize];
         for (int i = 0; i < speakersCount; i++) {
             for (int j = 0; j < vectorSize; j++)
@@ -70,7 +70,7 @@ public class Tester {
             System.out.print("Speaker " + (++idx) + ": ");
             ArrayList<Segment> segments = spk.getSpeakerIntervals();
             for (Segment seg : segments)
-                System.out.print("[" + time(seg.getStartTime()) + " " + time(seg.getLength()) + "]");
+                System.out.print('[' + time(seg.getStartTime()) + " " + time(seg.getLength()) + "]");
             System.out.println();
         }
     }
@@ -92,8 +92,8 @@ public class Tester {
             idx ++;
             ArrayList<Segment> segments = spk.getSpeakerIntervals();
             for (Segment seg : segments)
-                fr.write(fileName + " " + 1 + " " + seg.getStartTime() / 10 + " " + seg.getLength() / 10
-                        + "U U U Speaker" + idx + "\n");
+                fr.write(fileName + ' ' + 1 + " " + seg.getStartTime() / 10 + " " + seg.getLength() / 10
+                        + "U U U Speaker" + idx + '\n');
         }
         fr.close();
     }
@@ -129,7 +129,7 @@ public class Tester {
      */
     public static void testRepeatedSpeakerIdentification(int vectorSize, int vectorsCount, int speakersCount,
             int repeatFactor) {
-        ArrayList<float[]> lst = new ArrayList<float[]>();
+        ArrayList<float[]> lst = new ArrayList<>();
         ArrayList<float[]> aux = generateDistinctSpeakers(vectorSize, vectorsCount, speakersCount);
         for (int i = 0; i < repeatFactor; i++)
             lst.addAll(aux);

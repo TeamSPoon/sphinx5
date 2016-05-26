@@ -25,9 +25,6 @@ import edu.cmu.sphinx.util.LogMath;
 /** This class builds an HMM from a transcript, at increasing levels of details. */
 public class BuildTranscriptHMM {
 
-    private Graph wordGraph;
-    private Graph phonemeGraph;
-    private Graph contextDependentPhoneGraph;
     private Graph hmmGraph;
     private TrainerDictionary dictionary;
     private AcousticModel acousticModel;
@@ -48,12 +45,11 @@ public class BuildTranscriptHMM {
 
         this.acousticModel = acousticModel;
         this.unitManager = unitManager;
-        wordGraph = buildWordGraph(transcript);
+        Graph wordGraph = buildWordGraph(transcript);
         assert wordGraph.validate() : "Word graph not validated";
-        phonemeGraph = buildPhonemeGraph(wordGraph);
+        Graph phonemeGraph = buildPhonemeGraph(wordGraph);
         assert phonemeGraph.validate() : "Phone graph not validated";
-        contextDependentPhoneGraph =
-                buildContextDependentPhonemeGraph(phonemeGraph);
+        Graph contextDependentPhoneGraph = buildContextDependentPhonemeGraph(phonemeGraph);
         assert contextDependentPhoneGraph.validate() :
                 "Context dependent graph not validated";
         hmmGraph = buildHMMGraph(contextDependentPhoneGraph);
@@ -187,7 +183,7 @@ public class BuildTranscriptHMM {
      * @param phonemeGraph the phoneme graph
      * @return a context dependendent phoneme graph
      */
-    public Graph buildContextDependentPhonemeGraph(Graph phonemeGraph) {
+    public static Graph buildContextDependentPhonemeGraph(Graph phonemeGraph) {
         // TODO: Dummy stub for now - return a copy of the original graph
         Graph cdGraph = new Graph();
         cdGraph.copyGraph(phonemeGraph);
@@ -234,7 +230,7 @@ public class BuildTranscriptHMM {
      * @param hmm the HMM
      * @return the graph
      */
-    private Graph buildModelGraph(SenoneHMM hmm) {
+    private static Graph buildModelGraph(SenoneHMM hmm) {
         Graph graph = new Graph();
         Node prevNode;
         Node stateNode = null;

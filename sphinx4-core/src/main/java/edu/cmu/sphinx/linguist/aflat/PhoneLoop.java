@@ -32,7 +32,6 @@ public class PhoneLoop {
     private final float logPhoneInsertionProbability;
     private final static SearchStateArc[] EMPTY_ARCS = new SearchStateArc[0];
     private final FirstBranchState fbs;
-    private final LastBranchState lbs;
     private final UnknownWordState uws;
     private final SearchStateArc[] lbsArcSet;
     private final SearchStateArc[] toGrammarSearchState;
@@ -54,7 +53,7 @@ public class PhoneLoop {
         this.logPhoneInsertionProbability = logPhoneInsertionProbability;
         this.toGrammarSearchState = toGrammarSearchState;
         fbs = new FirstBranchState();
-        lbs = new LastBranchState();
+        LastBranchState lbs = new LastBranchState();
         uws = new UnknownWordState();
         lbsArcSet = new SearchStateArc[1];
         lbsArcSet[0] = lbs;
@@ -158,7 +157,7 @@ public class PhoneLoop {
 
         /** Creates the first branch state */
         FirstBranchState() {
-            List<OogHMM> successorList = new ArrayList<OogHMM>();
+            List<OogHMM> successorList = new ArrayList<>();
             for (Iterator<Unit> i = acousticModel.getContextIndependentUnitIterator(); i.hasNext();) {
                 Unit unit = i.next();
             	if(!unit.isFiller()) {

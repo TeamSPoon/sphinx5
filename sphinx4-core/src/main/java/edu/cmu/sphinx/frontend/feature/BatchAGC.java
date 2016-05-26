@@ -42,7 +42,7 @@ public class BatchAGC extends BaseDataProcessor {
     @Override
     public void initialize() {
         super.initialize();
-        cepstraList = new LinkedList<Data>();
+        cepstraList = new LinkedList<>();
     }
 
     /**

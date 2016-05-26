@@ -28,15 +28,13 @@ public interface Scoreable extends Data {
      * actually return the Scoreable with the <b>highest</b> score,
      * in contrast to the natural meaning of the word "min".   
      */
-    Comparator<Scoreable> COMPARATOR = new Comparator<Scoreable>() {
-        public int compare(Scoreable t1, Scoreable t2) {
-            if (t1.getScore() > t2.getScore()) {
-                return -1;
-            } else if (t1.getScore() == t2.getScore()) {
-                return 0;
-            } else {
-                return 1;
-            }
+    Comparator<Scoreable> COMPARATOR = (t1, t2) -> {
+        if (t1.getScore() > t2.getScore()) {
+            return -1;
+        } else if (t1.getScore() == t2.getScore()) {
+            return 0;
+        } else {
+            return 1;
         }
     };
 
@@ -46,7 +44,7 @@ public interface Scoreable extends Data {
      * @param data     the data to be scored
      * @return the score for the data
      */
-    public float calculateScore(Data data);
+    float calculateScore(Data data);
 
 
     /**
@@ -54,7 +52,7 @@ public interface Scoreable extends Data {
      *
      * @return the score
      */
-    public float getScore();
+    float getScore();
 
 
     /**
@@ -63,6 +61,6 @@ public interface Scoreable extends Data {
      * @param maxScore maximum score to use for norm
      * @return the normalized score
      */
-    public float normalizeScore(float maxScore);
+    float normalizeScore(float maxScore);
 
 }

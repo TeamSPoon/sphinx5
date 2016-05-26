@@ -124,7 +124,7 @@ public class Sphinx3Saver implements Saver {
         mixtureWeights = loader.getMixtureWeights();
         matrixPool = loader.getTransitionMatrixPool();
         senonePool = loader.getSenonePool();
-        contextIndependentUnits = new LinkedHashMap<String, Unit> ();
+        contextIndependentUnits = new LinkedHashMap<>();
 
         // TODO: read checksum from props;
         checksum = "no";
@@ -209,7 +209,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     private void saveDensityFileAscii(Pool<float[]> pool, String path, boolean append)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         logger.info("Saving density file to: ");
         logger.info(path);
 
@@ -258,7 +258,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     private void saveDensityFileBinary(Pool<float[]> pool, String path, boolean append)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         Properties props = new Properties();
         int checkSum = 0;
 
@@ -337,8 +337,8 @@ public class Sphinx3Saver implements Saver {
 
         writeWord(dos, "s3\n");
 
-        for (Enumeration<Object> e = props.keys(); e.hasMoreElements();) {
-            String name = (String) e.nextElement();
+        for (Iterator<Object> iterator = props.keySet().iterator(); iterator.hasNext();) {
+            String name = (String) iterator.next();
             String value = props.getProperty(name);
             writeWord(dos, name + ' ' + value + '\n');
         }
@@ -356,7 +356,7 @@ public class Sphinx3Saver implements Saver {
      * @param word the next word
      * @throws IOException on error
      */
-    void writeWord(DataOutputStream dos, String word) throws IOException {
+    static void writeWord(DataOutputStream dos, String word) throws IOException {
         dos.writeBytes(word);
     }
 
@@ -417,7 +417,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     private void saveHMMPool(boolean useCDUnits, OutputStream outputStream, String path)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         logger.info("Saving HMM file to: ");
         logger.info(path);
 
@@ -558,7 +558,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     private void saveMixtureWeightsAscii(GaussianWeights mixtureWeights, String path, boolean append)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         logger.info("Saving mixture weights to: ");
         logger.info(path);
 
@@ -578,7 +578,7 @@ public class Sphinx3Saver implements Saver {
 
         for (int i = 0; i < numStates; i++) {
             for (int j = 0; j < numStreams; j++) {
-                pw.print("mixw [" + i + " " + j + "] ");
+                pw.print("mixw [" + i + ' ' + j + "] ");
                 float[] mixtureWeight = new float[numGaussiansPerState];
                 float[] logMixtureWeight = new float[numGaussiansPerState];
                 for (int k = 0; k < numGaussiansPerState; k++)
@@ -607,7 +607,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     private void saveMixtureWeightsBinary(GaussianWeights mixtureWeights, String path, boolean append)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         logger.info("Saving mixture weights to: ");
         logger.info(path);
 
@@ -661,7 +661,7 @@ public class Sphinx3Saver implements Saver {
      * @throws IOException           if an error occurs while saving the data
      */
     protected void saveTransitionMatricesAscii(Pool<float[][]> pool, String path, boolean append)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         OutputStream outputStream = StreamFactory.getOutputStream(location, path, append);
         if (outputStream == null) {
             throw new IOException("Error trying to write file " + location + path);

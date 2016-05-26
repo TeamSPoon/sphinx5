@@ -74,11 +74,7 @@ public class CepstrumPanel extends JPanel {
         audio = audioData;
         this.frontEnd = frontEnd;
         this.dataSource = dataSource;
-        audio.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                computeCepstrum();
-            }
-        });
+        audio.addChangeListener(event -> computeCepstrum());
     }
 
     static final int HSCALE = 10;
@@ -92,7 +88,7 @@ public class CepstrumPanel extends JPanel {
             /* Run through all the spectra one at a time and convert
              * them to an log intensity value.
              */
-            ArrayList<float[]> intensitiesList = new ArrayList<float[]>();
+            ArrayList<float[]> intensitiesList = new ArrayList<>();
             float maxIntensity[] = new float[100];
             Arrays.fill(maxIntensity, Float.MIN_VALUE);
             Data spectrum = frontEnd.getData();

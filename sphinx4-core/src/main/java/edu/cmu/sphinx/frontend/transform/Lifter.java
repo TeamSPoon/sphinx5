@@ -101,7 +101,7 @@ public class Lifter extends BaseDataProcessor {
     private void computeLifterWeights() {
         lifterWeights = new double[cepstrumSize];
         for (int i = 0; i < cepstrumSize; i++) {
-            lifterWeights[i] = 1 + lifterValue / 2
+            lifterWeights[i] = 1f + lifterValue / 2f
                     * Math.sin(i * Math.PI / lifterValue);
         }
     }

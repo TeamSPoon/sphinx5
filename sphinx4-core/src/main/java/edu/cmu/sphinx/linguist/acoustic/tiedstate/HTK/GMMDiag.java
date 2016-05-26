@@ -161,12 +161,12 @@ public class GMMDiag {
 			PrintWriter fout = new PrintWriter(new FileWriter(nomFich));
 			fout.println("~o");
 			fout.println("<HMMSETID> tree");
-			fout.println("<STREAMINFO> 1 " + getNcoefs());
-			fout.println("<VECSIZE> " + getNcoefs() + "<NULLD>" + parmKind
+			fout.println("<STREAMINFO> 1 " + ncoefs);
+			fout.println("<VECSIZE> " + ncoefs + "<NULLD>" + parmKind
 					+ "<DIAGC>");
 			fout.println("~r \"rtree_1\"");
 			fout.println("<REGTREE> 1");
-			fout.println("<TNODE> 1 " + getNgauss());
+			fout.println("<TNODE> 1 " + ngauss);
 			return fout;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -175,24 +175,24 @@ public class GMMDiag {
 	}
 
 	public void saveHTKState(PrintWriter fout) {
-		fout.println("<NUMMIXES> " + getNgauss());
-		for (int i = 1; i <= getNgauss(); i++) {
+		fout.println("<NUMMIXES> " + ngauss);
+		for (int i = 1; i <= ngauss; i++) {
 			fout.println("<MIXTURE> " + i + ' ' + getWeight(i - 1));
 			fout.println("<RCLASS> 1");
-			fout.println("<MEAN> " + getNcoefs());
-			for (int j = 0; j < getNcoefs(); j++) {
+			fout.println("<MEAN> " + ncoefs);
+			for (int j = 0; j < ncoefs; j++) {
 				fout.print(getMean(i - 1, j) + " ");
 			}
 			fout.println();
-			fout.println("<VARIANCE> " + getNcoefs());
-			for (int j = 0; j < getNcoefs(); j++) {
+			fout.println("<VARIANCE> " + ncoefs);
+			for (int j = 0; j < ncoefs; j++) {
 				fout.print(getVar(i - 1, j) + " ");
 			}
 			fout.println();
 		}
 	}
 
-	public void saveHTKtailer(int nstates, PrintWriter fout) {
+	public static void saveHTKtailer(int nstates, PrintWriter fout) {
 		fout.println("<TRANSP> " + nstates);
 		// First state is non emitting
 		for (int j = 0; j < nstates; j++)
@@ -215,27 +215,27 @@ public class GMMDiag {
 			PrintWriter fout = new PrintWriter(new FileWriter(nomFich));
 			fout.println("~o");
 			fout.println("<HMMSETID> tree");
-			fout.println("<STREAMINFO> 1 " + getNcoefs());
-			fout.println("<VECSIZE> " + getNcoefs() + "<NULLD>" + parmKind
+			fout.println("<STREAMINFO> 1 " + ncoefs);
+			fout.println("<VECSIZE> " + ncoefs + "<NULLD>" + parmKind
 					+ "<DIAGC>");
 			fout.println("~r \"rtree_1\"");
 			fout.println("<REGTREE> 1");
-			fout.println("<TNODE> 1 " + getNgauss());
+			fout.println("<TNODE> 1 " + ngauss);
 			fout.println("~h \"" + nomHMM + '\"');
 			fout.println("<BEGINHMM>");
 			fout.println("<NUMSTATES> 3");
 			fout.println("<STATE> 2");
-			fout.println("<NUMMIXES> " + getNgauss());
-			for (int i = 1; i <= getNgauss(); i++) {
+			fout.println("<NUMMIXES> " + ngauss);
+			for (int i = 1; i <= ngauss; i++) {
 				fout.println("<MIXTURE> " + i + ' ' + getWeight(i - 1));
 				fout.println("<RCLASS> 1");
-				fout.println("<MEAN> " + getNcoefs());
-				for (int j = 0; j < getNcoefs(); j++) {
+				fout.println("<MEAN> " + ncoefs);
+				for (int j = 0; j < ncoefs; j++) {
 					fout.print(getMean(i - 1, j) + " ");
 				}
 				fout.println();
-				fout.println("<VARIANCE> " + getNcoefs());
-				for (int j = 0; j < getNcoefs(); j++) {
+				fout.println("<VARIANCE> " + ncoefs);
+				for (int j = 0; j < ncoefs; j++) {
 					fout.print(getVar(i - 1, j) + " ");
 				}
 				fout.println();
@@ -451,7 +451,7 @@ public class GMMDiag {
 		for (boolean flag : mask)
 			if (flag)
 				nc++;
-		GMMDiag g = new GMMDiag(getNgauss(), nc);
+		GMMDiag g = new GMMDiag(ngauss, nc);
 		int curc = 0;
 		for (int j = 0; j < ncoefs; j++) {
 			if (mask[j]) {
@@ -476,17 +476,17 @@ public class GMMDiag {
 	 * @return gaussian
 	 */
 	public GMMDiag merge(GMMDiag g, float w1) {
-		GMMDiag res = new GMMDiag(getNgauss() + g.getNgauss(), getNcoefs());
-		for (int i = 0; i < getNgauss(); i++) {
-			System.arraycopy(means[i], 0, res.means[i], 0, getNcoefs());
-			System.arraycopy(covar[i], 0, res.covar[i], 0, getNcoefs());
+		GMMDiag res = new GMMDiag(ngauss + g.getNgauss(), getNcoefs());
+		for (int i = 0; i < ngauss; i++) {
+			System.arraycopy(means[i], 0, res.means[i], 0, ncoefs);
+			System.arraycopy(covar[i], 0, res.covar[i], 0, ncoefs);
 			res.setWeight(i, getWeight(i) * w1);
 		}
-		for (int i = 0; i < g.getNgauss(); i++) {
+		for (int i = 0; i < g.ngauss; i++) {
 			System.arraycopy(g.means[i], 0, res.means[ngauss + i], 0,
-					getNcoefs());
+					ncoefs);
 			System.arraycopy(g.covar[i], 0, res.covar[ngauss + i], 0,
-					getNcoefs());
+					ncoefs);
 			res.setWeight(ngauss + i, g.getWeight(i) * (1f - w1));
 		}
 		res.precomputeDistance();
@@ -500,9 +500,9 @@ public class GMMDiag {
 	 * @return gaussian
 	 */
 	public GMMDiag getGauss(int i) {
-		GMMDiag res = new GMMDiag(1, getNcoefs());
-		System.arraycopy(means[i], 0, res.means[0], 0, getNcoefs());
-		System.arraycopy(covar[i], 0, res.covar[0], 0, getNcoefs());
+		GMMDiag res = new GMMDiag(1, ncoefs);
+		System.arraycopy(means[i], 0, res.means[0], 0, ncoefs);
+		System.arraycopy(covar[i], 0, res.covar[0], 0, ncoefs);
 		res.setWeight(0, 1);
 		res.precomputeDistance();
 		return res;
@@ -519,14 +519,14 @@ public class GMMDiag {
 	 * @return if GMMs are equal
 	 */
 	public boolean isEqual(GMMDiag g) {
-		if (getNgauss() != g.getNgauss())
+		if (ngauss != g.getNgauss())
 			return false;
-		if (getNgauss() != g.getNcoefs())
+		if (ngauss != g.getNcoefs())
 			return false;
-		for (int i = 0; i < getNgauss(); i++) {
+		for (int i = 0; i < ngauss; i++) {
 			if (isDiff(getWeight(i), g.getWeight(i)))
 				return false;
-			for (int j = 0; j < getNcoefs(); j++) {
+			for (int j = 0; j < ncoefs; j++) {
 				if (isDiff(getMean(i, j), g.getMean(i, j)))
 					return false;
 				if (isDiff(getVar(i, j), g.getVar(i, j)))
@@ -536,14 +536,14 @@ public class GMMDiag {
 		return true;
 	}
 
-	private boolean isDiff(float a, float b) {
+	private static boolean isDiff(float a, float b) {
         return Math.abs(1 - b / a) > 0.01;
 	}
 
     @Override
     public String toString() {
 		StringBuilder sb = new StringBuilder ();
-		for (int i = 0; i < getNgauss(); i++) {
+		for (int i = 0; i < ngauss; i++) {
 			sb.append(getMean(i, 0)).append(' ').append(getVar(i, 0)).append(
 					'\n');
 		}

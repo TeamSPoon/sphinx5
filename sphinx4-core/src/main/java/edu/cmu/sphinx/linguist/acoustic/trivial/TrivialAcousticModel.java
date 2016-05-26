@@ -37,7 +37,7 @@ public class TrivialAcousticModel implements AcousticModel {
     public final static String RIGHT_CONTEXT_SIZE = "leftContextSize";
 
     private String name;
-    private final Map<Unit, HMM> hmmMap = new HashMap<Unit, HMM>();
+    private final Map<Unit, HMM> hmmMap = new HashMap<>();
     private int leftContextSize;
     private int rightContextSize;
 

@@ -21,7 +21,7 @@ public class JSGFRuleTag extends JSGFRule {
 		setTag(tag);
 	}
 
-	private String escapeTag(String tag) {
+	private static String escapeTag(String tag) {
 		StringBuilder stringBuilder = new StringBuilder(tag);
 
 		if ((tag.indexOf('}') >= 0) || (tag.indexOf('\\') >= 0)
@@ -57,11 +57,11 @@ public class JSGFRuleTag extends JSGFRule {
 
 	@Override
     public String toString() {
-		String str = " {" + escapeTag(tag) + "}";
+		String str = " {" + escapeTag(tag) + '}';
 
 		if ((rule instanceof JSGFRuleToken) || (rule instanceof JSGFRuleName)) {
 			return rule.toString() + str;
 		}
-		return "(" + rule.toString() + ")" + str;
+		return '(' + rule.toString() + ")" + str;
 	}
 }

@@ -21,11 +21,11 @@ public interface UtteranceGraph {
      *
      * @param transcriptGraph the transcript graph to add
      */
-    public void add(Graph transcriptGraph);
+    void add(Graph transcriptGraph);
 
 
     /** @return the size of a graph. This is the number of nodes in a graph. */
-    public int size();
+    int size();
 
 
     /**
@@ -34,7 +34,7 @@ public interface UtteranceGraph {
      * @param index index of item to retun
      * @return the node
      */
-    public Node getNode(int index);
+    Node getNode(int index);
 
 
     /**
@@ -42,7 +42,7 @@ public interface UtteranceGraph {
      *
      * @return the initial node
      */
-    public Node getInitialNode();
+    Node getInitialNode();
 
 
     /**
@@ -50,7 +50,7 @@ public interface UtteranceGraph {
      *
      * @return the final node
      */
-    public Node getFinalNode();
+    Node getFinalNode();
 
 
     /**
@@ -59,7 +59,7 @@ public interface UtteranceGraph {
      * @param node the node we want to compare
      * @return if true, the node is the initial node
      */
-    public boolean isInitialNode(Node node);
+    boolean isInitialNode(Node node);
 
 
     /**
@@ -68,7 +68,7 @@ public interface UtteranceGraph {
      * @param node the node we want to compare
      * @return if true, the node is the final node
      */
-    public boolean isFinalNode(Node node);
+    boolean isFinalNode(Node node);
 
 
     /**
@@ -77,7 +77,7 @@ public interface UtteranceGraph {
      * @param node the node
      * @return the index
      */
-    public int indexOf(Node node);
+    int indexOf(Node node);
 
 
     /**
@@ -86,5 +86,5 @@ public interface UtteranceGraph {
      *
      * @return if true, graph validation passed
      */
-    public boolean validate();
+    boolean validate();
 }

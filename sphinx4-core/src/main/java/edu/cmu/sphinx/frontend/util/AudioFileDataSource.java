@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * An AudioFileDataSource generates a stream of audio data from a given audio file. All required information concerning
@@ -46,7 +47,7 @@ public class AudioFileDataSource extends BaseDataProcessor {
 
     @S4ComponentList(type = Configurable.class)
     public static final String AUDIO_FILE_LISTENERS = "audioFileListners";
-    protected final List<AudioFileProcessListener> fileListeners = new ArrayList<AudioFileProcessListener>();
+    protected final List<AudioFileProcessListener> fileListeners = new ArrayList<>();
 
 
     protected InputStream dataStream;
@@ -180,7 +181,9 @@ public class AudioFileDataSource extends BaseDataProcessor {
         bigEndian = format.isBigEndian();
 
         String s = format.toString();
-        logger.finer("input format is " + s);
+        if (logger.isLoggable(Level.FINER)) {
+            logger.finer("input format is " + s);
+        }
 
         if (format.getSampleSizeInBits() % 8 != 0)
             throw new Error("StreamDataSource: bits per sample must be a multiple of 8.");

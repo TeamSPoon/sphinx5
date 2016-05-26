@@ -29,17 +29,17 @@ public class ClassMap implements Configurable {
     /**
      * Maps class name to class as a Word
      */
-    private Map<String, Word> classVocabulary = new HashMap<String, Word>();
+    private Map<String, Word> classVocabulary = new HashMap<>();
 
     /**
      * Maps a word to it's class and the probability of the word being in this class
      */
-    private Map<String, ClassProbability> wordToClassProbabilities = new HashMap<String, ClassProbability>();
+    private Map<String, ClassProbability> wordToClassProbabilities = new HashMap<>();
 
     /**
      * Maps a class to a set of words that belong to this class
      */
-    private final HashMap<String, Set<String>> classToWord = new HashMap<String, Set<String>>();
+    private final HashMap<String, Set<String>> classToWord = new HashMap<>();
 
     public ClassMap(URL classDefsLocation) {
         this.logger = Logger.getLogger(getClass().getName());
@@ -125,7 +125,7 @@ public class ClassMap implements Configurable {
             float linearProb = Float.parseFloat(st.nextToken());
             String word = st.nextToken();
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine(word + " --> " + className + " " + linearProb);
+                logger.fine(word + " --> " + className + ' ' + linearProb);
             }
             wordToClassProbabilities.put(word,
                     new ClassProbability(className, logMath.linearToLog(linearProb)));
@@ -141,7 +141,7 @@ public class ClassMap implements Configurable {
      * Checks that word probabilities in each class sum to 1.
      */
     private void checkClasses() {
-        Map<String, Float> sums = new HashMap<String, Float>();
+        Map<String, Float> sums = new HashMap<>();
         for (ClassProbability cp : wordToClassProbabilities.values()) {
             Float sum = sums.get(cp.getClassName());
             if (sum == null) {
@@ -165,7 +165,7 @@ public class ClassMap implements Configurable {
     private void addWordInClass(String className, String word) {
         Set<String> words = classToWord.get(className);
         if (words == null) {
-            words = new HashSet<String>();
+            words = new HashSet<>();
             classToWord.put(className, words);
         }
         words.add(word);

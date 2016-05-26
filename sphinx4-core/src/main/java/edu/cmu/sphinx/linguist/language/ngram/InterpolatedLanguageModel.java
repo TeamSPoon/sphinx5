@@ -108,7 +108,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
     public void allocate() throws IOException {
         if (!allocated) {
             allocated = true;
-            vocabulary = new HashSet<String>();
+            vocabulary = new HashSet<>();
             for (LanguageModel model : languageModels) {
                 model.allocate();
                 vocabulary.addAll(model.getVocabulary());

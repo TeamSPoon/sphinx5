@@ -214,7 +214,7 @@ public class HTKLoader implements Loader {
     public void load() throws IOException {
         if (!loaded) {
             hmmManager = new HMMManager();
-            contextIndependentUnits = new LinkedHashMap<String, Unit>();
+            contextIndependentUnits = new LinkedHashMap<>();
             // dummy pools for these elements
             meanTransformationMatrixPool = null;
             meanTransformationVectorPool = null;
@@ -294,7 +294,7 @@ public class HTKLoader implements Loader {
      * @return the senone pool
      */
     private Pool<Senone> createSenonePool(float distFloor, float varianceFloor) {
-        Pool<Senone> pool = new Pool<Senone>("senones");
+        Pool<Senone> pool = new Pool<>("senones");
 
         int numMeans = meansPool.size();
         int numVariances = variancePool.size();
@@ -304,10 +304,12 @@ public class HTKLoader implements Loader {
         int numSenones = mixtureWeights.getStatesNum();
         int whichGaussian = 0;
 
-        logger.fine("NG " + numGaussiansPerSenone);
-        logger.fine("NS " + numSenones);
-        logger.fine("NMNS " + numMeans);
-        logger.fine("NMNS " + numVariances);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("NG " + numGaussiansPerSenone);
+            logger.fine("NS " + numSenones);
+            logger.fine("NMNS " + numMeans);
+            logger.fine("NMNS " + numVariances);
+        }
 
         assert numGaussiansPerSenone > 0;
         assert numVariances == numSenones * numGaussiansPerSenone;
@@ -354,7 +356,7 @@ public class HTKLoader implements Loader {
      * @throws IOException
      *             on error
      */
-    String readWord(DataInputStream dis) throws IOException {
+    static String readWord(DataInputStream dis) throws IOException {
         StringBuilder sb = new StringBuilder();
         char c;
         // skip leading whitespace
@@ -378,7 +380,7 @@ public class HTKLoader implements Loader {
      * @throws IOException
      *             if an error occurs
      */
-    private char readChar(DataInputStream dis) throws IOException {
+    private static char readChar(DataInputStream dis) throws IOException {
         return (char) dis.readByte();
     }
 
@@ -451,7 +453,7 @@ public class HTKLoader implements Loader {
      *             if an error occurs while loading the data
      */
     protected void loadHMMPool(boolean useCDUnits, HTKStruct htkModels,
-            String path) throws IOException {
+            String path) {
         int numStatePerHMM;
 
         // assert numTiedState == mixtureWeightsPool.getFeature(NUM_SENONES, 0);
@@ -493,7 +495,7 @@ public class HTKLoader implements Loader {
                     if (hmm.isEmitting(ii)) {
                         HMMState s = hmm.getState(ii);
                         // we use the index of HMM in MMF file
-                        stid[j] = htkModels.hmmsHTK.getStateIdx(s);
+                        stid[j] = HMMSet.getStateIdx(s);
                         j++;
                         // assert stid[j] >= 0 && stid[j] <
                         // numContextIndependentTiedState;
@@ -550,7 +552,7 @@ public class HTKLoader implements Loader {
                         if (hmm.isEmitting(ii)) {
                             HMMState s = hmm.getState(ii);
                             // We get an index of HMM in MMF file
-                            stid[j] = htkModels.hmmsHTK.getStateIdx(s);
+                            stid[j] = HMMSet.getStateIdx(s);
                             j++;
                             // assert stid[j] >= 0 && stid[j] <
                             // numContextIndependentTiedState;
@@ -590,7 +592,7 @@ public class HTKLoader implements Loader {
         int[] lastStid = null;
         SenoneSequence lastSenoneSequence = null;
 
-        List<String> HMMdejavu = new ArrayList<String>();
+        List<String> HMMdejavu = new ArrayList<>();
         for (Iterator<SingleHMM> triPhones = htkModels.hmmsHTK.get3phIt(); triPhones
                 .hasNext();) {
             SingleHMM hmm = triPhones.next();
@@ -629,7 +631,7 @@ public class HTKLoader implements Loader {
             for (int ii = 0; ii < numStatePerHMM; ii++) {
                 if (hmm.isEmitting(ii)) {
                     HMMState s = hmm.getState(ii);
-                    stid[j] = htkModels.hmmsHTK.getStateIdx(s);
+                    stid[j] = HMMSet.getStateIdx(s);
                     j++;
                     // assert stid[j] >= 0 && stid[j] <
                     // numContextIndependentTiedState;
@@ -684,7 +686,7 @@ public class HTKLoader implements Loader {
      * @return true if the given senone sequence IDs are the same, false
      *         otherwise
      */
-    protected boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
+    protected static boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
         if (ssid1.length == ssid2.length) {
             for (int i = 0; i < ssid1.length; i++) {
                 if (ssid1[i] != ssid2[i]) {
@@ -818,7 +820,7 @@ public class HTKLoader implements Loader {
         }
 
         public Pool<float[]> htkMeans(String path) {
-            Pool<float[]> pool = new Pool<float[]>(path);
+            Pool<float[]> pool = new Pool<>(path);
             // Suppose this is the number of shared states
             int numStates = getNumStates();
             int numStreams = 1;
@@ -844,7 +846,7 @@ public class HTKLoader implements Loader {
         }
 
         public Pool<float[]> htkVars(String path, float floor) {
-            Pool<float[]> pool = new Pool<float[]>(path);
+            Pool<float[]> pool = new Pool<>(path);
             int numStates = getNumStates();
             int numStreams = 1;
             int numGaussiansPerState = getGMMSize();
@@ -891,7 +893,7 @@ public class HTKLoader implements Loader {
         }
 
         public Pool<float[][]> htkTrans(String path) {
-            Pool<float[][]> pool = new Pool<float[][]>(path);
+            Pool<float[][]> pool = new Pool<>(path);
             int numMatrices = getNumHMMs();
             int i = 0;
 

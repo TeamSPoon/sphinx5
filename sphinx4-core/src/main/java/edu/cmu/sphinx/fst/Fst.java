@@ -57,7 +57,7 @@ public class Fst {
      * Default Constructor
      */
     public Fst() {
-        states = new ArrayList<State>();
+        states = new ArrayList<>();
     }
 
     /**
@@ -69,7 +69,7 @@ public class Fst {
      */
     public Fst(int numStates) {
         if (numStates > 0) {
-            states = new ArrayList<State>(numStates);
+            states = new ArrayList<>(numStates);
         }
     }
 
@@ -190,7 +190,7 @@ public class Fst {
      *            the symbol map to serialize
      * @throws IOException
      */
-    private void writeStringMap(ObjectOutputStream out, String[] map)
+    private static void writeStringMap(ObjectOutputStream out, String[] map)
             throws IOException {
         out.writeInt(map.length);
         for (int i = 0; i < map.length; i++) {
@@ -214,7 +214,7 @@ public class Fst {
         out.writeObject(semiring);
         out.writeInt(states.size());
 
-        HashMap<State, Integer> stateMap = new HashMap<State, Integer>(
+        HashMap<State, Integer> stateMap = new HashMap<>(
                 states.size(), 1.f);
         for (int i = 0; i < states.size(); i++) {
             State s = states.get(i);
@@ -415,16 +415,15 @@ public class Fst {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Fst(start=" + start + ", isyms=" + Arrays.toString(isyms) + ", osyms="
-                + Arrays.toString(osyms) + ", semiring=" + semiring + ")\n");
+        sb.append("Fst(start=").append(start).append(", isyms=").append(Arrays.toString(isyms)).append(", osyms=").append(Arrays.toString(osyms)).append(", semiring=").append(semiring).append(")\n");
         int numStates = states.size();
         for (int i = 0; i < numStates; i++) {
             State s = states.get(i);
-            sb.append("  " + s + "\n");
+            sb.append("  ").append(s).append('\n');
             int numArcs = s.getNumArcs();
             for (int j = 0; j < numArcs; j++) {
                 Arc a = s.getArc(j);
-                sb.append("    " + a + "\n");
+                sb.append("    ").append(a).append('\n');
             }
         }
 
@@ -447,7 +446,7 @@ public class Fst {
         states.remove(state);
 
         for (State s1 : states) {
-            ArrayList<Arc> newArcs = new ArrayList<Arc>();
+            ArrayList<Arc> newArcs = new ArrayList<>();
             for (int j = 0; j < s1.getNumArcs(); j++) {
                 Arc a = s1.getArc(j);
                 if (!a.getNextState().equals(state)) {
@@ -479,12 +478,12 @@ public class Fst {
             return;
         }
 
-        ArrayList<State> newStates = new ArrayList<State>();
+        ArrayList<State> newStates = new ArrayList<>();
 
         for (State s1 : states) {
             if (!toDelete.contains(s1)) {
                 newStates.add(s1);
-                ArrayList<Arc> newArcs = new ArrayList<Arc>();
+                ArrayList<Arc> newArcs = new ArrayList<>();
                 for (int j = 0; j < s1.getNumArcs(); j++) {
                     Arc a = s1.getArc(j);
                     if (!toDelete.contains(a.getNextState())) {

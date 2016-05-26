@@ -77,7 +77,7 @@ public class CommandInterpreter extends Thread {
     /** Initializes the CI */
 
     private void init(BufferedReader in, PrintWriter out) {
-        commandList = new HashMap<String, CommandInterface>();
+        commandList = new HashMap<>();
         addStandardCommands();
         setStreams(in, out);
     }
@@ -203,17 +203,7 @@ public class CommandInterpreter extends Thread {
             }
         });
 
-        add("gc", new CommandInterface() {
-            public String execute(CommandInterpreter ci, String[] args) {
-                Runtime.getRuntime().gc();
-                return "";
-            }
-
-
-            public String getHelp() {
-                return "performs garbage collection";
-            }
-        });
+        add("gc", new MyCommandInterface());
 
         add("memory", new CommandInterface() {
             public String execute(CommandInterpreter ci, String[] args) {
@@ -302,7 +292,7 @@ public class CommandInterpreter extends Thread {
             public String execute(CommandInterpreter ci, String[] args) {
                 if (args.length > 1) {
                     String[] subargs = new String[args.length - 1];
-                    List<String[]> commands = new ArrayList<String[]>(5);
+                    List<String[]> commands = new ArrayList<>(5);
                     int count = 0;
                     for (int i = 1; i < args.length; i++) {
                         if (args[i].equals(";")) {
@@ -364,7 +354,7 @@ public class CommandInterpreter extends Thread {
     /** Dumps the commands in the interpreter */
 
     private void dumpCommands() {
-        for (Map.Entry<String, CommandInterface> entry : new TreeMap<String, CommandInterface>(commandList).entrySet())
+        for (Map.Entry<String, CommandInterface> entry : new TreeMap<>(commandList).entrySet())
             putResponse(entry.getKey() + " - " + entry.getValue().getHelp());
     }
 
@@ -472,9 +462,9 @@ public class CommandInterpreter extends Thread {
      * @param message the string to be parsed.
      * @return the parsed message as an array of strings
      */
-    protected String[] parseMessage(String message) {
+    protected static String[] parseMessage(String message) {
         int tokenType;
-        List<String> words = new ArrayList<String>(20);
+        List<String> words = new ArrayList<>(20);
         StreamTokenizer st = new StreamTokenizer(new StringReader(message));
 
         st.resetSyntax();
@@ -697,10 +687,22 @@ public class CommandInterpreter extends Thread {
         }
     }
 
+    private static class MyCommandInterface implements CommandInterface {
+        public String execute(CommandInterpreter ci, String[] args) {
+            Runtime.getRuntime().gc();
+            return "";
+        }
+
+
+        public String getHelp() {
+            return "performs garbage collection";
+        }
+    }
+
 
     class CommandHistory {
 
-        private final List<String> history = new ArrayList<String>(100);
+        private final List<String> history = new ArrayList<>(100);
 
 
         /**

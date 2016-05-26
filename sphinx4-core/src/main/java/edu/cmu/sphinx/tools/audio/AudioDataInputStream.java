@@ -92,7 +92,7 @@ public class AudioDataInputStream extends InputStream {
 
     // inherited from InputStream
     //
-    public long skip(int n) throws IOException {
+    public long skip(int n) {
         int actual = n;
         if ((currentIndex + n) > bytes.length) {
             actual = bytes.length - currentIndex;
@@ -121,7 +121,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from InputStream
     //
     @Override
-    public void mark(int readLimit) {
+    public synchronized void mark(int readLimit) {
         markIndex = currentIndex;
     }
 
@@ -137,7 +137,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from AudioInputStream
     //
     @Override
-    public void reset() throws IOException {
+    public synchronized void reset() throws IOException {
         currentIndex = markIndex;
     }
 }

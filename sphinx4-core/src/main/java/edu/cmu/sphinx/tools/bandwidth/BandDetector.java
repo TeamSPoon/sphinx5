@@ -67,7 +67,7 @@ public class BandDetector {
         MelFrequencyFilterBank filterbank = new MelFrequencyFilterBank(130.0,
                 6800.0, bands);
 
-        ArrayList<DataProcessor> list = new ArrayList<DataProcessor>();
+        ArrayList<DataProcessor> list = new ArrayList<>();
         list.add(source);
         list.add(windower);
         list.add(fft);
@@ -135,13 +135,11 @@ public class BandDetector {
         // System.out.format("%.4f ", energy[i]);
         // System.out.println();
 
-        if (maxHi < noSignalLevel && maxLow > signalLevel)
-            return true;
+        return maxHi < noSignalLevel && maxLow > signalLevel;
 
-        return false;
     }
 
-    private double max(double[] energy, int start, int end) {
+    private static double max(double[] energy, int start, int end) {
         double max = 0;
         for (int i = start; i <= end; i++)
             max = Math.max(max, energy[i]);

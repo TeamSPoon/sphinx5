@@ -72,7 +72,7 @@ public class SequiturImport {
         @XmlElement(name = "state")
         List<State> states;
         transient List<edu.cmu.sphinx.fst.State> openFstStates;
-        transient Semiring ring = new TropicalSemiring();
+        final transient Semiring ring = new TropicalSemiring();
 
         public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
             // might also work with other formats, but we have never seen any
@@ -87,15 +87,11 @@ public class SequiturImport {
             initialArc.out = outputAlphabet.symbols.size() - 1;
             initialArc.target = initial + 1;
             initialArc.weight = ring.one();
-            initialState.arcs = Collections.<Arc> singletonList(initialArc);
+            initialState.arcs = Collections.singletonList(initialArc);
             states.add(initialState);
             // sort the states (to ascertain that initialState is the first
             // element)
-            Collections.<State> sort(states, new Comparator<State>() {
-                public int compare(State s1, State s2) {
-                    return s1.id - s2.id;
-                }
-            });
+            Collections.sort(states, new StateComparator());
         }
 
         /**
@@ -107,7 +103,7 @@ public class SequiturImport {
             Fst openFst = new Fst(ring);
             openFst.setIsyms(inputAlphabet.toSymbols());
             openFst.setOsyms(outputAlphabet.toSymbols());
-            openFstStates = new ArrayList<edu.cmu.sphinx.fst.State>(
+            openFstStates = new ArrayList<>(
                     states.size());
             for (State state : states) {
                 edu.cmu.sphinx.fst.State openFstState = state
@@ -123,6 +119,12 @@ public class SequiturImport {
                 state.connectStates(openFstStates);
             }
             return openFst;
+        }
+
+        private static class StateComparator implements Comparator<State> {
+            public int compare(State s1, State s2) {
+                return s1.id - s2.id;
+            }
         }
     }
 

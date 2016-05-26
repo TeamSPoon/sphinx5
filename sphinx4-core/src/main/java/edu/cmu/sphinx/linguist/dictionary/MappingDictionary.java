@@ -45,7 +45,7 @@ public class MappingDictionary extends TextDictionary implements Dictionary {
     public static final String PROP_MAP_FILE = "mapFile";
 
     private URL mappingFile;
-    private final Map<String, String> mapping = new HashMap<String, String>();
+    private final Map<String, String> mapping = new HashMap<>();
 
     public MappingDictionary(URL mappingFile, URL wordDictionaryFile, URL fillerDictionaryFile, List<URL> addendaUrlList,
             String wordReplacement, UnitManager unitManager) {
@@ -72,7 +72,7 @@ public class MappingDictionary extends TextDictionary implements Dictionary {
     @Override
     public void allocate() throws IOException {
         super.allocate();
-        if (!mappingFile.getFile().equals(""))
+        if (!mappingFile.getFile().isEmpty())
             loadMapping(mappingFile.openStream());
     }
 

@@ -323,7 +323,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * Clears lists and maps before next expansion stage
      */
     private void clearCollectors() {
-        resultList = new LinkedList<Token>();
+        resultList = new LinkedList<>();
         createBestTokenMap();
         activeListManager.clearEmittingList();
     }
@@ -336,7 +336,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         if (mapSize == 0) {
             mapSize = 1;
         }
-        bestTokenMap = new HashMap<SearchState, Token>(mapSize, 0.3F);
+        bestTokenMap = new HashMap<>(mapSize, 0.3F);
     }
 
     /** Terminates a recognition */
@@ -670,7 +670,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * @param t token to check
      * @return true if we've visited the search state since the last frame
      */
-    protected boolean isVisited(Token t) {
+    protected static boolean isVisited(Token t) {
         SearchState curState = t.getSearchState();
 
         t = t.getPredecessor();
@@ -696,7 +696,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      *            the token to test
      * @return <code>true</code> if the token should be expanded
      */
-    protected boolean allowExpansion(Token t) {
+    protected static boolean allowExpansion(Token t) {
         return true; // currently disabled
     }
 
@@ -705,7 +705,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * expensive operation.
      */
     protected void showTokenCount() {
-        Set<Token> tokenSet = new HashSet<Token>();
+        Set<Token> tokenSet = new HashSet<>();
 
         for (Token token : activeList) {
             while (token != null) {
@@ -716,7 +716,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
         System.out.println("Token Lattice size: " + tokenSet.size());
 
-        tokenSet = new HashSet<Token>();
+        tokenSet = new HashSet<>();
 
         for (Token token : resultList) {
             while (token != null) {

@@ -43,7 +43,7 @@ public class MixtureComponentSet {
         this.numStreams = components.size();
         this.topGauNum = topGauNum;
         this.gauNum = components.get(0).length;
-        topComponents = new ArrayList<PrunableMixtureComponent[]>();
+        topComponents = new ArrayList<>();
         for (int i = 0; i < numStreams; i++) {
             PrunableMixtureComponent[] featTopComponents = new PrunableMixtureComponent[topGauNum];
             for (int j = 0; j < topGauNum; j++)
@@ -52,7 +52,7 @@ public class MixtureComponentSet {
         }
         gauCalcSampleNumber = -1;
         toStoreScore = false;
-        storedScores = new LinkedList<MixtureComponentSetScores>();
+        storedScores = new LinkedList<>();
         curScores = null;
     }
     
@@ -87,7 +87,7 @@ public class MixtureComponentSet {
         return scores;
     }
     
-    private void insertTopComponent(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
+    private static void insertTopComponent(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
         int i;
         for (i = 0; i < topComponents.length - 1; i++) {
             if (component.getPartialScore() < topComponents[i].getPartialScore()) {
@@ -102,7 +102,7 @@ public class MixtureComponentSet {
             topComponents[topComponents.length - 1] = component;
     }
     
-    private boolean isInTopComponents(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
+    private static boolean isInTopComponents(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
         for (PrunableMixtureComponent topComponent : topComponents)
             if (topComponent.getId() == component.getId())
                 return true;
@@ -223,7 +223,7 @@ public class MixtureComponentSet {
         return components.get(streamId)[topGauId].getId();
     }
     
-    private <T> T[] concatenate (T[] A, T[] B) {
+    private static <T> T[] concatenate(T[] A, T[] B) {
         int aLen = A.length;
         int bLen = B.length;
 
@@ -258,11 +258,12 @@ public class MixtureComponentSet {
         return size;
     }
     
-    private Comparator<PrunableMixtureComponent> componentComparator = new Comparator<PrunableMixtureComponent>() {
+    private final Comparator<PrunableMixtureComponent> componentComparator = new PrunableMixtureComponentComparator();
+
+    private static class PrunableMixtureComponentComparator implements Comparator<PrunableMixtureComponent> {
 
         public int compare(PrunableMixtureComponent a, PrunableMixtureComponent b) {
             return (int)(a.getStoredScore() - b.getStoredScore());
         }
-    };
-    
+    }
 }

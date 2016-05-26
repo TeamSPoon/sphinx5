@@ -22,5 +22,5 @@ public interface UnitSearchState extends SearchState {
      *
      * @return the unit
      */
-    public Unit getUnit();
+    Unit getUnit();
 }

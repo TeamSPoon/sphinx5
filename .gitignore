@@ -1,0 +1,9 @@
+sphinx4*/build/
+classes/
+.idea/
+.gradle/
+gradle/
+gradlew*
+*.iml
+*.ipr
+*.iws

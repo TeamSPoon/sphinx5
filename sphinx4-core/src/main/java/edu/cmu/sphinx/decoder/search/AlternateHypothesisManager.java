@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class AlternateHypothesisManager {
 
-    private final Map<Token, List<Token>> viterbiLoserMap = new HashMap<Token, List<Token>>();
+    private final Map<Token, List<Token>> viterbiLoserMap = new HashMap<>();
     private final int maxEdges;
 
 
@@ -49,7 +49,7 @@ public class AlternateHypothesisManager {
         assert predecessor != token.getPredecessor();
         List<Token> list = viterbiLoserMap.get(token);
         if (list == null) {
-            list = new ArrayList<Token>();
+            list = new ArrayList<>();
             viterbiLoserMap.put(token, list);
         }
         list.add(predecessor);

@@ -18,7 +18,7 @@ public interface AudioFileProcessListener extends Configurable {
      *
      * @param audioFile The name of the new audio file.
      */
-    public void audioFileProcStarted(File audioFile);
+    void audioFileProcStarted(File audioFile);
 
 
     /**
@@ -26,5 +26,5 @@ public interface AudioFileProcessListener extends Configurable {
      *
      * @param audioFile The name of the processed audio file.
      */
-    public void audioFileProcFinished(File audioFile);
+    void audioFileProcFinished(File audioFile);
 }

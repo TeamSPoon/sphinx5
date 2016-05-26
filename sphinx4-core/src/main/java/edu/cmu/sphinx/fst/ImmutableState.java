@@ -141,8 +141,6 @@ public class ImmutableState extends State {
         ImmutableState other = (ImmutableState) obj;
         if (!Arrays.equals(arcs, other.arcs))
             return false;
-        if (!super.equals(obj))
-            return false;
-        return true;
+        return super.equals(obj);
     }
 }

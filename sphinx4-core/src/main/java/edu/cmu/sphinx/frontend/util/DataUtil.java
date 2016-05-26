@@ -43,7 +43,7 @@ public class DataUtil {
 
 
     /** The number format to be used by *ArrayToString() methods. The default is scientific. */
-    private static int dumpFormat = SCIENTIFIC;
+    private static final int dumpFormat;
 
     /**
      * Static initialization of dumpFormat
@@ -51,13 +51,15 @@ public class DataUtil {
     static {
         String formatProperty = System.getProperty("frontend.util.dumpformat",
                 "SCIENTIFIC");
+        int d = SCIENTIFIC;
         if (formatProperty.compareToIgnoreCase("DECIMAL") == 0) {
-            dumpFormat = DECIMAL;
+            d = DECIMAL;
         } else if (formatProperty.compareToIgnoreCase("HEXADECIMAL") == 0) {
-            dumpFormat = HEXADECIMAL;
+            d = HEXADECIMAL;
         } else if (formatProperty.compareToIgnoreCase("SCIENTIFIC") == 0) {
-            dumpFormat = SCIENTIFIC;
+            d = SCIENTIFIC;
         }
+        dumpFormat = d;
     }
 
 

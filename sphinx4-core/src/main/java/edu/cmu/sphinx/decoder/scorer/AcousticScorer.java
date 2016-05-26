@@ -21,19 +21,19 @@ import java.util.List;
 public interface AcousticScorer extends Configurable {
 
     /** Allocates resources for this scorer */
-    public void allocate();
+    void allocate();
 
 
     /** Deallocates resources for this scorer */
-    public void deallocate();
+    void deallocate();
 
 
     /** starts the scorer */
-    public void startRecognition();
+    void startRecognition();
 
 
     /** stops the scorer */
-    public void stopRecognition();
+    void stopRecognition();
 
     /**
      * Scores the given set of states over previously stored acoustic data if any or a new one
@@ -41,7 +41,7 @@ public interface AcousticScorer extends Configurable {
      * @param scorableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    public Data calculateScores(List<? extends Scoreable> scorableList);
+    Data calculateScores(List<? extends Scoreable> scorableList);
     
     /**
      * Scores the given set of states over previously acoustic data from frontend
@@ -50,7 +50,7 @@ public interface AcousticScorer extends Configurable {
      * @param scorableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    public Data calculateScoresAndStoreData(List<? extends Scoreable> scorableList);
+    Data calculateScoresAndStoreData(List<? extends Scoreable> scorableList);
 
 }
 

@@ -25,6 +25,6 @@ public interface ResultListener extends EventListener, Configurable {
      *
      * @param result the new result
      */
-    public void newResult(Result result);
+    void newResult(Result result);
 }
 

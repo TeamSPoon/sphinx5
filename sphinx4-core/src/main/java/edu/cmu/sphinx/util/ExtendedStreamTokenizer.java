@@ -96,7 +96,7 @@ public class ExtendedStreamTokenizer {
         st.whitespaceChars(0, 32);
         st.wordChars(33, 255);
         st.eolIsSignificant(eolIsSignificant);
-        putbackList = new ArrayList<String>();
+        putbackList = new ArrayList<>();
     }
 
 
@@ -344,7 +344,7 @@ public class ExtendedStreamTokenizer {
     public void skipwhite() throws IOException {
         String next = null;
 
-        while (!isEOF()) {
+        while (!atEOF) {
             if ((next = getString()) != null) {
                 unget(next);
                 break;

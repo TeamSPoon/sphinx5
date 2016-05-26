@@ -161,7 +161,7 @@ public class MelFrequencyFilterBank2 extends BaseDataProcessor {
      * @param inputFreq the input frequency in linear scale
      * @return the frequency in a mel scale
      */
-    private double linearToMel(double inputFreq) {
+    private static double linearToMel(double inputFreq) {
         return 1127 * Math.log1p(inputFreq / 700);
     }
 

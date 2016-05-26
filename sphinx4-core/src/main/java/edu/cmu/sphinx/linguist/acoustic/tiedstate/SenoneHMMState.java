@@ -156,7 +156,7 @@ public class SenoneHMMState implements HMMState {
      */
     public HMMStateArc[] getSuccessors() {
         if (arcs == null) {
-            List<HMMStateArc> list = new ArrayList<HMMStateArc>();
+            List<HMMStateArc> list = new ArrayList<>();
             float[][] transitionMatrix = hmm.getTransitionMatrix();
 
             for (int i = 0; i < transitionMatrix.length; i++) {

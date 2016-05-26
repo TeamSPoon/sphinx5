@@ -3,6 +3,7 @@ package edu.cmu.sphinx.jsgf;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
@@ -34,11 +35,13 @@ public class GrXMLHandler extends DefaultHandler {
         JSGFRule newRule = null;
         JSGFRule topRule = null;
 
-        logger.fine("Starting element " + qName);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Starting element " + qName);
+        }
         if (qName.equals("rule")) {
             String id = attributes.getValue("id");
             if (id != null) {
-                newRule = new JSGFRuleSequence(new ArrayList<JSGFRule>());
+                newRule = new JSGFRuleSequence(new ArrayList<>());
                 topRuleMap.put(id, newRule);
                 topRule = newRule;
             }
@@ -46,16 +49,16 @@ public class GrXMLHandler extends DefaultHandler {
         if (qName.equals("item")) {
             String repeat = attributes.getValue("repeat");
             if (repeat != null) {
-                newRule = new JSGFRuleSequence(new ArrayList<JSGFRule>());
+                newRule = new JSGFRuleSequence(new ArrayList<>());
                 JSGFRuleCount ruleCount = new JSGFRuleCount(newRule, JSGFRuleCount.ONCE_OR_MORE);
                 topRule = ruleCount;
             } else {
-                newRule = new JSGFRuleSequence(new ArrayList<JSGFRule>());
+                newRule = new JSGFRuleSequence(new ArrayList<>());
                 topRule = newRule;
             }
         }
         if (qName.equals("one-of")) {
-            newRule = new JSGFRuleAlternatives(new ArrayList<JSGFRule>());
+            newRule = new JSGFRuleAlternatives(new ArrayList<>());
             topRule = newRule;
         }
         addToCurrent(newRule, topRule);
@@ -68,7 +71,9 @@ public class GrXMLHandler extends DefaultHandler {
         if (item.length() == 0)
             return;
 
-        logger.fine ("Processing text " + item);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine ("Processing text " + item);
+        }
 
         JSGFRuleToken newRule = new JSGFRuleToken(item);
         addToCurrent(newRule, newRule);
@@ -102,8 +107,10 @@ public class GrXMLHandler extends DefaultHandler {
     
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXParseException {
-        logger.fine ("Ending element " + qName);
-        
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine ("Ending element " + qName);
+        }
+
         if (qName.equals("item") || qName.equals("one-of") || qName.equals("rule"))
             currentRule = currentRule.parent;
     }

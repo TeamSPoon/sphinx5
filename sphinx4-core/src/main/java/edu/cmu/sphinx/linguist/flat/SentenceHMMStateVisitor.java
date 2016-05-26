@@ -22,6 +22,6 @@ interface SentenceHMMStateVisitor {
      * @param state the state that is being visited
      * @return true if the visiting should be terminated
      */
-    public boolean visit(SentenceHMMState state);
+    boolean visit(SentenceHMMState state);
 }
 

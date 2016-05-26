@@ -30,23 +30,23 @@ public interface ControlFile extends Configurable {
 
     /** The property for which batch partition to process. */
     @S4Integer(defaultValue = 1)
-    public final static String PROP_WHICH_BATCH = "whichBatch";
+    String PROP_WHICH_BATCH = "whichBatch";
 
     /** The property for the total number of batch partitions. */
     @S4Integer(defaultValue = 1)
-    public final static String PROP_TOTAL_BATCHES = "totalBatches";
+    String PROP_TOTAL_BATCHES = "totalBatches";
 
 
     /** Gets an iterator for utterances. */
-    public void startUtteranceIterator();
+    void startUtteranceIterator();
 
 
     /** @return whether there is a next utterance. 
      */
-    public boolean hasMoreUtterances();
+    boolean hasMoreUtterances();
 
 
     /** @return next utterance. */
-    public Utterance nextUtterance();
+    Utterance nextUtterance();
 
 }

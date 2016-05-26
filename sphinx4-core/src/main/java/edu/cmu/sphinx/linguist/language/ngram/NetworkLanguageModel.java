@@ -93,7 +93,7 @@ public class NetworkLanguageModel implements LanguageModel {
         if (!greeting.equals("probserver ready")) {
             throw new IOException("Incorrect input");
         }
-        cache = new LRUCache<WordSequence, Float>(1000);
+        cache = new LRUCache<>(1000);
     }
 
     public void deallocate() {
@@ -135,7 +135,7 @@ public class NetworkLanguageModel implements LanguageModel {
         }
 
         if (!result.equals("-inf"))
-            probability = logMath.log10ToLog(Float.parseFloat(result));
+            probability = LogMath.log10ToLog(Float.parseFloat(result));
         else
             probability = LogMath.LOG_ZERO;
 
@@ -148,7 +148,7 @@ public class NetworkLanguageModel implements LanguageModel {
     }
 
     public Set<String> getVocabulary() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         try {
             BufferedReader reader =
                 new BufferedReader(new InputStreamReader(location.openStream()));

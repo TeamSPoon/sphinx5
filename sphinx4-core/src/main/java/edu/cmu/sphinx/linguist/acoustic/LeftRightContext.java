@@ -97,8 +97,8 @@ public class LeftRightContext extends Context {
     public boolean isPartialMatch(Context context) {
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext)context;
-            Unit[] lc = lrContext.getLeftContext();
-            Unit[] rc = lrContext.getRightContext();
+            Unit[] lc = lrContext.leftContext;
+            Unit[] rc = lrContext.rightContext;
 
             return (lc == null || leftContext == null || Unit.isContextMatch(lc, leftContext))
                 && (rc == null || rightContext == null || Unit.isContextMatch(rc, rightContext));

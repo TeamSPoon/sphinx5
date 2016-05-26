@@ -57,7 +57,7 @@ public class RawReader {
          * data.
          */
         byte[] buffer = new byte[bytesPerSample];
-        ArrayList<Short> samples = new ArrayList<Short>();
+        ArrayList<Short> samples = new ArrayList<>();
         int read = 0;
         int totalRead = 0;
         boolean done = false;

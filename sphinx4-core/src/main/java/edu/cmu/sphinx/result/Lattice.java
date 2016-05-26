@@ -131,6 +131,7 @@ import edu.cmu.sphinx.util.TimeFrame;
  */
 public class Lattice {
 
+    public static final Pronunciation[] ZERO = new Pronunciation[0];
     protected Node initialNode;
     protected Node terminalNode;
     protected Set<Edge> edges;
@@ -143,8 +144,8 @@ public class Lattice {
 
     /** Create an empty Lattice. */
     public Lattice() {
-        edges = new HashSet<Edge>();
-        nodes = new HashMap<String, Node>();
+        edges = new HashSet<>();
+        nodes = new HashMap<>();
         logMath = LogMath.getLogMath();
     }
 
@@ -167,7 +168,7 @@ public class Lattice {
             initialNode = terminalNode;
             addNode(terminalNode);
 
-            visitedWordTokens = new HashSet<Token>();
+            visitedWordTokens = new HashSet<>();
             wordTokenFirst = result.getWordTokenFirst();
             loserManager = result.getAlternateHypothesisManager();
             if (loserManager != null) {
@@ -177,12 +178,12 @@ public class Lattice {
         }
     }
 
-    private TimeFrame getTimeFrameWordTokenFirst(Token token) {
+    private static TimeFrame getTimeFrameWordTokenFirst(Token token) {
         // TODO: Not implemented yet
         return new TimeFrame(0, 0);
    }
 
-    private TimeFrame getTimeFrameWordTokenLast(Token token) {
+    private static TimeFrame getTimeFrameWordTokenLast(Token token) {
         TimeFrame capTimeFrame = new TimeFrame(0, 0);
 
         Word word = null;
@@ -328,7 +329,7 @@ public class Lattice {
      *            the token associated with the Node
      * @return an ID for the Node
      */
-    private String getNodeID(Token token) {
+    private static String getNodeID(Token token) {
         return Integer.toString(token.hashCode());
     }
 
@@ -351,19 +352,25 @@ public class Lattice {
                 if (tokens.hasMoreTokens()) {
                     String type = tokens.nextToken();
 
-                    if (type.equals("edge:")) {
-                        Edge.load(this, tokens);
-                    } else if (type.equals("node:")) {
-                        Node.load(this, tokens);
-                    } else if (type.equals("initialNode:")) {
-                        setInitialNode(getNode(tokens.nextToken()));
-                    } else if (type.equals("terminalNode:")) {
-                        setTerminalNode(getNode(tokens.nextToken()));
-                    } else if (type.equals("logBase:")) {
-                        logBase = Double.parseDouble(tokens.nextToken());
-                    } else {
-                        in.close();
-                        throw new Error("SYNTAX ERROR: " + fileName + '[' + in.getLineNumber() + "] " + line);
+                    switch (type) {
+                        case "edge:":
+                            Edge.load(this, tokens);
+                            break;
+                        case "node:":
+                            Node.load(this, tokens);
+                            break;
+                        case "initialNode:":
+                            setInitialNode(getNode(tokens.nextToken()));
+                            break;
+                        case "terminalNode:":
+                            setTerminalNode(getNode(tokens.nextToken()));
+                            break;
+                        case "logBase:":
+                            logBase = Double.parseDouble(tokens.nextToken());
+                            break;
+                        default:
+                            in.close();
+                            throw new Error("SYNTAX ERROR: " + fileName + '[' + in.getLineNumber() + "] " + line);
                     }
                 }
             }
@@ -423,7 +430,7 @@ public class Lattice {
                 }
                 if (wordStr.startsWith("["))
                     isFiller = true;
-                Word word = new Word(wordStr, new Pronunciation[0], isFiller);
+                Word word = new Word(wordStr, ZERO, isFiller);
                 Node node = lattice.addNode(Integer.toString(idx), word, beginTime, -1);
                 if (wordStr.equals("<s>"))
                     lattice.setInitialNode(node);
@@ -588,7 +595,7 @@ public class Lattice {
      * @return a copy of the collection of Nodes
      */
     protected Collection<Node> getCopyOfNodes() {
-        return new ArrayList<Node>(nodes.values());
+        return new ArrayList<>(nodes.values());
     }
 
     /**
@@ -695,14 +702,14 @@ public class Lattice {
         w.write("start=0\n");
         w.write("end=1\n");
         w.write("#\n# Size line.\n#\n");
-        w.write("NODES=" + nodes.size() + "    LINKS=" + this.edges.size() + "\n");
+        w.write("NODES=" + nodes.size() + "    LINKS=" + this.edges.size() + '\n');
 
         // we cannot use the id from sphinx as node id. The id from sphinx may
         // be arbitrarily big.
         // Certain tools, such as lattice-tool from srilm, may elect to use an
         // array to hold the nodes,
         // which might cause out of memory problem due to huge array.
-        HashMap<String, Integer> nodeIdMap = new HashMap<String, Integer>();
+        HashMap<String, Integer> nodeIdMap = new HashMap<>();
 
         nodeIdMap.put(initialNode.getId(), 0);
         nodeIdMap.put(terminalNode.getId(), 1);
@@ -754,7 +761,7 @@ public class Lattice {
         }
         out.println("initialNode: " + initialNode.getId());
         out.println("terminalNode: " + terminalNode.getId());
-        out.println("logBase: " + logMath.getLogBase());
+        out.println("logBase: " + LogMath.getLogBase());
         out.flush();
     }
 
@@ -887,7 +894,7 @@ public class Lattice {
      */
     protected List<String> allPathsFrom(String path, Node n) {
         String p = path + ' ' + n.getWord();
-        List<String> l = new LinkedList<String>();
+        List<String> l = new LinkedList<>();
         if (n == terminalNode) {
             l.add(p);
         } else {
@@ -928,7 +935,7 @@ public class Lattice {
         return true;
     }
 
-    protected void sortHelper(Node n, List<Node> sorted, Set<Node> visited) {
+    protected static void sortHelper(Node n, List<Node> sorted, Set<Node> visited) {
         if (visited.contains(n)) {
             return;
         }
@@ -948,8 +955,8 @@ public class Lattice {
      * @return Topologically sorted list of nodes in this lattice.
      */
     public List<Node> sortNodes() {
-        List<Node> sorted = new ArrayList<Node>(nodes.size());
-        sortHelper(initialNode, sorted, new HashSet<Node>());
+        List<Node> sorted = new ArrayList<>(nodes.size());
+        sortHelper(initialNode, sorted, new HashSet<>());
         Collections.reverse(sorted);
         return sorted;
     }
@@ -1039,7 +1046,7 @@ public class Lattice {
      * @return a list of nodes representing the MAP path.
      */
     public List<Node> getViterbiPath() {
-        LinkedList<Node> path = new LinkedList<Node>();
+        LinkedList<Node> path = new LinkedList<>();
         Node n = terminalNode;
         while (n != initialNode) {
             path.addFirst(n);
@@ -1057,7 +1064,7 @@ public class Lattice {
      */
     public List<WordResult> getWordResultPath() {
         List<Node> path = getViterbiPath();
-        LinkedList<WordResult> wordResults = new LinkedList<WordResult>();
+        LinkedList<WordResult> wordResults = new LinkedList<>();
         for (Node node : path) {
             if (node.getWord().isSentenceStartWord() || node.getWord().isSentenceEndWord())
                 continue;
@@ -1077,7 +1084,7 @@ public class Lattice {
      *            already scaled by language weight
      * @return the score of an edge
      */
-    private double computeEdgeScore(Edge edge, float languageModelWeightAdjustment, boolean useAcousticScoresOnly) {
+    private static double computeEdgeScore(Edge edge, float languageModelWeightAdjustment, boolean useAcousticScoresOnly) {
         if (useAcousticScoresOnly) {
             return edge.getAcousticScore();
         } else {
@@ -1094,7 +1101,7 @@ public class Lattice {
      * @return true if the Lattices are equivalent; false otherwise
      */
     public boolean isEquivalent(Lattice other) {
-        return checkNodesEquivalent(initialNode, other.getInitialNode());
+        return checkNodesEquivalent(initialNode, other.initialNode);
     }
 
     /**
@@ -1108,7 +1115,7 @@ public class Lattice {
      *            starting node of the second lattice
      * @return true if the two lattices are equivalent
      */
-    private boolean checkNodesEquivalent(Node n1, Node n2) {
+    private static boolean checkNodesEquivalent(Node n1, Node n2) {
         assert n1 != null && n2 != null;
 
         boolean equivalent = n1.isEquivalent(n2);
@@ -1150,7 +1157,7 @@ public class Lattice {
         return equivalent;
     }
 
-    boolean isFillerNode(Node node) {
+    static boolean isFillerNode(Node node) {
         Word word = node.getWord();
         if (word.isSentenceStartWord() || word.isSentenceEndWord())
             return false;

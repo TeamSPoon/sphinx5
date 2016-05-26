@@ -60,7 +60,7 @@ public class GaussianWeights {
         logger.info("Gaussian weights: " + name + ". Entries: " + numStates * numStreams);
     }
     
-    public Pool<float[]> convertToPool() {
+    public static Pool<float[]> convertToPool() {
         return null;
     }
 }

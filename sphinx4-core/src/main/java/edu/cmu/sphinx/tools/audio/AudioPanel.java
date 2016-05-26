@@ -32,8 +32,6 @@ public class AudioPanel extends JPanel
     private float xScale;
     private final float yScale;
     private final float originalXScale;
-    private int xDragStart;
-    private int xDragEnd;
     protected int selectionStart = -1;
     protected int selectionEnd = -1;
 
@@ -63,23 +61,21 @@ public class AudioPanel extends JPanel
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.white);
 
-        audio.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent event) {
-                int width = (int) (audio.getAudioData().length * xScale);
-                int height = (int) ((1 << 16) * yScale);
+        audio.addChangeListener(event -> {
+            int width1 = (int) (audio.getAudioData().length * xScale);
+            int height1 = (int) ((1 << 16) * yScale);
 
-                labelTimes = new float[0];
-                labels = new String[0];
+            labelTimes = new float[0];
+            labels = new String[0];
 
-                setSelectionStart(-1);
-                setSelectionEnd(-1);
+            setSelectionStart(-1);
+            setSelectionEnd(-1);
 
-                setPreferredSize(new Dimension(width, height));
-                Dimension sz = getSize();
+            setPreferredSize(new Dimension(width1, height1));
+            Dimension sz = getSize();
 
-                revalidate();
-                repaint(0, 0, 0, sz.width, sz.height);
-            }
+            revalidate();
+            repaint(0, 0, 0, sz.width, sz.height);
         });
 
         addMouseMotionListener(this);
@@ -152,9 +148,9 @@ public class AudioPanel extends JPanel
         /**
          * Now fill in the audio selection area as gray.
          */
-        index = Math.max(0, getSelectionStart());
+        index = Math.max(0, selectionStart);
         int start = (int) (index * xScale);
-        index = getSelectionEnd();
+        index = selectionEnd;
         if (index == -1) {
             index = audioData.length - 1;
         }
@@ -279,8 +275,8 @@ public class AudioPanel extends JPanel
      */
     public void crop() {
         short[] shorts = audio.getAudioData();
-        int start = Math.max(0, getSelectionStart());
-        int end = getSelectionEnd();
+        int start = Math.max(0, selectionStart);
+        int end = selectionEnd;
         if (end == -1) {
             end = shorts.length;
         }
@@ -305,7 +301,7 @@ public class AudioPanel extends JPanel
      * @param evt the mouse pressed event
      */
     public void mousePressed(MouseEvent evt) {
-        xDragStart = Math.max(0, evt.getX());
+        int xDragStart = Math.max(0, evt.getX());
         setSelectionStart((int) (xDragStart / xScale));
         setSelectionEnd((int) (xDragStart / xScale));
         repaint();
@@ -318,8 +314,8 @@ public class AudioPanel extends JPanel
      * @param evt the mouse dragged event
      */
     public void mouseDragged(MouseEvent evt) {
-        xDragEnd = evt.getX();
-        if (xDragEnd < (int) (getSelectionStart() * xScale)) {
+        int xDragEnd = evt.getX();
+        if (xDragEnd < (int) (selectionStart * xScale)) {
             setSelectionStart((int) (xDragEnd / xScale));
         } else {
             setSelectionEnd((int) (xDragEnd / xScale));

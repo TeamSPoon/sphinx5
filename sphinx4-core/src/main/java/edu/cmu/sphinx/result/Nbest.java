@@ -52,9 +52,9 @@ public class Nbest {
     }
 
     public Collection<String> getNbest(int n) {
-        HashSet<String> result = new HashSet<String>();
+        HashSet<String> result = new HashSet<>();
         BoundedPriorityQueue<NBestPath> queue =
-            new BoundedPriorityQueue<Nbest.NBestPath>(n);
+                new BoundedPriorityQueue<>(n);
 
         queue.add(new NBestPath("<s>", lattice.getInitialNode(), 0, 0));
 
@@ -92,7 +92,7 @@ public class Nbest {
         else if (newNode.getWord().isFiller())
             newPathString = path.path;
         else
-            newPathString = path.path + " " + newNode.getWord();
+            newPathString = path.path + ' ' + newNode.getWord();
         return newPathString;
     }
 

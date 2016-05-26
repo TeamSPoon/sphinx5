@@ -49,7 +49,7 @@ public class Item {
         next = null;
         prev = null;
 
-        getSharedContents().addItemRelation(relation.getName(), this);
+        contents.addItemRelation(relation.getName(), this);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Item {
      * @return the item as found in the given relation or null if not found
      */
     public Item getItemAs(String relationName) {
-        return getSharedContents().getItemRelation(relationName);
+        return contents.getItemRelation(relationName);
     }
 
     /**
@@ -149,9 +149,9 @@ public class Item {
             if (item == null) {
                 contents = new ItemContents();
             } else {
-                contents = item.getSharedContents();
+                contents = item.contents;
             }
-            newItem = new Item(getOwnerRelation(), contents);
+            newItem = new Item(ownerRelation, contents);
             newItem.parent = this;
             daughter = newItem;
         }
@@ -195,7 +195,7 @@ public class Item {
      * @return the utterance that contains this item
      */
     public Utterance getUtterance() {
-        return getOwnerRelation().getUtterance();
+        return ownerRelation.getUtterance();
     }
 
     /**
@@ -204,7 +204,7 @@ public class Item {
      * @return the feature set of this item
      */
     public FeatureSet getFeatures() {
-        return getSharedContents().getFeatures();
+        return contents.getFeatures();
     }
 
     /**
@@ -235,7 +235,7 @@ public class Item {
         Item item;
         Object results = null;
 
-        lastDot = pathAndFeature.lastIndexOf(".");
+        lastDot = pathAndFeature.lastIndexOf('.');
         // string can be of the form "p.feature" or just "feature"
 
         if (lastDot == -1) {
@@ -290,34 +290,45 @@ public class Item {
 
         while (pitem != null && tok.hasMoreTokens()) {
             String token = tok.nextToken();
-            if (token.equals("n")) {
-                pitem = pitem.getNext();
-            } else if (token.equals("p")) {
-                pitem = pitem.getPrevious();
-            } else if (token.equals("nn")) {
-                pitem = pitem.getNext();
-                if (pitem != null) {
-                    pitem = pitem.getNext();
-                }
-            } else if (token.equals("pp")) {
-                pitem = pitem.getPrevious();
-                if (pitem != null) {
-                    pitem = pitem.getPrevious();
-                }
-            } else if (token.equals("parent")) {
-                pitem = pitem.getParent();
-            } else if (token.equals("daughter") || token.equals("daughter1")) {
-                pitem = pitem.getDaughter();
-            } else if (token.equals("daughtern")) {
-                pitem = pitem.getLastDaughter();
-            } else if (token.equals("R")) {
-                String relationName = tok.nextToken();
-                pitem =
-                        pitem.getSharedContents()
-                                .getItemRelation(relationName);
-            } else {
-                System.out.println("findItem: bad feature " + token + " in "
-                        + path);
+            switch (token) {
+                case "n":
+                    pitem = pitem.next;
+                    break;
+                case "p":
+                    pitem = pitem.prev;
+                    break;
+                case "nn":
+                    pitem = pitem.next;
+                    if (pitem != null) {
+                        pitem = pitem.next;
+                    }
+                    break;
+                case "pp":
+                    pitem = pitem.prev;
+                    if (pitem != null) {
+                        pitem = pitem.prev;
+                    }
+                    break;
+                case "parent":
+                    pitem = pitem.getParent();
+                    break;
+                case "daughter":
+                case "daughter1":
+                    pitem = pitem.daughter;
+                    break;
+                case "daughtern":
+                    pitem = pitem.getLastDaughter();
+                    break;
+                case "R":
+                    String relationName = tok.nextToken();
+                    pitem =
+                            pitem.contents
+                                    .getItemRelation(relationName);
+                    break;
+                default:
+                    System.out.println("findItem: bad feature " + token + " in "
+                            + path);
+                    break;
             }
         }
         return pitem;
@@ -356,10 +367,10 @@ public class Item {
         if (originalItem == null) {
             contents = null;
         } else {
-            contents = originalItem.getSharedContents();
+            contents = originalItem.contents;
         }
 
-        newItem = new Item(getOwnerRelation(), contents);
+        newItem = new Item(ownerRelation, contents);
         newItem.next = this.next;
         if (this.next != null) {
             this.next.prev = newItem;
@@ -398,10 +409,10 @@ public class Item {
         if (originalItem == null) {
             contents = null;
         } else {
-            contents = originalItem.getSharedContents();
+            contents = originalItem.contents;
         }
 
-        newItem = new Item(getOwnerRelation(), contents);
+        newItem = new Item(ownerRelation, contents);
         newItem.prev = this.prev;
         if (this.prev != null) {
             this.prev.next = newItem;
@@ -441,7 +452,7 @@ public class Item {
         if (otherItem == null) {
             return false;
         } else {
-            return getSharedContents().equals(otherItem.getSharedContents());
+            return contents.equals(otherItem.getSharedContents());
         }
     }
 }

@@ -66,7 +66,7 @@ public class JSGFParser implements JSGFParserConstants {
                 JSGFEncoding encoding = getJSGFEncoding(i);
                 Reader rdr;
                 if ((encoding != null) && (encoding.encoding != null)) {
-                    System.out.println("Grammar Character Encoding \u005c"" + encoding.encoding + "\u005c"");
+                    //System.out.println("Grammar Character Encoding \u005c"" + encoding.encoding + "\u005c"");
                     rdr = new InputStreamReader(i, encoding.encoding);
                 } else {
                     if (encoding == null) System.out.println("WARNING: Grammar missing self identifying header");

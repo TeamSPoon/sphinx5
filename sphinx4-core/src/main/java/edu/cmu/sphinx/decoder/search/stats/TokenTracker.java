@@ -51,7 +51,7 @@ public class TokenTracker {
     /** Starts the per-frame tracking */
     void startFrame() {
         if (enabled) {
-            stateMap = new HashMap<Object, TokenStats>();
+            stateMap = new HashMap<>();
         }
     }
 

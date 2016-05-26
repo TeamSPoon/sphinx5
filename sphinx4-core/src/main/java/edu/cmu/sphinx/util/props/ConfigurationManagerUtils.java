@@ -45,7 +45,7 @@ public final class ConfigurationManagerUtils {
      * @param cm Configuration manager
      * @return {@code true} if it is a valid configuration.
      */
-    public boolean validateConfiguration(ConfigurationManager cm) {
+    public static boolean validateConfiguration(ConfigurationManager cm) {
         for (String compName : cm.getComponentNames()) {
             if (!cm.getPropertySheet(compName).validate())
                 return false;
@@ -195,7 +195,7 @@ public final class ConfigurationManagerUtils {
      * @return A map which maps all renamed component names to their new names.
      */
     public static Map<String, String> fixDuplicateNames(ConfigurationManager baseCM, ConfigurationManager subCM) {
-        Map<String, String> renames = new HashMap<String, String>();
+        Map<String, String> renames = new HashMap<>();
 
         for (String compName : subCM.getComponentNames()) {
             String uniqueName = compName;
@@ -360,8 +360,8 @@ public final class ConfigurationManagerUtils {
     static void applySystemProperties(Map<String, RawPropertyData> rawMap, Map<String, String> global)
             throws PropertyException {
         Properties props = System.getProperties();
-        for (Enumeration<?> e = props.keys(); e.hasMoreElements();) {
-            String param = (String) e.nextElement();
+        for (Iterator<?> iterator = props.keySet().iterator(); iterator.hasNext();) {
+            String param = (String) iterator.next();
             String value = props.getProperty(param);
 
             // search for parameters of the form component[parameter]=value
@@ -429,6 +429,7 @@ public final class ConfigurationManagerUtils {
                         if (propSheet.getRawNoReplacement(propName).equals(oldName)) {
                             propSheet.setRaw(propName, newName);
                         }
+                        break;
                     default:
                     	break;
                 }
@@ -521,7 +522,7 @@ public final class ConfigurationManagerUtils {
         while (aClass != null && !aClass.equals(Object.class)) {
             aClass = aClass.getSuperclass();
 
-            if (aClass != null && aClass.equals(possibleSuperclass))
+            if (Objects.equals(aClass, possibleSuperclass))
                 return true;
         }
 
@@ -548,14 +549,16 @@ public final class ConfigurationManagerUtils {
      * @return map with properties
      */
     public static Map<String, List<PropertySheet>> listAllsPropNames(ConfigurationManager cm) {
-        Map<String, List<PropertySheet>> allProps = new HashMap<String, List<PropertySheet>>();
+        Map<String, List<PropertySheet>> allProps = new HashMap<>();
 
         for (String configName : cm.getComponentNames()) {
             PropertySheet ps = cm.getPropertySheet(configName);
+            if (ps == null)
+                continue;
 
             for (String propName : ps.getRegisteredProperties()) {
                 if (!allProps.containsKey(propName))
-                    allProps.put(propName, new ArrayList<PropertySheet>());
+                    allProps.put(propName, new ArrayList<>());
 
                 allProps.get(propName).add(ps);
             }
@@ -672,7 +675,7 @@ public final class ConfigurationManagerUtils {
                 ps.setComponent(propName, propValue, null);
                 break;
             case COMPONENT_LIST:
-                List<String> compNames = new ArrayList<String>();
+                List<String> compNames = new ArrayList<>();
                 for (String component : propValue.split(";")) {
                     compNames.add(component.trim());
                 }
@@ -702,7 +705,7 @@ public final class ConfigurationManagerUtils {
      * @return collection of instantiated components
      */
     public static Collection<String> getNonInstaniatedComps(ConfigurationManager cm) {
-        Collection<String> nonInstComponents = new ArrayList<String>();
+        Collection<String> nonInstComponents = new ArrayList<>();
 
         for (String compName : cm.getComponentNames()) {
             if (!cm.getPropertySheet(compName).isInstanciated())
@@ -721,7 +724,7 @@ public final class ConfigurationManagerUtils {
 
 
     public static List<String> toStringList(Object obj) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (!(obj instanceof List<?>))
             return null;
         for (Object o : (List<?>) obj) {

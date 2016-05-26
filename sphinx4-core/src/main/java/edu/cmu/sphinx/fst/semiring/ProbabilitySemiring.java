@@ -21,11 +21,6 @@ package edu.cmu.sphinx.fst.semiring;
 public class ProbabilitySemiring extends Semiring {
 
     private static final long serialVersionUID = 5592668313009971909L;
-    // zero value
-    private static float zero = 0.f;
-
-    // one value
-    private static float one = 1.f;
 
     /*
      * (non-Javadoc)
@@ -79,6 +74,7 @@ public class ProbabilitySemiring extends Semiring {
      */
     @Override
     public float zero() {
+        float zero = 0.f;
         return zero;
     }
 
@@ -89,6 +85,7 @@ public class ProbabilitySemiring extends Semiring {
      */
     @Override
     public float one() {
+        float one = 1.f;
         return one;
     }
 

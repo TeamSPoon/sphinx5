@@ -73,9 +73,7 @@ public class Pair<L, R> {
         Pair<L,R> other = (Pair<L,R>) obj;
         if (!left.equals(other.left))
             return false;
-        if (!right.equals(other.right))
-            return false;
-        return true;
+        return right.equals(other.right);
     }
 
     /*
@@ -85,7 +83,7 @@ public class Pair<L, R> {
      */
     @Override
     public String toString() {
-        return "(" + left + ", " + right + ")";
+        return "(" + left + ", " + right + ')';
     }
 
 }

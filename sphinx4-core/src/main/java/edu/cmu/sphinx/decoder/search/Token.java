@@ -287,11 +287,11 @@ public class Token implements Scoreable {
     @Override
     public String toString() {
         return
-            numFmt.format(getCollectTime()) + ' ' +
-            scoreFmt.format(getScore()) + ' ' +
-            scoreFmt.format(getAcousticScore()) + ' ' +
-            scoreFmt.format(getLanguageScore()) + ' ' +
-            getSearchState();
+            numFmt.format(collectTime) + ' ' +
+            scoreFmt.format(logTotalScore) + ' ' +
+            scoreFmt.format(logAcousticScore) + ' ' +
+            scoreFmt.format(logLanguageScore) + ' ' +
+                    searchState;
     }
 
 
@@ -308,16 +308,16 @@ public class Token implements Scoreable {
      */
     public void dumpTokenPath(boolean includeHMMStates) {
         Token token = this;
-        List<Token> list = new ArrayList<Token>();
+        List<Token> list = new ArrayList<>();
 
         while (token != null) {
             list.add(token);
-            token = token.getPredecessor();
+            token = token.predecessor;
         }
         for (int i = list.size() - 1; i >= 0; i--) {
             token = list.get(i);
             if (includeHMMStates ||
-                    (!(token.getSearchState() instanceof HMMSearchState))) {
+                    (!(token.searchState instanceof HMMSearchState))) {
                 System.out.println("  " + token);
             }
         }
@@ -339,7 +339,7 @@ public class Token implements Scoreable {
         while (token != null) {
             if (token.isWord()) {
                 WordSearchState wordState =
-                        (WordSearchState) token.getSearchState();
+                        (WordSearchState) token.searchState;
                 Pronunciation pron = wordState.getPronunciation();
                 Word word = wordState.getPronunciation().getWord();
 
@@ -359,7 +359,7 @@ public class Token implements Scoreable {
                     sb.insert(0, ' ');
                 }
             }
-            token = token.getPredecessor();
+            token = token.predecessor;
         }
         return sb.toString().trim();
     }
@@ -395,7 +395,7 @@ public class Token implements Scoreable {
         Token token = this;
 
         while (token != null) {
-            SearchState searchState = token.getSearchState();
+            SearchState searchState = token.searchState;
             if (searchState instanceof WordSearchState) {
                 WordSearchState wordState = (WordSearchState) searchState;
                 Word word = wordState.getPronunciation().getWord();
@@ -405,7 +405,7 @@ public class Token implements Scoreable {
                 Unit unit = unitState.getUnit();
                 sb.insert(0, ' ' + unit.getName());
             }
-            token = token.getPredecessor();
+            token = token.predecessor;
         }
         return sb.toString().trim();
     }
@@ -440,7 +440,7 @@ public class Token implements Scoreable {
      *
      * @return true if the token and its predecessors are valid
      */
-    public boolean validate() {
+    public static boolean validate() {
         return true;
     }
 

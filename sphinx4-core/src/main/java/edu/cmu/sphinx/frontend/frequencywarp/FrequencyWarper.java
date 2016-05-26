@@ -46,7 +46,7 @@ public class FrequencyWarper {
      * @return the frequency in a Bark scale
      *
      */
-    public double hertzToBark(double hertz) {
+    public static double hertzToBark(double hertz) {
         double x = hertz / 600;
         return (6.0 * Math.log(x + Math.sqrt(x * x + 1)));
     }
@@ -59,7 +59,7 @@ public class FrequencyWarper {
      * @param bark the input frequency in Barks
      * @return the frequency in Hertz
      */
-    public double barkToHertz(double bark) {
+    public static double barkToHertz(double bark) {
         double x = bark / 6.0;
         return (300.0 * (Math.exp(x) - Math.exp(-x)));
     }

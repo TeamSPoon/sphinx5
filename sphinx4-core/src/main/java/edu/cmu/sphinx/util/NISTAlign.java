@@ -71,9 +71,6 @@ public class NISTAlign {
     private int deletions;
     private int correct;
 
-    /** The raw reference string.  Updated with each call to 'align'. */
-    private String rawReference;
-
     /**
      * The reference annotation; typically the name of the audio file for the reference string.  This is an optional
      * part of the rawReference string.  If it is included, it is appended to the end of the string in parentheses.
@@ -89,9 +86,6 @@ public class NISTAlign {
 
     /** Aligned list of words from rawReference.  Created in alignWords.  Updated with each call to 'align'. */
     private LinkedList<String> alignedReferenceWords;
-
-    /** The raw hypothesis string.  Updated with each call to 'align'. */
-    private String rawHypothesis;
 
     /**
      * Ordered list of words from rawHypothesis after the annotation has been removed.  Updated with each call to
@@ -171,8 +165,10 @@ public class NISTAlign {
 
         // Save the original strings for future reference.
         //
-        rawReference = reference;
-        rawHypothesis = hypothesis;
+        /* The raw reference string.  Updated with each call to 'align'. */
+        String rawReference = reference;
+        /* The raw hypothesis string.  Updated with each call to 'align'. */
+        String rawHypothesis = hypothesis;
 
         // Strip the annotation off the reference string and
         // save it.
@@ -210,23 +206,7 @@ public class NISTAlign {
         // creating alignedReferenceWords and alignedHypothesisWords.
         //
         alignWords(backtrace(createBacktraceTable(referenceItems,
-                hypothesisItems, new  Comparator () {
-                    public boolean isSimilar(Object ref, Object hyp) {
-                        if (ref instanceof String && hyp instanceof String) {
-                            return ((String)ref).equals(hyp);
-                        }
-                        return false;
-                    }          
-        })), new StringRenderer () {
-
-            public String getRef(Object ref, Object hyp) {
-                return (String)ref;
-            }
-            public String getHyp(Object ref, Object hyp) {
-                return (String)hyp;
-            }
-            
-        });
+                hypothesisItems, new MyComparator())), new MyStringRenderer());
 
         // Compute the number of correct words in the hypothesis.
         //
@@ -594,9 +574,9 @@ public class NISTAlign {
      * @param hypothesisItems the ordered list of hypothesis words
      * @return the backtrace table
      */
-    int[][] createBacktraceTable(LinkedList<?> referenceItems,
-                                 LinkedList<?> hypothesisItems,
-                                 Comparator comparator) {
+    static int[][] createBacktraceTable(LinkedList<?> referenceItems,
+                                        LinkedList<?> hypothesisItems,
+                                        Comparator comparator) {
         int[][] penaltyTable;
         int[][] backtraceTable;
         int penalty;
@@ -694,7 +674,7 @@ public class NISTAlign {
      * @return a linked list of Integers representing the backtrace
      */
     LinkedList<Integer> backtrace(int[][] backtraceTable) {
-        LinkedList<Integer> list = new LinkedList<Integer>();
+        LinkedList<Integer> list = new LinkedList<>();
         int i = referenceItems.size();
         int j = hypothesisItems.size();
         while ((i >= 0) && (j >= 0)) {
@@ -738,8 +718,8 @@ public class NISTAlign {
         Object a = null;
         Object b = null;
 
-        alignedReferenceWords = new LinkedList<String>();
-        alignedHypothesisWords = new LinkedList<String>();
+        alignedReferenceWords = new LinkedList<>();
+        alignedHypothesisWords = new LinkedList<>();
 
 
         for (int m = backtrace.size() - 2; m >= 0; m--) {
@@ -839,7 +819,7 @@ public class NISTAlign {
      * @param denominator the denominator
      * @return a String that represents the percentage value.
      */
-    String toPercentage(String pattern, int numerator, int denominator) {
+    static String toPercentage(String pattern, int numerator, int denominator) {
         percentageFormat.applyPattern(pattern);
         return padLeft(
                 6,
@@ -855,7 +835,7 @@ public class NISTAlign {
      * @param value   the floating point value
      * @return a String that represents the percentage value.
      */
-    String toPercentage(String pattern, float value) {
+    static String toPercentage(String pattern, float value) {
         percentageFormat.applyPattern(pattern);
         return percentageFormat.format(value);
     }
@@ -868,7 +848,7 @@ public class NISTAlign {
      * @param i     the integer
      * @return a String padded left with spaces
      */
-    String padLeft(int width, int i) {
+    static String padLeft(int width, int i) {
         return padLeft(width, Integer.toString(i));
     }
 
@@ -880,7 +860,7 @@ public class NISTAlign {
      * @param string the String to pad
      * @return a String padded left with spaces
      */
-    String padLeft(int width, String string) {
+    static String padLeft(int width, String string) {
         int len = string.length();
         if (len < width) {
             return SPACES.substring(0, width - len).concat(string);
@@ -896,8 +876,8 @@ public class NISTAlign {
      * @param s the String of words to parse to a LinkedList
      * @return a list, one word per item
      */
-    LinkedList<Object> toList(String s) {
-        LinkedList<Object> list = new LinkedList<Object>();
+    static LinkedList<Object> toList(String s) {
+        LinkedList<Object> list = new LinkedList<>();
         StringTokenizer st = new StringTokenizer(s.trim());
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -913,11 +893,11 @@ public class NISTAlign {
      * @param list the list of words
      * @return a space separated string
      */
-    private String toString(LinkedList<? extends Object> list) {
+    private static String toString(LinkedList<?> list) {
         if (list == null || list.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
-        ListIterator<? extends Object> iterator = list.listIterator();
+        ListIterator<?> iterator = list.listIterator();
         while (iterator.hasNext())
             sb.append(iterator.next()).append(' ');
         sb.setLength(sb.length() - 1);
@@ -966,12 +946,33 @@ public class NISTAlign {
     }
 
     interface Comparator {
-        public boolean isSimilar (Object ref, Object hyp);
+        boolean isSimilar(Object ref, Object hyp);
     }
     
     
     public interface StringRenderer {
         String getRef (Object ref, Object hyp);
         String getHyp (Object ref, Object hyp);
+    }
+
+    private static class MyStringRenderer implements StringRenderer {
+
+        public String getRef(Object ref, Object hyp) {
+            return (String)ref;
+        }
+
+        public String getHyp(Object ref, Object hyp) {
+            return (String)hyp;
+        }
+
+    }
+
+    private static class MyComparator implements Comparator {
+        public boolean isSimilar(Object ref, Object hyp) {
+            if (ref instanceof String && hyp instanceof String) {
+                return ref.equals(hyp);
+            }
+            return false;
+        }
     }
 }

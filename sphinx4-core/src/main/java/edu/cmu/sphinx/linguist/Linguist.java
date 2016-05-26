@@ -79,23 +79,23 @@ public interface Linguist extends Configurable {
 
     /** Word insertion probability property */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_WORD_INSERTION_PROBABILITY = "wordInsertionProbability";
+    String PROP_WORD_INSERTION_PROBABILITY = "wordInsertionProbability";
 
     /** Unit insertion probability property */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_UNIT_INSERTION_PROBABILITY = "unitInsertionProbability";
+    String PROP_UNIT_INSERTION_PROBABILITY = "unitInsertionProbability";
 
     /** Silence insertion probability property */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_SILENCE_INSERTION_PROBABILITY = "silenceInsertionProbability";
+    String PROP_SILENCE_INSERTION_PROBABILITY = "silenceInsertionProbability";
 
     /** Filler insertion probability property */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_FILLER_INSERTION_PROBABILITY = "fillerInsertionProbability";
+    String PROP_FILLER_INSERTION_PROBABILITY = "fillerInsertionProbability";
 
     /** The property that defines the language weight for the search */
     @S4Double(defaultValue = 1.0)
-    public final static String PROP_LANGUAGE_WEIGHT = "languageWeight";
+    String PROP_LANGUAGE_WEIGHT = "languageWeight";
 
 
     /**
@@ -105,7 +105,7 @@ public interface Linguist extends Configurable {
      *
      * @return the search graph
      */
-    public SearchGraph getSearchGraph();
+    SearchGraph getSearchGraph();
 
 
     /**
@@ -118,7 +118,7 @@ public interface Linguist extends Configurable {
      * shared by multiple simulataneous searches. Reliance on a 'startRecognition' may prevent a linguist from being
      * used in a multi-threaded search.
      */
-    public void startRecognition();
+    void startRecognition();
 
 
     /**
@@ -131,7 +131,7 @@ public interface Linguist extends Configurable {
      * multiple simulataneous searches. Reliance on a 'stopRecognition' may prevent a linguist from being used in a
      * multi-threaded search.
      */
-    public void stopRecognition();
+    void stopRecognition();
 
 
     /**
@@ -143,7 +143,7 @@ public interface Linguist extends Configurable {
      *
      * @throws IOException if an IO error occurs
      */
-    public void allocate() throws IOException;
+    void allocate() throws IOException;
 
 
     /**
@@ -159,6 +159,6 @@ public interface Linguist extends Configurable {
      *
      * @throws IOException if an IO error occurs
      */
-    public void deallocate() throws IOException;
+    void deallocate() throws IOException;
 }
 

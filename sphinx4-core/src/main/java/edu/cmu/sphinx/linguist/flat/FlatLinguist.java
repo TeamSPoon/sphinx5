@@ -262,9 +262,9 @@ public class FlatLinguist implements Linguist, Configurable {
     public void allocate() throws IOException {
         allocateAcousticModel();
         grammar.allocate();
-        totalStates = StatisticsVariable.getStatisticsVariable(getName(), "totalStates");
-        totalArcs = StatisticsVariable.getStatisticsVariable(getName(), "totalArcs");
-        actualArcs = StatisticsVariable.getStatisticsVariable(getName(), "actualArcs");
+        totalStates = StatisticsVariable.getStatisticsVariable(name, "totalStates");
+        totalArcs = StatisticsVariable.getStatisticsVariable(name, "totalArcs");
+        actualArcs = StatisticsVariable.getStatisticsVariable(name, "actualArcs");
         stateSet = compileGrammar();
         totalStates.value = stateSet.size();
     }
@@ -332,10 +332,10 @@ public class FlatLinguist implements Linguist, Configurable {
     protected Collection<SentenceHMMState> compileGrammar() {
         initialGrammarState = grammar.getInitialNode();
 
-        nodeStateMap = new HashMap<GrammarNode, GState>();
-        arcPool = new Cache<SentenceHMMStateArc>();
+        nodeStateMap = new HashMap<>();
+        arcPool = new Cache<>();
 
-        List<GState> gstateList = new ArrayList<GState>();
+        List<GState> gstateList = new ArrayList<>();
         TimerPool.getTimer(this, "Compile").start();
 
         // get the nodes from the grammar and create states
@@ -535,14 +535,14 @@ public class FlatLinguist implements Linguist, Configurable {
      */
     protected class GState {
 
-        private final Map<ContextPair, List<SearchState>> entryPoints = new HashMap<ContextPair, List<SearchState>>();
-        private final Map<ContextPair, List<SearchState>> exitPoints = new HashMap<ContextPair, List<SearchState>>();
-        private final Map<String, SentenceHMMState> existingStates = new HashMap<String, SentenceHMMState>();
+        private final Map<ContextPair, List<SearchState>> entryPoints = new HashMap<>();
+        private final Map<ContextPair, List<SearchState>> exitPoints = new HashMap<>();
+        private final Map<String, SentenceHMMState> existingStates = new HashMap<>();
 
         private final GrammarNode node;
 
-        private final Set<UnitContext> rightContexts = new HashSet<UnitContext>();
-        private final Set<UnitContext> leftContexts = new HashSet<UnitContext>();
+        private final Set<UnitContext> rightContexts = new HashSet<>();
+        private final Set<UnitContext> leftContexts = new HashSet<>();
         private Set<UnitContext> startingContexts;
 
         private int exitConnections;
@@ -568,7 +568,7 @@ public class FlatLinguist implements Linguist, Configurable {
          */
         private Set<UnitContext> getStartingContexts() {
             if (startingContexts == null) {
-                startingContexts = new HashSet<UnitContext>();
+                startingContexts = new HashSet<>();
                 // if this is an empty node, the starting context is
                 // the set of starting contexts for all successor
                 // nodes, otherwise, it is built up from each
@@ -613,7 +613,7 @@ public class FlatLinguist implements Linguist, Configurable {
 
          */
         Collection<UnitContext> getEndingContexts() {
-            Collection<UnitContext> endingContexts = new ArrayList<UnitContext>();
+            Collection<UnitContext> endingContexts = new ArrayList<>();
             if (!node.isEmpty()) {
                 int maxSize = getLeftContextSize();
                 Word word = node.getWord();
@@ -657,7 +657,7 @@ public class FlatLinguist implements Linguist, Configurable {
          */
         void pushLeftContexts() {
             Collection<UnitContext> endingContext = getEndingContexts();
-            Set<GrammarNode> visitedSet = new HashSet<GrammarNode>();
+            Set<GrammarNode> visitedSet = new HashSet<>();
             pushLeftContexts(visitedSet, endingContext);
         }
 
@@ -670,17 +670,17 @@ public class FlatLinguist implements Linguist, Configurable {
          * @param leftContext the context to push
          */
         void pushLeftContexts(Set<GrammarNode> visitedSet, Collection<UnitContext> leftContext) {
-            if (visitedSet.contains(getNode())) {
+            if (visitedSet.contains(node)) {
                 return;
             } else {
-                visitedSet.add(getNode());
+                visitedSet.add(node);
             }
             for (GrammarArc arc : getSuccessors()) {
                 GState gstate = getGState(arc.getGrammarNode());
                 gstate.addLeftContext(leftContext);
                 // if our successor state is empty, also push our
                 // ending context into the empty nodes successors
-                if (gstate.getNode().isEmpty()) {
+                if (gstate.node.isEmpty()) {
                     gstate.pushLeftContexts(visitedSet, leftContext);
                 }
             }
@@ -753,7 +753,7 @@ public class FlatLinguist implements Linguist, Configurable {
             for (UnitContext leftContext : leftContexts) {
                 for (UnitContext startingContext : getStartingContexts()) {
                     ContextPair contextPair = ContextPair.get(leftContext, startingContext);
-                    entryPoints.put(contextPair, new ArrayList<SearchState>());
+                    entryPoints.put(contextPair, new ArrayList<>());
                 }
             }
             // if this is a final node don't expand it, just create a
@@ -803,14 +803,14 @@ public class FlatLinguist implements Linguist, Configurable {
          * synthesized and added to the the list of entry points.
          */
         private void addEmptyEntryPoints() {
-            Map<ContextPair, List<SearchState>> emptyEntryPoints = new HashMap<ContextPair, List<SearchState>>();
+            Map<ContextPair, List<SearchState>> emptyEntryPoints = new HashMap<>();
             for (Map.Entry<ContextPair, List<SearchState>> entry : entryPoints.entrySet()) {
                 ContextPair cp = entry.getKey();
                 if (needsEmptyVersion(cp)) {
                     ContextPair emptyContextPair = ContextPair.get(cp.getLeftContext(), UnitContext.EMPTY);
                     List<SearchState> epList = emptyEntryPoints.get(emptyContextPair);
                     if (epList == null) {
-                        epList = new ArrayList<SearchState>();
+                        epList = new ArrayList<>();
                         emptyEntryPoints.put(emptyContextPair, epList);
                     }
                     epList.addAll(entry.getValue());
@@ -912,7 +912,7 @@ public class FlatLinguist implements Linguist, Configurable {
             // Add the pronunciation state to the entry point list
             // (based upon its left and right context)
             String pname = "P(" + pronunciation.getWord() + '[' + leftContext
-                    + ',' + startingContext + "])-G" + getNode().getID();
+                    + ',' + startingContext + "])-G" + node.getID();
             PronunciationState ps = new PronunciationState(pname, pronunciation, which);
             T("     Expanding " + ps.getPronunciation() + " for lc " + leftContext);
             ContextPair cp = ContextPair.get(leftContext, startingContext);
@@ -1009,7 +1009,7 @@ public class FlatLinguist implements Linguist, Configurable {
         private void addExitPoint(ContextPair cp, SentenceHMMState state) {
             List<SearchState> list = exitPoints.get(cp);
             if (list == null) {
-                list = new ArrayList<SearchState>();
+                list = new ArrayList<>();
                 exitPoints.put(cp, list);
             }
             list.add(state);
@@ -1212,8 +1212,8 @@ public class FlatLinguist implements Linguist, Configurable {
             // T("Connecting " + node.getWord());
             for (GrammarArc arc : getSuccessors()) {
                 GState gstate = getGState(arc.getGrammarNode());
-                if (!gstate.getNode().isEmpty()
-                        && gstate.getNode().getWord().getSpelling().equals(
+                if (!gstate.node.isEmpty()
+                        && gstate.node.getWord().getSpelling().equals(
                         Dictionary.SENTENCE_START_SPELLING)) {
                     continue;
                 }
@@ -1222,8 +1222,8 @@ public class FlatLinguist implements Linguist, Configurable {
                 // pronunciations. If there are 3 ways to say the
                 // word, then each pronunciation gets 1/3 of the total
                 // probability.
-                if (spreadWordProbabilitiesAcrossPronunciations && !gstate.getNode().isEmpty()) {
-                    int numPronunciations = gstate.getNode().getWord().getPronunciations().length;
+                if (spreadWordProbabilitiesAcrossPronunciations && !gstate.node.isEmpty()) {
+                    int numPronunciations = gstate.node.getWord().getPronunciations().length;
                     probability -= logMath.linearToLog(numPronunciations);
                 }
                 float fprob = probability;
@@ -1286,7 +1286,7 @@ public class FlatLinguist implements Linguist, Configurable {
             // since pstates are not placed in the cache we have to
             // gather those states. All other states are found in the
             // existingStates cache.
-            List<SearchState> allStates = new ArrayList<SearchState>(existingStates.values());
+            List<SearchState> allStates = new ArrayList<>(existingStates.values());
             for (List<SearchState> list : entryPoints.values()) {
                 allStates.addAll(list);
             }
@@ -1416,7 +1416,7 @@ public class FlatLinguist implements Linguist, Configurable {
      *
      * @param s the string to trace.
      */
-    private void T(String s) {
+    private static void T(String s) {
         if (tracing) {
             System.out.println(s);
         }
@@ -1428,7 +1428,7 @@ public class FlatLinguist implements Linguist, Configurable {
  */
 class UnitContext {
 
-    private static final Cache<UnitContext> unitContextCache = new Cache<UnitContext>();
+    private static final Cache<UnitContext> unitContextCache = new Cache<>();
     private final Unit[] context;
     private int hashCode = 12;
     public final static UnitContext EMPTY = new UnitContext(Unit.EMPTY_ARRAY);
@@ -1543,7 +1543,7 @@ class UnitContext {
  */
 class ContextPair {
 
-    static final Cache<ContextPair> contextPairCache = new Cache<ContextPair>();
+    static final Cache<ContextPair> contextPairCache = new Cache<>();
     private final UnitContext left;
     private final UnitContext right;
     private final int hashCode;

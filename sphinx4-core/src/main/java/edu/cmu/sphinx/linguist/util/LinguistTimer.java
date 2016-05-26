@@ -69,12 +69,12 @@ public class LinguistTimer {
         totalTimer.start();
         for (int runs = 0; runs < numRuns; runs++) {
             int level = 0;
-            List<SearchState> activeList = new ArrayList<SearchState>();
+            List<SearchState> activeList = new ArrayList<>();
             activeList.add(linguist.getSearchGraph().getInitialState());
             linguist.startRecognition();
             for (int i = 0; i < numFrames; i++) {
                 List<SearchState> oldList = activeList;
-                activeList = new ArrayList<SearchState>(maxBeam * 10);
+                activeList = new ArrayList<>(maxBeam * 10);
                 frameTimer.start();
                 for (SearchState nextStates : oldList) {
                     expandState(level, activeList, nextStates);

@@ -51,7 +51,7 @@ public class BatchCMN extends BaseDataProcessor {
     private double[] sums;           // array of current sums
     private List<Data> cepstraList;
     private int numberDataCepstra;
-    private DecimalFormat formatter = new DecimalFormat("0.00;-0.00", new DecimalFormatSymbols(Locale.US));;
+    private final DecimalFormat formatter = new DecimalFormat("0.00;-0.00", new DecimalFormatSymbols(Locale.US));
 
     public BatchCMN() {
         initLogger();
@@ -71,7 +71,7 @@ public class BatchCMN extends BaseDataProcessor {
     public void initialize() {
         super.initialize();
         sums = null;
-        cepstraList = new LinkedList<Data>();
+        cepstraList = new LinkedList<>();
     }
 
 

@@ -26,7 +26,7 @@ public class FeatureSet {
      * Creates a new empty feature set
      */
     public FeatureSet() {
-        featureMap = new LinkedHashMap<String, Object>();
+        featureMap = new LinkedHashMap<>();
     }
 
     /**
@@ -110,7 +110,7 @@ public class FeatureSet {
      * @param value the value of the feature
      */
     public void setInt(String name, int value) {
-        setObject(name, new Integer(value));
+        setObject(name, value);
     }
 
     /**
@@ -120,7 +120,7 @@ public class FeatureSet {
      * @param value the value of the feature
      */
     public void setFloat(String name, float value) {
-        setObject(name, new Float(value));
+        setObject(name, value);
     }
 
     /**

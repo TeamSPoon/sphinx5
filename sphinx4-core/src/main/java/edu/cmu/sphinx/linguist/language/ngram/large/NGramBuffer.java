@@ -221,7 +221,7 @@ class NGramBuffer {
      * @return the NGram Probability ID of the given nth word
      */
     public int findProbabilityID(int nthWordID) {
-        int mid, start = 0, end = getNumberNGrams();
+        int mid, start = 0, end = numberNGrams;
 
         int nGram = -1;
 
@@ -265,7 +265,7 @@ class NGramBuffer {
      */
     public NGramProbability findNGram(int nthWordID) {
 
-        int mid, start = 0, end = getNumberNGrams() - 1;
+        int mid, start = 0, end = numberNGrams - 1;
         NGramProbability ngram = null;
 
         while ((end - start) > 0) {
@@ -292,7 +292,7 @@ class NGramBuffer {
      */
     public int findNGramIndex(int nthWordID) {
 
-        int mid = -1, start = 0, end = getNumberNGrams() - 1;
+        int mid = -1, start = 0, end = numberNGrams - 1;
 
         while ((end - start) > 0) {
             mid = (start + end) / 2;

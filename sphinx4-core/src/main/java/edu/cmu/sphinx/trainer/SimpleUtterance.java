@@ -29,13 +29,13 @@ public class SimpleUtterance implements Utterance {
     /*
      * The logger for this class
      */
-    private static Logger logger =
+    private static final Logger logger =
             Logger.getLogger("edu.cmu.sphinx.trainer.SimpleUtterance");
 
 
     /** Constructor for class SimpleUtterance. */
     public SimpleUtterance() {
-        transcriptSet = new LinkedList<SimpleTranscript>();
+        transcriptSet = new LinkedList<>();
     }
 
 
@@ -47,7 +47,7 @@ public class SimpleUtterance implements Utterance {
     public SimpleUtterance(String utteranceID) {
         logger.info("Utterance ID: " + utteranceID);
         this.utteranceID = utteranceID;
-        this.transcriptSet = new LinkedList<SimpleTranscript>();
+        this.transcriptSet = new LinkedList<>();
     }
 
 

@@ -31,11 +31,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      * Comparator that compares two sequences by their oldest part.
      */
     public final static Comparator<WordSequence> OLDEST_COMPARATOR =
-            new Comparator<WordSequence>() {
-                public int compare(WordSequence o1, WordSequence o2) {
-                    return o1.getOldest().compareTo(o2.getOldest());
-                }
-            };
+            (o1, o2) -> o1.getOldest().compareTo(o2.getOldest());
 
     /** an empty word sequence, that is, it has no words. */
     public final static WordSequence EMPTY = new WordSequence(0);
@@ -50,7 +46,7 @@ public final class WordSequence implements Comparable<WordSequence> {
     }
 
     private final Word[] words;
-    private transient int hashCode = -1;
+    private transient int hashCode;
 
     /**
      * Constructs a word sequence with the given depth.
@@ -58,7 +54,18 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @param size the maximum depth of the word history
      */
     private WordSequence(int size) {
+
         words = new Word[size];
+    }
+
+    public static int hash(Word[] words) {
+        int code = 123;
+        int i = 0;
+        for (Word word : words) {
+            code += word.hashCode() * (2 * i + 1);
+            i++;
+        }
+        return code;
     }
 
     /**
@@ -81,9 +88,10 @@ public final class WordSequence implements Comparable<WordSequence> {
     }
 
     private void check() {
-        for (Word word : words)
-            if (word == null)
-                throw new Error("WordSequence should not have null Words.");
+        this.hashCode = hash(words);
+//        for (Word word : words)
+//            if (word == null)
+//                throw new Error("WordSequence should not have null Words.");
     }
 
     /**
@@ -123,6 +131,7 @@ public final class WordSequence implements Comparable<WordSequence> {
         if (size() >= 1) {
             next = new WordSequence(words.length - 1);
             System.arraycopy(this.words, 0, next.words, 0, next.words.length);
+            next.check();
         }
         return next;
     }
@@ -138,6 +147,7 @@ public final class WordSequence implements Comparable<WordSequence> {
         if (size() >= 1) {
             next = new WordSequence(words.length - 1);
             System.arraycopy(this.words, 1, next.words, 0, next.words.length);
+            next.check();
         }
         return next;
     }
@@ -165,6 +175,7 @@ public final class WordSequence implements Comparable<WordSequence> {
             for (int i = 0; i < maxSize; i++) {
                 next.words[nextIndex--] = this.words[thisIndex--];
             }
+            next.check();
             return next;
         }
     }
@@ -185,7 +196,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      *
      * @return the number of words
      */
-    public int size() {
+    public final int size() {
         return words.length;
     }
 
@@ -196,7 +207,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @return the string
      */
     @Override
-    public String toString() {
+    public final String toString() {
         StringBuilder sb = new StringBuilder();
         for (Word word : words)
             sb.append('[').append(word).append(']');
@@ -209,14 +220,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @return a hashcode for this object
      */
     @Override
-    public int hashCode() {
-        if (hashCode == -1) {
-            int code = 123;
-            for (int i = 0; i < words.length; i++) {
-                code += words[i].hashCode() * (2 * i + 1);
-            }
-            hashCode = code;
-        }
+    public final int hashCode() {
         return hashCode;
     }
 
@@ -227,7 +231,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @return true if the given object is equal to this object
      */
     @Override
-    public boolean equals(Object object) {
+    public final boolean equals(Object object) {
         if (this == object)
             return true;
         if (!(object instanceof WordSequence))
@@ -243,7 +247,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      *         <code>stopIndex</code> exclusive.
      */
     public WordSequence getSubSequence(int startIndex, int stopIndex) {
-        List<Word> subseqWords = new ArrayList<Word>();
+        List<Word> subseqWords = new ArrayList<>();
 
         for (int i = startIndex; i < stopIndex; i++) {
             subseqWords.add(getWord(i));
@@ -261,13 +265,17 @@ public final class WordSequence implements Comparable<WordSequence> {
     }
 
     public int compareTo(WordSequence other) {
-        int n = min(words.length, other.words.length);
+        Word[] aa = this.words;
+        Word[] bb = other.words;
+        int n = min(aa.length, bb.length);
         for (int i = 0; i < n; ++i) {
-            if (!words[i].equals(other.words[i])) {
-                return words[i].compareTo(other.words[i]);
+            Word a = aa[i];
+            Word b = bb[i];
+            if (!a.equals(b)) {
+                return a.compareTo(b);
             }
         }
 
-        return words.length - other.words.length;
+        return aa.length - bb.length;
     }
 }

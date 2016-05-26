@@ -186,7 +186,7 @@ public class BatchModeRecognizer implements Configurable {
      * @param batchFile the name of the batch file
      * @throws IOException if the file could not be opened or read.
      */
-    public void setBatchFile(String batchFile) throws IOException {
+    public void setBatchFile(String batchFile) {
         if (usePooledBatchManager) {
             batchManager = new PooledBatchManager(batchFile, skip);
         } else {
@@ -555,11 +555,11 @@ public class BatchModeRecognizer implements Configurable {
                 if (args.length != 2) {
                     ci.putResponse("Usage: batchReset batchfile");
                 } else {
-                    try {
+                    //try {
                         setBatchFile(args[1]);
-                    } catch (IOException ioe) {
-                        ci.putResponse("Can't load " + args[1] + ' ' + ioe);
-                    }
+                    //} catch (IOException ioe) {
+                        //ci.putResponse("Can't load " + args[1] + ' ' + ioe);
+                    //}
                 }
                 return "";
             }
@@ -610,7 +610,7 @@ public class BatchModeRecognizer implements Configurable {
         try {
             URL url = new File(cmFile).toURI().toURL();
             cm = new ConfigurationManager(url);
-            bmr = (BatchModeRecognizer) cm.lookup("batch");
+            bmr = cm.lookup("batch");
             if (bmr == null) {
                 System.err.println("Can't find batchModeRecognizer in " + cmFile);
                 return;

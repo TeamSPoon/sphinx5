@@ -1,10 +1,10 @@
 /*
- * Copyright 1999-2010 Carnegie Mellon University.  
- * Portions Copyright 2010 PC-NG Inc.  
+ * Copyright 1999-2010 Carnegie Mellon University.
+ * Portions Copyright 2010 PC-NG Inc.
  * All Rights Reserved.  Use is subject to license terms.
- * 
+ *
  * See the file "license.terms" for information on usage and
- * redistribution of this file, and for a DISCLAIMER OF ALL 
+ * redistribution of this file, and for a DISCLAIMER OF ALL
  * WARRANTIES.
  *
  */
@@ -39,7 +39,7 @@ public class GrXMLGrammar extends JSGFGrammar {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             XMLReader xr = factory.newSAXParser().getXMLReader();
-            rules = new HashMap<String, JSGFRule>();
+            rules = new HashMap<>();
             GrXMLHandler handler = new GrXMLHandler(baseURL, rules, logger);
             xr.setContentHandler(handler);
             xr.setErrorHandler(handler);
@@ -57,11 +57,11 @@ public class GrXMLGrammar extends JSGFGrammar {
 
         return;
     }
-    
+
     /**
      * Commit changes to all loaded grammars and all changes of grammar since
      * the last commitChange
-     * 
+     *
      * @throws JSGFGrammarParseException parse exception occured
      * @throws JSGFGrammarException other exception occured
      */
@@ -87,7 +87,7 @@ public class GrXMLGrammar extends JSGFGrammar {
             // for each of them
 
             for (Map.Entry<String, JSGFRule> entry : rules.entrySet()) {
-                
+
                     GrammarGraph publicRuleGraph = new GrammarGraph();
                     ruleStack.push(entry.getKey(), publicRuleGraph);
                     GrammarGraph graph = processRule(entry.getValue());

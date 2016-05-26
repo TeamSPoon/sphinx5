@@ -34,7 +34,7 @@ public class MixtureComponentTest {
 
     @BeforeSuite
     public void setupLogMath() {
-        LogMath.setUseTable(true);
+        //LogMath.setUseTable(true);
     }
 
     /**

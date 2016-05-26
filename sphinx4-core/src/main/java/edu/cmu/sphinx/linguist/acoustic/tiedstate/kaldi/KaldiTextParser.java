@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -17,8 +16,7 @@ public class KaldiTextParser {
     private final Scanner scanner;
 
     public KaldiTextParser(String path)
-        throws IOException, MalformedURLException
-    {
+        throws IOException {
         // TODO: rewrite with StreamTokenizer, see ExtendedStreamTokenizer.
         File modelFile = new File(path, "final.mdl");
         InputStream modelStream = new URL(modelFile.getPath()).openStream();
@@ -42,7 +40,7 @@ public class KaldiTextParser {
     }
 
     public int[] getIntArray() {
-        List<Integer> ints = new ArrayList<Integer>();
+        List<Integer> ints = new ArrayList<>();
         for (String token : getTokenList("[", "]"))
             ints.add(Integer.parseInt(token));
 
@@ -54,7 +52,7 @@ public class KaldiTextParser {
     }
 
     public float[] getFloatArray() {
-        List<Float> floats = new ArrayList<Float>();
+        List<Float> floats = new ArrayList<>();
         for (String token : getTokenList("[", "]"))
             floats.add(Float.parseFloat(token));
 
@@ -67,7 +65,7 @@ public class KaldiTextParser {
 
     public List<String> getTokenList(String openToken, String closeToken) {
         expectToken(openToken);
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         String token;
 
         while (!closeToken.equals(token = scanner.next()))
@@ -81,7 +79,7 @@ public class KaldiTextParser {
         assertToken(expected, actual);
     }
 
-    public void assertToken(String expected, String actual) {
+    public static void assertToken(String expected, String actual) {
         if (actual.equals(expected))
             return;
 

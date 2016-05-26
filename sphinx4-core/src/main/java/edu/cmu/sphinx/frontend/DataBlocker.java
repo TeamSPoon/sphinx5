@@ -22,7 +22,7 @@ public class DataBlocker extends BaseDataProcessor {
     private int curFirstSamplePos;
     private int sampleRate = -1;
 
-    private final LinkedList<DoubleData> inBuffer = new LinkedList<DoubleData>();
+    private final LinkedList<DoubleData> inBuffer = new LinkedList<>();
 
     private int curInBufferSize;
 

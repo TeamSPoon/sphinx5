@@ -44,7 +44,7 @@ public class SocketCommandInterpreter extends Thread {
      */
     public SocketCommandInterpreter(int port) {
         this.port = port;
-        commandList = new HashMap<String, CommandInterface>();
+        commandList = new HashMap<>();
     }
 
 

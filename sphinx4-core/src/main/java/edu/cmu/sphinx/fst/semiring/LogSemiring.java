@@ -24,10 +24,7 @@ public class LogSemiring extends Semiring {
     private static final long serialVersionUID = 5212106775584311083L;
 
     // zero value
-    private static float zero = Float.POSITIVE_INFINITY;
-
-    // one value
-    private static float one = 0.f;
+    private static final float zero = Float.POSITIVE_INFINITY;
 
     /*
      * (non-Javadoc)
@@ -104,6 +101,7 @@ public class LogSemiring extends Semiring {
      */
     @Override
     public float one() {
+        float one = 0.f;
         return one;
     }
 

@@ -17,6 +17,7 @@ import edu.cmu.sphinx.util.props.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** An abstract decoder which implements all functionality which is independent of the used decoding-paradigm (pull/push). */
@@ -31,7 +32,7 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
 
     @S4ComponentList(type = ResultListener.class)
     public static final String PROP_RESULT_LISTENERS = "resultListeners";
-    protected final List<ResultListener> resultListeners = new ArrayList<ResultListener>();
+    protected final List<ResultListener> resultListeners = new ArrayList<>();
 
     /**
      * If set to true the used search-manager will be automatically allocated
@@ -142,7 +143,9 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
                 resultListener.newResult(result);
             }
         }else {
-            logger.finer("skipping non-final result " + result);
+            if (logger.isLoggable(Level.FINER)) {
+                logger.finer("skipping non-final result " + result);
+            }
         }
     }
 

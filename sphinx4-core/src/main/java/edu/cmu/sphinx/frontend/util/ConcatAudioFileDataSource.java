@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 import javax.sound.sampled.*;
 
@@ -46,12 +47,11 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
         if (batchFiles == null)
             return;
 
-        try {
-            referenceList = new ArrayList<String>();
+
+            referenceList = new ArrayList<>();
             dataStream = new SequenceInputStream(new InputStreamEnumeration(batchFiles));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
     }
 
     public void setBatchFile(File file) {
@@ -59,7 +59,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
     }
 
     public void setBatchFiles(List<File> files) {
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
 
         try {
             for (File file : files)
@@ -72,7 +72,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
     }
 
     public void setBatchUrls(List<URL> urls) {
-        batchFiles = new ArrayList<URL>(urls);
+        batchFiles = new ArrayList<>(urls);
         initialize();
     }
 
@@ -87,7 +87,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
 
         try {
             BufferedReader bf = new BufferedReader(new FileReader(inputFile));
-            driverFiles = new ArrayList<URL>();
+            driverFiles = new ArrayList<>();
 
             String line;
             while ((line = bf.readLine()) != null && line.trim().length() != 0) {
@@ -130,8 +130,8 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
         private URL lastFile;
         final Iterator<URL> fileIt;
 
-        InputStreamEnumeration(List<URL> files) throws IOException {
-            fileIt = new ArrayList<URL>(files).iterator();
+        InputStreamEnumeration(List<URL> files) {
+            fileIt = new ArrayList<>(files).iterator();
         }
 
         /**
@@ -184,8 +184,10 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
                     }
 
                     stream = ais;
-                    logger.finer("Strating processing of '"
-                            + lastFile.getFile() + '\'');
+                    if (logger.isLoggable(Level.FINER)) {
+                        logger.finer("Strating processing of '"
+                                + lastFile.getFile() + '\'');
+                    }
                     for (AudioFileProcessListener fl : fileListeners)
                         fl.audioFileProcStarted(new File(nextFile.getFile()));
 
@@ -210,8 +212,10 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
          */
         public URL readNext() {
             if (lastFile != null) {
-                logger.finest("Finished processing of '" + lastFile.getFile()
-                        + '\'');
+                if (logger.isLoggable(Level.FINEST)) {
+                    logger.finest("Finished processing of '" + lastFile.getFile()
+                            + '\'');
+                }
                 for (AudioFileProcessListener fl : fileListeners)
                     fl.audioFileProcFinished(new File(lastFile.getFile()));
 

@@ -23,12 +23,12 @@ public interface ActiveListManager extends Configurable {
 
     /** The property that specifies the absolute word beam width */
     @S4Integer(defaultValue = 2000)
-    public final static String PROP_ABSOLUTE_WORD_BEAM_WIDTH =
+    String PROP_ABSOLUTE_WORD_BEAM_WIDTH =
             "absoluteWordBeamWidth";
 
     /** The property that specifies the relative word beam width */
     @S4Double(defaultValue = 0.0)
-    public final static String PROP_RELATIVE_WORD_BEAM_WIDTH =
+    String PROP_RELATIVE_WORD_BEAM_WIDTH =
             "relativeWordBeamWidth";
 
     /**
@@ -36,7 +36,7 @@ public interface ActiveListManager extends Configurable {
      *
      * @param token the token to add
      */
-    public void add(Token token);
+    void add(Token token);
 
 
     /**
@@ -45,7 +45,7 @@ public interface ActiveListManager extends Configurable {
      *
      * @return an Iterator of non-emitting ActiveLists
      */
-    public Iterator<ActiveList> getNonEmittingListIterator();
+    Iterator<ActiveList> getNonEmittingListIterator();
 
 
     /**
@@ -53,17 +53,17 @@ public interface ActiveListManager extends Configurable {
      *
      * @return the emitting ActiveList
      */
-    public ActiveList getEmittingList();
+    ActiveList getEmittingList();
 
     
     /**
      * Clears emitting list in manager
      */
-	public void clearEmittingList();
+    void clearEmittingList();
 
 	
     /** Dumps out debug info for the active list manager */
-    public void dump();
+    void dump();
 
 
     /**
@@ -71,7 +71,7 @@ public interface ActiveListManager extends Configurable {
      *
      * @param numStateOrder the total number of state types
      */
-    public void setNumStateOrder(int numStateOrder);
+    void setNumStateOrder(int numStateOrder);
 
 }
 

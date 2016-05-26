@@ -25,7 +25,7 @@ public class StateHistoryTracker {
      * @param frameNumber the frame number
      */
     public StateHistoryTracker(int frameNumber) {
-        statMap = new HashMap<WordSequence, WordStats>();
+        statMap = new HashMap<>();
         this.frameNumber = frameNumber;
     }
 
@@ -50,7 +50,7 @@ public class StateHistoryTracker {
     /** Dumps the word histories in the tracker */
     public void dump() {
         dumpSummary();
-        List<WordStats> stats = new ArrayList<WordStats>(statMap.values());
+        List<WordStats> stats = new ArrayList<>(statMap.values());
         Collections.sort(stats, WordStats.COMPARATOR);
         for (WordStats stat : stats) {
             System.out.println("   " + stat);
@@ -71,7 +71,7 @@ public class StateHistoryTracker {
      * @param token the token of interest
      * @return the word sequence for the token
      */
-    private WordSequence getWordSequence(Token token) {
+    private static WordSequence getWordSequence(Token token) {
         return token.getSearchState().getWordHistory();
     }
     
@@ -79,15 +79,13 @@ public class StateHistoryTracker {
 
     static class WordStats {
 
-        public final static Comparator<WordStats> COMPARATOR = new Comparator<WordStats>() {
-            public int compare(WordStats ws1, WordStats ws2) {
-                if (ws1.maxScore > ws2.maxScore) {
-                    return -1;
-                } else if (ws1.maxScore == ws2.maxScore) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+        public final static Comparator<WordStats> COMPARATOR = (ws1, ws2) -> {
+            if (ws1.maxScore > ws2.maxScore) {
+                return -1;
+            } else if (ws1.maxScore == ws2.maxScore) {
+                return 0;
+            } else {
+                return 1;
             }
         };
 

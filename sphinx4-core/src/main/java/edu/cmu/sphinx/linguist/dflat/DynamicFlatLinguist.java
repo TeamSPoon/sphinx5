@@ -189,8 +189,8 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
         allocateAcousticModel();
         grammar.allocate();
         hmmPool = new HMMPool(acousticModel, logger, unitManager);
-        nodeToNextUnitArrayMap = new HashMap<GrammarNode, int[]>();
-        nodeToUnitSetMap = new HashMap<GrammarNode, Set<Unit>>();
+        nodeToNextUnitArrayMap = new HashMap<>();
+        nodeToUnitSetMap = new HashMap<>();
         Timer timer = TimerPool.getTimer(this, "compileGrammar");
         timer.start();
         compileGrammar();
@@ -281,8 +281,8 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
         // collect the set of next units for this node
 
         if (nodeToNextUnitArrayMap.get(node) == null) {
-            Set<GrammarNode> vistedNodes = new HashSet<GrammarNode>();
-            Set<Unit> unitSet = new HashSet<Unit>();
+            Set<GrammarNode> vistedNodes = new HashSet<>();
+            Set<Unit> unitSet = new HashSet<>();
 
             GrammarArc[] arcs = node.getSuccessors();
             for (GrammarArc arc : arcs) {
@@ -300,8 +300,8 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
         // collect the set of entry units for this node
 
         if (nodeToUnitSetMap.get(node) == null) {
-            Set<GrammarNode> vistedNodes = new HashSet<GrammarNode>();
-            Set<Unit> unitSet = new HashSet<Unit>();
+            Set<GrammarNode> vistedNodes = new HashSet<>();
+            Set<Unit> unitSet = new HashSet<>();
             collectNextUnits(node, vistedNodes, unitSet);
             nodeToUnitSetMap.put(node, unitSet);
         }
@@ -316,8 +316,8 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
      *                    grammar node more than once (which could lead to a death spiral)
      * @param unitSet     the entry units are collected here.
      */
-    private void collectNextUnits(GrammarNode thisNode,
-                                  Set<GrammarNode> vistedNodes, Set<Unit> unitSet) {
+    private static void collectNextUnits(GrammarNode thisNode,
+                                         Set<GrammarNode> vistedNodes, Set<Unit> unitSet) {
         if (vistedNodes.contains(thisNode)) {
             return;
         }
@@ -341,7 +341,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
     }
 
 
-    final Map<SearchState, SearchStateArc[]> successorCache = new HashMap<SearchState, SearchStateArc[]>();
+    final Map<SearchState, SearchStateArc[]> successorCache = new HashMap<>();
 
     /** The base search state for this dynamic flat linguist. */
     abstract class FlatSearchState implements SearchState, SearchStateArc {
@@ -694,7 +694,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          */
         GrammarArc[] filter(GrammarArc[] arcs, int nextBase) {
             if (nextBase != ANY) {
-                List<GrammarArc> list = new ArrayList<GrammarArc>();
+                List<GrammarArc> list = new ArrayList<>();
                 for (GrammarArc arc : arcs) {
                     GrammarNode node = arc.getGrammarNode();
                     if (hasEntryContext(node, nextBase)) {
@@ -736,7 +736,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
                 return pronunciations;
             }
 
-            ArrayList<Pronunciation> filteredPronunciation = new ArrayList<Pronunciation>(
+            ArrayList<Pronunciation> filteredPronunciation = new ArrayList<>(
                     pronunciations.length);
             for (Pronunciation pronunciation : pronunciations) {
                 if (pronunciation.getUnits()[0].getBaseID() == nextBase) {
@@ -801,7 +801,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
 
     class InitialState extends FlatSearchState {
 
-        private final List<SearchStateArc> nextArcs = new ArrayList<SearchStateArc>();
+        private final List<SearchStateArc> nextArcs = new ArrayList<>();
 
 
         /**
@@ -1274,15 +1274,15 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             // otherwise generate arcs to the next set of words
 
 //            Pronunciation pronunciation = pState.getPronunciation();
-            int nextLC = getHMM().getBaseUnit().getBaseID();
+            int nextLC = hmm.getBaseUnit().getBaseID();
 
-            if (!isLastUnitOfWord()) {
+            if (!isLastUnitOfWord) {
                 arcs = pState.getSuccessors(nextLC, index + 1);
             } else {
                 // we are at the end of the word, so we transit to the
                 // next grammar nodes
                 GrammarState gs = pState.getGrammarState();
-                arcs = gs.getNextGrammarStates(nextLC, getRC());
+                arcs = gs.getNextGrammarStates(nextLC, rc);
             }
             return arcs;
         }

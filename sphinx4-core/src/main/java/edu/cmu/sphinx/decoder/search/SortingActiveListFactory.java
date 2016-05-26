@@ -90,7 +90,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
             this.logRelativeBeamWidth = logRelativeBeamWidth;
 
             int initListSize = absoluteBeamWidth > 0 ? absoluteBeamWidth : DEFAULT_SIZE;
-            this.tokenList = new ArrayList<Token>(initListSize);
+            this.tokenList = new ArrayList<>(initListSize);
         }
 
 

@@ -103,7 +103,7 @@ class UsEnglish {
     /** whitespace regular expression pattern */
     public static String RX_WHITESPACE = RX_DEFAULT_US_EN_WHITESPACE;
     /** letter regular expression pattern */
-    public static String RX_ALPHABET = RX_DEFAULT_US_EN_ALPHABET;
+    public static final String RX_ALPHABET = RX_DEFAULT_US_EN_ALPHABET;
     /** uppercase regular expression pattern */
     public static String RX_UPPERCASE = RX_DEFAULT_US_EN_UPPERCASE;
     /** lowercase regular expression pattern */
@@ -115,15 +115,15 @@ class UsEnglish {
     /** integer regular expression pattern */
     public static String RX_INT = RX_DEFAULT_US_EN_INT;
     /** double regular expression pattern */
-    public static String RX_DOUBLE = RX_DEFAULT_US_EN_DOUBLE;
+    public static final String RX_DOUBLE = RX_DEFAULT_US_EN_DOUBLE;
     /** comma separated integer regular expression pattern */
-    public static String RX_COMMAINT = RX_DEFAULT_US_EN_COMMAINT;
+    public static final String RX_COMMAINT = RX_DEFAULT_US_EN_COMMAINT;
     /** digits regular expression pattern */
-    public static String RX_DIGITS = RX_DEFAULT_US_EN_DIGITS;
+    public static final String RX_DIGITS = RX_DEFAULT_US_EN_DIGITS;
     /** dotted abbreviation regular expression pattern */
-    public static String RX_DOTTED_ABBREV = RX_DEFAULT_US_EN_DOTTED_ABBREV;
+    public static final String RX_DOTTED_ABBREV = RX_DEFAULT_US_EN_DOTTED_ABBREV;
     /** ordinal number regular expression pattern */
-    public static String RX_ORDINAL_NUMBER = RX_DEFAULT_US_EN_ORDINAL_NUMBER;
+    public static final String RX_ORDINAL_NUMBER = RX_DEFAULT_US_EN_ORDINAL_NUMBER;
     /** has-vowel regular expression */
     public static final String RX_HAS_VOWEL = RX_DEFAULT_HAS_VOWEL;
     /** US money regular expression */
@@ -198,6 +198,9 @@ public class USEnglishTokenizer implements TextTokenizer {
     private static final Pattern sevenPhoneNumberPattern;
     private static final Pattern threeDigitsPattern;
     private static final Pattern usMoneyPattern;
+    private static final Pattern DOTLITERAL = Pattern.compile(".", Pattern.LITERAL);
+    private static final Pattern COMMALITERAL = Pattern.compile(",", Pattern.LITERAL);
+
 
     static {
         alphabetPattern = Pattern.compile(UsEnglish.RX_ALPHABET);
@@ -243,7 +246,7 @@ public class USEnglishTokenizer implements TextTokenizer {
      * Here we use a map for constant time matching, instead of using if
      * (A.equals(B) || A.equals(C) || ...) to match Strings
      */
-    private static Map<String, String> kingSectionLikeMap = new HashMap<String, String>();
+    private static final Map<String, String> kingSectionLikeMap = new HashMap<>();
 
     private static final String KING_NAMES = "kingNames";
     private static final String KING_TITLES = "kingTitles";
@@ -333,12 +336,12 @@ public class USEnglishTokenizer implements TextTokenizer {
             {"Wyo", "", "wyoming"}, {"PR", "ambiguous", "puerto", "rico"}};
 
     // Again map for constant time searching.
-    private static Map<String, String[]> usStatesMap = new HashMap<String, String[]>();
+    private static final Map<String, String[]> usStatesMap = new HashMap<>();
     static {
         for (int i = 0; i < usStates.length; i++) {
             usStatesMap.put(usStates[i][0], usStates[i]);
         }
-    };
+    }
 
     // class variables
 
@@ -411,7 +414,7 @@ public class USEnglishTokenizer implements TextTokenizer {
             tokenToWords(tokenVal);
         }
 
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         for (Item item = utterance.getRelation(Relation.WORD).getHead(); item != null; item =
                 item.getNext()) {
             if (!item.toString().isEmpty() && !item.toString().contains("#")) {
@@ -421,7 +424,7 @@ public class USEnglishTokenizer implements TextTokenizer {
         return words;
     }
 
-    private String simplifyChars(String text) {
+    private static String simplifyChars(String text) {
         text = text.replace('’', '\'');
         text = text.replace('‘', '\'');
         text = text.replace('”', '"');
@@ -481,8 +484,8 @@ public class USEnglishTokenizer implements TextTokenizer {
 
         } else if ((tokenVal.equals("a") || tokenVal.equals("A"))
                 && ((tokenItem.getNext() == null)
-                        || !(tokenVal.equals(itemName)) || !(((String) tokenItem
-                            .findFeature("punc")).equals("")))) {
+                        || !(tokenVal.equals(itemName)) || !(tokenItem
+                            .findFeature("punc").equals("")))) {
             /* if A is a sub part of a token, then its ey not ah */
             wordRelation.addWord("_a");
 
@@ -511,7 +514,7 @@ public class USEnglishTokenizer implements TextTokenizer {
                 wordRelation.addWord("missus");
             } else if (tokenLength == 1
                     && Character.isUpperCase(tokenVal.charAt(0))
-                    && ((String) tokenItem.findFeature("n.whitespace"))
+                    && tokenItem.findFeature("n.whitespace")
                             .equals(" ")
                     && Character.isUpperCase(((String) tokenItem
                             .findFeature("n.name")).charAt(0))) {
@@ -542,13 +545,13 @@ public class USEnglishTokenizer implements TextTokenizer {
 
             /* U.S.A. */
             // remove all dots
-            NumberExpander.expandLetters(tokenVal.replace(".", ""),
+            NumberExpander.expandLetters(DOTLITERAL.matcher(tokenVal).replaceAll(Matcher.quoteReplacement("")),
                     wordRelation);
 
         } else if (matches(commaIntPattern, tokenVal)) {
 
             /* 99,999,999 */
-            NumberExpander.expandReal(tokenVal.replace(",", "").replace("'", ""), wordRelation);
+            NumberExpander.expandReal(COMMALITERAL.matcher(tokenVal).replaceAll(Matcher.quoteReplacement("")).replace("'", ""), wordRelation);
 
         } else if (matches(sevenPhoneNumberPattern, tokenVal)) {
 
@@ -565,7 +568,7 @@ public class USEnglishTokenizer implements TextTokenizer {
 
             /* part of a telephone number */
             String punctuation = (String) tokenItem.findFeature("punc");
-            if (punctuation.equals("")) {
+            if (punctuation.isEmpty()) {
                 tokenItem.getFeatures().setString("punc", ",");
             }
             NumberExpander.expandDigits(tokenVal, wordRelation);
@@ -588,7 +591,7 @@ public class USEnglishTokenizer implements TextTokenizer {
             digitsToWords(tokenVal);
         } else if (tokenLength == 1
                 && Character.isUpperCase(tokenVal.charAt(0))
-                && ((String) tokenItem.findFeature("n.whitespace"))
+                && tokenItem.findFeature("n.whitespace")
                         .equals(" ")
                 && Character.isUpperCase(((String) tokenItem
                         .findFeature("n.name")).charAt(0))) {
@@ -678,14 +681,19 @@ public class USEnglishTokenizer implements TextTokenizer {
                 featureSet.setString("name", rName);
             }
 
-            if (digitsType.equals("ordinal")) {
-                NumberExpander.expandOrdinal(tokenVal, wordRelation);
-            } else if (digitsType.equals("digits")) {
-                NumberExpander.expandDigits(tokenVal, wordRelation);
-            } else if (digitsType.equals("year")) {
-                NumberExpander.expandID(tokenVal, wordRelation);
-            } else {
-                NumberExpander.expandNumber(tokenVal, wordRelation);
+            switch (digitsType) {
+                case "ordinal":
+                    NumberExpander.expandOrdinal(tokenVal, wordRelation);
+                    break;
+                case "digits":
+                    NumberExpander.expandDigits(tokenVal, wordRelation);
+                    break;
+                case "year":
+                    NumberExpander.expandID(tokenVal, wordRelation);
+                    break;
+                default:
+                    NumberExpander.expandNumber(tokenVal, wordRelation);
+                    break;
             }
         }
     }
@@ -699,7 +707,7 @@ public class USEnglishTokenizer implements TextTokenizer {
     private void romanToWords(String romanString) {
         String punctuation = (String) tokenItem.findFeature("p.punc");
 
-        if (punctuation.equals("")) {
+        if (punctuation.isEmpty()) {
             /* no preceeding punctuation */
             String n = String.valueOf(NumberExpander.expandRoman(romanString));
 
@@ -847,7 +855,7 @@ public class USEnglishTokenizer implements TextTokenizer {
             NumberExpander.expandReal(tokenVal.substring(1), wordRelation);
             wordRelation.addWord("dollars");
         } else {
-            String aaa = tokenVal.substring(1, dotIndex).replace(",", "");
+            String aaa = COMMALITERAL.matcher(tokenVal.substring(1, dotIndex)).replaceAll(Matcher.quoteReplacement(""));
             String bbb = tokenVal.substring(dotIndex + 1);
 
             NumberExpander.expandNumber(aaa, wordRelation);
@@ -982,7 +990,7 @@ public class USEnglishTokenizer implements TextTokenizer {
      * @param tokenVal the token string
      */
     private boolean isStateName(String tokenVal) {
-        String[] state = (String[]) usStatesMap.get(tokenVal);
+        String[] state = usStatesMap.get(tokenVal);
         if (state != null) {
             boolean expandState = false;
 
@@ -1013,11 +1021,7 @@ public class USEnglishTokenizer implements TextTokenizer {
                                 || featureSet.getString("punc").equals(".") || ((nextLength == 5 || nextLength == 10) && matches(
                                 digitsPattern, next)));
 
-                if (previousIsCity && nextIsGood) {
-                    expandState = true;
-                } else {
-                    expandState = false;
-                }
+                expandState = previousIsCity && nextIsGood;
             } else {
                 expandState = true;
             }
@@ -1075,10 +1079,6 @@ public class USEnglishTokenizer implements TextTokenizer {
             return false;
         } else if (c0 == '\'' || Character.isLetter(c1)) {
             return false;
-        } else if (c1 == '\'' || Character.isLetter(c0)) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return !(c1 == '\'' || Character.isLetter(c0));
     }
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import edu.cmu.sphinx.fst.semiring.Semiring;
 import edu.cmu.sphinx.fst.utils.Utils;
@@ -33,6 +34,8 @@ import edu.cmu.sphinx.fst.utils.Utils;
  * @author John Salatas
  */
 public class Convert {
+
+    private static final Pattern COMPILE = Pattern.compile("\\t");
 
     /**
      * Default private Constructor.
@@ -101,7 +104,7 @@ public class Convert {
                         : Integer.toString(arc.getOlabel());
 
                 out.println(s.getId() + "\t" + arc.getNextState().getId()
-                        + "\t" + isym + "\t" + osym + "\t" + arc.getWeight());
+                        + '\t' + isym + "\t" + osym + "\t" + arc.getWeight());
             }
         }
 
@@ -128,7 +131,7 @@ public class Convert {
 
         for (int i = 0; i < syms.length; i++) {
             String key = syms[i];
-            out.println(key + "\t" + i);
+            out.println(key + '\t' + i);
         }
 
         out.close();
@@ -155,11 +158,11 @@ public class Convert {
         FileInputStream fis = new FileInputStream(filename); 
         DataInputStream dis = new DataInputStream(fis);
         BufferedReader br = new BufferedReader(new InputStreamReader(dis));
-        HashMap<String, Integer> syms = new HashMap<String, Integer>();
+        HashMap<String, Integer> syms = new HashMap<>();
         String strLine;
 
         while ((strLine = br.readLine()) != null) {
-            String[] tokens = strLine.split("\\t");
+            String[] tokens = COMPILE.split(strLine);
             String sym = tokens[0];
             Integer index = Integer.parseInt(tokens[1]);
             syms.put(sym, index);
@@ -188,14 +191,14 @@ public class Convert {
 
         HashMap<String, Integer> isyms = importSymbols(basename + ".input.syms");
         if (isyms == null) {
-            isyms = new HashMap<String, Integer>();
+            isyms = new HashMap<>();
             isyms.put("<eps>", 0);
         }
 
         HashMap<String, Integer> osyms = importSymbols(basename
                 + ".output.syms");
         if (osyms == null) {
-            osyms = new HashMap<String, Integer>();
+            osyms = new HashMap<>();
             osyms.put("<eps>", 0);
         }
 
@@ -209,10 +212,10 @@ public class Convert {
         BufferedReader br = new BufferedReader(new InputStreamReader(dis, "UTF-8"));
         boolean firstLine = true;
         String strLine;
-        HashMap<Integer, State> stateMap = new HashMap<Integer, State>();
+        HashMap<Integer, State> stateMap = new HashMap<>();
 
         while ((strLine = br.readLine()) != null) {
-            String[] tokens = strLine.split("\\t");
+            String[] tokens = COMPILE.split(strLine);
             Integer inputStateId;
             if (ssyms == null) {
                 inputStateId = Integer.parseInt(tokens[0]);
@@ -246,13 +249,9 @@ public class Convert {
                     stateMap.put(nextStateId, nextState);
                 }
                 // Adding arc
-                if (isyms.get(tokens[2]) == null) {
-                    isyms.put(tokens[2], isyms.size());
-                }
+                isyms.putIfAbsent(tokens[2], isyms.size());
                 int iLabel = isyms.get(tokens[2]);
-                if (osyms.get(tokens[3]) == null) {
-                    osyms.put(tokens[3], osyms.size());
-                }
+                osyms.putIfAbsent(tokens[3], osyms.size());
                 int oLabel = osyms.get(tokens[3]);
 
                 float arcWeight;

@@ -199,7 +199,7 @@ public class BinaryLoader {
      * @return a string of the given length from the given DataInputStream
      * @throws java.io.IOException
      */
-    private String readString(DataInputStream stream, int length)
+    private static String readString(DataInputStream stream, int length)
             throws IOException {
         StringBuilder builder = new StringBuilder();
         byte[] bytes = new byte[length];

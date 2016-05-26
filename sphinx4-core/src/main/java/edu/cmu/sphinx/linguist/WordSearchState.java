@@ -32,5 +32,5 @@ public interface WordSearchState extends SearchState {
      * @return true if this WordSearchState indicates the start of a word, false if this WordSearchState indicates the
      *         end of a word
      */
-    public boolean isWordStart();
+    boolean isWordStart();
 }

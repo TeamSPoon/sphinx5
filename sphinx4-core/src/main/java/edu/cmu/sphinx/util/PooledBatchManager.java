@@ -148,7 +148,7 @@ public class PooledBatchManager implements BatchManager {
      * @param name the name of the file
      * @param line the contents of the file
      */
-    private void createInputFile(File dir, String name, String line)
+    private static void createInputFile(File dir, String name, String line)
             throws IOException {
 
         File path = new File(dir, name);
@@ -178,13 +178,13 @@ public class PooledBatchManager implements BatchManager {
      *
      * @return my network name
      */
-    private String getMyName() throws IOException {
+    private static String getMyName() throws IOException {
         return InetAddress.getLocalHost().getHostName();
     }
 
 
     /** Close the redirected stdout and restore it to what it was before we redirected it. */
-    private void closeStdout() throws IOException {
+    private void closeStdout() {
         System.out.close();
         System.setOut(oldOut);
     }
@@ -211,7 +211,7 @@ public class PooledBatchManager implements BatchManager {
      * @param file the in process file
      * @return the completed file
      */
-    private File getCompletedFile(File file) {
+    private static File getCompletedFile(File file) {
         return new File(completedDir, file.getName());
     }
 
@@ -222,13 +222,13 @@ public class PooledBatchManager implements BatchManager {
      * @param file the in process file
      * @return the completed file
      */
-    private File getProcessingFile(File file) {
+    private static File getProcessingFile(File file) {
         return new File(inProcessDir, file.getName());
     }
 
 
     /** returns the next batch item file in the input directory */
-    private File getNextFile() throws IOException {
+    private File getNextFile() {
         File[] match = inputDir.listFiles(testFileFilter);
 
         if (match.length > 0) {
@@ -244,7 +244,7 @@ public class PooledBatchManager implements BatchManager {
      * @param file the file to parse
      * @return the contents in the form of a batch item
      */
-    private BatchItem getBatchItem(File file) throws IOException {
+    private static BatchItem getBatchItem(File file) throws IOException {
         List<String> list = BatchFile.getLines(file.getPath());
         if (list.size() != 1) {
             throw new IOException("Bad batch file size");

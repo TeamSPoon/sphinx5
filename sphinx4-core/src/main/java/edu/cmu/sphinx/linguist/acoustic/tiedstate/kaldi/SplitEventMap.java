@@ -32,7 +32,7 @@ public class SplitEventMap extends EventMapWithKey {
                          EventMap yesMap, EventMap noMap)
     {
         super(key);
-        this.values = new HashSet<Integer>(values);
+        this.values = new HashSet<>(values);
         this.yesMap = yesMap;
         this.noMap = noMap;
     }

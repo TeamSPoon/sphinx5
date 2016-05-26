@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class StatisticsVariable {
 
-    private static final Map<String, StatisticsVariable> pool = new HashMap<String, StatisticsVariable>();
+    private static final Map<String, StatisticsVariable> pool = new HashMap<>();
 
     /** the value of this StatisticsVariable. It can be manipulated directly by the application. */
     public double value;
@@ -129,7 +129,7 @@ public class StatisticsVariable {
 
     /** Dumps this StatisticsVariable. */
     public void dump() {
-        if (isEnabled()) {
+        if (enabled) {
             System.out.println(name + ' ' + value);
         }
     }

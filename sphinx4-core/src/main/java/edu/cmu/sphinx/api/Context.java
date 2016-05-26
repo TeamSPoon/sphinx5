@@ -40,8 +40,7 @@ public class Context {
      * @throws MalformedURLException if failed to load configuration file
      */
     public Context(Configuration config)
-        throws IOException, MalformedURLException
-    {
+        throws IOException {
         this("resource:/edu/cmu/sphinx/api/default.config.xml", config);
     }
 
@@ -54,8 +53,7 @@ public class Context {
      * @throws IOException           if failed to load configuration file
      */
     public Context(String path, Configuration config)
-        throws IOException, MalformedURLException
-    {
+        throws IOException {
         configurationManager = new ConfigurationManager(resourceToURL(path));
 
         setAcousticModel(config.getAcousticModelPath());
@@ -84,7 +82,7 @@ public class Context {
      *
      * @throws IOException if failed to read feat.params
      */
-    public void setAcousticModel(String path) throws IOException {
+    public void setAcousticModel(String path) {
         setLocalProperty("acousticModelLoader->location", path);
         setLocalProperty("dictionary->fillerPath", Utilities.pathJoin(path, "noisedict"));
     }

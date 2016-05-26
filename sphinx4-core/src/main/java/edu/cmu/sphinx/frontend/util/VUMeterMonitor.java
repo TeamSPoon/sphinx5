@@ -73,7 +73,7 @@ public class VUMeterMonitor extends BaseDataProcessor {
         mic.startRecording();
 
         VUMeterMonitor monitor = new VUMeterMonitor();
-        monitor.getVuMeterDialog().setModal(true);
+        monitor.vuMeterDialog.setModal(true);
         monitor.setPredecessor(mic);
 
         while (true) {

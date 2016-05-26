@@ -91,7 +91,7 @@ public class KaldiLoader implements Loader {
         InputStream stream = new URL(file.getPath()).openStream();
         Reader reader = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(reader);
-        Map<String, Integer> symbolTable = new HashMap<String, Integer>();
+        Map<String, Integer> symbolTable = new HashMap<>();
         String line;
 
         while (null != (line = br.readLine())) {
@@ -100,7 +100,7 @@ public class KaldiLoader implements Loader {
                 symbolTable.put(fields[0], Integer.parseInt(fields[1]));
         }
 
-        contextIndependentUnits = new HashMap<String, Unit>();
+        contextIndependentUnits = new HashMap<>();
         hmmManager = new LazyHmmManager(parser, transitionModel,
                                         senonePool, symbolTable);
 
@@ -119,7 +119,7 @@ public class KaldiLoader implements Loader {
         URL transformUrl = new URL(new File(location, "final.mat").getPath());
         Reader reader = new InputStreamReader(transformUrl.openStream());
         BufferedReader br = new BufferedReader(reader);
-        List<Float> values = new ArrayList<Float>();
+        List<Float> values = new ArrayList<>();
         int numRows = 0;
         int numCols = 0;
         String line;

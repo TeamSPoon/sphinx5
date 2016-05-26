@@ -31,7 +31,7 @@ public class RawPropertyData {
      * @param className the class name of the item
      */
     public RawPropertyData(String name, String className) {
-        this(name, className, new HashMap<String, Object>());
+        this(name, className, new HashMap<>());
     }
 
     /**
@@ -128,7 +128,7 @@ public class RawPropertyData {
      * @param globalProperties global properties
      * @return the property value or null if it doesn't exist.
      */
-    public String getGlobalProperty(String key, Map<String, String> globalProperties) {
+    public static String getGlobalProperty(String key, Map<String, String> globalProperties) {
         if (!key.startsWith("${")) // is symbol already flat
             return key;
 

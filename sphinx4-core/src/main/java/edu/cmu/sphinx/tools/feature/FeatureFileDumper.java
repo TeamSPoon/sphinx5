@@ -18,7 +18,6 @@ import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,11 +60,10 @@ public class FeatureFileDumper {
      *            the name for the frontend
      * @throws IOException if error occurred
      */
-    public FeatureFileDumper(ConfigurationManager cm, String frontEndName)
-            throws IOException {
+    public FeatureFileDumper(ConfigurationManager cm, String frontEndName) {
         try {
-            frontEnd = (FrontEnd) cm.lookup(frontEndName);
-            audioSource = (StreamDataSource) cm.lookup("streamDataSource");
+            frontEnd = cm.lookup(frontEndName);
+            audioSource = cm.lookup("streamDataSource");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +78,7 @@ public class FeatureFileDumper {
      */
     public void processFile(String inputAudioFile) throws FileNotFoundException {
         audioSource .setInputStream(new FileInputStream(inputAudioFile));
-        allFeatures = new LinkedList<float[]>();
+        allFeatures = new LinkedList<>();
         getAllFeatures();
         logger.info("Frames: " + allFeatures.size());
     }
@@ -248,34 +246,42 @@ public class FeatureFileDumper {
     }
 
     private void processFile(String inputFile, String outputFile, String format)
-            throws MalformedURLException, IOException {
+            throws IOException {
         processFile(inputFile);
-        if (format.equals("binary")) {
-            dumpBinary(outputFile);
-        } else if (format.equals("ascii")) {
-            dumpAscii(outputFile);
-        } else {
-            System.out.println("ERROR: unknown output format: " + format);
+        switch (format) {
+            case "binary":
+                dumpBinary(outputFile);
+                break;
+            case "ascii":
+                dumpAscii(outputFile);
+                break;
+            default:
+                System.out.println("ERROR: unknown output format: " + format);
+                break;
         }
     }
 
     private void processCtl(String inputCtl, String inputFolder,
-            String outputFolder, String format) throws MalformedURLException,
+            String outputFolder, String format) throws
             IOException {
 
         Scanner scanner = new Scanner(new File(inputCtl));
         while (scanner.hasNext()) {
             String fileName = scanner.next();
-            String inputFile = inputFolder + "/" + fileName + ".wav";
-            String outputFile = outputFolder + "/" + fileName + ".mfc";
+            String inputFile = inputFolder + '/' + fileName + ".wav";
+            String outputFile = outputFolder + '/' + fileName + ".mfc";
 
             processFile(inputFile);
-            if (format.equals("binary")) {
-                dumpBinary(outputFile);
-            } else if (format.equals("ascii")) {
-                dumpAscii(outputFile);
-            } else {
-                System.out.println("ERROR: unknown output format: " + format);
+            switch (format) {
+                case "binary":
+                    dumpBinary(outputFile);
+                    break;
+                case "ascii":
+                    dumpAscii(outputFile);
+                    break;
+                default:
+                    System.out.println("ERROR: unknown output format: " + format);
+                    break;
             }
         }
         scanner.close();

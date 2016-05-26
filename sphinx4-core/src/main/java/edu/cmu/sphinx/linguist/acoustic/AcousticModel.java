@@ -24,18 +24,18 @@ public interface AcousticModel extends Configurable {
 
     /** The directory where the acoustic model data can be found. */
     @S4String(defaultValue = ".")
-    public final static String PROP_LOCATION = "location";
+    String PROP_LOCATION = "location";
 
     /**
      * Gets this acoustic model ready to use, allocating all necessary resources.
      *
      * @throws IOException if the model could not be loaded
      */
-    public void allocate() throws IOException;
+    void allocate() throws IOException;
 
 
     /** Deallocates previously allocated resources */
-    public void deallocate();
+    void deallocate();
 
 
     /**
@@ -43,7 +43,7 @@ public interface AcousticModel extends Configurable {
      *
      * @return the name of this AcousticModel, or null if it has no name
      */
-    public String getName();
+    String getName();
 
 
     /**
@@ -56,8 +56,8 @@ public interface AcousticModel extends Configurable {
      * @param exactMatch if true, only an exact match is acceptable.
      * @return the HMM that best matches, or null if no match could be found.
      */
-    public HMM lookupNearestHMM(Unit unit, HMMPosition position,
-                                boolean exactMatch);
+    HMM lookupNearestHMM(Unit unit, HMMPosition position,
+                         boolean exactMatch);
 
 
     /**
@@ -66,7 +66,7 @@ public interface AcousticModel extends Configurable {
      * @return an iterator that can be used to iterate through all HMMs in the model. The iterator returns objects of
      *         type <code>HMM</code>.
      */
-    public Iterator<HMM> getHMMIterator();
+    Iterator<HMM> getHMMIterator();
 
 
     /**
@@ -75,7 +75,7 @@ public interface AcousticModel extends Configurable {
      * @return an iterator that can be used to iterate through all CI units. The iterator returns objects of type
      *         <code>Unit</code>
      */
-    public Iterator<Unit> getContextIndependentUnitIterator();
+    Iterator<Unit> getContextIndependentUnitIterator();
 
 
     /**
@@ -83,7 +83,7 @@ public interface AcousticModel extends Configurable {
      *
      * @return the left context size
      */
-    public int getLeftContextSize();
+    int getLeftContextSize();
 
 
     /**
@@ -91,7 +91,7 @@ public interface AcousticModel extends Configurable {
      *
      * @return the left context size
      */
-    public int getRightContextSize();
+    int getRightContextSize();
 
 
     /**
@@ -99,6 +99,6 @@ public interface AcousticModel extends Configurable {
      *
      * @return the properties of this acoustic model
      */
-    public Properties getProperties();
+    Properties getProperties();
 }
 

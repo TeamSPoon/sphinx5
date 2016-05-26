@@ -37,19 +37,19 @@ public class SpeakerCluster {
     }
 
     public SpeakerCluster() {
-        this.segmentSet = new TreeSet<Segment>();
+        this.segmentSet = new TreeSet<>();
     }
 
     public SpeakerCluster(Segment s, Array2DRowRealMatrix featureMatrix, double bicValue) {
-        this.segmentSet = new TreeSet<Segment>();
+        this.segmentSet = new TreeSet<>();
         this.featureMatrix = new Array2DRowRealMatrix(featureMatrix.getData());
         this.bicValue = bicValue;
         addSegment(s);
     }
 
     public SpeakerCluster(SpeakerCluster c) {
-        this.segmentSet = new TreeSet<Segment>();
-        this.featureMatrix = new Array2DRowRealMatrix(c.getFeatureMatrix().getData());
+        this.segmentSet = new TreeSet<>();
+        this.featureMatrix = new Array2DRowRealMatrix(c.featureMatrix.getData());
         Iterator<Segment> it = c.segmentSet.iterator();
         while (it.hasNext())
             this.addSegment(it.next());
@@ -61,7 +61,7 @@ public class SpeakerCluster {
 
     public ArrayList<Segment> getArrayOfSegments() {
         Iterator<Segment> it = segmentSet.iterator();
-        ArrayList<Segment> ret = new ArrayList<Segment>();
+        ArrayList<Segment> ret = new ArrayList<>();
         while (it.hasNext())
             ret.add(it.next());
         return ret;
@@ -92,7 +92,7 @@ public class SpeakerCluster {
         int start = previous.getStartTime();
         int length = previous.getLength();
         int idx = 0;
-        ArrayList<Segment> ret = new ArrayList<Segment>();
+        ArrayList<Segment> ret = new ArrayList<>();
         ret.add(previous);
         while (it.hasNext()) {
             curent = it.next();
@@ -117,12 +117,12 @@ public class SpeakerCluster {
             if (!this.addSegment(it.next()))
                 System.out.println("Something doesn't work in mergeWith method, Cluster class");
         }
-        int rowDim = featureMatrix.getRowDimension() + target.getFeatureMatrix().getRowDimension();
+        int rowDim = featureMatrix.getRowDimension() + target.featureMatrix.getRowDimension();
         int colDim = featureMatrix.getColumnDimension();
         Array2DRowRealMatrix combinedFeatures = new Array2DRowRealMatrix(rowDim, colDim);
         combinedFeatures.setSubMatrix(featureMatrix.getData(), 0, 0);
         combinedFeatures
-                .setSubMatrix(target.getFeatureMatrix().getData(), featureMatrix.getRowDimension(), 0);
+                .setSubMatrix(target.featureMatrix.getData(), featureMatrix.getRowDimension(), 0);
         bicValue = SpeakerIdentification.getBICValue(combinedFeatures);
         featureMatrix = new Array2DRowRealMatrix(combinedFeatures.getData());
     }

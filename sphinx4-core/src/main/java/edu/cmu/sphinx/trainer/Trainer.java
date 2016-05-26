@@ -45,8 +45,8 @@ public class Trainer implements Configurable {
     private String initialStage;
     private String finalStage;
     private boolean isStageActive;
-    private List<Stage> StageList = new LinkedList<Stage>();
-    private Set<String> StageNames = new HashSet<String>();
+    private final List<Stage> StageList = new LinkedList<>();
+    private final Set<String> StageNames = new HashSet<>();
 
     private TrainManager trainManager;
     
@@ -155,7 +155,7 @@ public class Trainer implements Configurable {
         	String configFile = argv[0];
         
         	ConfigurationManager cm = new ConfigurationManager(configFile);
-        	Trainer trainer = (Trainer)cm.lookup (context);
+        	Trainer trainer = cm.lookup (context);
         	trainer.processStages(context);
         }
     }

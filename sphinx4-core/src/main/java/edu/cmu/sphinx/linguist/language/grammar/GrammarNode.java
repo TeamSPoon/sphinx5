@@ -31,11 +31,12 @@ import java.util.*;
 
 public class GrammarNode {
 
+    public static final Word[][] ZERO = new Word[0][0];
     private final int identity;            // the node id
     private boolean isFinal;            // is this the final node?
 
     private Word[][] alternatives;              // ordered words at this node
-    private List<GrammarArc> arcList = new ArrayList<GrammarArc>();      // arcs to successors
+    private List<GrammarArc> arcList = new ArrayList<>();      // arcs to successors
 
 
     /**
@@ -63,7 +64,7 @@ public class GrammarNode {
     protected GrammarNode(int id, boolean isFinal) {
         this.identity = id;
         this.isFinal = isFinal;
-        this.alternatives = new Word[0][0];
+        this.alternatives = ZERO;
     }
 
 
@@ -114,7 +115,7 @@ public class GrammarNode {
      * @param arc the arc to optimize
      * @return the optimized arc
      */
-    GrammarArc optimizeArc(GrammarArc arc) {
+    static GrammarArc optimizeArc(GrammarArc arc) {
         GrammarNode nextNode = arc.getGrammarNode();
         while (nextNode.isEmpty() && nextNode.arcList.size() == 1) {
             GrammarArc nextArc = nextNode.arcList.get(0);
@@ -219,7 +220,7 @@ public class GrammarNode {
     /** Returns the string representation of this object */
     @Override
     public String toString() {
-        return "G" + getID();
+        return "G" + identity;
     }
 
 
@@ -237,14 +238,14 @@ public class GrammarNode {
             dump.append("    ");
         }
 
-        dump.append("N(").append(getID()).append("):");
+        dump.append("N(").append(identity).append("):");
         dump.append("p:").append(logProb);
 
-        if (isFinalNode()) {
+        if (isFinal) {
             dump.append(" !");
         }
 
-        Word[][] alternatives = getAlternatives();
+        Word[][] alternatives = this.alternatives;
         for (int i = 0; i < alternatives.length; i++) {
             for (int j = 0; j < alternatives[i].length; j++) {
                 dump.append(' ').append(alternatives[i][j].getSpelling());
@@ -258,7 +259,7 @@ public class GrammarNode {
 
         // Visit the children nodes if this node has never been visited.
 
-        if (!isFinalNode() && !(visitedNodes.contains(this))) {
+        if (!isFinal && !(visitedNodes.contains(this))) {
 
             visitedNodes.add(this);
             GrammarArc[] arcs = getSuccessors();
@@ -267,7 +268,7 @@ public class GrammarNode {
                 GrammarNode child = arc.getGrammarNode();
                 child.traverse(level + 1, visitedNodes, arc.getProbability());
             }
-        } else if (isFinalNode()) {
+        } else if (isFinal) {
 
             // this node has no children, so just add it to the visitedNodes
             visitedNodes.add(this);
@@ -284,8 +285,7 @@ public class GrammarNode {
      * @param visitedNodes the set of visited nodes
      * @throws IOException if an error occurs while writing the file
      */
-    private void traverseGDL(PrintWriter out, Set<GrammarNode> visitedNodes)
-            throws IOException {
+    private void traverseGDL(PrintWriter out, Set<GrammarNode> visitedNodes) {
 
         // Visit the children nodes if this node has never been visited.
 
@@ -315,8 +315,8 @@ public class GrammarNode {
      * @param node the node
      * @return the GDL id
      */
-    String getGDLID(GrammarNode node) {
-        return "\"" + node.getID() + '\"';
+    static String getGDLID(GrammarNode node) {
+        return "\"" + node.identity + '\"';
     }
 
 
@@ -326,7 +326,7 @@ public class GrammarNode {
      * @param node the node
      * @return a gdl label for the node
      */
-    String getGDLLabel(GrammarNode node) {
+    static String getGDLLabel(GrammarNode node) {
         String label = node.isEmpty() ? "" : node.getWord().getSpelling();
         return '\"' + label + '\"';
     }
@@ -338,7 +338,7 @@ public class GrammarNode {
      * @param node the node
      * @return a gdl shape for the node
      */
-    String getGDLShape(GrammarNode node) {
+    static String getGDLShape(GrammarNode node) {
         return node.isEmpty() ? "circle" : "box";
     }
 
@@ -349,9 +349,9 @@ public class GrammarNode {
      * @param node the node of interest
      * @return the gdl label for the color
      */
-    String getGDLColor(GrammarNode node) {
+    static String getGDLColor(GrammarNode node) {
         String color = "grey";
-        if (node.isFinalNode()) {
+        if (node.isFinal) {
             color = "red";
         } else if (!node.isEmpty()) {
             color = "green";
@@ -371,7 +371,7 @@ public class GrammarNode {
             out.println("graph: {");
             out.println("    orientation: left_to_right");
             out.println("    layout_algorithm: dfs");
-            traverseGDL(out, new HashSet<GrammarNode>());
+            traverseGDL(out, new HashSet<>());
             out.println("}");
             out.close();
         } catch (FileNotFoundException fnfe) {
@@ -384,7 +384,7 @@ public class GrammarNode {
 
     /** Dumps the grammar */
     public void dump() {
-        System.out.println(traverse(0, new HashSet<GrammarNode>(), 1.0f));
+        System.out.println(traverse(0, new HashSet<>(), 1.0f));
     }
 
 
@@ -398,7 +398,7 @@ public class GrammarNode {
     GrammarNode splitNode(int id) {
         GrammarNode branchNode = new GrammarNode(id, false);
         branchNode.arcList = arcList;
-        arcList = new ArrayList<GrammarArc>();
+        arcList = new ArrayList<>();
         add(branchNode, 0.0f);
         return branchNode;
     }
@@ -409,7 +409,7 @@ public class GrammarNode {
             PrintWriter out = new PrintWriter(new FileOutputStream(path));
             out.println("digraph \"" + path + "\" {");
             out.println("rankdir = LR\n");
-            traverseDot(out, new HashSet<GrammarNode>());
+            traverseDot(out, new HashSet<>());
             out.println("}");
             out.close();
         } catch (FileNotFoundException fnfe) {
@@ -421,7 +421,7 @@ public class GrammarNode {
 	private void traverseDot(PrintWriter out, Set<GrammarNode> visitedNodes) {
         if (!(visitedNodes.contains(this))) {
             visitedNodes.add(this);
-            out.println("\tnode" + this.getID() 
+            out.println("\tnode" + identity
                     + " [ label=" + getGDLLabel(this) 
                     + ", color=" + getGDLColor(this) 
                     + ", shape=" + getGDLShape(this) 
@@ -429,8 +429,8 @@ public class GrammarNode {
             GrammarArc[] arcs = getSuccessors();
             for (GrammarArc arc : arcs) {
                 GrammarNode child = arc.getGrammarNode();
-                float prob = arc.getProbability();                
-                out.write("\tnode" + this.getID() + " -> node" + child.getID() 
+                float prob = arc.getProbability();
+                out.write("\tnode" + identity + " -> node" + child.getID()
                         + " [ label=" + prob + " ]\n");               
                 child.traverseDot(out, visitedNodes);
             }

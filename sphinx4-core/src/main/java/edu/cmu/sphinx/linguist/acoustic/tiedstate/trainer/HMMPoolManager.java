@@ -47,7 +47,7 @@ class HMMPoolManager {
     private float currentLogLikelihood;
 
     /** The logger for this class */
-    private static Logger logger = Logger.getLogger("edu.cmu.sphinx.linguist.acoustic.HMMPoolManager");
+    private static final Logger logger = Logger.getLogger("edu.cmu.sphinx.linguist.acoustic.HMMPoolManager");
 
     /**
      * Constructor for this pool manager. It gets the pointers to the pools from a loader.
@@ -58,7 +58,7 @@ class HMMPoolManager {
     protected HMMPoolManager(Loader loader) throws IOException {
     	loader.load();
         hmmManager = loader.getHMMManager();
-        indexMap = new HashMap<Object, Integer>();
+        indexMap = new HashMap<>();
         meansPool = loader.getMeansPool();
         variancePool = loader.getVariancePool();
         mixtureWeights = loader.getMixtureWeights();
@@ -100,7 +100,7 @@ class HMMPoolManager {
 
     /** Create buffers for a given pool. */
     private Pool<Buffer> create1DPoolBuffer(Pool<float[]> pool, boolean isLog) {
-        Pool<Buffer> bufferPool = new Pool<Buffer>(pool.getName());
+        Pool<Buffer> bufferPool = new Pool<>(pool.getName());
 
         for (int i = 0; i < pool.size(); i++) {
             float[] element = pool.get(i);
@@ -111,8 +111,8 @@ class HMMPoolManager {
         return bufferPool;
     }
     
-    private Pool<Buffer> createWeightsPoolBuffer(GaussianWeights mixtureWeights) {
-         Pool<Buffer> bufferPool = new Pool<Buffer>(mixtureWeights.getName());
+    private static Pool<Buffer> createWeightsPoolBuffer(GaussianWeights mixtureWeights) {
+         Pool<Buffer> bufferPool = new Pool<>(mixtureWeights.getName());
          int statesNum = mixtureWeights.getStatesNum();
          int streamsNum = mixtureWeights.getStreamsNum();
          int gauPerState = mixtureWeights.getGauPerState();
@@ -128,7 +128,7 @@ class HMMPoolManager {
     
     /** Create buffers for a given pool. */
     private Pool<Buffer[]> create2DPoolBuffer(Pool<float[][]> pool, boolean isLog) {
-        Pool<Buffer[]> bufferPool = new Pool<Buffer[]>(pool.getName());
+        Pool<Buffer[]> bufferPool = new Pool<>(pool.getName());
 
         for (int i = 0; i < pool.size(); i++) {
             float[][] element = pool.get(i);
@@ -415,7 +415,7 @@ class HMMPoolManager {
      *
      * @param pool the buffer pool to normalize
      */
-    private void normalizePool(Pool<Buffer> pool) {
+    private static void normalizePool(Pool<Buffer> pool) {
         assert pool != null;
         for (int i = 0; i < pool.size(); i++) {
             Buffer buffer = pool.get(i);
@@ -430,7 +430,7 @@ class HMMPoolManager {
      *
      * @param pool the buffer pool to normalize
      */
-    private void logNormalizePool(Pool<Buffer> pool) {
+    private static void logNormalizePool(Pool<Buffer> pool) {
         assert pool != null;
         for (int i = 0; i < pool.size(); i++) {
             Buffer buffer = pool.get(i);
@@ -447,7 +447,7 @@ class HMMPoolManager {
      * @param pool     the buffer pool to normalize
      * @param maskPool pool containing a mask with zero/non-zero values.
      */
-    private void logNormalize2DPool(Pool<Buffer[]> pool, Pool<float[][]> maskPool) {
+    private static void logNormalize2DPool(Pool<Buffer[]> pool, Pool<float[][]> maskPool) {
         assert pool != null;
         for (int i = 0; i < pool.size(); i++) {
             Buffer[] bufferArray = pool.get(i);
@@ -475,7 +475,7 @@ class HMMPoolManager {
      * @param in  the source vector
      * @param out the destination vector
      */
-    private void copyVector(float[] in, float[] out) {
+    private static void copyVector(float[] in, float[] out) {
         assert in.length == out.length;
         System.arraycopy(in, 0, out, 0, in.length);
     }

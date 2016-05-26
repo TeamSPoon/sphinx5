@@ -26,7 +26,7 @@ public interface HMM {
      *
      * @return the unit associated with this HMM
      */
-    public Unit getUnit();
+    Unit getUnit();
 
 
     /**
@@ -34,14 +34,14 @@ public interface HMM {
      *
      * @return the unit associated with this HMM
      */
-    public Unit getBaseUnit();
+    Unit getBaseUnit();
 
 
     /**
      * @param which the state of interest
      * @return hmm state
      */
-    public HMMState getState(int which);
+    HMMState getState(int which);
 
 
     /**
@@ -49,7 +49,7 @@ public interface HMM {
      *
      * @return the order of the HMM
      */
-    public int getOrder();
+    int getOrder();
 
 
     /**
@@ -57,7 +57,7 @@ public interface HMM {
      *
      * @return the position for this HMM
      */
-    public HMMPosition getPosition();
+    HMMPosition getPosition();
 
 
     /**
@@ -65,6 +65,6 @@ public interface HMM {
      *
      * @return the set of arcs that transition to the initial states for this HMM
      */
-    public HMMState getInitialState();
+    HMMState getInitialState();
 }
 

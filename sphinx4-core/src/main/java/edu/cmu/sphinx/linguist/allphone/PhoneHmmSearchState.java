@@ -33,11 +33,11 @@ public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScorePr
     }
     
     public int getBaseId() {
-        return ((SenoneHMM)state.getHMM()).getBaseUnit().getBaseID();
+        return state.getHMM().getBaseUnit().getBaseID();
     }
 
     public float getProbability() {
-        return getLanguageProbability() + getInsertionProbability();
+        return languageProb + getInsertionProbability();
     }
 
     public float getLanguageProbability() {

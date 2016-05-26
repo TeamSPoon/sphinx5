@@ -45,7 +45,7 @@ public class SimpleActiveListManager implements ActiveListManager {
     // Configuration data
     // --------------------------------------
     private Logger logger;
-    private boolean checkPriorLists;
+    //private boolean checkPriorLists;
     private List<ActiveListFactory> activeListFactories;
     private ActiveList[] currentActiveLists;
 
@@ -53,13 +53,12 @@ public class SimpleActiveListManager implements ActiveListManager {
     /**
      * Create a simple list manager
      * @param activeListFactories factories
-     * @param checkPriorLists check prior lists during operation
      */
-    public SimpleActiveListManager(List<ActiveListFactory> activeListFactories, boolean checkPriorLists) {
+    public SimpleActiveListManager(List<ActiveListFactory> activeListFactories) {
         this.logger = Logger.getLogger( getClass().getName() );
 
         this.activeListFactories = activeListFactories;
-        this.checkPriorLists = checkPriorLists;
+        //this.checkPriorLists = checkPriorLists;
     }
 
     public SimpleActiveListManager() {
@@ -75,7 +74,7 @@ public class SimpleActiveListManager implements ActiveListManager {
         logger = ps.getLogger();
 
         activeListFactories = ps.getComponentList(PROP_ACTIVE_LIST_FACTORIES, ActiveListFactory.class);
-        checkPriorLists = ps.getBoolean(PROP_CHECK_PRIOR_LISTS_EMPTY);
+        //checkPriorLists = ps.getBoolean(PROP_CHECK_PRIOR_LISTS_EMPTY);
     }
 
 
@@ -176,6 +175,8 @@ public class SimpleActiveListManager implements ActiveListManager {
     }
 
 
+
+
     private class NonEmittingListIterator implements Iterator<ActiveList> {
 
         private int listPtr;
@@ -197,9 +198,9 @@ public class SimpleActiveListManager implements ActiveListManager {
             if (listPtr >= currentActiveLists.length) {
                 throw new NoSuchElementException();
             }
-            if (checkPriorLists) {
-                checkPriorLists();
-            }
+//            if (checkPriorLists) {
+//                checkPriorLists();
+//            }
             return currentActiveLists[listPtr];
         }
 
@@ -237,7 +238,7 @@ public class SimpleActiveListManager implements ActiveListManager {
      *
      * @param al the active list to dump
      */
-    private void dumpList(ActiveList al) {
+    private static void dumpList(ActiveList al) {
         System.out.println("Size: " + al.size() + " Best token: " + al.getBestToken());
     }
 

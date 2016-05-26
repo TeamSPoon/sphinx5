@@ -38,6 +38,7 @@ import java.util.*;
  */
 public class Node {
 
+    public static final Pronunciation[] ZERO = new Pronunciation[0];
     // used to generate unique IDs for new Nodes.
     private static int nodeCount;
 
@@ -45,8 +46,8 @@ public class Node {
     private Word word;
     private long beginTime = -1;
     private long endTime = -1;
-    private List<Edge> enteringEdges;
-    private List<Edge> leavingEdges;
+    private final List<Edge> enteringEdges;
+    private final List<Edge> leavingEdges;
     private double forwardScore;
     private double backwardScore;
     private double posterior;
@@ -56,8 +57,8 @@ public class Node {
 
 
     {
-        enteringEdges = new ArrayList<Edge>();
-        leavingEdges = new ArrayList<Edge>();
+        enteringEdges = new ArrayList<>();
+        leavingEdges = new ArrayList<>();
         nodeCount++;
     }
 
@@ -225,7 +226,7 @@ public class Node {
      * @return a copy of the edges to this node
      */
     public Collection<Edge> getCopyOfEnteringEdges() {
-        return new ArrayList<Edge>(enteringEdges);
+        return new ArrayList<>(enteringEdges);
     }
 
     /**
@@ -234,7 +235,7 @@ public class Node {
      * @return a copy of the edges from this node
      */
     public Collection<Edge> getCopyOfLeavingEdges() {
-        return new ArrayList<Edge>(leavingEdges);
+        return new ArrayList<>(leavingEdges);
     }
 
     /**
@@ -350,7 +351,7 @@ public class Node {
      * @return TimeFrame
      */
     public TimeFrame getTimeFrame() {
-        return new TimeFrame(getBeginTime(), getEndTime());
+        return new TimeFrame(getBeginTime(), endTime);
     }
 
 
@@ -362,7 +363,7 @@ public class Node {
     @Override
     public String toString() {
         return ("Node(" + word.getSpelling() + ',' + getBeginTime() + '|' +
-                getEndTime() + ')');
+                endTime + ')');
     }
 
 
@@ -373,12 +374,12 @@ public class Node {
      * @throws IOException
      */
     void dumpAISee(FileWriter f) throws IOException {
-        String posterior = String.valueOf(getPosterior());
-        if (getPosterior() == LogMath.LOG_ZERO) {
+        String posterior = String.valueOf(this.posterior);
+        if (this.posterior == LogMath.LOG_ZERO) {
             posterior = "log zero";
         }
         f.write("node: { title: \"" + id + "\" label: \""
-                + getWord() + '[' + getBeginTime() + ',' + getEndTime() +
+                + word + '[' + getBeginTime() + ',' + getEndTime() +
                 " p:" + posterior + "]\" }\n");
     }
 
@@ -389,11 +390,11 @@ public class Node {
      * @throws IOException if error occurred
      */
     public void dumpDot(FileWriter f) throws IOException {
-        String posterior = String.valueOf(getPosterior());
-        if (getPosterior() == LogMath.LOG_ZERO) {
+        String posterior = String.valueOf(this.posterior);
+        if (this.posterior == LogMath.LOG_ZERO) {
             posterior = "log zero";
         }
-        String label = getWord().toString() + '[' + getBeginTime() + ',' + getEndTime() + " p:" + posterior + ']';
+        String label = word.toString() + '[' + getBeginTime() + ',' + getEndTime() + " p:" + posterior + ']';
         f.write("\tnode" + id + " [ label=\"" + label + "\" ]\n");
     }
 
@@ -403,11 +404,11 @@ public class Node {
      * @param f print writer to store
      * @throws IOException if error occurred
      */
-    void dump(PrintWriter f) throws IOException {
+    void dump(PrintWriter f) {
         f.println("node: " + id + ' ' + word.getSpelling() +
                 //" a:" + getForwardProb() + " b:" + getBackwardProb()
                 //" p:" + getPosterior());
-                ' ' + getBeginTime() + ' ' + getEndTime());
+                ' ' + getBeginTime() + ' ' + endTime);
     }
 
 
@@ -424,7 +425,7 @@ public class Node {
         long beginTime = Long.parseLong(tokens.nextToken());
         long endTime = Long.parseLong(tokens.nextToken());
 
-        Word word = new Word(label, new Pronunciation[0], label.startsWith("<") || label.startsWith("["));
+        Word word = new Word(label, ZERO, label.startsWith("<") || label.startsWith("["));
         lattice.addNode(id, word, beginTime, endTime);
     }
 
@@ -505,7 +506,7 @@ public class Node {
      */
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Node && id.equals(((Node) obj).getId());
+        return obj instanceof Node && id.equals(((Node) obj).id);
     }
 
 
@@ -516,8 +517,8 @@ public class Node {
     private void calculateBeginTime() {
         beginTime = 0;
         for (Edge edge : enteringEdges) {
-            if (edge.getFromNode().getEndTime() > beginTime) {
-                beginTime = edge.getFromNode().getEndTime();
+            if (edge.getFromNode().endTime > beginTime) {
+                beginTime = edge.getFromNode().endTime;
             }
         }
     }
@@ -529,7 +530,7 @@ public class Node {
      * @return a list of child nodes
      */
     public List<Node> getChildNodes() {
-        LinkedList<Node> childNodes = new LinkedList<Node>();
+        LinkedList<Node> childNodes = new LinkedList<>();
         for (Edge edge : leavingEdges) {
             childNodes.add(edge.getToNode());
         }
@@ -538,7 +539,7 @@ public class Node {
 
 
     protected void cacheDescendants() {
-        descendants = new HashSet<Node>();
+        descendants = new HashSet<>();
         cacheDescendantsHelper(this);
     }
 
@@ -554,7 +555,7 @@ public class Node {
     }
 
 
-    protected boolean isAncestorHelper(List<Node> children, Node node, Set<Node> seenNodes) {
+    protected static boolean isAncestorHelper(List<Node> children, Node node, Set<Node> seenNodes) {
         for (Node n : children) {
             if (seenNodes.contains(n)) {
                 continue;
@@ -584,7 +585,7 @@ public class Node {
         if (this.equals(node)) {
             return true; // node is its own ancestor
         }
-        Set<Node> seenNodes = new HashSet<Node>();
+        Set<Node> seenNodes = new HashSet<>();
         seenNodes.add(this);
         return isAncestorHelper(this.getChildNodes(), node, seenNodes);
     }
@@ -611,11 +612,11 @@ public class Node {
      */
     public boolean isEquivalent(Node other) {
         return
-                ((word.getSpelling().equals(other.getWord().getSpelling()) &&
+                ((word.getSpelling().equals(other.word.getSpelling()) &&
                         (getEnteringEdges().size() == other.getEnteringEdges().size() &&
                                 getLeavingEdges().size() == other.getLeavingEdges().size())) &&
                         (getBeginTime() == other.getBeginTime() &&
-                                endTime == other.getEndTime()));
+                                endTime == other.endTime));
     }
 
 

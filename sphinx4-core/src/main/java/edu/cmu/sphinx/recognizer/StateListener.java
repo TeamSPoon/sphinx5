@@ -24,5 +24,5 @@ public interface StateListener extends EventListener, Configurable {
      *
      * @param status the new status
      */
-    public void statusChanged(Recognizer.State status);
+    void statusChanged(Recognizer.State status);
 }

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class Cache<T> {
 
-    private Map<T, T> map = new HashMap<T, T>();
+    private final Map<T, T> map = new HashMap<>();
 
     private int hits = 0;
 

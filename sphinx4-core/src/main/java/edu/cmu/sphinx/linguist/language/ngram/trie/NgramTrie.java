@@ -72,7 +72,7 @@ public class NgramTrie {
      * @param range - range to look in. range contains ngram successors or is invalid after method usage.
      * @return ngram index that can be converted into byte offset if ngram was found, -1 otherwise
      */
-    private int findNgram(NgramSet ngramSet, int wordId, TrieRange range) {
+    private static int findNgram(NgramSet ngramSet, int wordId, TrieRange range) {
         int ptr;
         range.begin--;
         if ((ptr = uniformFind(ngramSet, range, wordId)) < 0) {
@@ -124,14 +124,14 @@ public class NgramTrie {
     /**
      * Calculates pivot for binary search
      */
-    private int calculatePivot(int offset, int range, int width) {
+    private static int calculatePivot(int offset, int range, int width) {
     	return (int)(((long)offset * width) / (range + 1));
     }
 
     /**
      * Searches ngram index for given wordId in provided range 
      */
-    private int uniformFind(NgramSet ngram, TrieRange range, int wordId) {
+    private static int uniformFind(NgramSet ngram, TrieRange range, int wordId) {
     	TrieRange vocabRange = new TrieRange(0, ngram.maxVocab);
         while (range.getWidth() > 1) {
             int pivot = range.begin + 1 + calculatePivot(wordId - vocabRange.begin, vocabRange.getWidth(), range.getWidth() - 1);
@@ -161,7 +161,7 @@ public class NgramTrie {
     /**
      * Calculates minimum amount of bits to store provided int
      */
-    private int requiredBits(int maxValue) {
+    private static int requiredBits(int maxValue) {
         if (maxValue == 0) return 0;
         int res = 1;
         while ((maxValue >>= 1) != 0) res++;

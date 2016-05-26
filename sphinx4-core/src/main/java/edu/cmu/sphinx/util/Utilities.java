@@ -316,7 +316,7 @@ public class Utilities {
 
 
     public static List<Integer> asList(int[] align) {
-        ArrayList<Integer> result = new ArrayList<Integer>(align.length);
+        ArrayList<Integer> result = new ArrayList<>(align.length);
         for (int i : align) {
             result.add(i);
         }
@@ -338,7 +338,7 @@ public class Utilities {
         if (path2.length() > 0 && path2.charAt(0) == '/') {
             path2 = path2.substring(1);
         }
-        return path1 + "/" + path2;
+        return path1 + '/' + path2;
     }
     
 }

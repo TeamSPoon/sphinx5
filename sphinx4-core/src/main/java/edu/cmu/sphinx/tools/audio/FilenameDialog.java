@@ -87,11 +87,7 @@ public class FilenameDialog extends JDialog {
         /* BUTTON PANEL
          */
         JButton okButton = new JButton("Save");
-        okButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                setVisible(false);
-            }
-        });
+        okButton.addActionListener(event -> setVisible(false));
 
         insets = new Insets(0, 12, 12, 12); // top, left, bottom, right
         constraints = new GridBagConstraints(

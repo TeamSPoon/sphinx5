@@ -103,12 +103,11 @@ public class FSTGrammar extends Grammar {
     // -------------------------------
 
     private boolean addOptionalSilence;
-    private final boolean ignoreUnknownTransitions = true;
     private String path;
     private LogMath logMath;
 
-    private final Map<String, GrammarNode> nodes = new HashMap<String, GrammarNode>();
-    private final Set<GrammarNode> expandedNodes = new HashSet<GrammarNode>();
+    private final Map<String, GrammarNode> nodes = new HashMap<>();
+    private final Set<GrammarNode> expandedNodes = new HashSet<>();
 
 
     /**
@@ -248,6 +247,7 @@ public class FSTGrammar extends Grammar {
                     String word = tok.getString();     // skip words
                     lnProb = tok.getFloat("probability");
 
+                    boolean ignoreUnknownTransitions = true;
                     if (ignoreUnknownTransitions && word.equals("<unknown>")) {
                         continue;
                     }
@@ -397,7 +397,7 @@ public class FSTGrammar extends Grammar {
      * @param node the grammar node of interest
      * @return true if the node has a word
      */
-    private boolean hasWord(GrammarNode node) {
+    private static boolean hasWord(GrammarNode node) {
         return (node.getNumAlternatives() > 0);
     }
 
@@ -408,7 +408,7 @@ public class FSTGrammar extends Grammar {
      * @param node the node of interest
      * @return the word (or null if the node has no word)
      */
-    private String getWord(GrammarNode node) {
+    private static String getWord(GrammarNode node) {
         String word = null;
         if (node.getNumAlternatives() > 0) {
             Word[][] alternatives = node.getAlternatives();
@@ -435,7 +435,7 @@ public class FSTGrammar extends Grammar {
      * @param node the node of interest
      * @return the ending node or null if no end node is available
      */
-    private GrammarNode getEndNode(GrammarNode node) {
+    private static GrammarNode getEndNode(GrammarNode node) {
         GrammarArc[] arcs = node.getSuccessors();
         assert arcs != null && arcs.length > 0;
         return arcs[0].getGrammarNode();

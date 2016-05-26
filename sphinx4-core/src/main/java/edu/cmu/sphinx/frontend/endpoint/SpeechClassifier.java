@@ -62,7 +62,7 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
     @S4Double(defaultValue = 0.003)
     public static final String PROP_ADJUSTMENT = "adjustment";
 
-    protected final double averageNumber = 1;
+    protected static final double averageNumber = 1;
     protected double adjustment;
     /** average signal level. */
     protected double level;
@@ -248,9 +248,11 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
      */
     public double getSNR () {
         double snr = (totalSpeechLevel / speechFrames) - (totalBackgroundLevel / backgroundFrames);
-        logger.fine ("Background " + totalBackgroundLevel / backgroundFrames);
-        logger.fine ("Speech " + totalSpeechLevel / speechFrames);
-        logger.fine ("SNR is " + snr);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine ("Background " + totalBackgroundLevel / backgroundFrames);
+            logger.fine ("Speech " + totalSpeechLevel / speechFrames);
+            logger.fine ("SNR is " + snr);
+        }
         return snr;
     }
  

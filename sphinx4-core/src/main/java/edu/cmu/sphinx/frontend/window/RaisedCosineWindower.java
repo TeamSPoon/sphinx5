@@ -106,7 +106,7 @@ public class RaisedCosineWindower extends BaseDataProcessor {
         super.initialize();
 
         // createWindow();
-        outputQueue = new LinkedList<Data>();
+        outputQueue = new LinkedList<>();
     }
 
 
@@ -219,7 +219,7 @@ public class RaisedCosineWindower extends BaseDataProcessor {
         double[] in = input.getValues();
         int length = overflowBuffer.getOccupancy() + in.length;
 
-        List<DoubleData> dataList = new LinkedList<DoubleData>();
+        List<DoubleData> dataList = new LinkedList<>();
         dataList.add(input);
 
         Data utteranceEnd = null;

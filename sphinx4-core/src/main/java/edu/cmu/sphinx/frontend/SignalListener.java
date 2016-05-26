@@ -21,6 +21,6 @@ public interface SignalListener {
      *
      * @param signal the signal
      */
-    public void signalOccurred(Signal signal);
+    void signalOccurred(Signal signal);
 }
 

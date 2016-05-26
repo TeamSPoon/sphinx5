@@ -36,7 +36,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     private final static int SHIFT_WHICH = 0x8;
 
     /** A Color is used to tag SentenceHMM nodes */
-    public static enum Color { RED, GREEN }
+    public enum Color { RED, GREEN }
 
     private static int globalStateNumber = -1000;
 
@@ -75,7 +75,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     /** Empty contructor */
     protected SentenceHMMState() {
         stateNumber = globalStateNumber--;
-        this.arcs = new LinkedHashMap<String, SentenceHMMStateArc>();
+        this.arcs = new LinkedHashMap<>();
     }
 
 
@@ -137,7 +137,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
         SentenceHMMState state = this;
 
         while (state != null && !(state instanceof WordState)) {
-            state = state.getParent();
+            state = state.parent;
         }
 
         if (state != null) {
@@ -211,11 +211,9 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
 
     /** Reset process flags for this state and all successor states */
     public void resetAllProcessed() {
-        visitStates(new SentenceHMMStateVisitor() {
-            public boolean visit(SentenceHMMState state) {
-                state.setProcessed(false);
-                return false;
-            }
+        visitStates(state -> {
+            state.setProcessed(false);
+            return false;
         }, this, false);
     }
 
@@ -298,7 +296,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
         SentenceHMMState state = (SentenceHMMState) arc.getState();
 
         // attach the state-number because the state-signature is not necessarily unique
-        arcs.put(state.getValueSignature() + state.getStateNumber(), arc);
+        arcs.put(state.getValueSignature() + state.stateNumber, arc);
     }
 
 
@@ -348,12 +346,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
 
     /** Dumps this SentenceHMMState and all its successors. Just for debugging. */
     public void dumpAll() {
-        visitStates(new SentenceHMMStateVisitor() {
-            public boolean visit(SentenceHMMState state) {
-                state.dump();
-                return false;
-            }
-        }, this, true);
+        visitStates(new MySentenceHMMStateVisitor(), this, true);
     }
 
 
@@ -362,7 +355,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
      *
      * @return the annotation
      */
-    protected String getAnnotation() {
+    protected static String getAnnotation() {
         return "";
     }
 
@@ -548,13 +541,10 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
         if (sorted) {
             // sort the states by stateNumber
 
-            TreeSet<SentenceHMMState> sortedStates = new TreeSet<SentenceHMMState>(new Comparator<SentenceHMMState>() {
-
-                public int compare(SentenceHMMState o1, SentenceHMMState o2) {
-                    SentenceHMMState so1 = o1;
-                    SentenceHMMState so2 = o2;
-                    return so1.stateNumber - so2.stateNumber;
-                }
+            TreeSet<SentenceHMMState> sortedStates = new TreeSet<>((o1, o2) -> {
+                SentenceHMMState so1 = o1;
+                SentenceHMMState so2 = o2;
+                return so1.stateNumber - so2.stateNumber;
             });
 
             sortedStates.addAll(states);
@@ -615,8 +605,8 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
      * @return the set of collected state
      */
     public static Set<SentenceHMMState> collectStates(SentenceHMMState start) {
-        Set<SentenceHMMState> visitedStates = new HashSet<SentenceHMMState>();
-        List<SentenceHMMState> queue = new LinkedList<SentenceHMMState>();
+        Set<SentenceHMMState> visitedStates = new HashSet<>();
+        List<SentenceHMMState> queue = new LinkedList<>();
 
         queue.add(start);
 
@@ -642,5 +632,12 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
      * @return the state order for this state
      */
     abstract public int getOrder();
+
+    private static class MySentenceHMMStateVisitor implements SentenceHMMStateVisitor {
+        public boolean visit(SentenceHMMState state) {
+            state.dump();
+            return false;
+        }
+    }
 }
 

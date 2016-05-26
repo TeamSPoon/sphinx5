@@ -17,6 +17,6 @@ package edu.cmu.sphinx.instrumentation;
 public interface Resetable {
 
     /** Resets this component. Typically this is for components that keep track of statistics */
-    public void reset();
+    void reset();
 
 }

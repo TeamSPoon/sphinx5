@@ -125,7 +125,7 @@ public class AutoCepstrum extends BaseDataProcessor {
     private void initDataProcessors() {
         try {
             Properties featParams = loader.getProperties();
-            selectedDataProcessors = new ArrayList<DataProcessor>();
+            selectedDataProcessors = new ArrayList<>();
 
             double lowFreq = parseDouble(featParams.getProperty("-lowerf"));
             double hiFreq = parseDouble(featParams.getProperty("-upperf"));

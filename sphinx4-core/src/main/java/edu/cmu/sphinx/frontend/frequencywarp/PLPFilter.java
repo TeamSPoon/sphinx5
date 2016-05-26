@@ -66,7 +66,7 @@ public class PLPFilter {
 
         numDFTPoints = DFTFrequenciesInHz.length;
         this.centerFreqInHz = centerFreqInHz;
-        centerFreqInBark = bark.hertzToBark(centerFreqInHz);
+        centerFreqInBark = FrequencyWarper.hertzToBark(centerFreqInHz);
 
         if (centerFreqInHz < DFTFrequenciesInHz[0] ||
                 centerFreqInHz > DFTFrequenciesInHz[numDFTPoints - 1]) {
@@ -79,7 +79,7 @@ public class PLPFilter {
         for (int i = 0; i < numDFTPoints; i++) {
             double barkf;
 
-            barkf = bark.hertzToBark(DFTFrequenciesInHz[i]) - centerFreqInBark;
+            barkf = FrequencyWarper.hertzToBark(DFTFrequenciesInHz[i]) - centerFreqInBark;
             if (barkf < -2.5)
                 filterCoefficients[i] = 0.0;
             else if (barkf <= -0.5)

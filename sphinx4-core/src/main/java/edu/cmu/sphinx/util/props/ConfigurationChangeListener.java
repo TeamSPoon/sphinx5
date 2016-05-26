@@ -16,7 +16,7 @@ public interface ConfigurationChangeListener {
      * @param propertyName     The name of the property which was changed
      * @param cm               The <code>ConfigurationManager</code>-instance this component is registered to
      */
-    public void configurationChanged(String configurableName, String propertyName, ConfigurationManager cm);
+    void configurationChanged(String configurableName, String propertyName, ConfigurationManager cm);
 
 
     /**
@@ -25,7 +25,7 @@ public interface ConfigurationChangeListener {
      * @param cm               Configuration manager
      * @param ps               Property sheet
      */
-    public void componentAdded(ConfigurationManager cm, PropertySheet ps);
+    void componentAdded(ConfigurationManager cm, PropertySheet ps);
 
 
     /**
@@ -34,7 +34,7 @@ public interface ConfigurationChangeListener {
      * @param cm               Configuration manager
      * @param ps               Property sheet
      */
-    public void componentRemoved(ConfigurationManager cm, PropertySheet ps);
+    void componentRemoved(ConfigurationManager cm, PropertySheet ps);
 
 
     /**
@@ -43,5 +43,5 @@ public interface ConfigurationChangeListener {
      * @param ps               Property sheet
      * @param oldName          Old name
      */
-    public void componentRenamed(ConfigurationManager cm, PropertySheet ps, String oldName);
+    void componentRenamed(ConfigurationManager cm, PropertySheet ps, String oldName);
 }

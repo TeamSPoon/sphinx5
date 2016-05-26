@@ -131,7 +131,7 @@ public class MelFrequencyFilterBank extends BaseDataProcessor {
      * @param inputFreq the input frequency in linear scale
      * @return the frequency in a mel scale
      */
-    private double linToMelFreq(double inputFreq) {
+    private static double linToMelFreq(double inputFreq) {
         return (2595.0 * (Math.log(1.0 + inputFreq / 700.0) / Math.log(10.0)));
     }
 
@@ -142,7 +142,7 @@ public class MelFrequencyFilterBank extends BaseDataProcessor {
      * @param inputFreq the input frequency in mel scale
      * @return the frequency in a linear scale
      */
-    private double melToLinFreq(double inputFreq) {
+    private static double melToLinFreq(double inputFreq) {
         return (700.0 * (Math.pow(10.0, (inputFreq / 2595.0)) - 1.0));
     }
 
@@ -157,7 +157,7 @@ public class MelFrequencyFilterBank extends BaseDataProcessor {
      * @return the closest frequency bin
      * @throws IllegalArgumentException
      */
-    private double setToNearestFrequencyBin(double inFreq, double stepFreq)
+    private static double setToNearestFrequencyBin(double inFreq, double stepFreq)
             throws IllegalArgumentException {
         if (stepFreq == 0) {
             throw new IllegalArgumentException("stepFreq is zero");

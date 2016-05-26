@@ -87,7 +87,7 @@ public enum PropertyType {
      * Creates type of the property 
      * @param displayName  name of the property to output
      */
-    private PropertyType(String displayName) {
+    PropertyType(String displayName) {
         this.displayName = displayName;
     }
 
@@ -96,7 +96,7 @@ public enum PropertyType {
      * @param displayName  name of the property to output
      * @param checkClass   checked class
      */
-    private PropertyType(String displayName, Class<?> checkClass) {
+    PropertyType(String displayName, Class<?> checkClass) {
         this.displayName = displayName;
         this.checkClass = checkClass;
     }

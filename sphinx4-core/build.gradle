@@ -3,9 +3,9 @@ description = 'Sphinx4 core'
 dependencies {
     compile project(':sphinx4-data')
 
-    compile group: 'org.apache.commons', name: 'commons-math3', version:'3.2'
+    compile group: 'org.apache.commons', name: 'commons-math3', version:'3.6.1'
 
-    testCompile group: 'org.testng', name: 'testng', version:'6.8.8'
+    testCompile group: 'org.testng', name: 'testng', version:'6.9.10'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version:'1.3'
 }
 

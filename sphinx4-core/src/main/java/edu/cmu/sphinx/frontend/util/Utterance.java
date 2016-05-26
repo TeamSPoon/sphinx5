@@ -109,7 +109,7 @@ public class Utterance {
         File file = new File(fileName);
         byte[] audio = getAudio();
         AudioInputStream ais = new AudioInputStream
-                ((new ByteArrayInputStream(audio)), getAudioFormat(), audio.length);
+                ((new ByteArrayInputStream(audio)), audioFormat, audio.length);
         AudioSystem.write(ais, fileFormat, file);
     }
 }

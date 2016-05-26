@@ -15,7 +15,7 @@ public class JSGFRuleGrammarManager {
 	protected Map<String, JSGFRuleGrammar> grammars;
 
 	public JSGFRuleGrammarManager () {
-		grammars = new HashMap<String, JSGFRuleGrammar>();
+		grammars = new HashMap<>();
 	}
 	
 	public Collection<JSGFRuleGrammar> grammars() {

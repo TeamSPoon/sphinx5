@@ -26,8 +26,8 @@ public class HMMSet {
 	 * contains HMMState instances
 	 */
 	public final List<HMMState> states;
-	public final List<float[][]> transitions = new ArrayList<float[][]>();
-	public final Map<String, Integer> transNames = new HashMap<String, Integer>();
+	public final List<float[][]> transitions = new ArrayList<>();
+	public final Map<String, Integer> transNames = new HashMap<>();
 
 	public Iterator<SingleHMM> get1phIt() {
 		Iterator<SingleHMM> it = new Iterator<SingleHMM>() {
@@ -81,7 +81,7 @@ public class HMMSet {
 		return it;
 	}
 
-	public int getStateIdx(HMMState st) {
+	public static int getStateIdx(HMMState st) {
 		return st.gmmidx;
 	}
 
@@ -183,9 +183,9 @@ public class HMMSet {
 	}
 
 	public HMMSet() {
-		states = new ArrayList<HMMState>();
-		hmms = new ArrayList<SingleHMM>();
-		gmms = new ArrayList<GMMDiag>();
+		states = new ArrayList<>();
+		hmms = new ArrayList<>();
+		gmms = new ArrayList<>();
 	}
 
 	public void loadHTK(String nomFich) {

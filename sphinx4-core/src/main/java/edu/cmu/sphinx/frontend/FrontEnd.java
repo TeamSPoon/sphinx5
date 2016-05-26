@@ -139,7 +139,7 @@ public class FrontEnd extends BaseDataProcessor {
 
     private DataProcessor first;
     private DataProcessor last;
-    private final List<SignalListener> signalListeners = new ArrayList<SignalListener>();
+    private final List<SignalListener> signalListeners = new ArrayList<>();
 
     public FrontEnd(List<DataProcessor> frontEndList) {
         initLogger();
@@ -267,7 +267,7 @@ public class FrontEnd extends BaseDataProcessor {
      * @param signal the signal that occurred
      */
     protected void fireSignalListeners(Signal signal) {
-        for (SignalListener listener : new ArrayList<SignalListener>(signalListeners))
+        for (SignalListener listener : new ArrayList<>(signalListeners))
             listener.signalOccurred(signal);
     }
 
@@ -290,7 +290,7 @@ public class FrontEnd extends BaseDataProcessor {
     public String toString() {
         if (last == null)
             return super.toString() + " {}";
-        LinkedList<DataProcessor> list = new LinkedList<DataProcessor>();
+        LinkedList<DataProcessor> list = new LinkedList<>();
         for (DataProcessor current = last; current != null; current = current.getPredecessor())
             list.addFirst(current); // add processors in their correct order
         StringBuilder description = new StringBuilder(super.toString()).append(" {");

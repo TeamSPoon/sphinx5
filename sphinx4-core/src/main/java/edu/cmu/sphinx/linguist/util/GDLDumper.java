@@ -81,7 +81,7 @@ public class GDLDumper extends LinguistDumper {
      *
      * @return the default name for the file.
      */
-    protected String getDefaultName() {
+    protected static String getDefaultName() {
         return "linguistDump.gdl";
     }
 
@@ -147,7 +147,7 @@ public class GDLDumper extends LinguistDumper {
      * @param state the state
      * @return its color
      */
-    private String getColor(SearchState state) {
+    private static String getColor(SearchState state) {
         String color = "lightred";
         if (state.isFinal()) {
             color = "magenta";
@@ -185,7 +185,7 @@ public class GDLDumper extends LinguistDumper {
     @Override
     protected void dumpArc(PrintStream out, SearchState from,
                            SearchStateArc arc, int level) {
-        List<SearchStateArc> arcList = new ArrayList<SearchStateArc>();
+        List<SearchStateArc> arcList = new ArrayList<>();
 
         if (skipHMMs) {
             if (from instanceof HMMSearchState) {
@@ -224,9 +224,9 @@ public class GDLDumper extends LinguistDumper {
      * @param arc     the arc to start the search at
      * @param results the resulting arcs are placed on this list
      */
-    private void findNextNonHMMArc(SearchStateArc arc, List<SearchStateArc> results) {
-        Set<SearchStateArc> visited = new HashSet<SearchStateArc>();
-        List<SearchStateArc> queue = new ArrayList<SearchStateArc>();
+    private static void findNextNonHMMArc(SearchStateArc arc, List<SearchStateArc> results) {
+        Set<SearchStateArc> visited = new HashSet<>();
+        List<SearchStateArc> queue = new ArrayList<>();
         queue.add(arc);
         while (!queue.isEmpty()) {
             SearchStateArc nextArc = queue.remove(0);
@@ -247,7 +247,7 @@ public class GDLDumper extends LinguistDumper {
      *
      * @param value the floating point value to format
      */
-    private String formatEdgeLabel(double value) {
+    private static String formatEdgeLabel(double value) {
         if (value == 1.0) {
             return "1";
         } else if (value == 0.0) {
@@ -270,7 +270,7 @@ public class GDLDumper extends LinguistDumper {
      * @return the color of the arc based on weather it is a language arc (green), acoustic arc (red), insertion
      *         arc(blue), flat arc (black) or a combo (purple).
      */
-    private String getArcColor(SearchStateArc arc) {
+    private static String getArcColor(SearchStateArc arc) {
         String color = null;
         if (arc.getLanguageProbability() != 0.0) {
             color = "green";
@@ -296,7 +296,7 @@ public class GDLDumper extends LinguistDumper {
      * @param s the string to quote.
      * @return the quoted string
      */
-    private String qs(String s) {
+    private static String qs(String s) {
         return '\"' + s + '\"';
     }
 
@@ -307,7 +307,7 @@ public class GDLDumper extends LinguistDumper {
      * @param state the state of interest
      * @return the name
      */
-    private String getUniqueName(SearchState state) {
+    private static String getUniqueName(SearchState state) {
         return state.getSignature();
     }
 }

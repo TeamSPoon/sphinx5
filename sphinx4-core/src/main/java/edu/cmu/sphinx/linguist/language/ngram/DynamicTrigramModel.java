@@ -2,6 +2,7 @@ package edu.cmu.sphinx.linguist.language.ngram;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
@@ -18,6 +19,7 @@ import edu.cmu.sphinx.util.props.PropertySheet;
  */
 public class DynamicTrigramModel implements LanguageModel {
 
+    private static final Pattern COMPILE = Pattern.compile("\\s+");
     private Dictionary dictionary;
     private final Set<String> vocabulary;
     private int maxDepth;
@@ -28,9 +30,9 @@ public class DynamicTrigramModel implements LanguageModel {
     private Map<WordSequence, Float> logBackoffs;
 
     public DynamicTrigramModel() {
-        vocabulary = new HashSet<String>();
-        logProbs = new HashMap<WordSequence, Float>();
-        logBackoffs = new HashMap<WordSequence, Float>();
+        vocabulary = new HashSet<>();
+        logProbs = new HashMap<>();
+        logBackoffs = new HashMap<>();
     }
 
     public DynamicTrigramModel(Dictionary dictionary) {
@@ -48,14 +50,14 @@ public class DynamicTrigramModel implements LanguageModel {
         vocabulary.clear();
         logProbs.clear();
         logBackoffs.clear();
-        HashMap<WordSequence, Integer> unigrams = new HashMap<WordSequence, Integer>();
-        HashMap<WordSequence, Integer> bigrams = new HashMap<WordSequence, Integer>();
-        HashMap<WordSequence, Integer> trigrams = new HashMap<WordSequence, Integer>();
+        HashMap<WordSequence, Integer> unigrams = new HashMap<>();
+        HashMap<WordSequence, Integer> bigrams = new HashMap<>();
+        HashMap<WordSequence, Integer> trigrams = new HashMap<>();
         int wordCount = 0;
 
         for (String sentence : sentences) {
-            String[] textWords = sentence.split("\\s+");
-            List<Word> words = new ArrayList<Word>();
+            String[] textWords = COMPILE.split(sentence);
+            List<Word> words = new ArrayList<>();
             words.add(dictionary.getSentenceStartWord());
             for (String wordString : textWords) {
         	if (wordString.length() == 0) {
@@ -92,7 +94,7 @@ public class DynamicTrigramModel implements LanguageModel {
 
         float discount = .5f;
         float deflate = 1 - discount;
-        Map<WordSequence, Float> uniprobs = new HashMap<WordSequence, Float>();
+        Map<WordSequence, Float> uniprobs = new HashMap<>();
         for (Map.Entry<WordSequence, Integer> e : unigrams.entrySet()) {
             uniprobs.put(e.getKey(), (float) e.getValue() * deflate / wordCount);
         }
@@ -102,8 +104,8 @@ public class DynamicTrigramModel implements LanguageModel {
         float invLogUnigramWeight = lmath.linearToLog(1 - unigramWeight);
         float logUniformProb = -lmath.linearToLog(uniprobs.size());
 
-        Set<WordSequence> sorted1grams = new TreeSet<WordSequence>(unigrams.keySet());
-        Iterator<WordSequence> iter = new TreeSet<WordSequence>(bigrams.keySet()).iterator();
+        Set<WordSequence> sorted1grams = new TreeSet<>(unigrams.keySet());
+        Iterator<WordSequence> iter = new TreeSet<>(bigrams.keySet()).iterator();
         WordSequence ws = iter.hasNext() ? iter.next() : null;
         for (WordSequence unigram : sorted1grams) {
             float p = lmath.linearToLog(uniprobs.get(unigram));
@@ -126,14 +128,14 @@ public class DynamicTrigramModel implements LanguageModel {
             logBackoffs.put(unigram, lmath.linearToLog(discount / (1 - sum)));
         }
 
-        Map<WordSequence, Float> biprobs = new HashMap<WordSequence, Float>();
+        Map<WordSequence, Float> biprobs = new HashMap<>();
         for (Map.Entry<WordSequence, Integer> entry : bigrams.entrySet()) {
             int unigramCount = unigrams.get(entry.getKey().getOldest());
             biprobs.put(entry.getKey(), entry.getValue() * deflate / unigramCount);
         }
 
-        Set<WordSequence> sorted2grams = new TreeSet<WordSequence>(bigrams.keySet());
-        iter = new TreeSet<WordSequence>(trigrams.keySet()).iterator();
+        Set<WordSequence> sorted2grams = new TreeSet<>(bigrams.keySet());
+        iter = new TreeSet<>(trigrams.keySet()).iterator();
         ws = iter.hasNext() ? iter.next() : null;
         for (WordSequence biword : sorted2grams) {
             logProbs.put(biword, lmath.linearToLog(biprobs.get(biword)));
@@ -159,7 +161,7 @@ public class DynamicTrigramModel implements LanguageModel {
         }
     }
 
-    private void addSequence(HashMap<WordSequence, Integer> grams, WordSequence wordSequence) {
+    private static void addSequence(HashMap<WordSequence, Integer> grams, WordSequence wordSequence) {
         Integer count = grams.get(wordSequence);
         if (count != null) {
             grams.put(wordSequence, count + 1);

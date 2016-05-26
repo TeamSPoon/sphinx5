@@ -372,7 +372,7 @@ public class BinaryLoader {
         file.seek(position);
         byte[] bytes = new byte[size];
         if (file.read(bytes) != size) {
-            throw new IOException("Incorrect number of bytes read. Size = " + size + ". Position =" + position + ".");
+            throw new IOException("Incorrect number of bytes read. Size = " + size + ". Position =" + position + '.');
         }
         return bytes;
     }
@@ -482,15 +482,19 @@ public class BinaryLoader {
             throw new Error("Bad binary LM file header: " + header);
         }
         else {
-        	if (header.equals(DARPA_TG_HEADER))
-        		maxNGram = 3;
-        	else if (header.equals(DARPA_QG_HEADER))
-        		maxNGram = 4;
-        	else {
-        		Pattern p = Pattern.compile("\\d");
-        		Matcher m = p.matcher(header);
-        		maxNGram = Integer.parseInt(m.group());
-        	}
+            switch (header) {
+                case DARPA_TG_HEADER:
+                    maxNGram = 3;
+                    break;
+                case DARPA_QG_HEADER:
+                    maxNGram = 4;
+                    break;
+                default:
+                    Pattern p = Pattern.compile("\\d");
+                    Matcher m = p.matcher(header);
+                    maxNGram = Integer.parseInt(m.group());
+                    break;
+            }
         }
         
         // read LM filename string size and string
@@ -567,17 +571,17 @@ public class BinaryLoader {
         long bytesToSkip;
 
         NGramOffset[1] = bytesRead;
-        bytesToSkip = (numberNGrams[1] + 1) * LargeNGramModel.BYTES_PER_NGRAM * getBytesPerField();
+        bytesToSkip = (numberNGrams[1] + 1) * LargeNGramModel.BYTES_PER_NGRAM * bytesPerField;
         skipStreamBytes(stream, bytesToSkip);
 
         for (int i = 2; i < maxNGram; i++) {
             if (numberNGrams[i] > 0 && i < maxNGram - 1) {
                 NGramOffset[i] = bytesRead;
-                bytesToSkip = (long) (numberNGrams[i] + 1) * (long) LargeNGramModel.BYTES_PER_NGRAM * getBytesPerField();
+                bytesToSkip = (long) (numberNGrams[i] + 1) * (long) LargeNGramModel.BYTES_PER_NGRAM * bytesPerField;
                 skipStreamBytes(stream, bytesToSkip);
             } else if (numberNGrams[i] > 0 && i == maxNGram - 1) {
                 NGramOffset[i] = bytesRead;
-                bytesToSkip = (long) (numberNGrams[i]) * (long) LargeNGramModel.BYTES_PER_NMAXGRAM * getBytesPerField();
+                bytesToSkip = (long) (numberNGrams[i]) * (long) LargeNGramModel.BYTES_PER_NMAXGRAM * bytesPerField;
                 skipStreamBytes(stream, bytesToSkip);
             }
         }
@@ -630,8 +634,8 @@ public class BinaryLoader {
 
     /** Apply the language weight to the given array of probabilities.
      */
-    private void applyLanguageWeight(float[] logProbabilities,
-                                     float languageWeight) {
+    private static void applyLanguageWeight(float[] logProbabilities,
+                                            float languageWeight) {
         for (int i = 0; i < logProbabilities.length; i++) {
             logProbabilities[i] = logProbabilities[i] * languageWeight;
         }
@@ -667,7 +671,7 @@ public class BinaryLoader {
 
         for (int i = 0; i < numProbs; i++) {
         	//probTable[i] = readFloat(stream, bigEndian);
-            probTable[i] = logMath.log10ToLog(readFloat(stream, bigEndian));
+            probTable[i] = LogMath.log10ToLog(readFloat(stream, bigEndian));
         }
 
         return probTable;
@@ -730,8 +734,8 @@ public class BinaryLoader {
             float unigramBackoff = readFloat(stream, bigEndian);
             int firstBigramEntry = readInt(stream, bigEndian);
 
-            float logProbability = logMath.log10ToLog(unigramProbability);
-            float logBackoff = logMath.log10ToLog(unigramBackoff);
+            float logProbability = LogMath.log10ToLog(unigramProbability);
+            float logBackoff = LogMath.log10ToLog(unigramBackoff);
 
             unigrams[i] = new UnigramProbability(unigramID, logProbability,
                     logBackoff, firstBigramEntry);

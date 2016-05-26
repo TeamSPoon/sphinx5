@@ -88,7 +88,7 @@ public class Timer {
         if (startTime != 0L) {
             notReliable = true; // start called while timer already running
             System.out.println
-                    (getName() + " timer.start() called without a stop()");
+                    (name + " timer.start() called without a stop()");
         }
         startTime = System.currentTimeMillis();
     }
@@ -103,7 +103,7 @@ public class Timer {
         if (startTime != 0L) {
             notReliable = true; // start called while timer already running
             System.out.println
-                    (getName() + " timer.start() called without a stop()");
+                    (name + " timer.start() called without a stop()");
         }
         if (time > System.currentTimeMillis()) {
             throw new IllegalStateException
@@ -122,7 +122,7 @@ public class Timer {
         if (startTime == 0L) {
             notReliable = true;        // stop called, but start never called
             System.out.println
-                    (getName() + " timer.stop() called without a start()");
+                    (name + " timer.stop() called without a start()");
         }
         curTime = System.currentTimeMillis() - startTime;
         startTime = 0L;
@@ -206,7 +206,7 @@ public class Timer {
      * @param time the time (in milliseconds) to be formatted
      * @return a string representation of the time.
      */
-    private String fmtTime(long time) {
+    private static String fmtTime(long time) {
         return fmtTime(time / 1000.0);
     }
 
@@ -217,7 +217,7 @@ public class Timer {
      * @param time the time (in seconds) to be formatted
      * @return a string representation of the time.
      */
-    private String fmtTime(double time) {
+    private static String fmtTime(double time) {
         return Utilities.pad(timeFormatter.format(time) + 's', 10);
     }
 

@@ -31,8 +31,6 @@ public class SimpleControlFile implements ControlFile {
 	public static final String DICTIONARY = "dictionary";
 	private TrainerDictionary dictionary;
 
-    private String audioFile;           // the audio file
-    private String transcriptFile;      // the transcript file
     private String wordSeparator;       // the word separator
     private int currentPartition;       // the current partition
     private int numberOfPartitions;     // total number of partitions
@@ -57,14 +55,14 @@ public class SimpleControlFile implements ControlFile {
 			throw new PropertyException(e);
 		}
 
-        this.audioFile = ps.getString(PROP_AUDIO_FILE);
-        this.transcriptFile = ps.getString(PROP_TRANSCRIPT_FILE);
+        String audioFile = ps.getString(PROP_AUDIO_FILE);
+        String transcriptFile = ps.getString(PROP_TRANSCRIPT_FILE);
         this.currentPartition = ps.getInt(PROP_WHICH_BATCH);
         this.numberOfPartitions = ps.getInt(PROP_TOTAL_BATCHES);
        
 
-        logger.info("Audio control file: " + this.audioFile);
-        logger.info("Transcript file: " + this.transcriptFile);
+        logger.info("Audio control file: " + audioFile);
+        logger.info("Transcript file: " + transcriptFile);
         this.wordSeparator = " \t\n\r\f"; // the white spaces
         logger.info("Processing part " + this.currentPartition +
                 " of " + this.numberOfPartitions);
@@ -137,7 +135,7 @@ public class SimpleControlFile implements ControlFile {
      * @throws IOException if error occurs while reading file
      */
     private List<String> getLines(String file) throws IOException {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         BufferedReader reader
                 = new BufferedReader(new FileReader(file));
 

@@ -106,7 +106,7 @@ public class TrainerAcousticModel extends TiedStateAcousticModel {
 	 * @throws FileNotFoundException
 	 *             if the model does not exist
 	 */
-	public void load() throws IOException, FileNotFoundException {
+	public void load() throws IOException {
 		// super.load();
 		logInfo();
 		hmmPoolManager = new HMMPoolManager(loader);

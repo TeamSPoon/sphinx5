@@ -46,8 +46,8 @@ public class Node {
      * @param nodeSymbol the symbol for this type.
      */
     Node(NodeType nodeType, String nodeSymbol) {
-        incomingEdges = new ArrayList<Edge>();
-        outgoingEdges = new ArrayList<Edge>();
+        incomingEdges = new ArrayList<>();
+        outgoingEdges = new ArrayList<>();
         this.nodeId = nodeSymbol;
         this.nodeType = nodeType;
         this.object = null;

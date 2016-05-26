@@ -52,7 +52,7 @@ public class BatchVarNorm extends BaseDataProcessor {
     public void initialize() {
         super.initialize();
         variances = null;
-        cepstraList = new LinkedList<Data>();
+        cepstraList = new LinkedList<>();
     }
 
 

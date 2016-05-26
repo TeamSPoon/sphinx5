@@ -42,7 +42,7 @@ public class NumberExpander {
     "tenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth",
             "seventieth", "eightieth", "ninetieth"};
 
-    private static String[] digit2Numness = {
+    private static final String[] digit2Numness = {
            "", "tens", "twenties", "thirties", "fourties", "fifties", 
            "sixties", "seventies", "eighties", "nineties" 
     };
@@ -259,12 +259,16 @@ public class NumberExpander {
                 ordinal = findMatchInArray(lastNumber, digit2enty, ord2enty);
             }
 
-            if (lastNumber.equals("hundred")) {
-                ordinal = "hundredth";
-            } else if (lastNumber.equals("thousand")) {
-                ordinal = "thousandth";
-            } else if (lastNumber.equals("billion")) {
-                ordinal = "billionth";
+            switch (lastNumber) {
+                case "hundred":
+                    ordinal = "hundredth";
+                    break;
+                case "thousand":
+                    ordinal = "thousandth";
+                    break;
+                case "billion":
+                    ordinal = "billionth";
+                    break;
             }
 
             // if there was an ordinal, set the last element of the list

@@ -71,7 +71,7 @@ public class CIPhoneLoop {
 
         /** Constructs a phone loop search graph. */
         public PhoneLoopSearchGraph() {
-            existingStates = new HashMap<String, SearchState>();
+            existingStates = new HashMap<>();
             firstState = new UnknownWordState();
             SentenceHMMState branchState = new BranchOutState(firstState);
             attachState(firstState, branchState, logOne, logOne);

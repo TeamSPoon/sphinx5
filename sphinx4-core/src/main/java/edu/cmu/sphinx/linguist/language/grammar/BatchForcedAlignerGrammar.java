@@ -31,7 +31,7 @@ public class BatchForcedAlignerGrammar extends ForcedAlignerGrammar implements G
     public final static String PROP_REF_FILE = "refFile";
 
     protected String refFile;
-    protected final Map<String, GrammarNode> grammars = new HashMap<String, GrammarNode>();
+    protected final Map<String, GrammarNode> grammars = new HashMap<>();
     protected String currentUttName = "";
 
     public BatchForcedAlignerGrammar(String refFile, boolean showGrammar, boolean optimizeGrammar, boolean addSilenceWords,
@@ -94,8 +94,6 @@ public class BatchForcedAlignerGrammar extends ForcedAlignerGrammar implements G
                 currentUttName = uttName;
             }
             in.close();
-        } catch (FileNotFoundException e) {
-            throw new Error(e);
         } catch (IOException e) {
             throw new Error(e);
         }

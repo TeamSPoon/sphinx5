@@ -447,7 +447,7 @@ public class BatchNISTRecognizer extends BatchModeRecognizer {
         try {
             URL url = new File(propertiesFile).toURI().toURL();
             cm = new ConfigurationManager(url);
-            bmr = (BatchNISTRecognizer) cm.lookup("batchNIST");
+            bmr = cm.lookup("batchNIST");
         } catch (IOException ioe) {
             System.err.println("I/O error during initialization: \n   " + ioe);
             return;

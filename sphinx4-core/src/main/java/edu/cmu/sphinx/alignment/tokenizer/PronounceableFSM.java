@@ -111,8 +111,8 @@ public class PronounceableFSM {
      * 
      * @return an integer
      */
-    private int parseLastInt(String line) {
-        String lastInt = line.trim().substring(line.lastIndexOf(" "));
+    private static int parseLastInt(String line) {
+        String lastInt = line.trim().substring(line.lastIndexOf(' '));
         return Integer.parseInt(lastInt.trim());
     }
 

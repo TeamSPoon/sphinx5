@@ -164,7 +164,7 @@ class Node {
             child = new HMMNode(hmm, probability);
             putSuccessor(hmm, child);
         } else {
-            if (matchingChild.getUnigramProbability() < probability) {
+            if (matchingChild.logUnigramProbability < probability) {
                 matchingChild.setUnigramProbability(probability);
             }
             child = matchingChild;
@@ -513,7 +513,7 @@ class HMMNode extends UnitNode {
 
     @Override
     HMM getKey() {
-        return getHMM();
+        return hmm;
     }
 
 
@@ -668,9 +668,8 @@ class HMMTree {
 
     private LanguageModel lm;
     private final boolean addFillerWords;
-    private final boolean addSilenceWord = true;
-    private final Set<Unit> entryPoints = new HashSet<Unit>();
-    private Set<Unit> exitPoints = new HashSet<Unit>();
+    private final Set<Unit> entryPoints = new HashSet<>();
+    private Set<Unit> exitPoints = new HashSet<>();
     private Set<Word> allWords;
     private EntryPointTable entryPointTable;
     private boolean debug;
@@ -697,8 +696,8 @@ class HMMTree {
         this.hmmPool = pool;
         this.dictionary = dictionary;
         this.lm = lm;
-        this.endNodeMap = new HashMap<Object, HMMNode[]>();
-        this.wordNodeMap = new HashMap<Pronunciation, WordNode>();
+        this.endNodeMap = new HashMap<>();
+        this.wordNodeMap = new HashMap<>();
         this.addFillerWords = addFillerWords;
         this.languageWeight = languageWeight;
         
@@ -731,7 +730,7 @@ class HMMTree {
         if (results == null) {
             // System.out.println("Filling cache for " + endNode.getKey()
             //        + " size " + endNodeMap.size());
-            Map<HMM, HMMNode> resultMap = new HashMap<HMM, HMMNode>();
+            Map<HMM, HMMNode> resultMap = new HashMap<>();
             Unit baseUnit = endNode.getBaseUnit();
             Unit lc = endNode.getLeftContext();
             for (Unit rc : entryPoints) {
@@ -789,8 +788,8 @@ class HMMTree {
     /** Dumps the tree */
     void dumpTree() {
         System.out.println("Dumping Tree ...");
-        Map<Node, Node> dupNode = new HashMap<Node, Node>();
-        dumpTree(0, getInitialNode(), dupNode);
+        Map<Node, Node> dupNode = new HashMap<>();
+        dumpTree(0, initialNode, dupNode);
         System.out.println("... done Dumping Tree");
     }
 
@@ -802,7 +801,7 @@ class HMMTree {
      * @param node    the root of the tree to dump
      * @param dupNode map of visited nodes
      */
-    private void dumpTree(int level, Node node, Map<Node, Node> dupNode) {
+    private static void dumpTree(int level, Node node, Map<Node, Node> dupNode) {
         if (dupNode.get(node) == null) {
             dupNode.put(node, node);
             System.out.println(Utilities.pad(level) + node);
@@ -948,7 +947,7 @@ class HMMTree {
      */
     private Set<Word> getAllWords() {
         if (allWords == null) {
-            allWords = new HashSet<Word>();
+            allWords = new HashSet<>();
             for (String spelling : lm.getVocabulary()) {
                 Word word = dictionary.getWord(spelling);
                 if (word != null) {
@@ -956,6 +955,7 @@ class HMMTree {
                 }
             }
 
+            boolean addSilenceWord = true;
             if (addFillerWords) {
                 allWords.addAll(Arrays.asList(dictionary.getFillerWords()));
             } else if (addSilenceWord) {
@@ -988,7 +988,7 @@ class HMMTree {
          * @param entryPointCollection the set of possible entry points
          */
         EntryPointTable(Collection<Unit> entryPointCollection) {
-            entryPoints = new HashMap<Unit, EntryPoint>();
+            entryPoints = new HashMap<>();
             for (Unit unit : entryPointCollection) {
                 entryPoints.put(unit, new EntryPoint(unit));
             }
@@ -1032,7 +1032,7 @@ class HMMTree {
 
 
     /** Manages a single entry point. */
-    class EntryPoint {
+    final class EntryPoint {
 
         final Unit baseUnit;
         final Node baseNode;      // second units and beyond start here
@@ -1051,8 +1051,8 @@ class HMMTree {
         EntryPoint(Unit baseUnit) {
             this.baseUnit = baseUnit;
             this.baseNode = new Node(LogMath.LOG_ZERO);
-            this.unitToEntryPointMap = new HashMap<Unit, Node>();
-            this.singleUnitWords = new ArrayList<Pronunciation>();
+            this.unitToEntryPointMap = new HashMap<>();
+            this.singleUnitWords = new ArrayList<>();
             this.totalProbability = LogMath.LOG_ZERO;
         }
 
@@ -1127,7 +1127,7 @@ class HMMTree {
          */
         private Collection<Unit> getEntryPointRC() {
             if (rcSet == null) {
-                rcSet = new HashSet<Unit>();
+                rcSet = new HashSet<>();
                 for (Node node : baseNode.getSuccessorMap().values()) {
                     UnitNode unitNode = (UnitNode) node;
                     rcSet.add(unitNode.getBaseUnit());
@@ -1141,8 +1141,8 @@ class HMMTree {
          * A version of createEntryPointMap that compresses common hmms across all entry points.
          */
         void createEntryPointMap() {
-            HashMap<HMM, Node> map = new HashMap<HMM, Node>();
-            HashMap<HMM, HMMNode> singleUnitMap = new HashMap<HMM, HMMNode>();
+            HashMap<HMM, Node> map = new HashMap<>();
+            HashMap<HMM, HMMNode> singleUnitMap = new HashMap<>();
 
             for (Unit lc : exitPoints) {
                 Node epNode = new Node(LogMath.LOG_ZERO);
@@ -1151,7 +1151,7 @@ class HMMTree {
                     Node addedNode;
 
                     if ((addedNode = map.get(hmm)) == null) {
-                        addedNode = epNode.addSuccessor(hmm, getProbability());
+                        addedNode = epNode.addSuccessor(hmm, totalProbability);
                         map.put(hmm, addedNode);
                     } else {
                         epNode.putSuccessor(hmm, addedNode);
@@ -1183,7 +1183,7 @@ class HMMTree {
                     HMMNode tailNode;
                     if (( tailNode = map.get(hmm)) == null) {
                         tailNode = (HMMNode)
-                                epNode.addSuccessor(hmm, getProbability());
+                                epNode.addSuccessor(hmm, totalProbability);
                         map.put(hmm, tailNode);
                     } else {
                         epNode.putSuccessor(hmm, tailNode);

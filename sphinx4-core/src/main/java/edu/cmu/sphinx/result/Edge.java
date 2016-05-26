@@ -82,7 +82,7 @@ public class Edge {
      * @param f
      * @throws IOException
      */
-    void dump(PrintWriter f) throws IOException {
+    void dump(PrintWriter f) {
         f.println("edge: " + fromNode.getId() + ' ' + toNode.getId() + ' '
                 + acousticScore + ' ' + lmScore);
     }
@@ -107,7 +107,7 @@ public class Edge {
      * @throws IOException if error occured
      */
     public void dumpDot(FileWriter f) throws IOException {
-        String label = "" + acousticScore + "," + lmScore;
+        String label = acousticScore + "," + lmScore;
         f.write("\tnode" + fromNode.getId() + " -> node" + toNode.getId() 
                 + " [ label=\"" + label + "\" ]\n");
     }
@@ -188,9 +188,9 @@ public class Edge {
          * score is judge based on whether the difference is bigger than 1.
          */
         double diff = Math.abs(acousticScore) * 0.00001;
-        return ((Math.abs(acousticScore - other.getAcousticScore()) <= diff &&
-                lmScore == other.getLMScore()) &&
-                (fromNode.isEquivalent(other.getFromNode()) &&
-                        toNode.isEquivalent(other.getToNode())));
+        return ((Math.abs(acousticScore - other.acousticScore) <= diff &&
+                lmScore == other.lmScore) &&
+                (fromNode.isEquivalent(other.fromNode) &&
+                        toNode.isEquivalent(other.toNode)));
     }
 }

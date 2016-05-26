@@ -44,7 +44,7 @@ public class BatchFile {
      */
     public static List<String> getLines(String batchFile, int skip) throws IOException {
         int curCount = skip;
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(batchFile));
 
         String line = null;

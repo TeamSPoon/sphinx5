@@ -23,9 +23,10 @@ import java.util.List;
 /** Represents a 16bit, SIGNED_PCM, little endian audio clip with a sample rate specified by AudioFormat. */
 public class AudioData {
 
+    public static final short[] ZERO = new short[0];
     protected AudioFormat format;
     protected short[] shorts;
-    protected final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    protected final List<ChangeListener> listeners = new ArrayList<>();
     protected int selectionStart = -1;
     protected int selectionEnd = -1;
 
@@ -36,7 +37,7 @@ public class AudioData {
                 1,     // mono
                 true,  // signed
                 false); // little endian
-        shorts = new short[0];
+        shorts = ZERO;
     }
 
 

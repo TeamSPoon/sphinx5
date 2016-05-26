@@ -58,7 +58,7 @@ public class ModelInitializerLoader implements Loader {
     private GaussianWeights mixtureWeights;
 
     private Pool<Senone> senonePool;
-    private int vectorLength = 39;
+    private final int vectorLength = 39;
 
     private Map<String, Unit> contextIndependentUnits;
     private Map<String, Integer> phoneList;
@@ -109,8 +109,8 @@ public class ModelInitializerLoader implements Loader {
         unitManager = (UnitManager) ps.getComponent(PROP_UNIT_MANAGER);
 
         hmmManager = new HMMManager();
-        contextIndependentUnits = new LinkedHashMap<String, Unit>();
-        phoneList = new LinkedHashMap<String, Integer>();
+        contextIndependentUnits = new LinkedHashMap<>();
+        phoneList = new LinkedHashMap<>();
 
         meanTransformationMatrixPool = createDummyMatrixPool("meanTransformationMatrix");
         meanTransformationVectorPool = createDummyVectorPool("meanTransformationMatrix");
@@ -142,7 +142,7 @@ public class ModelInitializerLoader implements Loader {
     }
 
     /** Prints out a help message with format of phone list. */
-    private void printPhoneListHelp() {
+    private static void printPhoneListHelp() {
         System.out.println("The format for the phone list file is:");
         System.out.println("\tversion 0.1");
         System.out.println("\tsame_sized_models yes");
@@ -228,8 +228,7 @@ public class ModelInitializerLoader implements Loader {
      * @param numGaussiansPerState the number of Gaussians per state
      * @throws IOException if an error occurs while loading the data
      */
-    private void addModelToDensityPool(Pool<float[]> pool, int[] stateID, int numStreams, int numGaussiansPerState)
-            throws IOException {
+    private void addModelToDensityPool(Pool<float[]> pool, int[] stateID, int numStreams, int numGaussiansPerState) {
         assert pool != null;
         assert stateID != null;
 
@@ -270,7 +269,7 @@ public class ModelInitializerLoader implements Loader {
      * @param data the data to floor
      * @param floor the floored value
      */
-    private void floorData(float[] data, float floor) {
+    private static void floorData(float[] data, float floor) {
         for (int i = 0; i < data.length; i++) {
             if (data[i] < floor) {
                 data[i] = floor;
@@ -283,7 +282,7 @@ public class ModelInitializerLoader implements Loader {
      *
      * @param data the data to normalize
      */
-    private void normalize(float[] data) {
+    private static void normalize(float[] data) {
         float sum = 0;
         for (float val : data) {
             sum += val;
@@ -318,10 +317,10 @@ public class ModelInitializerLoader implements Loader {
         ExtendedStreamTokenizer est = new ExtendedStreamTokenizer(inputStream, '#', false);
 
         // Initialize the pools we'll need.
-        meansPool = new Pool<float[]>("means");
-        variancePool = new Pool<float[]>("variances");
-        matrixPool = new Pool<float[][]>("transitionmatrices");
-        senonePool = new Pool<Senone>("senones");
+        meansPool = new Pool<>("means");
+        variancePool = new Pool<>("variances");
+        matrixPool = new Pool<>("transitionmatrices");
+        senonePool = new Pool<>("senones");
 
         float distFloor = ps.getFloat(PROP_MC_FLOOR);
         float mixtureWeightFloor = ps.getFloat(PROP_MW_FLOOR);
@@ -364,7 +363,9 @@ public class ModelInitializerLoader implements Loader {
                 size = est.getInt("ModelSize");
             }
             phoneList.put(phone, size);
-            logger.fine("Phone: " + phone + " size: " + size);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Phone: " + phone + " size: " + size);
+            }
             int[] stid = new int[size];
             String position = "-";
 
@@ -469,8 +470,7 @@ public class ModelInitializerLoader implements Loader {
      * @throws IOException if an error occurs while loading the data
      */
     private void addModelToTransitionMatrixPool(Pool<float[][]> pool, int hmmId, int numEmittingStates,
-                                                float floor, boolean skip)
-            throws IOException {
+                                                float floor, boolean skip) {
 
         assert pool != null;
 
@@ -517,7 +517,7 @@ public class ModelInitializerLoader implements Loader {
      * @return the pool with the matrix
      */
     private Pool<float[][]> createDummyMatrixPool(String name) {
-        Pool<float[][]> pool = new Pool<float[][]>(name);
+        Pool<float[][]> pool = new Pool<>(name);
         float[][] matrix = new float[vectorLength][vectorLength];
         logger.info("creating dummy matrix pool " + name);
         for (int i = 0; i < vectorLength; i++) {
@@ -542,7 +542,7 @@ public class ModelInitializerLoader implements Loader {
      */
     private Pool<float[]> createDummyVectorPool(String name) {
         logger.info("creating dummy vector pool " + name);
-        Pool<float[]> pool = new Pool<float[]>(name);
+        Pool<float[]> pool = new Pool<>(name);
         float[] vector = new float[vectorLength];
         for (int i = 0; i < vectorLength; i++) {
             vector[i] = 0.0f;

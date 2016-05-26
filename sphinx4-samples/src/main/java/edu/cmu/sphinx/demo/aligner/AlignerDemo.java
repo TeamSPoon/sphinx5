@@ -74,7 +74,7 @@ public class AlignerDemo {
         LongTextAligner textAligner =
                 new LongTextAligner(stringResults, 2);
         List<String> sentences = aligner.getTokenizer().expand(transcript);
-        List<String> words = aligner.sentenceToWords(sentences);
+        List<String> words = SpeechAligner.sentenceToWords(sentences);
         
         int[] aid = textAligner.align(words);
         

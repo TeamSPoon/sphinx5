@@ -40,7 +40,7 @@ public class RmEpsilon {
             HashMap<State, Float>[] cl) {
         HashMap<State, Float> tmp = cl[fromState.getId()];
         if (tmp == null) {
-            tmp = new HashMap<State, Float>();
+            tmp = new HashMap<>();
             cl[fromState.getId()] = tmp;
         }
         tmp.put(toState, weight);

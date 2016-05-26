@@ -132,7 +132,7 @@ public class WavWriter extends BaseDataProcessor {
 
             for (double value : values) {
                 try {
-                    dos.writeShort(new Short((short) value));
+                    dos.writeShort((short) value);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

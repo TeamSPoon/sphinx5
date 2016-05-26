@@ -18,7 +18,7 @@ import java.util.*;
 /** A linguist processor that dumps out statistics about the search space */
 public class LinguistStats extends LinguistProcessor {
 
-    private final Map<Class<? extends SearchState>, Integer> stateCountByType = new HashMap<Class<? extends SearchState>, Integer>();
+    private final Map<Class<? extends SearchState>, Integer> stateCountByType = new HashMap<>();
 
     public LinguistStats( Linguist linguist ) {
         super(linguist);
@@ -32,8 +32,8 @@ public class LinguistStats extends LinguistProcessor {
     @Override
     public void run() {
         Linguist linguist = getLinguist();
-        List<SearchState> queue = new LinkedList<SearchState>();
-        Set<SearchState> visitedStates = new HashSet<SearchState>();
+        List<SearchState> queue = new LinkedList<>();
+        Set<SearchState> visitedStates = new HashSet<>();
         int stateCount = 0;
         queue.add(linguist.getSearchGraph().getInitialState());
         while (!queue.isEmpty()) {

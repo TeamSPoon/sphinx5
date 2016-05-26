@@ -44,7 +44,7 @@ public class AbstractSpeechRecognizer {
         this(new Context(configuration));
     }
 
-    protected AbstractSpeechRecognizer(Context context) throws IOException {
+    protected AbstractSpeechRecognizer(Context context) {
         this.context = context;
         recognizer = context.getInstance(Recognizer.class);
         speechSourceProvider = new SpeechSourceProvider();

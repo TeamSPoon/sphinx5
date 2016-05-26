@@ -61,8 +61,8 @@ public class Compose {
 
         Fst res = new Fst(semiring);
 
-        HashMap<Pair<State, State>, State> stateMap = new HashMap<Pair<State, State>, State>();
-        Queue<Pair<State, State>> queue = new LinkedList<Pair<State, State>>();
+        HashMap<Pair<State, State>, State> stateMap = new HashMap<>();
+        Queue<Pair<State, State>> queue = new LinkedList<>();
 
         State s1 = fst1.getStart();
         State s2 = fst2.getStart();
@@ -72,7 +72,7 @@ public class Compose {
             return null;
         }
 
-        Pair<State, State> p = new Pair<State, State>(s1, s2);
+        Pair<State, State> p = new Pair<>(s1, s2);
         State s = new State(semiring.times(s1.getFinalWeight(),
                 s2.getFinalWeight()));
 
@@ -97,7 +97,7 @@ public class Compose {
                     if (a1.getOlabel() == a2.getIlabel()) {
                         State nextState1 = a1.getNextState();
                         State nextState2 = a2.getNextState();
-                        Pair<State, State> nextPair = new Pair<State, State>(
+                        Pair<State, State> nextPair = new Pair<>(
                                 nextState1, nextState2);
                         State nextState = stateMap.get(nextPair);
                         if (nextState == null) {

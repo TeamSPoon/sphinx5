@@ -26,12 +26,12 @@ import java.util.logging.Logger;
  */
 public class HMMManager implements Iterable<HMM> {
 
-    private final List<HMM> allHMMs = new ArrayList<HMM>();
-    private final Map<HMMPosition, Map<Unit, HMM>> hmmsPerPosition = new EnumMap<HMMPosition, Map<Unit, HMM>>(HMMPosition.class);
+    private final List<HMM> allHMMs = new ArrayList<>();
+    private final Map<HMMPosition, Map<Unit, HMM>> hmmsPerPosition = new EnumMap<>(HMMPosition.class);
 
     public HMMManager () {
         for (HMMPosition pos : HMMPosition.values())
-            hmmsPerPosition.put(pos, new HashMap<Unit, HMM>());
+            hmmsPerPosition.put(pos, new HashMap<>());
     }
 
     /**

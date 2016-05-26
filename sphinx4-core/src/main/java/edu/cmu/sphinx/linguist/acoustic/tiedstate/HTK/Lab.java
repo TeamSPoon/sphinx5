@@ -33,10 +33,10 @@ public class Lab {
 
 	// copy-constructor
 	public Lab(Lab ref) {
-		setDeb(ref.getStart());
-		setFin(ref.getEnd());
-		setName(ref.getName());
-		setStateIdx(ref.getState());
+		setDeb(ref.start);
+		setFin(ref.end);
+		setName(ref.nameHMM);
+		setStateIdx(ref.numState);
 	}
 
 	public String getName() {
@@ -72,10 +72,10 @@ public class Lab {
 	}
 
 	public boolean isEqual(Lab l) {
-		if (l.getState() != -1 && getState() != -1) {
-			return l.getName().equals(getName()) && l.getState() == getState();
+		if (l.numState != -1 && getState() != -1) {
+			return l.nameHMM.equals(getName()) && l.getState() == getState();
 		} else {
-			return l.getName().equals(getName());
+			return l.nameHMM.equals(getName());
 		}
 	}
 

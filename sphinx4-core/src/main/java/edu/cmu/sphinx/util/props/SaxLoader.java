@@ -43,7 +43,7 @@ public class SaxLoader {
         this.url = url;
         this.globalProperties = globalProperties;
         this.replaceDuplicates = replaceDuplicates;
-        this.rpdMap = initRPD == null ? new HashMap<String, RawPropertyData>() : initRPD;
+        this.rpdMap = initRPD == null ? new HashMap<>() : initRPD;
     }
 
     /**

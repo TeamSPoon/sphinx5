@@ -16,11 +16,11 @@ import java.util.logging.Logger;
  */
 public class ConfigurationManager implements Cloneable {
 
-    private List<ConfigurationChangeListener> changeListeners = new ArrayList<ConfigurationChangeListener>();
+    private List<ConfigurationChangeListener> changeListeners = new ArrayList<>();
 
-    private Map<String, PropertySheet> symbolTable = new LinkedHashMap<String, PropertySheet>();
-    private Map<String, RawPropertyData> rawPropertyMap = new HashMap<String, RawPropertyData>();
-    private Map<String, String> globalProperties = new HashMap<String, String>();
+    private Map<String, PropertySheet> symbolTable = new LinkedHashMap<>();
+    private Map<String, RawPropertyData> rawPropertyMap = new HashMap<>();
+    private Map<String, String> globalProperties = new HashMap<>();
 
     private boolean showCreations;
     private URL configURL;
@@ -113,7 +113,7 @@ public class ConfigurationManager implements Cloneable {
      * @return the set of all instances
      */
     public Collection<String> getInstanceNames(Class<? extends Configurable> type) {
-        Collection<String> instanceNames = new ArrayList<String>();
+        Collection<String> instanceNames = new ArrayList<>();
 
         for (PropertySheet ps : symbolTable.values()) {
             if (!ps.isInstanciated())
@@ -194,7 +194,7 @@ public class ConfigurationManager implements Cloneable {
      * @return a list of property sheets
      */
     public List<PropertySheet> getPropSheets(Class<? extends Configurable> confClass) {
-        List<PropertySheet> psCol = new ArrayList<PropertySheet>();
+        List<PropertySheet> psCol = new ArrayList<>();
 
         for (PropertySheet ps : symbolTable.values()) {
             if (ConfigurationManagerUtils.isDerivedClass(ps.getConfigurableClass(), confClass))
@@ -215,7 +215,7 @@ public class ConfigurationManager implements Cloneable {
      *                                  this configuration manager instance.
      */
     public void addConfigurable(Class<? extends Configurable> confClass, String name) {
-        addConfigurable(confClass, name, new HashMap<String, Object>());
+        addConfigurable(confClass, name, new HashMap<>());
     }
 
 
@@ -352,7 +352,7 @@ public class ConfigurationManager implements Cloneable {
 
     /** @return a copy of the map of global properties set for this configuration manager. */
     public Map<String, String> getGlobalProperties() {
-        return new HashMap<String, String>(globalProperties);
+        return new HashMap<>(globalProperties);
     }
 
 
@@ -365,7 +365,7 @@ public class ConfigurationManager implements Cloneable {
     public String getGlobalProperty(String propertyName) {
         // propertyName = propertyName.startsWith("$") ? propertyName : "${" + propertyName + "}";
         String globProp = globalProperties.get(propertyName);
-        return globProp != null ? globProp.toString() : null;
+        return globProp != null ? globProp : null;
     }
 
 
@@ -413,7 +413,7 @@ public class ConfigurationManager implements Cloneable {
         assert propertyName != null;
 
         while (propertyName.startsWith("$"))
-            propertyName = globalProperties.get(ConfigurationManagerUtils.stripGlobalSymbol(propertyName)).toString();
+            propertyName = globalProperties.get(ConfigurationManagerUtils.stripGlobalSymbol(propertyName));
 
         return propertyName;
     }
@@ -506,14 +506,14 @@ public class ConfigurationManager implements Cloneable {
     public ConfigurationManager clone() throws CloneNotSupportedException {
         ConfigurationManager cloneCM = (ConfigurationManager)super.clone();
 
-        cloneCM.changeListeners = new ArrayList<ConfigurationChangeListener>();
-        cloneCM.symbolTable = new LinkedHashMap<String, PropertySheet>();
+        cloneCM.changeListeners = new ArrayList<>();
+        cloneCM.symbolTable = new LinkedHashMap<>();
         for (Map.Entry<String, PropertySheet> entry : symbolTable.entrySet()) {
             cloneCM.symbolTable.put(entry.getKey(), entry.getValue().clone());
         }
 
-        cloneCM.globalProperties = new HashMap<String, String>(globalProperties);
-        cloneCM.rawPropertyMap = new HashMap<String, RawPropertyData>(rawPropertyMap);
+        cloneCM.globalProperties = new HashMap<>(globalProperties);
+        cloneCM.rawPropertyMap = new HashMap<>(rawPropertyMap);
 
 
         return cloneCM;
@@ -529,7 +529,7 @@ public class ConfigurationManager implements Cloneable {
      * @throws PropertyException if no such class is defined
      */
     public static <C extends Configurable> C getInstance(Class<C> targetClass) throws PropertyException {
-        return getInstance(targetClass, new HashMap<String, Object>());
+        return getInstance(targetClass, new HashMap<>());
     }
 
 

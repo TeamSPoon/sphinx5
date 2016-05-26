@@ -24,10 +24,7 @@ public class TropicalSemiring extends Semiring {
     private static final long serialVersionUID = 2711172386738607866L;
 
     // zero value
-    private static float zero = Float.POSITIVE_INFINITY;
-
-    // one value
-    private static float one = 0.f;
+    private static final float zero = Float.POSITIVE_INFINITY;
 
     /*
      * (non-Javadoc)
@@ -100,6 +97,7 @@ public class TropicalSemiring extends Semiring {
      */
     @Override
     public float one() {
+        float one = 0.f;
         return one;
     }
 

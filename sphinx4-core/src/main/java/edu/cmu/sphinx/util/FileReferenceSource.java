@@ -30,7 +30,7 @@ public class FileReferenceSource implements ReferenceSource {
      * @throws IOException if something went wrong
      */
     public FileReferenceSource(String file) throws IOException {
-        references = new LinkedList<String>();
+        references = new LinkedList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
         while ((line = reader.readLine()) != null) {

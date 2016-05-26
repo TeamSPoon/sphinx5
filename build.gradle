@@ -1,3 +1,4 @@
+apply plugin: 'idea'
 
 def getRepositoryUsername() {
     return hasProperty('mavenUsername') ? mavenUsername : ""
@@ -35,8 +36,8 @@ subprojects() {
 
     compileJava.options.encoding = 'UTF-8'
     javadoc.options.encoding = 'UTF-8'
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     task javadocJar(type: Jar) {
         classifier = 'javadoc'

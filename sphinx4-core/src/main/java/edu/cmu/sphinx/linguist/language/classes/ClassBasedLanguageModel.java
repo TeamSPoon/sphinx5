@@ -161,7 +161,7 @@ public class ClassBasedLanguageModel implements LanguageModel {
      * Converts a vocabulary of the class LM to a word vocabulary.
      */
     private void makeVocabulary() {
-        vocabulary = new HashSet<String>();
+        vocabulary = new HashSet<>();
         for (String name : classLM.getVocabulary()) {
             Set<String> wordsInClass = classMap.getWordsInClass(name);
             if (wordsInClass == null) {

@@ -23,85 +23,83 @@ public final class LogMath {
     public static final float LOG_ONE = 0.f;
 
     // Singleton instance.
-    private static LogMath instance;
-    private static float logBase = 1.0001f;
-    private static boolean useTable = true;
+    private static final LogMath instance;
+    static {
+        instance = new LogMath();
+    }
 
-    private float naturalLogBase;
-    private float inverseNaturalLogBase;
+
+    private static final float logBase = 1.0001f;
+    //private static boolean useTable = false;
+
+    private static final float naturalLogBase = (float) Math.log(logBase);
+    private static final float inverseNaturalLogBase = 1f / naturalLogBase;
 
     private float theAddTable[];
 
     private LogMath() {
-        naturalLogBase = (float) Math.log(logBase);
-        inverseNaturalLogBase = 1.0f / naturalLogBase;
-        if (useTable) {
-            // Now create the addTable table.
-            // summation needed in the loop
-            float innerSummation;
-            // First decide number of elements.
-            int entriesInTheAddTable;
-            final int veryLargeNumberOfEntries = 150000;
-            final int verySmallNumberOfEntries = 0;
-            // To decide size of table, take into account that a base
-            // of 1.0001 or 1.0003 converts probabilities, which are
-            // numbers less than 1, into integers. Therefore, a good
-            // approximation for the smallest number in the table,
-            // therefore the value with the highest index, is an
-            // index that maps into 0.5: indices higher than that, if
-            // they were present, would map to less values less than
-            // 0.5, therefore they would be mapped to 0 as
-            // integers. Since the table implements the expression:
-            //
-            // log(1.0 + base^(-index)))
-            //
-            // then the highest index would be:
-            //
-            // topIndex = - log(logBase^(0.5) - 1)
-            //
-            // where log is the log in the appropriate base.
-            //
-            // Added -Math.rint(...) to round to nearest
-            // integer. Added the negation to match the preceding
-            // documentation
-            entriesInTheAddTable = (int) -Math
-                .rint(linearToLog(logToLinear(0.5f) - 1));
-            // We reach this max if the log base is 1.00007. The
-            // closer you get to 1, the higher the number of entries
-            // in the table.
-            if (entriesInTheAddTable > veryLargeNumberOfEntries) {
-                entriesInTheAddTable = veryLargeNumberOfEntries;
-            }
-            if (entriesInTheAddTable <= verySmallNumberOfEntries) {
-                throw new IllegalArgumentException("The log base " + logBase
-                        + " yields a very small addTable. "
-                        + "Either choose not to use the addTable, "
-                        + "or choose a logBase closer to 1.0");
-            }
-            // PBL added this just to see how many entries really are
-            // in the table
-            theAddTable = new float[entriesInTheAddTable];
-            for (int index = 0; index < entriesInTheAddTable; ++index) {
-                // This loop implements the expression:
-                //
-                // log( 1.0 + power(base, index))
-                //
-                // needed to add two numbers in the log domain.
-                innerSummation = (float) logToLinear(-index);
-                innerSummation += 1.0f;
-                theAddTable[index] = linearToLog(innerSummation);
-            }
-        }
+
+//        if (useTable) {
+//            // Now create the addTable table.
+//            // summation needed in the loop
+//            float innerSummation;
+//            // First decide number of elements.
+//            int entriesInTheAddTable;
+//            final int veryLargeNumberOfEntries = 150000;
+//            final int verySmallNumberOfEntries = 0;
+//            // To decide size of table, take into account that a base
+//            // of 1.0001 or 1.0003 converts probabilities, which are
+//            // numbers less than 1, into integers. Therefore, a good
+//            // approximation for the smallest number in the table,
+//            // therefore the value with the highest index, is an
+//            // index that maps into 0.5: indices higher than that, if
+//            // they were present, would map to less values less than
+//            // 0.5, therefore they would be mapped to 0 as
+//            // integers. Since the table implements the expression:
+//            //
+//            // log(1.0 + base^(-index)))
+//            //
+//            // then the highest index would be:
+//            //
+//            // topIndex = - log(logBase^(0.5) - 1)
+//            //
+//            // where log is the log in the appropriate base.
+//            //
+//            // Added -Math.rint(...) to round to nearest
+//            // integer. Added the negation to match the preceding
+//            // documentation
+//            entriesInTheAddTable = (int) -Math
+//                .rint(linearToLog(logToLinear(0.5f) - 1));
+//            // We reach this max if the log base is 1.00007. The
+//            // closer you get to 1, the higher the number of entries
+//            // in the table.
+//            if (entriesInTheAddTable > veryLargeNumberOfEntries) {
+//                entriesInTheAddTable = veryLargeNumberOfEntries;
+//            }
+//            if (entriesInTheAddTable <= verySmallNumberOfEntries) {
+//                throw new IllegalArgumentException("The log base " + logBase
+//                        + " yields a very small addTable. "
+//                        + "Either choose not to use the addTable, "
+//                        + "or choose a logBase closer to 1.0");
+//            }
+//            // PBL added this just to see how many entries really are
+//            // in the table
+//            theAddTable = new float[entriesInTheAddTable];
+//            for (int index = 0; index < entriesInTheAddTable; ++index) {
+//                // This loop implements the expression:
+//                //
+//                // log( 1.0 + power(base, index))
+//                //
+//                // needed to add two numbers in the log domain.
+//                innerSummation = (float) logToLinear(-index);
+//                innerSummation += 1.0f;
+//                theAddTable[index] = linearToLog(innerSummation);
+//            }
+//        }
     }
 
-    public static LogMath getLogMath() {
-        if (null == instance) {
-            synchronized(LogMath.class) {
-                if (null == instance)
-                    instance = new LogMath();
-            }
-        }
 
+    public static LogMath getLogMath() {
         return instance;
     }
 
@@ -113,24 +111,24 @@ public final class LogMath {
      *
      * @param logBase Log base
      */
-    public static void setLogBase(float logBase) {
-        synchronized(LogMath.class) {
-            assert instance == null;
-            LogMath.logBase = logBase;
-        }
-    }
+//    public static void setLogBase(float logBase) {
+//        synchronized(LogMath.class) {
+//            assert instance == null;
+//            LogMath.logBase = logBase;
+//        }
+//    }
 
-    /**
-     * The property that controls whether we use the old, slow (but correct)
-     * method of performing the LogMath.add by doing the actual computation.
-     * @param useTable to configure table lookups
-     */
-    public static void setUseTable(boolean useTable) {
-        synchronized(LogMath.class) {
-            assert instance == null;
-            LogMath.useTable = useTable;
-        }
-    }
+//    /**
+//     * The property that controls whether we use the old, slow (but correct)
+//     * method of performing the LogMath.add by doing the actual computation.
+//     * @param useTable to configure table lookups
+//     */
+//    public static void setUseTable(boolean useTable) {
+//        synchronized(LogMath.class) {
+//            assert instance == null;
+//            LogMath.useTable = useTable;
+//        }
+//    }
 
     /**
      * Returns the summation of two numbers when the arguments and the result are in log. <p>  That is, it returns
@@ -184,29 +182,37 @@ public final class LogMath {
         return linearToLog(logInnerSummation);
     }
 
-    /**
-     * Method used by add() internally. It returns the difference between the highest number and the total summation of
-     * two numbers. <p> Considering the expression (in which we assume natural log) <p>  <b>log(a + b) = log(a) +
-     * log(1 + exp(log(b) - log(a))) </b> </p>
-     * <p>
-     * the current function returns the second term of the right hand side of the equality above, generalized for the
-     * case of any log base. This function is constructed as a table lookup.
-     *
-     * @param index the index into the addTable
-     * @return the value pointed to by index
-     * @throws IllegalArgumentException
-     */
-    private float addTable(float index) throws IllegalArgumentException {
-            // int intIndex = (int) Math.rint(index);
-            int intIndex = (int) (index + 0.5);
-            // When adding two numbers, the highest one should be
-            // preserved, and therefore the difference should always
-            // be positive.
-            if (intIndex < theAddTable.length) {
-                return theAddTable[intIndex];
-            } else {
-                return 0.0f;
-            }
+//    /**
+//     * Method used by add() internally. It returns the difference between the highest number and the total summation of
+//     * two numbers. <p> Considering the expression (in which we assume natural log) <p>  <b>log(a + b) = log(a) +
+//     * log(1 + exp(log(b) - log(a))) </b> </p>
+//     * <p>
+//     * the current function returns the second term of the right hand side of the equality above, generalized for the
+//     * case of any log base. This function is constructed as a table lookup.
+//     *
+//     * @param index the index into the addTable
+//     * @return the value pointed to by index
+//     * @throws IllegalArgumentException
+//     */
+//    private float addTable(float index) throws IllegalArgumentException {
+//            // int intIndex = (int) Math.rint(index);
+//            int intIndex = (int) (index + 0.5);
+//            // When adding two numbers, the highest one should be
+//            // preserved, and therefore the difference should always
+//            // be positive.
+//            if (intIndex < theAddTable.length) {
+//                return theAddTable[intIndex];
+//            } else {
+//                return 0.0f;
+//            }
+//
+//
+//    }
+
+    static float addTable(float index) {
+        float innerSummation = (float) logToLinear(-index);
+        innerSummation += 1.0f;
+        return linearToLog(innerSummation);
     }
 
     /**
@@ -278,7 +284,7 @@ public final class LogMath {
      * @return converted value
      * @param logSource the number in base Math.E to convert
      */
-    public final float log10ToLog(float logSource) {
+    public static float log10ToLog(float logSource) {
         return logToLog(logSource, 10.0f, logBase);
     }
 
@@ -288,7 +294,7 @@ public final class LogMath {
      * @param logSource the number to convert to base Math.E
      * @return converted value
      */
-    public final float logToLn(float logSource) {
+    public static final float logToLn(float logSource) {
         return logSource * naturalLogBase;
     }
 
@@ -300,7 +306,7 @@ public final class LogMath {
      * @return the value in log scale
      * @throws IllegalArgumentException if value out of range
      */
-    public final float linearToLog(double linearValue)
+    public static final float linearToLog(double linearValue)
             throws IllegalArgumentException {
            return (float)Math.log(linearValue) * inverseNaturalLogBase;
     }
@@ -311,19 +317,19 @@ public final class LogMath {
      * @param logValue the value to be converted to the linear scale
      * @return the value in the linear scale
      */
-    public final double logToLinear(float logValue) {
+    public static final double logToLinear(float logValue) {
         return Math.exp(logToLn(logValue));
     }
 
     /** @return the actual log base. 
      */
-    public final float getLogBase() {
+    public static float getLogBase() {
         return logBase;
     }
 
-    public boolean isUseTable() {
-        return useTable;
-    }
+//    public static boolean isUseTable() {
+//        return useTable;
+//    }
 
     /**
      * Returns the log (base 10) of value

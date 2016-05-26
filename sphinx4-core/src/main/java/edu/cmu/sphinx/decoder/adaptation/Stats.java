@@ -25,7 +25,7 @@ public class Stats {
     private int nClusters;
     private Sphinx3Loader loader;
     private float varFlor;
-    private LogMath logMath = LogMath.getLogMath();
+    private final LogMath logMath = LogMath.getLogMath();
     private int nFrames;
 
     public Stats(Loader loader, ClusteredDensityFileData means) {
@@ -76,7 +76,7 @@ public class Stats {
             for (int k = 0; k < loader.getNumGaussiansPerState(); k++) {
                 for (int l = 0; l < loader.getVectorLength()[0]; l++) {
                     if (loader.getVariancePool().get(i * loader.getNumGaussiansPerState() + k)[l] <= 0.) {
-                        this.loader.getVariancePool().get(i * loader.getNumGaussiansPerState() + k)[l] = (float) 0.5;
+                        this.loader.getVariancePool().get(i * loader.getNumGaussiansPerState() + k)[l] = 0.5f;
                     } else if (loader.getVariancePool().get(i * loader.getNumGaussiansPerState() + k)[l] < varFlor) {
                         this.loader.getVariancePool().get(i * loader.getNumGaussiansPerState() + k)[l] = (float) (1. / varFlor);
                     } else {
@@ -152,9 +152,9 @@ public class Stats {
             componentScore = token.calculateComponentScore(feature);
             featureVector = FloatData.toFloatData(feature).getValues();
             mId = (int) ((HMMSearchState) token.getSearchState()).getHMMState().getMixtureId();
-            if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
+            if (loader instanceof Sphinx3Loader && loader.hasTiedMixtures())
                 // use CI phone ID for tied mixture model
-                mId = ((Sphinx3Loader) loader).getSenone2Ci()[mId];
+                mId = loader.getSenone2Ci()[mId];
             len = loader.getVectorLength();
             numStreams = loader.getNumStreams();
             gauPerState = loader.getNumGaussiansPerState();

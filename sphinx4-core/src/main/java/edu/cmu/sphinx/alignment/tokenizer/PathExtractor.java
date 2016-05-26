@@ -75,7 +75,7 @@ public class PathExtractor {
         }
 
         if (wantFeature) {
-            int lastDot = pathAndFeature.lastIndexOf(".");
+            int lastDot = pathAndFeature.lastIndexOf('.');
             // string can be of the form "p.feature" or just "feature"
 
             if (lastDot == -1) {
@@ -164,14 +164,14 @@ public class PathExtractor {
         if (pitem != null) {
             if (LOGGER.isLoggable(Level.FINER)) {
                 LOGGER.finer("findFeature: Item [" + pitem + "], feature '"
-                        + feature + "'");
+                        + feature + '\'');
             }
             results = pitem.getFeatures().getObject(feature);
         }
 
         results = (results == null) ? "0" : results;
         if (LOGGER.isLoggable(Level.FINER)) {
-            LOGGER.finer("findFeature: ...results = '" + results + "'");
+            LOGGER.finer("findFeature: ...results = '" + results + '\'');
         }
         return results;
     }
@@ -183,12 +183,12 @@ public class PathExtractor {
      * @return the compiled form which is in the form of an array path
      *         traversal enums and associated strings
      */
-    private Object[] compile(String path) {
+    private static Object[] compile(String path) {
         if (path == null) {
             return new Object[0];
         }
 
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         StringTokenizer tok = new StringTokenizer(path, ":.");
 
         while (tok.hasMoreTokens()) {
@@ -225,7 +225,7 @@ public class PathExtractor {
  * An enumerated type associated with path operations.
  */
 class OpEnum {
-    static private Map<String, OpEnum> map = new HashMap<String, OpEnum>();
+    static private final Map<String, OpEnum> map = new HashMap<>();
 
     public final static OpEnum NEXT = new OpEnum("n");
     public final static OpEnum PREV = new OpEnum("p");
@@ -254,7 +254,7 @@ class OpEnum {
      * @param name the name of the OpEnum of interest
      */
     public static OpEnum getInstance(String name) {
-        return (OpEnum) map.get(name);
+        return map.get(name);
     }
 
     // inherited from Object

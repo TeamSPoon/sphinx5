@@ -27,9 +27,6 @@ public class Path {
     // the path's cost
     private float cost;
 
-    // the paths' semiring
-    private Semiring semiring;
-
     /**
      * Create a Path instance with specified path and semiring elements
      * @param path word list to create path from
@@ -37,8 +34,8 @@ public class Path {
      */
     public Path(ArrayList<String> path, Semiring semiring) {
         this.path = path;
-        this.semiring = semiring;
-        cost = this.semiring.zero();
+        Semiring semiring1 = semiring;
+        cost = semiring1.zero();
     }
 
     /**
@@ -46,7 +43,7 @@ public class Path {
      * @param semiring semiring to use
      */
     public Path(Semiring semiring) {
-        this(new ArrayList<String>(), semiring);
+        this(new ArrayList<>(), semiring);
     }
 
     /**
@@ -89,7 +86,7 @@ public class Path {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(cost + "\t");
+        sb.append(cost).append("\t");
         for (String s : path) {
             sb.append(s);
             sb.append(' ');

@@ -22,11 +22,11 @@ import java.io.IOException;
 public interface Learner extends Configurable {
 
     /** Starts the Learner. */
-    public void start();
+    void start();
 
 
     /** Stops the Learner. */
-    public void stop();
+    void stop();
 
 
     /**
@@ -35,7 +35,7 @@ public interface Learner extends Configurable {
      * @param utterance the utterance
      * @throws IOException if exception occurred
      */
-    public void setUtterance(Utterance utterance) throws IOException;
+    void setUtterance(Utterance utterance) throws IOException;
 
 
     /**
@@ -45,8 +45,8 @@ public interface Learner extends Configurable {
      * @param graph     the current utterance graph
      * @throws IOException if exception occurred
      */
-    public void initializeComputation(Utterance utterance,
-                                      UtteranceGraph graph) throws IOException;
+    void initializeComputation(Utterance utterance,
+                               UtteranceGraph graph) throws IOException;
 
 
     /**
@@ -54,9 +54,9 @@ public interface Learner extends Configurable {
      *
      * @param graph the graph
      */
-    public void setGraph(UtteranceGraph graph);
+    void setGraph(UtteranceGraph graph);
 
 
     /** @return posterior probabilities for a given state. */
-    public TrainerScore[] getScore();
+    TrainerScore[] getScore();
 }

@@ -134,8 +134,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         if (lookaheadWindow < 1 || lookaheadWindow > 10)
             throw new IllegalArgumentException("Unsupported lookahead window size: " + lookaheadWindow
                     + ". Value in range [1..10] is expected");
-        this.ciScores = new LinkedList<FrameCiScores>();
-        this.penalties = new HashMap<Integer, Float>();
+        this.ciScores = new LinkedList<>();
+        this.penalties = new HashMap<>();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);
     }
@@ -163,8 +163,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         if (lookaheadWindow < 1 || lookaheadWindow > 10)
             throw new PropertyException(WordPruningBreadthFirstLookaheadSearchManager.class.getName(), PROP_LOOKAHEAD_WINDOW,
                     "Unsupported lookahead window size: " + lookaheadWindow + ". Value in range [1..10] is expected");
-        ciScores = new LinkedList<FrameCiScores>();
-        penalties = new HashMap<Integer, Float>();
+        ciScores = new LinkedList<>();
+        penalties = new HashMap<>();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);
     }
@@ -221,7 +221,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         if (mapSize == 0) {
             mapSize = 1;
         }
-        fastMatchBestTokenMap = new HashMap<SearchState, Token>(mapSize);
+        fastMatchBestTokenMap = new HashMap<>(mapSize);
     }
 
     /**

@@ -109,7 +109,7 @@ public class LiveModeRecognizer implements Configurable {
      * @throws IOException if IO went wrong
      */
     public void decode() throws IOException {
-        List<String> resultList = new LinkedList<String>();
+        List<String> resultList = new LinkedList<>();
         Result result;
         int startReference = 0;
         hypothesisTranscript = new FileWriter(hypothesisFile);
@@ -135,7 +135,7 @@ public class LiveModeRecognizer implements Configurable {
                 List<String> section = references.subList(startReference, references
                         .size());
                 alignResults(resultList, section);
-                resultList = new LinkedList<String>();
+                resultList = new LinkedList<>();
                 startReference = references.size();
             }
         }
@@ -215,7 +215,7 @@ public class LiveModeRecognizer implements Configurable {
      * @param hypothesis the aligned hypothesis text
      * @param reference  the aligned reference text
      */
-    private void saveAlignedText(String hypothesis, String reference) {
+    private static void saveAlignedText(String hypothesis, String reference) {
         try {
             FileWriter writer = new FileWriter("align.txt");
             writer.write(hypothesis);
@@ -234,7 +234,7 @@ public class LiveModeRecognizer implements Configurable {
      * @param resultList the list of strings
      * @return a string which is a concatenation of the strings in the list, separated by a space character
      */
-    private String listToString(List<String> resultList) {
+    private static String listToString(List<String> resultList) {
         StringBuilder sb = new StringBuilder();
         for (String result : resultList) {
             sb.append(result).append(' ');
@@ -274,7 +274,7 @@ public class LiveModeRecognizer implements Configurable {
         try {
             URL url = new File(cmFile).toURI().toURL();
             cm = new ConfigurationManager(url);
-            lmr = (LiveModeRecognizer) cm.lookup("live");
+            lmr = cm.lookup("live");
         } catch (IOException ioe) {
             System.err.println("I/O error during initialization: \n   " + ioe);
             return;

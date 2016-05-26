@@ -169,8 +169,8 @@ public class SpeedTracker
     /** Shows the audio usage data */
     protected void showAudioUsage() {
         logger.info("   This  Time Audio: " + timeFormat.format(audioTime)
-                + "s"
-                + "  Proc: " + timeFormat.format(processingTime) + "s"
+                + 's'
+                + "  Proc: " + timeFormat.format(processingTime) + 's'
                 + "  Speed: " + timeFormat.format(getSpeed())
                 + " X real time");
         showAudioSummary();
@@ -180,7 +180,7 @@ public class SpeedTracker
     /** Shows the audio summary data */
     protected void showAudioSummary() {
         logger.info("   Total Time Audio: "
-                + timeFormat.format(totalAudioTime) + "s"
+                + timeFormat.format(totalAudioTime) + 's'
                 + "  Proc: " + timeFormat.format(totalProcessingTime)
                 + "s "
                 + timeFormat.format(getCumulativeSpeed()) + " X real time");
@@ -263,7 +263,7 @@ public class SpeedTracker
      *
      * @return the time in milliseconds.
      */
-    private long getTime() {
+    private static long getTime() {
         return System.currentTimeMillis();
     }
 

@@ -299,17 +299,19 @@ class HypothesisFile {
      * @return the next available hypothesis utterance, or null if the end of file has been reached
      */
     private HypothesisUtterance nextUtterance() throws IOException {
-        String line = reader.readLine();
-        if (line != null) {
-            utteranceCount++;
-            HypothesisUtterance utterance = new HypothesisUtterance(line);
-            if (utterance.getWordCount() <= 0) {
-                return nextUtterance();
+        while (true) {
+            String line = reader.readLine();
+            if (line != null) {
+                utteranceCount++;
+                HypothesisUtterance utterance = new HypothesisUtterance(line);
+                if (utterance.getWordCount() <= 0) {
+
+                } else {
+                    return utterance;
+                }
             } else {
-                return utterance;
+                return null;
             }
-        } else {
-            return null;
         }
     }
 
@@ -338,7 +340,7 @@ class HypothesisUtterance {
      * Creates a hypothesis utterance from a line of input describing the hypothesis.
      */
     HypothesisUtterance(String line) {
-        words = new LinkedList<HypothesisWord>();
+        words = new LinkedList<>();
         StringTokenizer st = new StringTokenizer(line, " \t\n\r\f(),");
         while (st.hasMoreTokens()) {
             String text = st.nextToken();
@@ -379,7 +381,7 @@ class HypothesisUtterance {
      * @return a list of the words in this hypothesis
      */
     List<HypothesisWord> getWords() {
-        List<HypothesisWord> newList = new LinkedList<HypothesisWord>();
+        List<HypothesisWord> newList = new LinkedList<>();
         newList.addAll(words);
         return newList;
     }

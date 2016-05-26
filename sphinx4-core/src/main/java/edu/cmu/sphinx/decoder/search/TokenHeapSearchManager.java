@@ -25,7 +25,7 @@ import edu.cmu.sphinx.linguist.SearchState;
  */
 public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager {
 
-    protected final int maxTokenHeapSize = 3;
+    protected static final int maxTokenHeapSize = 3;
 
     Map<Object, TokenHeap> bestTokenMap;
 
@@ -35,7 +35,7 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
         if (mapSize == 0) {
             mapSize = 1;
         }
-        bestTokenMap = new HashMap<Object, TokenHeap>(mapSize, 0.3F);
+        bestTokenMap = new HashMap<>(mapSize, 0.3F);
     }
 
     @Override

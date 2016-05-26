@@ -99,7 +99,7 @@ public class SenoneHMM implements HMM {
     // value, but this is certainly more convenient and easier to
     // understand
     public int getOrder() {
-        return getSenoneSequence().getSenones().length;
+        return senoneSequence.getSenones().length;
     }
 
 
@@ -122,7 +122,7 @@ public class SenoneHMM implements HMM {
      * @return true if this is a composite hmm
      */
     public boolean isComposite() {
-        Senone[] senones = getSenoneSequence().getSenones();
+        Senone[] senones = senoneSequence.getSenones();
         for (Senone senone : senones) {
             if (senone instanceof CompositeSenone) {
                 return true;
@@ -212,7 +212,7 @@ public class SenoneHMM implements HMM {
 
     @Override
     public int hashCode() {
-        return getSenoneSequence().hashCode();
+        return senoneSequence.hashCode();
     }
 
 
@@ -222,7 +222,7 @@ public class SenoneHMM implements HMM {
             return true;
         } else if (o instanceof SenoneHMM) {
             SenoneHMM other = (SenoneHMM) o;
-		return getSenoneSequence().equals(other.getSenoneSequence());
+            return senoneSequence.equals(other.getSenoneSequence());
         }
         return false;
     }

@@ -23,7 +23,7 @@ public class CustomThreadFactory implements ThreadFactory {
             throw new IllegalArgumentException("illegal thread priority");
         SecurityManager s = System.getSecurityManager();
         this.group = s != null ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
-        this.namePrefix = namePrefix + "-" + poolNumber.getAndIncrement() + "-thread-";
+        this.namePrefix = namePrefix + '-' + poolNumber.getAndIncrement() + "-thread-";
         this.daemon = daemon;
         this.priority = priority;
     }

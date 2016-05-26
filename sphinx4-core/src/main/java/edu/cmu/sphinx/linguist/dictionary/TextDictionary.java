@@ -93,8 +93,7 @@ public class TextDictionary implements Dictionary {
     protected boolean allocated;
 
     public TextDictionary(String wordDictionaryFile, String fillerDictionaryFile, List<URL> addendaUrlList,
-            boolean addSilEndingPronunciation, String wordReplacement, UnitManager unitManager) throws MalformedURLException,
-            ClassNotFoundException {
+            boolean addSilEndingPronunciation, String wordReplacement, UnitManager unitManager) throws MalformedURLException {
         this(ConfigurationManagerUtils.resourceToURL(wordDictionaryFile), ConfigurationManagerUtils
                 .resourceToURL(fillerDictionaryFile), addendaUrlList, wordReplacement, unitManager);
     }
@@ -167,11 +166,11 @@ public class TextDictionary implements Dictionary {
 
     public void allocate() throws IOException {
         if (!allocated) {
-            dictionary = new HashMap<String, String>();
-            wordDictionary = new HashMap<String, Word>();
+            dictionary = new HashMap<>();
+            wordDictionary = new HashMap<>();
 
             Timer loadTimer = TimerPool.getTimer(this, "Load Dictionary");
-            fillerWords = new HashSet<String>();
+            fillerWords = new HashSet<>();
 
             loadTimer.start();
 
@@ -185,7 +184,7 @@ public class TextDictionary implements Dictionary {
 
             loadDictionary(fillerDictionaryFile.openStream(), true);
 
-            if (g2pModelFile != null && !g2pModelFile.getPath().equals("")) {
+            if (g2pModelFile != null && !g2pModelFile.getPath().isEmpty()) {
                 g2pDecoder = new G2PConverter(g2pModelFile);
             }
             loadTimer.stop();
@@ -257,7 +256,7 @@ public class TextDictionary implements Dictionary {
         inputStream.close();
     }
 
-    private int getSpaceIndex(String line) {
+    private static int getSpaceIndex(String line) {
         for (int i = 0; i < line.length(); i++) {
             if (line.charAt(i) == ' ' || line.charAt(i) == '\t')
                 return i;
@@ -325,10 +324,10 @@ public class TextDictionary implements Dictionary {
 
         String word = dictionary.get(text);
         if (word == null) { // deal with 'not found' case
-            logger.info("The dictionary is missing a phonetic transcription for the word '" + text + "'");
+            logger.info("The dictionary is missing a phonetic transcription for the word '" + text + '\'');
             if (wordReplacement != null) {
                 wordObject = getWord(wordReplacement);
-            } else if (g2pModelFile != null && !g2pModelFile.getPath().equals("")) {
+            } else if (g2pModelFile != null && !g2pModelFile.getPath().isEmpty()) {
                 logger.info("Generating phonetic transcription(s) for the word '" + text + "' using g2p model");
                 wordObject = extractPronunciation(text);
                 wordDictionary.put(text, wordObject);
@@ -343,10 +342,10 @@ public class TextDictionary implements Dictionary {
     private Word extractPronunciation(String text) {
         Word wordObject;
         ArrayList<Path> paths = g2pDecoder.phoneticize(text, g2pMaxPron);
-        List<Pronunciation> pronunciations = new LinkedList<Pronunciation>();
+        List<Pronunciation> pronunciations = new LinkedList<>();
         for (Path p : paths) {
             int unitCount = p.getPath().size();
-            ArrayList<Unit> units = new ArrayList<Unit>(unitCount);
+            ArrayList<Unit> units = new ArrayList<>(unitCount);
             for (String token : p.getPath()) {
                 units.add(getCIUnit(token, false));
             }
@@ -388,7 +387,7 @@ public class TextDictionary implements Dictionary {
      * pronunciations massaged into an array of pronunciations.
      */
     private Word processEntry(String word) {
-        List<Pronunciation> pronunciations = new LinkedList<Pronunciation>();
+        List<Pronunciation> pronunciations = new LinkedList<>();
         String line;
         int count = 0;
         boolean isFiller = false;
@@ -407,7 +406,7 @@ public class TextDictionary implements Dictionary {
                 isFiller = tag.startsWith(FILLER_TAG);
                 int unitCount = st.countTokens();
 
-                ArrayList<Unit> units = new ArrayList<Unit>(unitCount);
+                ArrayList<Unit> units = new ArrayList<>(unitCount);
                 for (int i = 0; i < unitCount; i++) {
                     String unitName = st.nextToken();
                     units.add(getCIUnit(unitName, isFiller));
@@ -435,7 +434,7 @@ public class TextDictionary implements Dictionary {
      */
     @Override
     public String toString() {
-        SortedMap<String, String> sorted = new TreeMap<String, String>(dictionary);
+        SortedMap<String, String> sorted = new TreeMap<>(dictionary);
         StringBuilder result = new StringBuilder();
 
         for (Map.Entry<String, String> entry : sorted.entrySet()) {

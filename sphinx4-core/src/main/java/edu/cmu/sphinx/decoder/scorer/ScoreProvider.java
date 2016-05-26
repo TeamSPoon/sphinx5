@@ -23,7 +23,7 @@ public interface ScoreProvider {
      * @param data data to score
      * @return the score
      */
-    public float getScore(Data data);
+    float getScore(Data data);
 
     /**
      * Provides component score
@@ -31,5 +31,5 @@ public interface ScoreProvider {
      * @param feature data to score
      * @return the score
      */
-     public float[] getComponentScore(Data feature);
+    float[] getComponentScore(Data feature);
 }

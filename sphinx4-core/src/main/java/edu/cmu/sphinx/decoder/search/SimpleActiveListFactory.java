@@ -73,7 +73,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
         private int absoluteBeamWidth = 2000;
         private final float logRelativeBeamWidth;
         private Token bestToken;
-        private List<Token> tokenList = new LinkedList<Token>();
+        private List<Token> tokenList = new LinkedList<>();
 
 
         /**

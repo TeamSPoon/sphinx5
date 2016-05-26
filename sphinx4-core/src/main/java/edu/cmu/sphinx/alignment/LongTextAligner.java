@@ -79,7 +79,7 @@ public class LongTextAligner {
             }
 
             public List<Node> adjacent() {
-                List<Node> result = new ArrayList<Node>(3);
+                List<Node> result = new ArrayList<>(3);
                 if (queryIndex < indices.size() &&
                     databaseIndex < shifts.size()) {
                     result.add(new Node(queryIndex + 1, databaseIndex + 1));
@@ -122,8 +122,8 @@ public class LongTextAligner {
 
         public Alignment(List<String> query, Range range) {
             this.query = query;
-            indices = new ArrayList<Integer>();
-            Set<Integer> shiftSet = new TreeSet<Integer>();
+            indices = new ArrayList<>();
+            Set<Integer> shiftSet = new TreeSet<>();
             for (int i = 0; i < query.size(); i++) {
                 if (tupleIndex.containsKey(query.get(i))) {
                     indices.add(i);
@@ -134,16 +134,12 @@ public class LongTextAligner {
                 }
             }
 
-            shifts = new ArrayList<Integer>(shiftSet);
+            shifts = new ArrayList<>(shiftSet);
 
-            final Map<Node, Integer> cost = new HashMap<Node, Integer>();
-            PriorityQueue<Node> openSet = new PriorityQueue<Node>(1, new Comparator<Node>() {
-                public int compare(Node o1, Node o2) {
-                    return cost.get(o1).compareTo(cost.get(o2));
-                }
-            });
-            Collection<Node> closedSet = new HashSet<Node>();
-            Map<Node, Node> parents = new HashMap<Node, Node>();
+            final Map<Node, Integer> cost = new HashMap<>();
+            PriorityQueue<Node> openSet = new PriorityQueue<>(1, (o1, o2) -> cost.get(o1).compareTo(cost.get(o2)));
+            Collection<Node> closedSet = new HashSet<>();
+            Map<Node, Node> parents = new HashMap<>();
 
             Node startNode = new Node(0, 0);
             cost.put(startNode, 0);
@@ -155,13 +151,13 @@ public class LongTextAligner {
                     continue;
 
                 if (q.isTarget()) {
-                    List<Node> backtrace = new ArrayList<Node>();
+                    List<Node> backtrace = new ArrayList<>();
                     while (parents.containsKey(q)) {
                         if (!q.isBoundary() && q.hasMatch())
                             backtrace.add(q);
                         q = parents.get(q);
                     }
-                    alignment = new ArrayList<Node>(backtrace);
+                    alignment = new ArrayList<>(backtrace);
                     Collections.reverse(alignment);
                     return;
                 }
@@ -226,11 +222,11 @@ public class LongTextAligner {
         int offset = 0;
         reftup = getTuples(words);
 
-        tupleIndex = new HashMap<String, ArrayList<Integer>>();
+        tupleIndex = new HashMap<>();
         for (String tuple : reftup) {
             ArrayList<Integer> indexes = tupleIndex.get(tuple);
             if (indexes == null) {
-                indexes = new ArrayList<Integer>();
+                indexes = new ArrayList<>();
                 tupleIndex.put(tuple, indexes);
             }
             indexes.add(offset++);
@@ -281,8 +277,8 @@ public class LongTextAligner {
      * @return list of tuples of size {@link #tupleSize}
      */
     private List<String> getTuples(List<String> words) {
-        List<String> result = new ArrayList<String>();
-        LinkedList<String> tuple = new LinkedList<String>();
+        List<String> result = new ArrayList<>();
+        LinkedList<String> tuple = new LinkedList<>();
         
         Iterator<String> it = words.iterator();
         for (int i = 0; i < tupleSize - 1; i++) {

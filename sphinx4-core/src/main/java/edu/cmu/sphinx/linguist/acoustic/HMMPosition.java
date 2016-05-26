@@ -43,7 +43,7 @@ public enum HMMPosition {
      * @param rep the string representation
      * @return the HMMPosition represented by rep or null if not found
      */
-    private HMMPosition(char rep) {
+    HMMPosition(char rep) {
         this.rep = String.valueOf(rep);
     }
 

@@ -202,7 +202,7 @@ public class ConcatFileDataSource extends StreamDataSource implements ReferenceS
                     (new SequenceInputStream
                             (new InputStreamEnumeration
                                     (batchFile, startFile, totalFiles)));
-            referenceList = new LinkedList<String>();
+            referenceList = new LinkedList<>();
         } catch (IOException e) {
             e.printStackTrace(); //TODO fix this
         }

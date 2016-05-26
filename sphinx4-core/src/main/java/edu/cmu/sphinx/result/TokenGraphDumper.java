@@ -44,8 +44,8 @@ public class TokenGraphDumper {
     public TokenGraphDumper(Result result) {
         this.result = result;
         this.loserManager = result.getAlternateHypothesisManager();
-        tokenIDMap = new HashMap<Token, Integer>();
-        dumpedTokens = new HashSet<Token>();
+        tokenIDMap = new HashMap<>();
+        dumpedTokens = new HashSet<>();
     }
 
 
@@ -148,7 +148,7 @@ public class TokenGraphDumper {
      * @param state the state
      * @return its color
      */
-    private String getColor(SearchState state) {
+    private static String getColor(SearchState state) {
         String color = "lightred";
         if (state.isFinal()) {
             color = "magenta";

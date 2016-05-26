@@ -261,7 +261,7 @@ public class Result {
      * @return the list token at the head of the branch
      */
     public List<Token> findPartialMatchingTokens(String text) {
-        List<Token> list = new ArrayList<Token>();
+        List<Token> list = new ArrayList<>();
         text = text.trim();
         for (Token token : activeList) {
             if (text.startsWith(token.getWordPathNoFiller())) {
@@ -297,7 +297,7 @@ public class Result {
      *         per frame or <code>null</code> if no frame statistics are
      *         available.
      */
-    public FrameStatistics[] getFrameStatistics() {
+    public static FrameStatistics[] getFrameStatistics() {
         return null; // [[[ TBD: write me ]]]
     }
 
@@ -307,7 +307,7 @@ public class Result {
      * 
      * @return the starting frame number for the result
      */
-    public int getStartFrame() {
+    public static int getStartFrame() {
         return 0;
     }
 
@@ -317,7 +317,7 @@ public class Result {
      * 
      * @return the ending frame number for the result
      */
-    public int getEndFrame() {
+    public static int getEndFrame() {
         return 0; // [[[ TBD: write me ]]]
     }
 
@@ -334,7 +334,7 @@ public class Result {
         if (token == null)
             return null;
 
-        List<Data> featureList = new LinkedList<Data>();
+        List<Data> featureList = new LinkedList<>();
 
         do {
             Data feature = token.getData();
@@ -428,9 +428,9 @@ public class Result {
      *            true if we want filler words, false otherwise
      * @return list of word with timestamps
      */
-    private List<WordResult> getTimedWordPath(Token token, boolean withFillers) {
+    private static List<WordResult> getTimedWordPath(Token token, boolean withFillers) {
         long prevWordEnd = -1;
-        List<WordResult> result = new ArrayList<WordResult>();
+        List<WordResult> result = new ArrayList<>();
 
         while (token != null) {
 
@@ -459,12 +459,12 @@ public class Result {
      * 
      * @return the string of words, each with the starting sample number
      */
-    private List<WordResult> getTimedWordTokenLastPath(Token token, boolean withFillers) {
+    private static List<WordResult> getTimedWordTokenLastPath(Token token, boolean withFillers) {
         long lastWordEnd = -1;
         long lastWordStart = -1;
         Word word = null;
 
-        List<WordResult> result = new ArrayList<WordResult>();
+        List<WordResult> result = new ArrayList<>();
         while (token != null) {
             if (token.isWord()) {
                 if (word != null && lastWordEnd >= 0) {
@@ -513,7 +513,7 @@ public class Result {
     public boolean validate() {
         boolean valid = true;
         for (Token token : activeList) {
-            if (!token.validate()) {
+            if (!Token.validate()) {
                 valid = false;
                 token.dumpTokenPath();
             }

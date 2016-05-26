@@ -10,7 +10,7 @@ package edu.cmu.sphinx.linguist.language.ngram.trie;
 
 public class NgramTrieQuant {
 
-    public static enum QuantType {NO_QUANT, QUANT_16};
+    public enum QuantType {NO_QUANT, QUANT_16}
 
     private int probBits;
     private int backoffBits;
@@ -120,7 +120,7 @@ public class NgramTrieQuant {
     public float readProb(NgramTrieBitarr bitArr, int memPtr, int bitOffset, int orderMinusTwo) {
         switch (quantType) {
         case NO_QUANT:
-            return bitArr.readNegativeFloat(memPtr, bitOffset);
+            return NgramTrieBitarr.readNegativeFloat(memPtr, bitOffset);
         case QUANT_16:
             int tableIdx = orderMinusTwo * 2;
             if (tableIdx < tables.length - 1)
@@ -145,7 +145,7 @@ public class NgramTrieQuant {
         switch (quantType) {
         case NO_QUANT:
             bitOffset += 31;
-            return bitArr.readFloat(memPtr, bitOffset);
+            return NgramTrieBitarr.readFloat(memPtr, bitOffset);
         case QUANT_16:
             int tableIdx = orderMinusTwo * 2 + 1;
             return binsDecode(tableIdx, bitArr.readInt(memPtr, bitOffset, probMask));

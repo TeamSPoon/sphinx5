@@ -116,7 +116,7 @@ public class PLPFrequencyFilterBank extends BaseDataProcessor {
         }
 
         DFTFrequencies = new double[numberDFTPoints];
-        nyquistFreq = sampleRate / 2;
+        nyquistFreq = sampleRate / 2f;
         for (int i = 0; i < numberDFTPoints; i++) {
             DFTFrequencies[i] = i * nyquistFreq /
                     (numberDFTPoints - 1);
@@ -132,8 +132,8 @@ public class PLPFrequencyFilterBank extends BaseDataProcessor {
          */
 
 
-        minBarkFreq = bark.hertzToBark(minFreq);
-        maxBarkFreq = bark.hertzToBark(maxFreq);
+        minBarkFreq = FrequencyWarper.hertzToBark(minFreq);
+        maxBarkFreq = FrequencyWarper.hertzToBark(maxFreq);
 
         if (numberFilters < 1) {
             throw new IllegalArgumentException("Number of filters illegal: "
@@ -142,7 +142,7 @@ public class PLPFrequencyFilterBank extends BaseDataProcessor {
         deltaBarkFreq = (maxBarkFreq - minBarkFreq) / (numberFilters + 1);
 
         for (int i = 0; i < numberFilters; i++) {
-            centerFreq = bark.barkToHertz(minBarkFreq + i * deltaBarkFreq);
+            centerFreq = FrequencyWarper.barkToHertz(minBarkFreq + i * deltaBarkFreq);
             criticalBandFilter[i] = new PLPFilter(DFTFrequencies, centerFreq);
         }
     }
@@ -162,7 +162,7 @@ public class PLPFrequencyFilterBank extends BaseDataProcessor {
      * where w is frequency in radians/second
      * @param freq
      */
-    private double loudnessScalingFunction(double freq) {
+    private static double loudnessScalingFunction(double freq) {
         double fsq = freq * freq;
         double fsub = fsq / (fsq + 1.6e5);
         return fsub * fsub * ((fsq + 1.44e6) / (fsq + 9.61e6));

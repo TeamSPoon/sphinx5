@@ -44,7 +44,7 @@ public class ExtendFinal {
      */
     public static void apply(Fst fst) {
         Semiring semiring = fst.getSemiring();
-        ArrayList<State> fStates = new ArrayList<State>();
+        ArrayList<State> fStates = new ArrayList<>();
 
         int numStates = fst.getNumStates();
         for (int i = 0; i < numStates; i++) {

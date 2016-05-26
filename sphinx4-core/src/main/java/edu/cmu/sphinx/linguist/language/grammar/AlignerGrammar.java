@@ -22,7 +22,7 @@ import edu.cmu.sphinx.util.LogMath;
 public class AlignerGrammar extends Grammar {
 
     protected GrammarNode finalNode;
-    private final List<String> tokens = new ArrayList<String>();
+    private final List<String> tokens = new ArrayList<>();
 
     public AlignerGrammar(final boolean showGrammar, final boolean optimizeGrammar, final boolean addSilenceWords,
             final boolean addFillerWords, final Dictionary dictionary) {

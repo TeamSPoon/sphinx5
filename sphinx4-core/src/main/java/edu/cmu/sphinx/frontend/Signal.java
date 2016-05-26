@@ -61,7 +61,7 @@ public class Signal implements Data {
      */
     public synchronized Map<String, Object> getProps() {
         if (props == null)
-            props = new HashMap<String, Object>();
+            props = new HashMap<>();
 
         return props;
     }

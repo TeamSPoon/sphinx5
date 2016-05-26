@@ -17,7 +17,7 @@ public @interface S4Integer {
     /**
      * Default value to return
      */
-    public static final int NOT_DEFINED = -918273645;
+    int NOT_DEFINED = -918273645;
 
     int defaultValue() default NOT_DEFINED;
 

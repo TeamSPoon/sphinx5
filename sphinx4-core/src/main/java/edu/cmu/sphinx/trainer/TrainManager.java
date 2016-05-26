@@ -23,15 +23,15 @@ public interface TrainManager extends Configurable {
 
     /** The minimum relative improvement of the log likelihood associated with the training data. */
     @S4Double(defaultValue = 0.2f)
-    public final static String PROP_MINIMUM_IMPROVEMENT = "minimumImprovement";
+    String PROP_MINIMUM_IMPROVEMENT = "minimumImprovement";
 
     /** The maximum number of iterations. */
     @S4Integer(defaultValue = 15)
-    public final static String PROP_MAXIMUM_ITERATION = "maximumIteration";
+    String PROP_MAXIMUM_ITERATION = "maximumIteration";
 
 
     /** Do the train. */
-    public void train();
+    void train();
 
     /**
      * Saves the acoustic models.

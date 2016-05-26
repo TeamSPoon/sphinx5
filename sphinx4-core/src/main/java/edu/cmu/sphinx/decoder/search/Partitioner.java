@@ -22,9 +22,6 @@ import edu.cmu.sphinx.decoder.scorer.Scoreable;
  */
 public class Partitioner {
 
-    /** Max recursion depth **/
-    final private int MAX_DEPTH = 50;
-
 
     /**
      * Partitions sub-array of tokens around the end token. 
@@ -36,7 +33,7 @@ public class Partitioner {
      * @param end      the pivot and the ending index of the subarray, inclusive
      * @return the index (after partitioning) of the element around which the array is partitioned
      */
-    private int endPointPartition(Token[] tokens, int start, int end) {
+    private static int endPointPartition(Token[] tokens, int start, int end) {
         Token pivot = tokens[end];
         float pivotScore = pivot.getScore();
                
@@ -106,7 +103,7 @@ public class Partitioner {
      * @param size the number of tokens to partition
      * @return index of the best token
      */
-    private int findBest(Token[] tokens, int size) {
+    private static int findBest(Token[] tokens, int size) {
         int r = -1;
         float lowestScore = Float.MAX_VALUE;
         for (int i = 0; i < tokens.length; i++) {
@@ -131,35 +128,42 @@ public class Partitioner {
     }
 
 
-    private void setToken(Token[] list, int index, Token token) {
+    private static void setToken(Token[] list, int index, Token token) {
         list[index] = token;
     }
 
     /**
      * Selects the token with the ith largest token score.
      *
-     * @param tokens       the token array to partition
-     * @param start        the starting index of the subarray
-     * @param end          the ending index of the subarray, inclusive
-     * @param targetSize   target size of the partition
-     * @param depth        recursion depth to avoid stack overflow and fall back to simple partition.
+     * @param tokens     the token array to partition
+     * @param start      the starting index of the subarray
+     * @param end        the ending index of the subarray, inclusive
+     * @param targetSize target size of the partition
+     * @param depth      recursion depth to avoid stack overflow and fall back to simple partition.
      * @return the index of the token with the ith largest score
      */
     private int midPointSelect(Token[] tokens, int start, int end, int targetSize, int depth) {
-        if (depth > MAX_DEPTH) {
-            return simplePointSelect (tokens, start, end, targetSize);
-        }
-        if (start == end) {
-            return start;
-        }
-        int partitionToken = midPointPartition(tokens, start, end);
-        int newSize = partitionToken - start + 1;
-        if (targetSize == newSize) {
-            return partitionToken;
-        } else if (targetSize < newSize) {
-            return midPointSelect(tokens, start, partitionToken - 1, targetSize, depth + 1);
-        } else {
-            return midPointSelect(tokens, partitionToken + 1, end, targetSize - newSize, depth + 1);
+        while (true) {
+            /* Max recursion depth */
+            int MAX_DEPTH = 50;
+            if (depth > MAX_DEPTH) {
+                return simplePointSelect(tokens, start, end, targetSize);
+            }
+            if (start == end) {
+                return start;
+            }
+            int partitionToken = midPointPartition(tokens, start, end);
+            int newSize = partitionToken - start + 1;
+            if (targetSize == newSize) {
+                return partitionToken;
+            } else if (targetSize < newSize) {
+                end = partitionToken - 1;
+                depth = depth + 1;
+            } else {
+                start = partitionToken + 1;
+                targetSize = targetSize - newSize;
+                depth = depth + 1;
+            }
         }
     }
     
@@ -172,7 +176,7 @@ public class Partitioner {
      * @param targetSize   target size of the partition
      * @return the index of the token with the ith largest score
      */
-    private int simplePointSelect(Token[] tokens, int start, int end, int targetSize) {
+    private static int simplePointSelect(Token[] tokens, int start, int end, int targetSize) {
         Arrays.sort(tokens, start, end + 1, Scoreable.COMPARATOR);
         return start + targetSize - 1;
     }

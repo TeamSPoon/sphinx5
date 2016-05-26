@@ -48,22 +48,22 @@ import edu.cmu.sphinx.fst.utils.Utils;
 public class G2PConverter {
 
     // epsilon symbol
-    String eps = "<eps>";
+    final String eps = "<eps>";
 
     // end sequence symbol
-    String se = "</s>";
+    final String se = "</s>";
 
     // begin sequence symbol
-    String sb = "<s>";
+    final String sb = "<s>";
 
     // skip symbol
-    String skip = "_";
+    final String skip = "_";
 
     // separator symbol
-    String tie = "|";
+    final String tie = "|";
 
     // set containing sequences to ignore
-    HashSet<String> skipSeqs = new HashSet<String>();
+    final HashSet<String> skipSeqs = new HashSet<>();
 
     // clusters
     ArrayList<String>[] clusters = null;
@@ -171,7 +171,7 @@ public class G2PConverter {
      * @return the pronunciation(s) of the input word
      */
     public ArrayList<Path> phoneticize(String word, int nbest) {
-        ArrayList<String> entry = new ArrayList<String>(word.length());
+        ArrayList<String> entry = new ArrayList<>(word.length());
         for (int i = 0; i < word.length(); i++) {
             String ch = word.substring(i, i + 1);
             if (Utils.getIndex(g2pmodel.getIsyms(), ch) >= 0) {
@@ -257,14 +257,14 @@ public class G2PConverter {
      * @return the paths
      */
     @SuppressWarnings("unchecked")
-    private ArrayList<Path> findAllPaths(Fst fst, int nbest,
-            HashSet<String> skipSeqs, String tie) {
+    private static ArrayList<Path> findAllPaths(Fst fst, int nbest,
+                                                HashSet<String> skipSeqs, String tie) {
         Semiring semiring = fst.getSemiring();
 
         // ArrayList<Path> finalPaths = new ArrayList<Path>();
-        HashMap<String, Path> finalPaths = new HashMap<String, Path>();
-        HashMap<State, Path> paths = new HashMap<State, Path>();
-        Queue<State> queue = new LinkedList<State>();
+        HashMap<String, Path> finalPaths = new HashMap<>();
+        HashMap<State, Path> paths = new HashMap<>();
+        Queue<State> queue = new LinkedList<>();
         Path p = new Path(fst.getSemiring());
         p.setCost(semiring.one());
         paths.put(fst.getStart(), p);
@@ -299,7 +299,7 @@ public class G2PConverter {
 
                 String sym = osyms[a.getOlabel()];
 
-                String[] symsArray = sym.split("\\" + tie);
+                String[] symsArray = sym.split('\\' + tie);
 
                 for (int i = 0; i < symsArray.length; i++) {
                     String phone = symsArray[i];
@@ -316,7 +316,7 @@ public class G2PConverter {
             }
         }
 
-        ArrayList<Path> res = new ArrayList<Path>();
+        ArrayList<Path> res = new ArrayList<>();
         for (Path path : finalPaths.values()) {
             res.add(path);
         }
@@ -343,7 +343,7 @@ public class G2PConverter {
             String sym = syms[i];
             if (sym.contains(tie)) {
                 String split[] = sym.split(Pattern.quote(tie));
-                ArrayList<String> cluster = new ArrayList<String>(
+                ArrayList<String> cluster = new ArrayList<>(
                         Arrays.asList(split));
                 clusters[i] = cluster;
             }

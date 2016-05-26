@@ -38,20 +38,20 @@ public class JSGFRuleGrammar {
 
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    protected final Map<String, JSGFRuleState> rules = new HashMap<String, JSGFRuleState>();
-    protected final List<JSGFRuleName> imports = new ArrayList<JSGFRuleName>();
-    protected final List<String> importedRules = new ArrayList<String>();
+    protected final Map<String, JSGFRuleState> rules = new HashMap<>();
+    protected final List<JSGFRuleName> imports = new ArrayList<>();
+    protected final List<String> importedRules = new ArrayList<>();
 
-    protected final Map<String, Collection<String>> ruleTags = new HashMap<String, Collection<String>>();
+    protected final Map<String, Collection<String>> ruleTags = new HashMap<>();
 
     private String name;
     private JSGFRuleGrammarManager manager;
 
     /** Storage for documentation comments for rules for JSGF doc. */
-    Properties ruleDocComments = new Properties();
+    final Properties ruleDocComments = new Properties();
 
     /** Storage for documentation comments for imports for JSGF doc. */
-    Properties importDocComments = new Properties();
+    final Properties importDocComments = new Properties();
 
     /** Storage for documentation comments for the grammar for JSGF doc. */
     String grammarDocComment;
@@ -69,7 +69,7 @@ public class JSGFRuleGrammar {
             this.rule = rule;
             this.isPublic = isPublic;
             this.isEnabled = isEnabled;
-            this.samples = new ArrayList<String>();
+            this.samples = new ArrayList<>();
         }
     }
 
@@ -303,12 +303,12 @@ public class JSGFRuleGrammar {
         // size()=0 if rn is unresolvable
         // size()=1 if rn is properly resolvable
         // size()>1 if rn is an ambiguous reference
-        List<JSGFRuleName> matches = new ArrayList<JSGFRuleName>();
+        List<JSGFRuleName> matches = new ArrayList<>();
 
         // Get list of imports
         // Add local grammar to simply the case of checking for
         // a qualified or fully-qualified local reference.
-        List<JSGFRuleName> imports = new ArrayList<JSGFRuleName>(this.imports);
+        List<JSGFRuleName> imports = new ArrayList<>(this.imports);
         imports.add(new JSGFRuleName(name + ".*"));
 
         // Check each import statement for a possible match
@@ -469,7 +469,7 @@ public class JSGFRuleGrammar {
             // add the tag the tag-table
             Collection<String> tags = ruleTags.get(ruleStr);
             if (tags == null) {
-                tags = new HashSet<String>();
+                tags = new HashSet<>();
                 ruleTags.put(ruleStr, tags);
             }
             tags.add(rt.getTag());
@@ -568,7 +568,7 @@ public class JSGFRuleGrammar {
             if (docComments.contains(curImport)) {
                 sb.append(formatComment((String) importDocComments.get(curImport)));
                 sb.append(LINE_SEPARATOR);
-                sb.append("import ").append(curImport + ';').append(LINE_SEPARATOR);
+                sb.append("import ").append(curImport).append(';').append(LINE_SEPARATOR);
                 sb.append(LINE_SEPARATOR);
             }
         }
@@ -599,7 +599,7 @@ public class JSGFRuleGrammar {
      *         representation of the provided comment, otherwise an empty string
      *         ("").
      */
-    private String formatComment(String comment) {
+    private static String formatComment(String comment) {
         StringBuilder sb = new StringBuilder("");
         if (comment == null) {
             return sb.toString();

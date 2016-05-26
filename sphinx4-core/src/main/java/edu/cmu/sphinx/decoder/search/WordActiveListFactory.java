@@ -93,7 +93,7 @@ public class WordActiveListFactory extends ActiveListFactory {
     class WordActiveList implements ActiveList {
 
         private Token bestToken;
-        private List<Token> tokenList = new LinkedList<Token>();
+        private List<Token> tokenList = new LinkedList<>();
 
 
         /**
@@ -131,7 +131,7 @@ public class WordActiveListFactory extends ActiveListFactory {
 
         public ActiveList purge() {
             int fillerCount = 0;
-            Map<Word, Integer> countMap = new HashMap<Word, Integer>();
+            Map<Word, Integer> countMap = new HashMap<>();
             Collections.sort(tokenList, Scoreable.COMPARATOR);
             // remove word duplicates
             for (Iterator<Token> i = tokenList.iterator(); i.hasNext();) {

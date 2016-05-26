@@ -60,7 +60,7 @@ public class LatticeGrammar extends Grammar {
         }
         
         GrammarNode firstNode = null;
-        HashMap<Node, GrammarNode> nodeMap = new HashMap<Node, GrammarNode>();
+        HashMap<Node, GrammarNode> nodeMap = new HashMap<>();
         for (Node n : lattice.getNodes()) { 
             String word = n.getWord().toString();
             GrammarNode node = createGrammarNode(word);

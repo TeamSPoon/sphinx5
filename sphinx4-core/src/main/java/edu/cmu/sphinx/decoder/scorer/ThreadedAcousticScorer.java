@@ -22,6 +22,7 @@ import edu.cmu.sphinx.util.props.S4Integer;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.logging.Level;
 
 /**
  * An acoustic scorer that breaks the scoring up into a configurable number of separate threads.
@@ -146,7 +147,9 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
         super.allocate();
         if (executorService == null) {
             if (numThreads > 1) {
-                logger.fine("# of scoring threads: " + numThreads);
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("# of scoring threads: " + numThreads);
+                }
                 executorService = Executors.newFixedThreadPool(numThreads,
                     new CustomThreadFactory(className, true, threadPriority));
             } else {
@@ -171,17 +174,13 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
             int jobSize = Math.max((totalSize + numThreads - 1) / numThreads, minScoreablesPerThread);
 
             if (jobSize < totalSize) {
-                List<Callable<T>> tasks = new ArrayList<Callable<T>>();
+                List<Callable<T>> tasks = new ArrayList<>();
                 for (int from = 0, to = jobSize; from < totalSize; from = to, to += jobSize) {
                     final List<T> scoringJob = scoreableList.subList(from, Math.min(to, totalSize));
-                    tasks.add(new Callable<T>() {
-                        public T call() throws Exception {
-                            return ThreadedAcousticScorer.super.doScoring(scoringJob, data);
-                        }
-                    });
+                    tasks.add(() -> ThreadedAcousticScorer.super.doScoring(scoringJob, data));
                 }
 
-                List<T> finalists = new ArrayList<T>(tasks.size());
+                List<T> finalists = new ArrayList<>(tasks.size());
        
                 try {
                     for (Future<T> result : executorService.invokeAll(tasks))

@@ -77,4 +77,5 @@ public interface SearchState {
      * @return the state order for this state
      */
     int getOrder();
+
 }

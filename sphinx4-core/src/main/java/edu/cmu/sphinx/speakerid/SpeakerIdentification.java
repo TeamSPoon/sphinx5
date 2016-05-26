@@ -32,15 +32,14 @@ import edu.cmu.sphinx.util.props.ConfigurationManager;
  */
 public class SpeakerIdentification {
 
-    public final String FRONTEND_NAME = "plpFrontEnd";
+    public static final String FRONTEND_NAME = "plpFrontEnd";
 
     private FrontEnd frontEnd;
     private StreamDataSource audioSource;
-    private ConfigurationManager cm;
 
     public SpeakerIdentification() {
         URL url = getClass().getResource("frontend.config.xml");
-        cm = new ConfigurationManager(url);
+        ConfigurationManager cm = new ConfigurationManager(url);
         audioSource = cm.lookup("streamDataSource");
         frontEnd = cm.lookup(FRONTEND_NAME);
     }
@@ -50,7 +49,7 @@ public class SpeakerIdentification {
      *         audioSource
      */
     private ArrayList<float[]> getFeatures() {
-        ArrayList<float[]> ret = new ArrayList<float[]>();
+        ArrayList<float[]> ret = new ArrayList<>();
         try {
             int featureLength = -1;
             Data feature = frontEnd.getData();
@@ -94,7 +93,7 @@ public class SpeakerIdentification {
      *            the feature vectors matrix
      * @return the likelihood ratio
      */
-    double getLikelihoodRatio(double bicValue, int frame, Array2DRowRealMatrix features) {
+    static double getLikelihoodRatio(double bicValue, int frame, Array2DRowRealMatrix features) {
         double bicValue1, bicValue2;
         int d = Segment.FEATURES_SIZE;
         double penalty = 0.5 * (d + 0.5 * d * (d + 1)) * Math.log(features.getRowDimension()) * 2;
@@ -118,7 +117,7 @@ public class SpeakerIdentification {
      * 
      */
 
-    private int getPoint(int start, int length, int step, Array2DRowRealMatrix features) {
+    private static int getPoint(int start, int length, int step, Array2DRowRealMatrix features) {
         double max = Double.NEGATIVE_INFINITY;
         int ncols = features.getColumnDimension(), point = 0;
         Array2DRowRealMatrix sub = (Array2DRowRealMatrix) features.getSubMatrix(start, start + length - 1, 0,
@@ -142,8 +141,8 @@ public class SpeakerIdentification {
      *            Matrix with feature vectors as rows
      * @return A list with all changing points detected in the file
      */
-    private LinkedList<Integer> getAllChangingPoints(Array2DRowRealMatrix features) {
-        LinkedList<Integer> ret = new LinkedList<Integer>();
+    private static LinkedList<Integer> getAllChangingPoints(Array2DRowRealMatrix features) {
+        LinkedList<Integer> ret = new LinkedList<>();
         ret.add(0);
         int framesCount = features.getRowDimension(), step = 500;
         int start = 0, end = step, cp;
@@ -172,7 +171,7 @@ public class SpeakerIdentification {
         double[] re = ed.getRealEigenvalues();
         for (int i = 0; i < re.length; i++)
             ret += Math.log(re[i]);
-        return ret * (mat.getRowDimension() / 2);
+        return ret * (mat.getRowDimension() / 2f);
     }
 
     /**
@@ -189,8 +188,8 @@ public class SpeakerIdentification {
      * @param features The feature vectors to be used for clustering
      * @return A cluster for each speaker detected based on the feature vectors provided
      */
-    public ArrayList<SpeakerCluster> cluster(ArrayList<float[]> features) {
-        ArrayList<SpeakerCluster> ret = new ArrayList<SpeakerCluster>();
+    public static ArrayList<SpeakerCluster> cluster(ArrayList<float[]> features) {
+        ArrayList<SpeakerCluster> ret = new ArrayList<>();
         Array2DRowRealMatrix featuresMatrix = ArrayToRealMatrix(features, features.size());
         LinkedList<Integer> l = getAllChangingPoints(featuresMatrix);
         Iterator<Integer> it = l.iterator();
@@ -250,8 +249,8 @@ public class SpeakerIdentification {
      * @param distance
      *            The distance matrix that will be updated
      */
-    void updateDistances(ArrayList<SpeakerCluster> clustering, int posi, int posj,
-            Array2DRowRealMatrix distance) {
+    static void updateDistances(ArrayList<SpeakerCluster> clustering, int posi, int posj,
+                                Array2DRowRealMatrix distance) {
         int clusterCount = clustering.size();
         for (int i = 0; i < clusterCount; i++) {
             distance.setEntry(i, posi, computeDistance(clustering.get(i), clustering.get(posi)));
@@ -270,7 +269,7 @@ public class SpeakerIdentification {
      * @param Clustering
      *            The array of clusters
      */
-    Array2DRowRealMatrix updateDistances(ArrayList<SpeakerCluster> clustering) {
+    static Array2DRowRealMatrix updateDistances(ArrayList<SpeakerCluster> clustering) {
         int clusterCount = clustering.size();
         Array2DRowRealMatrix distance = new Array2DRowRealMatrix(clusterCount, clusterCount);
         for (int i = 0; i < clusterCount; i++) {
@@ -282,7 +281,7 @@ public class SpeakerIdentification {
         return distance;
     }
 
-    double computeDistance(SpeakerCluster c1, SpeakerCluster c2) {
+    static double computeDistance(SpeakerCluster c1, SpeakerCluster c2) {
         int rowDim = c1.getFeatureMatrix().getRowDimension() + c2.getFeatureMatrix().getRowDimension();
         int colDim = c1.getFeatureMatrix().getColumnDimension();
         Array2DRowRealMatrix combinedFeatures = new Array2DRowRealMatrix(rowDim, colDim);
@@ -301,7 +300,7 @@ public class SpeakerIdentification {
      *            dimension
      * @return The RealMatrix with the vectors from the ArrayList on columns
      */
-    Array2DRowRealMatrix ArrayToRealMatrix(ArrayList<float[]> lst, int size) {
+    static Array2DRowRealMatrix ArrayToRealMatrix(ArrayList<float[]> lst, int size) {
         int length = lst.get(1).length;
         Array2DRowRealMatrix ret = new Array2DRowRealMatrix(size, length);
         int i = 0;
@@ -314,7 +313,7 @@ public class SpeakerIdentification {
         return ret;
     }
 
-    void printMatrix(Array2DRowRealMatrix a) {
+    static void printMatrix(Array2DRowRealMatrix a) {
         for (int i = 0; i < a.getRowDimension(); i++) {
             for (int j = 0; j < a.getColumnDimension(); j++)
                 System.out.print(a.getEntry(i, j) + " ");

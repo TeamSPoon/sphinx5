@@ -48,7 +48,7 @@ public class BaumWelchLearner implements Learner {
     /*
      * The logger for this class
      */
-    private static Logger logger =
+    private static final Logger logger =
             Logger.getLogger("edu.cmu.sphinx.trainer.BaumWelch");
 
     private Data curFeature;
@@ -168,7 +168,7 @@ public class BaumWelchLearner implements Learner {
     private TrainerScore[][] prepareScore() {
         // scoreList will contain a list of score, which in turn are a
         // vector of TrainerScore elements.
-        List<TrainerScore[]> scoreList = new ArrayList<TrainerScore[]>();
+        List<TrainerScore[]> scoreList = new ArrayList<>();
         int numStates = graph.size();
         TrainerScore[] score = new TrainerScore[numStates];
         betas = new float[numStates];

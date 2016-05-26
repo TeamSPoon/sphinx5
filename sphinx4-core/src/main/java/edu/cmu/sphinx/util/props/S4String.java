@@ -18,7 +18,7 @@ public @interface S4String {
     /**
      * Default value to return
      */
-    public static final String NOT_DEFINED = "nullnullnull";
+    String NOT_DEFINED = "nullnullnull";
 
 
     String defaultValue() default NOT_DEFINED; // this default value will be mapped to zero by the configuration manager

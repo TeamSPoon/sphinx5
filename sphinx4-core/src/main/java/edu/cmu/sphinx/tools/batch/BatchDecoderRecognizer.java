@@ -82,7 +82,7 @@ public class BatchDecoderRecognizer {
         for (int i = 0; i < ctlCount; i++) {
             if (scanner.hasNext()) {
                 String utteranceId = scanner.next();
-                String inputFile =  featDir + "/" + utteranceId + ".wav";
+                String inputFile =  featDir + '/' + utteranceId + ".wav";
                 processFile(utteranceId, inputFile);
             }
         }
@@ -95,7 +95,7 @@ public class BatchDecoderRecognizer {
         FileInputStream stream = new FileInputStream(inputFile);
         source.setInputStream(stream);
         Result result = recognizer.recognize();
-        writer.println (result.getBestFinalResultNoFiller() + " (" + utteranceId + ")");
+        writer.println (result.getBestFinalResultNoFiller() + " (" + utteranceId + ')');
     }
 
     public static void main(String[] argv) throws IOException {
@@ -104,10 +104,10 @@ public class BatchDecoderRecognizer {
         batchRecognizer.recognize();
     }
 
-    private void init() throws IOException {
+    private void init() {
         manager = new ConfigurationManager(config);
-        recognizer = (Recognizer)manager.lookup("recognizer");
-        source = (StreamDataSource)manager.lookup("streamDataSource");
+        recognizer = manager.lookup("recognizer");
+        source = manager.lookup("streamDataSource");
         
         recognizer.allocate();        
     }

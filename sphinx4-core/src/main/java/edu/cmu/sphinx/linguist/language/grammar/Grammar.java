@@ -174,7 +174,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
      */
     public void dumpRandomSentences(String path, int count) {
         try {
-            Set<String> set = new HashSet<String>();
+            Set<String> set = new HashSet<>();
             PrintWriter out = new PrintWriter(new FileOutputStream(path));
             for (int i = 0; i < count; i++) {
                 String s = getRandomSentence();
@@ -197,14 +197,14 @@ public abstract class Grammar implements Configurable, GrammarInterface {
      *              grammar.
      */
     public void dumpRandomSentences(int count) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         for (int i = 0; i < count; i++) {
             String s = getRandomSentence();
             if (!set.contains(s)) {
                 set.add(s);
             }
         }
-        List<String> sampleList = new ArrayList<String>(set);
+        List<String> sampleList = new ArrayList<>(set);
         Collections.sort(sampleList);
 
         for (String sentence : sampleList) {
@@ -305,7 +305,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     /** Prepare to create a new grammar */
     protected void newGrammar() {
         maxIdentity = 0;
-        grammarNodes = new HashSet<GrammarNode>();
+        grammarNodes = new HashSet<>();
         initialNode = null;
     }
 
@@ -356,7 +356,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         for (int i = 0; i < alternatives.length; i++) {
             alternatives[i] = new Word[alts[i].length];
             for (int j = 0; j < alts[i].length; j++) {
-                Word word = getDictionary().getWord(alts[i][j]);
+                Word word = dictionary.getWord(alts[i][j]);
                 // Pronunciation[] pronunciation =
                 // word.getPronunciations(null);
                 if (word == null) {
@@ -410,7 +410,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     protected GrammarNode createGrammarNode(int identity, String word) {
         GrammarNode node;
         Word[][] alternatives = EMPTY_ALTERNATIVE;
-        Word wordObject = getDictionary().getWord(word);
+        Word wordObject = dictionary.getWord(word);
         // Pronunciation[] pronunciation = wordObject.getPronunciations(null);
         if (wordObject != null) {
             alternatives = new Word[1][];
@@ -472,7 +472,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
      * nodes that have no words and have only a single exit and bypasses these nodes.
      */
     private void optimizeGrammar() {
-        Set<GrammarNode> nodes = getGrammarNodes();
+        Set<GrammarNode> nodes = grammarNodes;
         for (GrammarNode node : nodes)
             node.optimize();
     }
@@ -480,7 +480,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
 
     /** Adds an optional silence word after every non-filler word in the grammar */
     private void addSilenceWords() {
-        HashSet<GrammarNode> nodes = new HashSet<GrammarNode>(getGrammarNodes());
+        HashSet<GrammarNode> nodes = new HashSet<>(grammarNodes);
         for (GrammarNode g : nodes) {
             if (!g.isEmpty() && !g.getWord().isFiller()) {
                 GrammarNode silNode = createGrammarNode(maxIdentity + 1,
@@ -499,7 +499,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
 
     /** Adds an optional filler word loop after every non-filler word in the grammar */
     private void addFillerWords() {
-        Set<GrammarNode> nodes = new HashSet<GrammarNode>(getGrammarNodes());
+        Set<GrammarNode> nodes = new HashSet<>(grammarNodes);
 
         Word[] fillers = getInterWordFillers();
 
@@ -533,7 +533,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
      * @return the set of inter-word fillers
      */
     private Word[] getInterWordFillers() {
-        List<Word> fillerList = new ArrayList<Word>();
+        List<Word> fillerList = new ArrayList<>();
         Word[] fillers = dictionary.getFillerWords();
 
         for (Word fillerWord : fillers) {

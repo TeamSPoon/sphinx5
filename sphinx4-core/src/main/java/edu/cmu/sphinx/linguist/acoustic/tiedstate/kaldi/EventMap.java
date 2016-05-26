@@ -14,5 +14,5 @@ public interface EventMap {
      *
      * @return identifier of probability distribution function
      */
-    public int map(int pdfClass, int[] context);
+    int map(int pdfClass, int[] context);
 }

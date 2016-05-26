@@ -60,8 +60,7 @@ public class SimpleNGramModel implements LanguageModel {
 
     public SimpleNGramModel(String location, Dictionary dictionary,
             float unigramWeight, int desiredMaxDepth)
-            throws MalformedURLException, ClassNotFoundException
-    {
+            throws MalformedURLException {
         this(ConfigurationManagerUtils.resourceToURL(location), dictionary,
              unigramWeight, desiredMaxDepth);
     }
@@ -74,9 +73,9 @@ public class SimpleNGramModel implements LanguageModel {
         this.logMath = LogMath.getLogMath();
         this.desiredMaxDepth = desiredMaxDepth;
         this.dictionary = dictionary;
-        this.map = new HashMap<WordSequence, Probability>();
-        this.vocabulary = new HashSet<String>();
-        this.tokens = new LinkedList<WordSequence>();
+        this.map = new HashMap<>();
+        this.vocabulary = new HashSet<>();
+        this.tokens = new LinkedList<>();
     }
 
     public SimpleNGramModel() {
@@ -100,9 +99,9 @@ public class SimpleNGramModel implements LanguageModel {
         unigramWeight = ps.getFloat(PROP_UNIGRAM_WEIGHT);
         desiredMaxDepth = ps.getInt(PROP_MAX_DEPTH);
         dictionary = (Dictionary) ps.getComponent(PROP_DICTIONARY);
-        map = new HashMap<WordSequence, Probability>();
-        vocabulary = new HashSet<String>();
-        tokens = new LinkedList<WordSequence>();
+        map = new HashMap<>();
+        vocabulary = new HashSet<>();
+        tokens = new LinkedList<>();
     }
 
     /*
@@ -229,7 +228,7 @@ public class SimpleNGramModel implements LanguageModel {
      * @return the string
      */
     @SuppressWarnings("unused")
-    private String listToString(List<Word> wordList) {
+    private static String listToString(List<Word> wordList) {
         StringBuilder sb = new StringBuilder();
         for (Word word : wordList)
             sb.append(word).append(' ');
@@ -250,7 +249,7 @@ public class SimpleNGramModel implements LanguageModel {
      * @return a string representation of the word list
      */
     @SuppressWarnings("unused")
-    private String getRepresentation(List<String> wordList) {
+    private static String getRepresentation(List<String> wordList) {
         if (wordList.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
@@ -278,7 +277,7 @@ public class SimpleNGramModel implements LanguageModel {
         // look for beginning of data
         readUntil("\\data\\");
         // look for ngram statements
-        List<Integer> ngramList = new ArrayList<Integer>();
+        List<Integer> ngramList = new ArrayList<>();
         while ((line = readLine()) != null) {
             if (line.startsWith("ngram")) {
                 StringTokenizer st = new StringTokenizer(line, " \t\n\r\f=");
@@ -310,7 +309,7 @@ public class SimpleNGramModel implements LanguageModel {
                 float log10Prob = Float.parseFloat(tok.nextToken());
                 float log10Backoff = 0.0f;
                 // construct the WordSequence for this N-Gram
-                List<Word> wordList = new ArrayList<Word>(maxNGram);
+                List<Word> wordList = new ArrayList<>(maxNGram);
                 for (int j = 0; j < ngram; j++) {
                     String word = tok.nextToken();
                     vocabulary.add(word);
@@ -324,8 +323,8 @@ public class SimpleNGramModel implements LanguageModel {
                 if (tok.hasMoreTokens()) {
                     log10Backoff = Float.parseFloat(tok.nextToken());
                 }
-                float logProb = logMath.log10ToLog(log10Prob);
-                float logBackoff = logMath.log10ToLog(log10Backoff);
+                float logProb = LogMath.log10ToLog(log10Prob);
+                float logBackoff = LogMath.log10ToLog(log10Backoff);
                 // Apply unigram weights if this is a unigram probability
                 if (ngram == 1) {
                     float p1 = logProb + logUnigramWeight;

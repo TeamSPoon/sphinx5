@@ -23,7 +23,7 @@ public class Pool<T> {
 
     private final String name;
     private final List<T> pool;
-    private final Map<Feature, Integer> features = new EnumMap<Feature, Integer>(Feature.class);
+    private final Map<Feature, Integer> features = new EnumMap<>(Feature.class);
 
     /**
      * Creates a new pool.
@@ -32,7 +32,7 @@ public class Pool<T> {
      */
     public Pool(String name) {
         this.name = name;
-        pool = new ArrayList<T>();
+        pool = new ArrayList<>();
     }
 
     /**

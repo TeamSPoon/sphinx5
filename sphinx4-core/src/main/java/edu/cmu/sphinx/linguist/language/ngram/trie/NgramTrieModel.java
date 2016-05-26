@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
@@ -69,6 +71,7 @@ public class NgramTrieModel implements LanguageModel {
     /** Word insertion probability property */
     @S4Double(defaultValue = 1.0f)
     public final static String PROP_WORD_INSERTION_PROBABILITY = "wordInsertionProbability";
+    private static final Pattern COMPILE = Pattern.compile("][", Pattern.LITERAL);
 
     // ------------------------------
     // Configuration data
@@ -172,12 +175,12 @@ public class NgramTrieModel implements LanguageModel {
     private void buildUnigramIDMap() {
         int missingWords = 0;
         if (unigramIDMap == null)
-            unigramIDMap = new HashMap<Word, Integer>();
+            unigramIDMap = new HashMap<>();
         for (int i = 0; i < words.length; i++) {
             Word word = dictionary.getWord(words[i]);
             if (word == null) {
                 logger.warning("The dictionary is missing a phonetic transcription for the word '"
-                        + words[i] + "'");
+                        + words[i] + '\'');
                 missingWords++;
             }
 
@@ -232,7 +235,7 @@ public class NgramTrieModel implements LanguageModel {
         //string words can be read here
         words = loader.readWords(counts[0]);
         buildUnigramIDMap();
-        ngramProbCache = new LRUCache<WordSequence, Float>(ngramCacheSize);
+        ngramProbCache = new LRUCache<>(ngramCacheSize);
         loader.close();
         TimerPool.getTimer(this, "Load LM").stop();
     }
@@ -361,7 +364,7 @@ public class NgramTrieModel implements LanguageModel {
         if (numberWords == maxDepth)
             ngramProbCache.put(wordSequence, probability);
         if (logFile != null)
-            logFile.println(wordSequence.toString().replace("][", " ") + " : "
+            logFile.println(COMPILE.matcher(wordSequence.toString()).replaceAll(Matcher.quoteReplacement(" ")) + " : "
                     + Float.toString(probability));
         return probability;
     }
@@ -385,7 +388,7 @@ public class NgramTrieModel implements LanguageModel {
      */
     @Override
     public Set<String> getVocabulary() {
-        Set<String> vocabulary = new HashSet<String>(Arrays.asList(words));
+        Set<String> vocabulary = new HashSet<>(Arrays.asList(words));
         return Collections.unmodifiableSet(vocabulary);
     }
 
@@ -423,7 +426,7 @@ public class NgramTrieModel implements LanguageModel {
         logger.info("LM Cache Size: " + ngramProbCache.size() + " Hits: "
                 + ngramHits + " Misses: " + ngramMisses);
         if (clearCacheAfterUtterance) {
-            ngramProbCache = new LRUCache<WordSequence, Float>(ngramCacheSize);
+            ngramProbCache = new LRUCache<>(ngramCacheSize);
         }
     }
 

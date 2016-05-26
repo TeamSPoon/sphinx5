@@ -60,7 +60,7 @@ public class Recognizer implements Configurable, ResultProducer {
     public final static String PROP_MONITORS = "monitors";
 
     /** Defines the possible states of the recognizer. */
-    public static enum State { DEALLOCATED, ALLOCATING, ALLOCATED, READY, RECOGNIZING, DEALLOCATING, ERROR }
+    public enum State { DEALLOCATED, ALLOCATING, ALLOCATED, READY, RECOGNIZING, DEALLOCATING, ERROR }
 
     private String name;
     private Decoder decoder;

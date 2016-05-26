@@ -23,34 +23,34 @@ public interface HMMState {
      *
      * @return the HMM
      */
-    public HMM getHMM();
+    HMM getHMM();
     
     /**
      * Returns the mixture components associated with this Gaussian
      *
      * @return the array of mixture components
      */
-    public MixtureComponent[] getMixtureComponents();
+    MixtureComponent[] getMixtureComponents();
     
     /**
      * Gets the id of the mixture
      * 
      * @return the id
      */
-    public long getMixtureId();
+    long getMixtureId();
     
     /**
      * 
      * @return the mixture weights vector
      */
-    public float[] getLogMixtureWeights();
+    float[] getLogMixtureWeights();
     
     /**
      * Gets the state
      *
      * @return the state
      */
-    public int getState();
+    int getState();
 
 
     /**
@@ -59,16 +59,16 @@ public interface HMMState {
      * @param data the data to be scored
      * @return the acoustic score for this state.
      */
-    public float getScore(Data data);
+    float getScore(Data data);
 
-    public float[] calculateComponentScore(Data data);
+    float[] calculateComponentScore(Data data);
 
     /**
      * Determines if this HMMState is an emitting state
      *
      * @return true if the state is an emitting state
      */
-    public boolean isEmitting();
+    boolean isEmitting();
 
 
     /**
@@ -76,7 +76,7 @@ public interface HMMState {
      *
      * @return the set of successor state arcs
      */
-    public HMMStateArc[] getSuccessors();
+    HMMStateArc[] getSuccessors();
 
 
     /**
@@ -84,6 +84,6 @@ public interface HMMState {
      *
      * @return true if the state is an exit state
      */
-    public boolean isExitState();
+    boolean isExitState();
 }
 

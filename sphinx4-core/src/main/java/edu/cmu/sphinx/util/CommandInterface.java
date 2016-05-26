@@ -26,7 +26,7 @@ public interface CommandInterface {
      * @param args command line arguments (just like main).
      * @return a command result
      */
-    public String execute(CommandInterpreter ci, String[] args);
+    String execute(CommandInterpreter ci, String[] args);
 
 
     /**
@@ -34,5 +34,5 @@ public interface CommandInterface {
      *
      * @return a one-liner help message
      */
-    public String getHelp();
+    String getHelp();
 }

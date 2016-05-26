@@ -27,14 +27,14 @@ import java.util.StringTokenizer;
  * 
  */
 public class NamesConversion {
-	final HashMap<String,String> phoneConv = new HashMap<String,String>();
-	final HashMap<String,String> wordConv = new HashMap<String,String>();
+	final HashMap<String,String> phoneConv = new HashMap<>();
+	final HashMap<String,String> wordConv = new HashMap<>();
 	String left, base, right;
 	
 	public NamesConversion() {
 	}
 
-	void addInConv(String item, HashMap<String,String> conv) {
+	static void addInConv(String item, HashMap<String, String> conv) {
 		if (!conv.containsKey(item)) {
 			// new item
 			String cand = item.toUpperCase();
@@ -312,14 +312,19 @@ public class NamesConversion {
 		String gramFile = null;
 
 		for (int i=0;i<args.length;i++) {
-			if (args[i].equals("-lex")) {
-				lexFile = args[++i];
-			} else if (args[i].equals("-gram")) {
-				gramFile = args[++i];
-			} else if (args[i].equals("-mmf")) {
-				MMFfile = args[++i];
-			} else if (args[i].equals("-filler")) {
-				fillerFile = args[++i];
+			switch (args[i]) {
+				case "-lex":
+					lexFile = args[++i];
+					break;
+				case "-gram":
+					gramFile = args[++i];
+					break;
+				case "-mmf":
+					MMFfile = args[++i];
+					break;
+				case "-filler":
+					fillerFile = args[++i];
+					break;
 			}
 		}
 		// output = same files + extension ".conv"

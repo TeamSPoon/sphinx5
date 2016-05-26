@@ -21,7 +21,7 @@ public class BoundedPriorityQueue<T> implements Iterable<T> {
     int maxSize;
 
     public BoundedPriorityQueue(int maxSize) {
-        items = new TreeSet<T>();
+        items = new TreeSet<>();
         this.maxSize = maxSize;
     }
 

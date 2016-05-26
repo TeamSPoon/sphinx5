@@ -107,7 +107,7 @@ public class PLPCepstrumProducer extends BaseDataProcessor {
      * relatively low order AR filters.
      * @param inspectrum
      */
-    private double[] powerLawCompress(double[] inspectrum) {
+    private static double[] powerLawCompress(double[] inspectrum) {
         double[] compressedspectrum = new double[inspectrum.length];
 
         for (int i = 0; i < inspectrum.length; i++) {

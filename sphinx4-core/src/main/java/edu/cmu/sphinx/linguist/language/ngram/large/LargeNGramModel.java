@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
@@ -83,6 +85,7 @@ public class LargeNGramModel implements LanguageModel {
     public static final int BYTES_PER_NMAXGRAM = 2;
 
     private final static int SMEAR_MAGIC = 0xC0CAC01A; // things go better
+    private static final Pattern COMPILE = Pattern.compile("][", Pattern.LITERAL);
 
     // ------------------------------
     // Configuration data
@@ -213,7 +216,7 @@ public class LargeNGramModel implements LanguageModel {
                     unigramWeight);
         }
 
-        unigramIDMap = new HashMap<Word, UnigramProbability>();
+        unigramIDMap = new HashMap<>();
         unigrams = loader.getUnigrams();
         loadedNGramBuffers = new Map[loader.getMaxDepth()];
         ngramProbTable = new float[loader.getMaxDepth()][];
@@ -221,7 +224,7 @@ public class LargeNGramModel implements LanguageModel {
         ngramSegmentTable = new int[loader.getMaxDepth()][];
 
         for (int i = 1; i <= loader.getMaxDepth(); i++) {
-            loadedNGramBuffers[i - 1] = new HashMap<WordSequence, NGramBuffer>();
+            loadedNGramBuffers[i - 1] = new HashMap<>();
 
             if (i >= 2)
                 ngramProbTable[i - 1] = loader.getNGramProbabilities(i);
@@ -232,7 +235,7 @@ public class LargeNGramModel implements LanguageModel {
             }
         }
 
-        ngramProbCache = new LRUCache<WordSequence, Float>(ngramCacheSize);
+        ngramProbCache = new LRUCache<>(ngramCacheSize);
         if (dictionary != null)
             buildUnigramIDMap(dictionary);
         else
@@ -288,7 +291,7 @@ public class LargeNGramModel implements LanguageModel {
 
             if (word == null) {
                 logger.warning("The dictionary is missing a phonetic transcription for the word '"
-                        + words[i] + "'");
+                        + words[i] + '\'');
                 missingWords++;
             }
 
@@ -337,12 +340,12 @@ public class LargeNGramModel implements LanguageModel {
 
         loadedBigramBuffers = new NGramBuffer[unigrams.length];
         for (int i = 2; i <= loader.getMaxDepth(); i++) {
-            loadedNGramBuffers[i - 1] = new HashMap<WordSequence, NGramBuffer>();
+            loadedNGramBuffers[i - 1] = new HashMap<>();
         }
         logger.info("LM Cache Size: " + ngramProbCache.size() + " Hits: "
                 + ngramHits + " Misses: " + ngramMisses);
         if (clearCacheAfterUtterance) {
-            ngramProbCache = new LRUCache<WordSequence, Float>(ngramCacheSize);
+            ngramProbCache = new LRUCache<>(ngramCacheSize);
         }
     }
 
@@ -379,46 +382,50 @@ public class LargeNGramModel implements LanguageModel {
             ngramProbCache.put(wordSequence, probability);
 
         if (logFile != null && probability != null)
-            logFile.println(wordSequence.toString().replace("][", " ") + " : "
+            logFile.println(COMPILE.matcher(wordSequence.toString()).replaceAll(Matcher.quoteReplacement(" ")) + " : "
                     + Float.toString(probability));
 
         return probability;
     }
 
     private Float getNGramProbability(WordSequence wordSequence) {
-        int numberWords = wordSequence.size();
-        Word firstWord = wordSequence.getWord(0);
+        while (true) {
+            int numberWords = wordSequence.size();
+            Word firstWord = wordSequence.getWord(0);
 
-        if (loader.getNumberNGrams(numberWords) == 0 || !hasUnigram(firstWord))
-            return getNGramProbability(wordSequence.getNewest());
+            if (loader.getNumberNGrams(numberWords) == 0 || !hasUnigram(firstWord)) {
+                wordSequence = wordSequence.getNewest();
+                continue;
+            }
 
-        if (numberWords < 2) {
-            return getUnigramProbability(wordSequence);
+            if (numberWords < 2) {
+                return getUnigramProbability(wordSequence);
+            }
+
+            NGramProbability nGProbability = findNGram(wordSequence);
+
+            if (nGProbability != null) {
+                return ngramProbTable[numberWords - 1][nGProbability
+                        .getProbabilityID()];
+            }
+
+            if (numberWords == 2) {
+                UnigramProbability unigramProb = getUnigram(firstWord);
+                UnigramProbability unigramProb1 = getUnigram(wordSequence
+                        .getWord(1));
+                return unigramProb.getLogBackoff()
+                        + unigramProb1.getLogProbability();
+            }
+
+            NGramProbability nMinus1Gram = findNGram(wordSequence.getOldest());
+
+            if (nMinus1Gram != null) {
+                return ngramBackoffTable[numberWords - 1][nMinus1Gram
+                        .getBackoffID()] + getProbability(wordSequence.getNewest());
+            }
+
+            return getProbability(wordSequence.getNewest());
         }
-
-        NGramProbability nGProbability = findNGram(wordSequence);
-
-        if (nGProbability != null) {
-            return ngramProbTable[numberWords - 1][nGProbability
-                    .getProbabilityID()];
-        }
-
-        if (numberWords == 2) {
-            UnigramProbability unigramProb = getUnigram(firstWord);
-            UnigramProbability unigramProb1 = getUnigram(wordSequence
-                    .getWord(1));
-            return unigramProb.getLogBackoff()
-                    + unigramProb1.getLogProbability();
-        }
-
-        NGramProbability nMinus1Gram = findNGram(wordSequence.getOldest());
-
-        if (nMinus1Gram != null) {
-            return ngramBackoffTable[numberWords - 1][nMinus1Gram
-                    .getBackoffID()] + getProbability(wordSequence.getNewest());
-        }
-
-        return getProbability(wordSequence.getNewest());
     }
 
     /**
@@ -455,9 +462,7 @@ public class LargeNGramModel implements LanguageModel {
      * @return true if 32 bits, false otherwise
      */
     private boolean is32bits() {
-        if (loader.getBytesPerField() == 4)
-            return true;
-        return false;
+        return loader.getBytesPerField() == 4;
     }
 
     /**
@@ -757,7 +762,7 @@ public class LargeNGramModel implements LanguageModel {
      * @return the unmodifiable set of words
      */
     public Set<String> getVocabulary() {
-        Set<String> vocabulary = new HashSet<String>(Arrays.asList(loader
+        Set<String> vocabulary = new HashSet<>(Arrays.asList(loader
                 .getWords()));
         return Collections.unmodifiableSet(vocabulary);
     }
@@ -817,11 +822,11 @@ public class LargeNGramModel implements LanguageModel {
         return loadNGramBuffer(ws);
     }
 
-    private void buildSmearInfo() throws IOException {
+    private void buildSmearInfo() {
         double S0 = 0;
         double R0 = 0;
 
-        bigramSmearMap = new HashMap<Long, Float>();
+        bigramSmearMap = new HashMap<>();
 
         double[] ugNumerator = new double[unigrams.length];
         double[] ugDenominator = new double[unigrams.length];
@@ -946,9 +951,9 @@ public class LargeNGramModel implements LanguageModel {
     }
 
     @SuppressWarnings("unused")
-    private void dumpProbs(double[] ugNumerator, double[] ugDenominator, int i,
-            int j, float logugprob, float logbgprob, double ugprob,
-            double bgprob, double backoffbgprob, double logbackoffbgprob) {
+    private static void dumpProbs(double[] ugNumerator, double[] ugDenominator, int i,
+                                  int j, float logugprob, float logbgprob, double ugprob,
+                                  double bgprob, double backoffbgprob, double logbackoffbgprob) {
 
         System.out
                 .println("ubo " + ugprob + ' ' + bgprob + ' ' + backoffbgprob);
@@ -1025,7 +1030,7 @@ public class LargeNGramModel implements LanguageModel {
             throw new IOException("Bad unigram length in " + filename);
         }
 
-        bigramSmearMap = new HashMap<Long, Float>();
+        bigramSmearMap = new HashMap<>();
         unigramSmearTerm = new float[unigrams.length];
         System.out.println("Reading " + unigrams.length);
 

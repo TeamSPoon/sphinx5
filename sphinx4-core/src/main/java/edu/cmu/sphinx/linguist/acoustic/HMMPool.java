@@ -64,7 +64,9 @@ public class HMMPool {
         // count CI units:
         for (Iterator<Unit> i = model.getContextIndependentUnitIterator(); i.hasNext();) {
             Unit unit = i.next();
-            logger.fine("CI unit " + unit);
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("CI unit " + unit);
+            }
             if (unit.getBaseID() > maxCIUnits) {
                 maxCIUnits = unit.getBaseID();
             }
@@ -85,7 +87,7 @@ public class HMMPool {
         }
 
         // build up the hmm table to allow quick access to the hmms
-        hmmTable = new EnumMap<HMMPosition, HMM[]>(HMMPosition.class);
+        hmmTable = new EnumMap<>(HMMPosition.class);
         for (HMMPosition position : HMMPosition.values()) {
             HMM[] hmms = new HMM[unitTable.length];
             hmmTable.put(position, hmms);
@@ -209,7 +211,7 @@ public class HMMPool {
      * @param unit the unit of interest
      * @return the ID of the central unit (ignoring any context)
      */
-    private int getSimpleUnitID(Unit unit) {
+    private static int getSimpleUnitID(Unit unit) {
         return unit.getBaseID();
     }
 
