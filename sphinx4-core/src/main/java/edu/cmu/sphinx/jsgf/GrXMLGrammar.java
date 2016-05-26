@@ -11,35 +11,39 @@
 
 package edu.cmu.sphinx.jsgf;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-
+import com.fasterxml.aalto.sax.SAXParserFactoryImpl;
+import edu.cmu.sphinx.jsgf.rule.JSGFRule;
+import edu.cmu.sphinx.linguist.language.grammar.GrammarNode;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import edu.cmu.sphinx.jsgf.rule.JSGFRule;
-import edu.cmu.sphinx.linguist.language.grammar.GrammarNode;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Grammar for GrXML W3C Standard
  */
 public class GrXMLGrammar extends JSGFGrammar {
 
-    Map<String, JSGFRule> rules;
+    final Map<String, JSGFRule> rules = new LinkedHashMap<>(16*1024);
 
     protected void loadXML() throws IOException {
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            XMLReader xr = factory.newSAXParser().getXMLReader();
-            rules = new HashMap<>();
+            SAXParserFactoryImpl spf = new SAXParserFactoryImpl();
+            SAXParser parser = spf.newSAXParser();
+
+
+            XMLReader xr = parser.getXMLReader();
+
+
             GrXMLHandler handler = new GrXMLHandler(baseURL, rules, logger);
             xr.setContentHandler(handler);
             xr.setErrorHandler(handler);
@@ -51,7 +55,7 @@ public class GrXMLGrammar extends JSGFGrammar {
             throw new IOException(msg);
         } catch (SAXException e) {
             throw new IOException("Problem with XML: " + e);
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             throw new IOException(e.getMessage());
         }
 
@@ -88,7 +92,7 @@ public class GrXMLGrammar extends JSGFGrammar {
 
             for (Map.Entry<String, JSGFRule> entry : rules.entrySet()) {
 
-                    GrammarGraph publicRuleGraph = new GrammarGraph();
+                    GrammarGraph publicRuleGraph = newGG();
                     ruleStack.push(entry.getKey(), publicRuleGraph);
                     GrammarGraph graph = processRule(entry.getValue());
                     ruleStack.pop();

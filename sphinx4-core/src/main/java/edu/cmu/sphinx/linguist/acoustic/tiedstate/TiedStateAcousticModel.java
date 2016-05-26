@@ -15,7 +15,10 @@ package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 // Placeholder for a package import
 
 import edu.cmu.sphinx.linguist.acoustic.*;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Boolean;
+import edu.cmu.sphinx.util.props.S4Component;
 
 import java.io.IOException;
 import java.util.*;

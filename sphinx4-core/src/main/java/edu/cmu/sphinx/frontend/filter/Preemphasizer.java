@@ -12,8 +12,10 @@
 package edu.cmu.sphinx.frontend.filter;
 
 import edu.cmu.sphinx.frontend.*;
-import edu.cmu.sphinx.frontend.endpoint.*;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Double;
 
 /**
  * Implements a high-pass filter that compensates for attenuation in the audio data. Speech signals have an attenuation

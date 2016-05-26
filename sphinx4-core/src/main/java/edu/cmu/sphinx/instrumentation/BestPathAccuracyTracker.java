@@ -13,9 +13,11 @@
 package edu.cmu.sphinx.instrumentation;
 
 import edu.cmu.sphinx.decoder.search.Token;
-import edu.cmu.sphinx.result.Result;
-import edu.cmu.sphinx.util.props.*;
 import edu.cmu.sphinx.recognizer.Recognizer;
+import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Boolean;
 
 /** Tracks and reports recognition accuracy based upon the highest scoring path in a Result. */
 public class BestPathAccuracyTracker extends AccuracyTracker {

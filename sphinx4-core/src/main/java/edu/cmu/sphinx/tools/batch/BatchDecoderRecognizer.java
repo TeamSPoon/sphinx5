@@ -12,16 +12,16 @@
 
 package edu.cmu.sphinx.tools.batch;
 
+import edu.cmu.sphinx.frontend.util.StreamDataSource;
+import edu.cmu.sphinx.recognizer.Recognizer;
+import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.util.props.ConfigurationManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
-
-import edu.cmu.sphinx.frontend.util.StreamDataSource;
-import edu.cmu.sphinx.recognizer.Recognizer;
-import edu.cmu.sphinx.result.Result;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
 
 /**
  * Batch decoder recognizer which can be used inside Sphinxtrain

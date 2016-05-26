@@ -13,12 +13,12 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.ArrayList;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.State;
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.util.ArrayList;
 
 /**
  * Extend an Fst to a single final state and undo operations.

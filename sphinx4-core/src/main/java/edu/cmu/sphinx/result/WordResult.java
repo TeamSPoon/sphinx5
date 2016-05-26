@@ -9,12 +9,12 @@
 
 package edu.cmu.sphinx.result;
 
-import java.util.Locale;
-
 import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.TimeFrame;
+
+import java.util.Locale;
 
 /**
  * Represents a word in a recognition result.

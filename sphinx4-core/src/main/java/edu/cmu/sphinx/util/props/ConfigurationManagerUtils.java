@@ -1,15 +1,18 @@
 package edu.cmu.sphinx.util.props;
 
+import edu.cmu.sphinx.util.SphinxLogFormatter;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import edu.cmu.sphinx.util.SphinxLogFormatter;
 
 /**
  * Some static utility methods which ease the handling of system configurations.

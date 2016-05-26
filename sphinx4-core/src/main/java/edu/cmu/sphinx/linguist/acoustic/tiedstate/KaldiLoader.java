@@ -11,20 +11,6 @@
 
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import edu.cmu.sphinx.decoder.adaptation.ClusteredDensityFileData;
 import edu.cmu.sphinx.decoder.adaptation.Transform;
 import edu.cmu.sphinx.linguist.acoustic.HMMPosition;
@@ -37,6 +23,10 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Component;
 import edu.cmu.sphinx.util.props.S4String;
+
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 
 public class KaldiLoader implements Loader {

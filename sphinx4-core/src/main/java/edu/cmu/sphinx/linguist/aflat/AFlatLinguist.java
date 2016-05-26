@@ -11,10 +11,6 @@
  */
 package edu.cmu.sphinx.linguist.aflat;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
-
 import edu.cmu.sphinx.decoder.scorer.ScoreProvider;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.linguist.*;
@@ -28,6 +24,10 @@ import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.Timer;
 import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.*;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * A simple form of the linguist. It makes the following simplifying

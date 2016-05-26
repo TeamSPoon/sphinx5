@@ -13,8 +13,8 @@
 package edu.cmu.sphinx.recognizer;
 
 import edu.cmu.sphinx.decoder.Decoder;
-import edu.cmu.sphinx.decoder.ResultProducer;
 import edu.cmu.sphinx.decoder.ResultListener;
+import edu.cmu.sphinx.decoder.ResultProducer;
 import edu.cmu.sphinx.instrumentation.Monitor;
 import edu.cmu.sphinx.instrumentation.Resetable;
 import edu.cmu.sphinx.result.Result;
@@ -66,7 +66,7 @@ public class Recognizer implements Configurable, ResultProducer {
     private Decoder decoder;
     private State currentState = State.DEALLOCATED;
 
-    private final List<StateListener> stateListeners = Collections.synchronizedList(new ArrayList<StateListener>());
+    private final List<StateListener> stateListeners = /*Collections.synchronizedList*/(new ArrayList<StateListener>());
     private List<Monitor> monitors;
 
 
@@ -129,7 +129,7 @@ public class Recognizer implements Configurable, ResultProducer {
      * @param desiredState the state that the recognizer should be in
      * @throws IllegalStateException if the recognizer is not in the desired state.
      */
-    private void checkState(State desiredState) {
+    private final void checkState(State desiredState) {
         if (currentState != desiredState) {
             throw new IllegalStateException("Expected state " + desiredState
                     + " actual state " + currentState);
@@ -142,11 +142,13 @@ public class Recognizer implements Configurable, ResultProducer {
      *
      * @param newState the new state
      */
-    private void setState(State newState) {
+    private final void setState(State newState) {
         currentState = newState;
-        synchronized (stateListeners) {
-            for (StateListener sl : stateListeners) {
-                sl.statusChanged(currentState);
+        List<StateListener> sl = this.stateListeners;
+        State cs = this.currentState;
+        synchronized (sl) {
+            for (int i = 0, stateListenersSize = sl.size(); i < stateListenersSize; i++) {
+                sl.get(i).statusChanged(cs);
             }
         }
     }

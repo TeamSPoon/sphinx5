@@ -12,9 +12,8 @@
 
 package edu.cmu.sphinx.api;
 
-import java.io.InputStream;
-
 import javax.sound.sampled.*;
+import java.io.InputStream;
 
 /**
  * InputStream adapter

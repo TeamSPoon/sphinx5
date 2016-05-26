@@ -13,17 +13,17 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.ImmutableFst;
 import edu.cmu.sphinx.fst.State;
 import edu.cmu.sphinx.fst.semiring.Semiring;
 import edu.cmu.sphinx.fst.utils.Pair;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Compose operation.

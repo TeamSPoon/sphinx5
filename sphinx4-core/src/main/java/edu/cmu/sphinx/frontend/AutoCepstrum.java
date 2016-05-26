@@ -6,21 +6,24 @@
  */
 package edu.cmu.sphinx.frontend;
 
-import static java.lang.Double.parseDouble;
-import static java.lang.Integer.parseInt;
+import edu.cmu.sphinx.frontend.denoise.Denoise;
+import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
+import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank2;
+import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
+import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform2;
+import edu.cmu.sphinx.frontend.transform.KaldiDiscreteCosineTransform;
+import edu.cmu.sphinx.frontend.transform.Lifter;
+import edu.cmu.sphinx.linguist.acoustic.tiedstate.KaldiLoader;
+import edu.cmu.sphinx.linguist.acoustic.tiedstate.Loader;
+import edu.cmu.sphinx.util.props.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import edu.cmu.sphinx.frontend.denoise.Denoise;
-import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
-import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank2;
-import edu.cmu.sphinx.frontend.transform.*;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.KaldiLoader;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.Loader;
-import edu.cmu.sphinx.util.props.*;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 
 /**

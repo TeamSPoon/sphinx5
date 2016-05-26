@@ -9,17 +9,13 @@
  */
 package edu.cmu.sphinx.frontend.denoise;
 
-import java.util.Arrays;
-
-import edu.cmu.sphinx.frontend.BaseDataProcessor;
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DataProcessingException;
-import edu.cmu.sphinx.frontend.DataStartSignal;
-import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Double;
 import edu.cmu.sphinx.util.props.S4Integer;
+
+import java.util.Arrays;
 
 /**
  * The noise filter, same as implemented in sphinxbase/sphinxtrain/pocketsphinx.

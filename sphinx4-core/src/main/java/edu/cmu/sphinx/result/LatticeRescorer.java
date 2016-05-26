@@ -11,13 +11,13 @@
  */
 package edu.cmu.sphinx.result;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.linguist.language.ngram.LanguageModel;
 import edu.cmu.sphinx.util.LogMath;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class to rescore the lattice with the new Language model.

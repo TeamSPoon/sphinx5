@@ -11,19 +11,19 @@
  */
 package edu.cmu.sphinx.tools.live;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.cmu.sphinx.frontend.util.ConcatFileDataSource;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
 import edu.cmu.sphinx.util.*;
 import edu.cmu.sphinx.util.props.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Decodes a batch file containing a list of files to decode. The files can be either audio files or cepstral files, but

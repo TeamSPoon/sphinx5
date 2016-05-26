@@ -1,12 +1,12 @@
 package edu.cmu.sphinx.util.props.tools;
 
-import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.Configurable;
+import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertySheet;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.List;
 

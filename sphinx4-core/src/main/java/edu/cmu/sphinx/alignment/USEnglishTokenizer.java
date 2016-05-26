@@ -10,6 +10,8 @@
  */
 package edu.cmu.sphinx.alignment;
 
+import edu.cmu.sphinx.alignment.tokenizer.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,18 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import edu.cmu.sphinx.alignment.tokenizer.CharTokenizer;
-import edu.cmu.sphinx.alignment.tokenizer.DecisionTree;
-import edu.cmu.sphinx.alignment.tokenizer.FeatureSet;
-import edu.cmu.sphinx.alignment.tokenizer.Item;
-import edu.cmu.sphinx.alignment.tokenizer.NumberExpander;
-import edu.cmu.sphinx.alignment.tokenizer.PrefixFSM;
-import edu.cmu.sphinx.alignment.tokenizer.PronounceableFSM;
-import edu.cmu.sphinx.alignment.tokenizer.Relation;
-import edu.cmu.sphinx.alignment.tokenizer.SuffixFSM;
-import edu.cmu.sphinx.alignment.tokenizer.Utterance;
-import edu.cmu.sphinx.alignment.tokenizer.WordRelation;
 
 /**
  * Provides the definitions for US English whitespace, punctuations,

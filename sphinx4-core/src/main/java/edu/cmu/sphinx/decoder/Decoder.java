@@ -11,11 +11,11 @@
  */
 package edu.cmu.sphinx.decoder;
 
+import edu.cmu.sphinx.decoder.search.SearchManager;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
-import edu.cmu.sphinx.decoder.search.SearchManager;
 
 import java.util.List;
 

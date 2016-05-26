@@ -13,11 +13,11 @@
 package edu.cmu.sphinx.linguist.acoustic;
 
 import edu.cmu.sphinx.util.props.Configurable;
+import edu.cmu.sphinx.util.props.S4String;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
-import edu.cmu.sphinx.util.props.S4String;
 
 /** Represents the generic interface to the Acoustic Model for sphinx4 */
 public interface AcousticModel extends Configurable {

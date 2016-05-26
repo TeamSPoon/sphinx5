@@ -10,11 +10,7 @@ package edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK;
 
 import edu.cmu.sphinx.util.LogMath;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.StringTokenizer;
 
 /**

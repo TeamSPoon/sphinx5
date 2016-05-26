@@ -12,11 +12,11 @@
  */
 package edu.cmu.sphinx.speakerid;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
-
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 public class SpeakerCluster {
     private TreeSet<Segment> segmentSet;

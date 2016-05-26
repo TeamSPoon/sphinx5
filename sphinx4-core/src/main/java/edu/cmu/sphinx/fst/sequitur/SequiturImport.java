@@ -13,13 +13,9 @@
  */
 package edu.cmu.sphinx.fst.sequitur;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import edu.cmu.sphinx.fst.Fst;
+import edu.cmu.sphinx.fst.semiring.Semiring;
+import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -28,10 +24,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import edu.cmu.sphinx.fst.Fst;
-import edu.cmu.sphinx.fst.semiring.Semiring;
-import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Converter for an Fst in Sequitur G2P's XML to Sphinx binary OpenFst format.

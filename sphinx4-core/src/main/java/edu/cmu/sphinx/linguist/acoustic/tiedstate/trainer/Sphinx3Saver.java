@@ -12,20 +12,24 @@
 
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.trainer;
 
+import edu.cmu.sphinx.linguist.acoustic.HMM;
 import edu.cmu.sphinx.linguist.acoustic.LeftRightContext;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
-import edu.cmu.sphinx.linguist.acoustic.HMM;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.*;
-import static edu.cmu.sphinx.linguist.acoustic.tiedstate.Pool.Feature.*;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StreamFactory;
 import edu.cmu.sphinx.util.Utilities;
 import edu.cmu.sphinx.util.props.*;
 
 import java.io.*;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static edu.cmu.sphinx.linguist.acoustic.tiedstate.Pool.Feature.*;
 
 /**
  * An acoustic model saver that saves sphinx3 ascii data.

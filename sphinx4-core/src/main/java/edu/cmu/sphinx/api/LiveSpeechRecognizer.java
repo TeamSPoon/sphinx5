@@ -11,9 +11,9 @@
 
 package edu.cmu.sphinx.api;
 
-import java.io.IOException;
-
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
+
+import java.io.IOException;
 
 
 /**

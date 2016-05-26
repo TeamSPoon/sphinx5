@@ -12,16 +12,6 @@
 
 package edu.cmu.sphinx.jsgf;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 import edu.cmu.sphinx.jsgf.parser.JSGFParser;
 import edu.cmu.sphinx.jsgf.rule.*;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
@@ -32,6 +22,13 @@ import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4String;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <h3>Defines a BNF-style grammar based on JSGF grammar rules in a file.</h3>
@@ -364,7 +361,7 @@ public class JSGFGrammar extends Grammar {
         if (result != null) { // its a recursive call
             return result;
         } else {
-            result = new GrammarGraph();
+            result = newGG();
             ruleStack.push(initialRuleName.getRuleName(), result);
         }
         JSGFRuleName ruleName = ruleGrammar.resolve(initialRuleName);
@@ -413,7 +410,7 @@ public class JSGFGrammar extends Grammar {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("parseRuleCount: " + ruleCount);
         }
-        GrammarGraph result = new GrammarGraph();
+        GrammarGraph result = newGG();
         int count = ruleCount.getCount();
         GrammarGraph newNodes = processRule(ruleCount.getRule());
 
@@ -448,7 +445,7 @@ public class JSGFGrammar extends Grammar {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("parseRuleAlternatives: " + ruleAlternatives);
         }
-        GrammarGraph result = new GrammarGraph();
+        GrammarGraph result = newGG();
 
         List<JSGFRule> rules = ruleAlternatives.getRules();
         List<Float> weights = getNormalizedWeights(ruleAlternatives.getWeights());
@@ -642,7 +639,7 @@ public class JSGFGrammar extends Grammar {
             for (String ruleName : ruleGrammar.getRuleNames()) {
                 if (ruleGrammar.isRulePublic(ruleName)) {
                     String fullName = getFullRuleName(ruleName);
-                    GrammarGraph publicRuleGraph = new GrammarGraph();
+                    GrammarGraph publicRuleGraph = newGG();
                     ruleStack.push(fullName, publicRuleGraph);
                     JSGFRule rule = ruleGrammar.getRule(ruleName);
                     GrammarGraph graph = processRule(rule);
@@ -662,6 +659,10 @@ public class JSGFGrammar extends Grammar {
         } catch (MalformedURLException mue) {
             throw new IOException("bad base grammar URL " + baseURL + ' ' + mue);
         }
+    }
+
+    public GrammarGraph newGG() {
+        return new GrammarGraph(createGrammarNode(false),createGrammarNode(false));
     }
 
     /**
@@ -791,7 +792,7 @@ public class JSGFGrammar extends Grammar {
      * Represents a graph of grammar nodes. A grammar graph has a single
      * starting node and a single ending node
      */
-    class GrammarGraph {
+    static class GrammarGraph {
 
         private GrammarNode startNode;
         private GrammarNode endNode;
@@ -809,11 +810,11 @@ public class JSGFGrammar extends Grammar {
             this.endNode = endNode;
         }
 
-        /** Creates a graph with non-word nodes for the start and ending nodes */
-        GrammarGraph() {
-            startNode = createGrammarNode(false);
-            endNode = createGrammarNode(false);
-        }
+//        /** Creates a graph with non-word nodes for the start and ending nodes */
+//        GrammarGraph() {
+//            startNode = createGrammarNode(false);
+//            endNode = createGrammarNode(false);
+//        }
 
         /**
          * Gets the starting node
@@ -835,25 +836,26 @@ public class JSGFGrammar extends Grammar {
     }
 
     /** Manages a stack of grammar graphs that can be accessed by grammar name */
-    class RuleStack {
+    final static class RuleStack {
 
-        private List<String> stack;
-        private HashMap<String, GrammarGraph> map;
+        private final Deque<String> stack;
+        private final HashMap<String, GrammarGraph> map;
 
         /** Creates a name stack */
         public RuleStack() {
-            clear();
+            stack = new ArrayDeque<>();
+            map = new HashMap<>();
         }
 
         /** Pushes the grammar graph on the stack */
         public void push(String name, GrammarGraph g) {
-            stack.add(0, name);
+            stack.addFirst(name);
             map.put(name, g);
         }
 
         /** remove the top graph on the stack */
         public void pop() {
-            map.remove(stack.remove(0));
+            map.remove(stack.removeLast());
         }
 
         /**
@@ -865,17 +867,13 @@ public class JSGFGrammar extends Grammar {
          *         otherwise null
          */
         public GrammarGraph contains(String name) {
-            if (stack.contains(name)) {
-                return map.get(name);
-            } else {
-                return null;
-            }
+            return map.get(name);
+//            if (stack.contains(name)) {
+//                return map.get(name);
+//            } else {
+//                return null;
+//            }
         }
 
-        /** Clears this name stack */
-        public void clear() {
-            stack = new LinkedList<>();
-            map = new HashMap<>();
-        }
     }
 }

@@ -11,13 +11,13 @@
 
 package edu.cmu.sphinx.tools.transcriber;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 public class Transcriber {
 

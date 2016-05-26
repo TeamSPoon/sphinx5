@@ -11,7 +11,9 @@
  */
 package edu.cmu.sphinx.frontend.feature;
 
-import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.FloatData;
 
 /**
  * Computes the delta and double delta of input cepstrum (or plp or ...). The delta is the first order derivative and

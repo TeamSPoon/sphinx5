@@ -1,15 +1,15 @@
 package edu.cmu.sphinx.linguist.language.ngram;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Pattern;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 3-gram language model that can change its content at runtime.

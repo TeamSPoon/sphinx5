@@ -8,7 +8,7 @@
 package edu.cmu.sphinx.jsgf.rule;
 
 public class JSGFRuleCount extends JSGFRule {
-	protected JSGFRule rule;
+	protected final JSGFRule rule;
 	protected int count;
 
 	public static final int OPTIONAL = 2;
@@ -16,12 +16,12 @@ public class JSGFRuleCount extends JSGFRule {
 	public static final int ZERO_OR_MORE = 4;
 
 	public JSGFRuleCount() {
-		setRule(null);
+		this.rule = null;
 		setCount(OPTIONAL);
 	}
 
 	public JSGFRuleCount(JSGFRule rule, int count) {
-		setRule(rule);
+		this.rule = rule;
 		setCount(count);
 	}
 
@@ -39,10 +39,6 @@ public class JSGFRuleCount extends JSGFRule {
 			return;
 		}
 		this.count = count;
-	}
-
-	public void setRule(JSGFRule rule) {
-		this.rule = rule;
 	}
 
 	@Override

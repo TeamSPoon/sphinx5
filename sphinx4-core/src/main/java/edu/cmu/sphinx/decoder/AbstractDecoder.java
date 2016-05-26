@@ -100,7 +100,7 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
 
 
     /** Allocate resources necessary for decoding */
-    public void allocate() {
+    public final void allocate() {
         searchManager.allocate();
     }
 

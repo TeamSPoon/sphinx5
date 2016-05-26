@@ -12,8 +12,8 @@
 package edu.cmu.sphinx.linguist.language.grammar;
 
 import edu.cmu.sphinx.linguist.WordSequence;
-import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.linguist.language.ngram.LanguageModel;
 import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.PropertyException;

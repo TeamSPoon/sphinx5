@@ -1,13 +1,8 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import edu.cmu.sphinx.util.LogMath;
+
+import java.util.*;
 
 final class HmmState {
 

@@ -13,13 +13,15 @@
 package edu.cmu.sphinx.frontend.feature;
 
 import edu.cmu.sphinx.frontend.*;
-import edu.cmu.sphinx.frontend.endpoint.*;
+import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 
 /**

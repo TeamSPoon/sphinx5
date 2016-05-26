@@ -13,19 +13,12 @@
 
 package edu.cmu.sphinx.fst;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.regex.Pattern;
-
 import edu.cmu.sphinx.fst.semiring.Semiring;
 import edu.cmu.sphinx.fst.utils.Utils;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * Provides the required functionality in order to convert from/to openfst's

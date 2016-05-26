@@ -12,8 +12,8 @@
 
 package edu.cmu.sphinx.decoder.search;
 
-import edu.cmu.sphinx.decoder.scorer.Scoreable;
 import edu.cmu.sphinx.decoder.scorer.ScoreProvider;
+import edu.cmu.sphinx.decoder.scorer.Scoreable;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.linguist.HMMSearchState;
@@ -25,7 +25,8 @@ import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a single state in the recognition trellis. Subclasses of a token are used to represent the various

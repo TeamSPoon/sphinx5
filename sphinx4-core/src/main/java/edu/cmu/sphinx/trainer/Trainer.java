@@ -13,15 +13,13 @@
 package edu.cmu.sphinx.trainer;
 
 
-import java.io.IOException;
-import java.util.*;
+import edu.cmu.sphinx.util.props.*;
 
-import edu.cmu.sphinx.util.props.Configurable;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
-import edu.cmu.sphinx.util.props.S4Component;
-import edu.cmu.sphinx.util.props.S4String;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 
 /**

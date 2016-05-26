@@ -12,13 +12,6 @@
 
 package edu.cmu.sphinx.result;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.reverse;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.cmu.sphinx.decoder.search.ActiveList;
 import edu.cmu.sphinx.decoder.search.AlternateHypothesisManager;
 import edu.cmu.sphinx.decoder.search.Token;
@@ -26,6 +19,13 @@ import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.TimeFrame;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.reverse;
 
 /**
  * Provides recognition results. Results can be partial or final. A result

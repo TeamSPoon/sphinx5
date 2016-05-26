@@ -1,10 +1,10 @@
 package edu.cmu.sphinx.decoder.search.stats;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.linguist.HMMSearchState;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /** This debugging class is used to track the number of active tokens per state */
 

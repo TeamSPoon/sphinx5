@@ -13,15 +13,15 @@
 
 package edu.cmu.sphinx.frontend;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import edu.cmu.sphinx.util.Timer;
 import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4ComponentList;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * FrontEnd is a wrapper class for the chain of front end processors. It provides methods for manipulating and

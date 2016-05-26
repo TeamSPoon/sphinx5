@@ -13,13 +13,13 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.State;
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Connect operation.

@@ -11,12 +11,12 @@
 
 package edu.cmu.sphinx.api;
 
+import edu.cmu.sphinx.recognizer.Recognizer;
+import edu.cmu.sphinx.result.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import edu.cmu.sphinx.recognizer.Recognizer;
-import edu.cmu.sphinx.result.*;
 
 
 /**

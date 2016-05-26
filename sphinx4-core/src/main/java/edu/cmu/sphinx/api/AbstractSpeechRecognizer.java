@@ -11,14 +11,14 @@
 
 package edu.cmu.sphinx.api;
 
-import java.io.IOException;
-
 import edu.cmu.sphinx.decoder.adaptation.ClusteredDensityFileData;
 import edu.cmu.sphinx.decoder.adaptation.Stats;
 import edu.cmu.sphinx.decoder.adaptation.Transform;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
+
+import java.io.IOException;
 
 
 /**

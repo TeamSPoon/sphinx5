@@ -3,15 +3,10 @@
  */
 package edu.cmu.sphinx.fst;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.Arrays;
-
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.io.*;
+import java.util.Arrays;
 
 /**
  * An immutable finite state transducer implementation.

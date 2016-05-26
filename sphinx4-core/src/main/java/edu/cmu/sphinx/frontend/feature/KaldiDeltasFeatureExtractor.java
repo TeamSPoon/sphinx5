@@ -9,7 +9,9 @@
  */
 package edu.cmu.sphinx.frontend.feature;
 
-import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.FloatData;
 
 public class KaldiDeltasFeatureExtractor extends AbstractFeatureExtractor {
 

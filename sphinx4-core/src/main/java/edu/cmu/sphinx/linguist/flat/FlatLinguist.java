@@ -262,9 +262,9 @@ public class FlatLinguist implements Linguist, Configurable {
     public void allocate() throws IOException {
         allocateAcousticModel();
         grammar.allocate();
-        totalStates = StatisticsVariable.getStatisticsVariable(name, "totalStates");
-        totalArcs = StatisticsVariable.getStatisticsVariable(name, "totalArcs");
-        actualArcs = StatisticsVariable.getStatisticsVariable(name, "actualArcs");
+        totalStates = StatisticsVariable.the(name, "totalStates");
+        totalArcs = StatisticsVariable.the(name, "totalArcs");
+        actualArcs = StatisticsVariable.the(name, "actualArcs");
         stateSet = compileGrammar();
         totalStates.value = stateSet.size();
     }

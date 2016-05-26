@@ -1,12 +1,12 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi;
 
-import java.util.Arrays;
-
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.ScoreCachingSenone;
 import edu.cmu.sphinx.util.LogMath;
+
+import java.util.Arrays;
 
 /**
  * Gaussian Mixture Model with diagonal covariances.

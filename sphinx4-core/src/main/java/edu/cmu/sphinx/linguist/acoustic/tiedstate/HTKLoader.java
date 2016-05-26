@@ -20,15 +20,19 @@ import edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK.GMMDiag;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK.HMMSet;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK.HMMState;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK.SingleHMM;
-import static edu.cmu.sphinx.linguist.acoustic.tiedstate.Pool.Feature.*;
-import edu.cmu.sphinx.util.*;
+import edu.cmu.sphinx.util.LogMath;
+import edu.cmu.sphinx.util.Utilities;
 import edu.cmu.sphinx.util.props.*;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static edu.cmu.sphinx.linguist.acoustic.tiedstate.Pool.Feature.*;
 
 /** 
  * Triphone selection algorithm:

@@ -12,19 +12,18 @@
  */
 package edu.cmu.sphinx.speakerid;
 
+import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.util.StreamDataSource;
+import edu.cmu.sphinx.util.props.ConfigurationManager;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.EigenDecomposition;
+import org.apache.commons.math3.stat.correlation.Covariance;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.EigenDecomposition;
-import org.apache.commons.math3.stat.correlation.Covariance;
-
-import edu.cmu.sphinx.frontend.*;
-import edu.cmu.sphinx.frontend.util.StreamDataSource;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
 
 /**
  * Provides method for detecting the number of speakers from a given input file

@@ -13,9 +13,9 @@
 
 package edu.cmu.sphinx.linguist.g2p;
 
-import java.util.ArrayList;
-
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.util.ArrayList;
 
 /**
  * @author John Salatas

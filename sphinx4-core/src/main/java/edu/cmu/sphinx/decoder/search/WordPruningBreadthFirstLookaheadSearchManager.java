@@ -12,11 +12,6 @@ package edu.cmu.sphinx.decoder.search;
 
 // a test search manager.
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
 import edu.cmu.sphinx.decoder.pruner.Pruner;
 import edu.cmu.sphinx.decoder.scorer.AcousticScorer;
 import edu.cmu.sphinx.frontend.Data;
@@ -27,16 +22,17 @@ import edu.cmu.sphinx.linguist.WordSearchState;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Loader;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader;
 import edu.cmu.sphinx.linguist.allphone.PhoneHmmSearchState;
+import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeEndUnitState;
 import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeHMMState;
 import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeNonEmittingHMMState;
 import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeWordState;
-import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeEndUnitState;
 import edu.cmu.sphinx.result.Result;
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
-import edu.cmu.sphinx.util.props.S4Component;
-import edu.cmu.sphinx.util.props.S4Double;
-import edu.cmu.sphinx.util.props.S4Integer;
+import edu.cmu.sphinx.util.props.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Provides the breadth first search with fast match heuristic included to

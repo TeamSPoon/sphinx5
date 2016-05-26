@@ -13,20 +13,10 @@
 
 package edu.cmu.sphinx.fst;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * A mutable finite state transducer implementation.

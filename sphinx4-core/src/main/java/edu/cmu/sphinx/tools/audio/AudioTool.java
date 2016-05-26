@@ -24,7 +24,6 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;

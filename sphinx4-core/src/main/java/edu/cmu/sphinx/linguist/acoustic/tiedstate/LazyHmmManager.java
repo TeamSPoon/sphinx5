@@ -1,21 +1,12 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Map;
-
 import edu.cmu.sphinx.linguist.acoustic.HMM;
 import edu.cmu.sphinx.linguist.acoustic.HMMPosition;
 import edu.cmu.sphinx.linguist.acoustic.LeftRightContext;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.ConstantEventMap;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.EventMap;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.KaldiTextParser;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.SplitEventMap;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.TableEventMap;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.TransitionModel;
+import edu.cmu.sphinx.linguist.acoustic.tiedstate.kaldi.*;
+
+import java.util.*;
 
 /**
  * {@link HMMManager} extension to load HMMs from Kaldi model.

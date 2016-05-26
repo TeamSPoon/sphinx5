@@ -12,8 +12,8 @@
 
 package edu.cmu.sphinx.linguist.language.grammar;
 
-import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.util.LogMath;
 
 import java.util.StringTokenizer;
 

@@ -12,10 +12,10 @@
 
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
-import edu.cmu.sphinx.util.props.Configurable;
 import edu.cmu.sphinx.decoder.adaptation.ClusteredDensityFileData;
 import edu.cmu.sphinx.decoder.adaptation.Transform;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
+import edu.cmu.sphinx.util.props.Configurable;
 
 import java.io.IOException;
 import java.util.Map;

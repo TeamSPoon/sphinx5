@@ -10,7 +10,9 @@
  */
 package edu.cmu.sphinx.frontend.feature;
 
-import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.FloatData;
 
 /**
  * This component concatenate the cepstrum from the sequence of frames according to the window size.

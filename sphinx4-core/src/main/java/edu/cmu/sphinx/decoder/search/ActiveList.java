@@ -12,8 +12,11 @@
 
 package edu.cmu.sphinx.decoder.search;
 
+import edu.cmu.sphinx.util.props.S4Boolean;
+import edu.cmu.sphinx.util.props.S4Double;
+import edu.cmu.sphinx.util.props.S4Integer;
+
 import java.util.List;
-import edu.cmu.sphinx.util.props.*;
 
 /**
  * An active list is maintained as a sorted list

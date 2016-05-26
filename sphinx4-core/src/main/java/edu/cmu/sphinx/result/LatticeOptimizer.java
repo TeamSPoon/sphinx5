@@ -11,8 +11,8 @@
  */
 package edu.cmu.sphinx.result;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class used to collapse all equivalent paths in a Lattice.  Results in a Lattices that is deterministic (no Node has

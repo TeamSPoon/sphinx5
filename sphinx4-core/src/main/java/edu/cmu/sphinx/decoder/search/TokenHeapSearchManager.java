@@ -12,12 +12,12 @@
 
 package edu.cmu.sphinx.decoder.search;
 
+import edu.cmu.sphinx.decoder.scorer.Scoreable;
+import edu.cmu.sphinx.linguist.SearchState;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import edu.cmu.sphinx.decoder.scorer.Scoreable;
-import edu.cmu.sphinx.linguist.SearchState;
 /**
  * The token heap search manager that maintains the heap of best tokens for each
  * search state instead of single one best token

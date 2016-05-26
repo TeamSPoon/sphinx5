@@ -13,9 +13,9 @@
 
 package edu.cmu.sphinx.fst;
 
-import java.io.IOException;
-
 import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+
+import java.io.IOException;
 
 /**
  * Provides a command line utility to convert an Fst in openfst's text format to

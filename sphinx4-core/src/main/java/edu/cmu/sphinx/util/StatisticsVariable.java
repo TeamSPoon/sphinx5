@@ -13,7 +13,6 @@
 package edu.cmu.sphinx.util;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents a named value. A StatisticsVariable may be used to track data in a fashion that will allow the data to be
@@ -22,12 +21,12 @@ import java.util.Map;
  */
 public class StatisticsVariable {
 
-    private static final Map<String, StatisticsVariable> pool = new HashMap<>();
+    private static final HashMap<String, StatisticsVariable> pool = new HashMap<>();
 
     /** the value of this StatisticsVariable. It can be manipulated directly by the application. */
     public double value;
 
-    private final String name;        // the name of this value
+    public final String name;        // the name of this value
     private boolean enabled;        // if true this var is enabled
 
 
@@ -38,14 +37,8 @@ public class StatisticsVariable {
      * @param statName the name of the StatisticsVariable
      * @return the StatisticsVariable with the given name and context
      */
-    static public StatisticsVariable getStatisticsVariable(String statName) {
-
-        StatisticsVariable stat = pool.get(statName);
-        if (stat == null) {
-            stat = new StatisticsVariable(statName);
-            pool.put(statName, stat);
-        }
-        return stat;
+    static public final StatisticsVariable the(String statName) {
+        return pool.computeIfAbsent(statName, StatisticsVariable::new);
     }
 
 
@@ -57,9 +50,8 @@ public class StatisticsVariable {
      * @param statName     the name of the StatisticsVariable
      * @return new variable
      */
-    static public StatisticsVariable getStatisticsVariable(
-            String instanceName, String statName) {
-        return getStatisticsVariable(instanceName + '.' + statName);
+    static public StatisticsVariable the(String instanceName, String statName) {
+        return the(instanceName + '.' + statName);
     }
 
 
@@ -74,9 +66,7 @@ public class StatisticsVariable {
 
     /** Resets all of the StatisticsVariables in the given context */
     static public void resetAll() {
-        for (StatisticsVariable stats : pool.values()) {
-            stats.reset();
-        }
+        pool.values().forEach(StatisticsVariable::reset);
     }
 
 
@@ -92,21 +82,11 @@ public class StatisticsVariable {
 
 
     /**
-     * Retrieves the name of this StatisticsVariable
-     *
-     * @return the name of this StatisticsVariable
-     */
-    public String getName() {
-        return name;
-    }
-
-
-    /**
      * Retrieves the value for this StatisticsVariable
      *
      * @return the current value for this StatisticsVariable
      */
-    public double getValue() {
+    public double val() {
         return value;
     }
 
@@ -116,14 +96,14 @@ public class StatisticsVariable {
      *
      * @param value the new value
      */
-    public void setValue(double value) {
+    public void val(double value) {
         this.value = value;
     }
 
 
     /** Resets this StatisticsVariable. The value is set to zero. */
     public void reset() {
-        setValue(0.0);
+        val(0.0);
     }
 
 
@@ -134,67 +114,67 @@ public class StatisticsVariable {
         }
     }
 
-
-    /**
-     * Determines if this StatisticsVariable is enabled
-     *
-     * @return true if enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-
-    /**
-     * Sets the enabled state of this StatisticsVariable
-     *
-     * @param enabled the new enabled state
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-
-    public static void main(String[] args) {
-        StatisticsVariable loops =
-                StatisticsVariable.getStatisticsVariable("main", "loops");
-        StatisticsVariable sum =
-                StatisticsVariable.getStatisticsVariable("main", "sum");
-
-        StatisticsVariable foot =
-                StatisticsVariable.getStatisticsVariable("body", "foot");
-        StatisticsVariable leg =
-                StatisticsVariable.getStatisticsVariable("body", "leg");
-        StatisticsVariable finger =
-                StatisticsVariable.getStatisticsVariable("body", "finger");
-
-        foot.setValue(2);
-        leg.setValue(2);
-        finger.setValue(10);
-
-        StatisticsVariable.dumpAll();
-        StatisticsVariable.dumpAll();
-
-        for (int i = 0; i < 1000; i++) {
-            loops.value++;
-            sum.value += i;
-        }
-
-        StatisticsVariable.dumpAll();
+//
+//    /**
+//     * Determines if this StatisticsVariable is enabled
+//     *
+//     * @return true if enabled
+//     */
+//    public boolean isEnabled() {
+//        return enabled;
+//    }
+//
+//
+//    /**
+//     * Sets the enabled state of this StatisticsVariable
+//     *
+//     * @param enabled the new enabled state
+//     */
+//    public void setEnabled(boolean enabled) {
+//        this.enabled = enabled;
+//    }
 
 
-        StatisticsVariable loopsAlias =
-                StatisticsVariable.getStatisticsVariable("main", "loops");
-        StatisticsVariable sumAlias =
-                StatisticsVariable.getStatisticsVariable("main", "sum");
-
-        for (int i = 0; i < 1000; i++) {
-            loopsAlias.value++;
-            sumAlias.value += i;
-        }
-
-        StatisticsVariable.dumpAll();
-        StatisticsVariable.resetAll();
-        StatisticsVariable.dumpAll();
-    }
+//    public static void main(String[] args) {
+//        StatisticsVariable loops =
+//                StatisticsVariable.the("main", "loops");
+//        StatisticsVariable sum =
+//                StatisticsVariable.the("main", "sum");
+//
+//        StatisticsVariable foot =
+//                StatisticsVariable.the("body", "foot");
+//        StatisticsVariable leg =
+//                StatisticsVariable.the("body", "leg");
+//        StatisticsVariable finger =
+//                StatisticsVariable.the("body", "finger");
+//
+//        foot.val(2);
+//        leg.val(2);
+//        finger.val(10);
+//
+//        StatisticsVariable.dumpAll();
+//        StatisticsVariable.dumpAll();
+//
+//        for (int i = 0; i < 1000; i++) {
+//            loops.value++;
+//            sum.value += i;
+//        }
+//
+//        StatisticsVariable.dumpAll();
+//
+//
+//        StatisticsVariable loopsAlias =
+//                StatisticsVariable.the("main", "loops");
+//        StatisticsVariable sumAlias =
+//                StatisticsVariable.the("main", "sum");
+//
+//        for (int i = 0; i < 1000; i++) {
+//            loopsAlias.value++;
+//            sumAlias.value += i;
+//        }
+//
+//        StatisticsVariable.dumpAll();
+//        StatisticsVariable.resetAll();
+//        StatisticsVariable.dumpAll();
+//    }
 }

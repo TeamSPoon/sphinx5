@@ -18,9 +18,10 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Boolean;
 import edu.cmu.sphinx.util.props.S4Double;
 
+import java.util.Random;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import java.util.Random;
 
 /**
  * Implements a dither for the incoming packet. A small amount of random noise is added

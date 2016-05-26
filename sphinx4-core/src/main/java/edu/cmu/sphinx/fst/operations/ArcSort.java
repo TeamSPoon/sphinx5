@@ -13,11 +13,11 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.Comparator;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.State;
+
+import java.util.Comparator;
 
 /**
  * ArcSort operation.

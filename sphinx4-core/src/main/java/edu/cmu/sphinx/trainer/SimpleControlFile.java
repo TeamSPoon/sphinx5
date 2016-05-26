@@ -12,8 +12,8 @@
 
 package edu.cmu.sphinx.trainer;
 
-import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Component;
 
 import java.io.BufferedReader;

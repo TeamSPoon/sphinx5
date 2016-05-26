@@ -1,7 +1,5 @@
 package edu.cmu.sphinx.linguist.allphone;
 
-import java.util.ArrayList;
-
 import edu.cmu.sphinx.decoder.scorer.ScoreProvider;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.linguist.SearchState;
@@ -12,6 +10,8 @@ import edu.cmu.sphinx.linguist.acoustic.HMMStateArc;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.SenoneHMM;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.SenoneSequence;
+
+import java.util.ArrayList;
 
 public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScoreProvider {
 

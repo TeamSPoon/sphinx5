@@ -13,8 +13,8 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.trainer;
 
 import edu.cmu.sphinx.frontend.FloatData;
-import edu.cmu.sphinx.linguist.acoustic.HMMState;
 import edu.cmu.sphinx.linguist.acoustic.HMM;
+import edu.cmu.sphinx.linguist.acoustic.HMMState;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.*;
 import edu.cmu.sphinx.util.LogMath;
 

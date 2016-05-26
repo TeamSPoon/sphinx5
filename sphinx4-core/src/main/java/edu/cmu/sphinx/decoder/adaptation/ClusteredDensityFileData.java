@@ -1,12 +1,11 @@
 package edu.cmu.sphinx.decoder.adaptation;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import org.apache.commons.math3.util.FastMath;
-
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Loader;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Pool;
+import org.apache.commons.math3.util.FastMath;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Used for clustering gaussians. The clustering is performed by Euclidean

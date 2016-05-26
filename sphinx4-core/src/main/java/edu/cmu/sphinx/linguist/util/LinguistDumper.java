@@ -13,7 +13,9 @@ package edu.cmu.sphinx.linguist.util;
 
 import edu.cmu.sphinx.linguist.*;
 import edu.cmu.sphinx.util.Cache;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4String;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

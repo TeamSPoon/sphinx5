@@ -11,20 +11,15 @@
 
 package edu.cmu.sphinx.tools.aligner;
 
+import edu.cmu.sphinx.api.SpeechAligner;
+import edu.cmu.sphinx.result.WordResult;
+import edu.cmu.sphinx.util.TimeFrame;
+
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import edu.cmu.sphinx.api.SpeechAligner;
-import edu.cmu.sphinx.util.TimeFrame;
-import edu.cmu.sphinx.result.WordResult;
 
 /**
  * This is a simple tool to align audio to text and dump a database

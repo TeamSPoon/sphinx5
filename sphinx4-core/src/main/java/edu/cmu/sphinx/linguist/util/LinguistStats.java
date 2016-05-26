@@ -11,7 +11,10 @@
  */
 package edu.cmu.sphinx.linguist.util;
 
-import edu.cmu.sphinx.linguist.*;
+import edu.cmu.sphinx.linguist.Linguist;
+import edu.cmu.sphinx.linguist.LinguistProcessor;
+import edu.cmu.sphinx.linguist.SearchState;
+import edu.cmu.sphinx.linguist.SearchStateArc;
 
 import java.util.*;
 

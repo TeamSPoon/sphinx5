@@ -7,27 +7,14 @@
  */
 package edu.cmu.sphinx.jsgf;
 
+import edu.cmu.sphinx.jsgf.rule.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import edu.cmu.sphinx.jsgf.rule.JSGFRule;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleAlternatives;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleCount;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleName;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleSequence;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleTag;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleToken;
+import java.util.*;
 
 /**
  * @author Paul Lamere

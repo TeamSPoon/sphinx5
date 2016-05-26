@@ -11,7 +11,13 @@
  */
 package edu.cmu.sphinx.linguist.language.ngram;
 
-import static java.lang.Math.max;
+import edu.cmu.sphinx.linguist.WordSequence;
+import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.linguist.dictionary.Word;
+import edu.cmu.sphinx.util.LogMath;
+import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,13 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import edu.cmu.sphinx.linguist.WordSequence;
-import edu.cmu.sphinx.linguist.dictionary.Dictionary;
-import edu.cmu.sphinx.linguist.dictionary.Word;
-import edu.cmu.sphinx.util.LogMath;
-import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
+import static java.lang.Math.max;
 
 
 /**
@@ -50,7 +50,12 @@ public class SimpleNGramModel implements LanguageModel {
     private Dictionary dictionary;
     private int desiredMaxDepth;
     private int maxNGram;
-    private Map<WordSequence, Probability> map;
+
+
+    /*  0: float logProbability;
+        1: float logBackoff; */
+    private Map<WordSequence, float[]> map;
+
     private Set<String> vocabulary;
     protected int lineNumber;
     protected BufferedReader reader;
@@ -144,7 +149,7 @@ public class SimpleNGramModel implements LanguageModel {
      */
     public float getProbability(WordSequence wordSequence) {
         float logProbability = 0.0f;
-        Probability prob = getProb(wordSequence);
+        float[] prob = getProb(wordSequence);
         if (prob == null) {
             if (wordSequence.size() > 1) {
                 logProbability = getBackoff(wordSequence.getOldest())
@@ -154,7 +159,7 @@ public class SimpleNGramModel implements LanguageModel {
                 logProbability = LogMath.LOG_ZERO;
             }
         } else {
-            logProbability = prob.logProbability;
+            logProbability = prob[0];
         }
         // System.out.println("Search: " + wordSequence + " : "
         // + logProbability + " "
@@ -180,9 +185,9 @@ public class SimpleNGramModel implements LanguageModel {
      */
     public float getBackoff(WordSequence wordSequence) {
         float logBackoff = 0.0f; // log of 1.0
-        Probability prob = getProb(wordSequence);
+        float[] prob = getProb(wordSequence);
         if (prob != null) {
-            logBackoff = prob.logBackoff;
+            logBackoff = prob[1];
         }
         return logBackoff;
     }
@@ -217,7 +222,7 @@ public class SimpleNGramModel implements LanguageModel {
      * @param wordSequence a word sequence
      * @return the probability entry for the wordlist or null
      */
-    private Probability getProb(WordSequence wordSequence) {
+    private float[] getProb(WordSequence wordSequence) {
         return map.get(wordSequence);
     }
 
@@ -237,7 +242,7 @@ public class SimpleNGramModel implements LanguageModel {
 
     /** Dumps the language model */
     public void dump() {
-        for (Map.Entry<WordSequence, Probability> entry : map.entrySet())
+        for (Map.Entry<WordSequence, float[]> entry : map.entrySet())
             System.out.println(entry.getKey() + " " + entry.getValue());
     }
 
@@ -277,7 +282,10 @@ public class SimpleNGramModel implements LanguageModel {
         // look for beginning of data
         readUntil("\\data\\");
         // look for ngram statements
+
+
         List<Integer> ngramList = new ArrayList<>();
+
         while ((line = readLine()) != null) {
             if (line.startsWith("ngram")) {
                 StringTokenizer st = new StringTokenizer(line, " \t\n\r\f=");
@@ -355,10 +363,10 @@ public class SimpleNGramModel implements LanguageModel {
      * @param logProb the probability in log math base
      * @param logBackoff the backoff probability in log math base
      */
-    private void put(WordSequence wordSequence, float logProb, float logBackoff) {
+    private void put(WordSequence wordSequence, float...logProbAndBackoff) {
         // System.out.println("Putting " + wordSequence + " p " + logProb
         // + " b " + logBackoff);
-        map.put(wordSequence, new Probability(logProb, logBackoff));
+        map.put(wordSequence, logProbAndBackoff);
         tokens.add(wordSequence);
     }
 
@@ -440,31 +448,31 @@ public class SimpleNGramModel implements LanguageModel {
 }
 
 
-/** Represents a probability and a backoff probability */
-
-class Probability {
-
-    final float logProbability;
-    final float logBackoff;
-
-    /**
-     * Constructs a probability
-     *
-     * @param logProbability the probability
-     * @param logBackoff the backoff probability
-     */
-    Probability(float logProbability, float logBackoff) {
-        this.logProbability = logProbability;
-        this.logBackoff = logBackoff;
-    }
-
-    /**
-     * Returns a string representation of this object
-     *
-     * @return the string form of this object
-     */
-    @Override
-    public String toString() {
-        return "Prob: " + logProbability + ' ' + logBackoff;
-    }
-}
+///** Represents a probability and a backoff probability */
+//
+//class Probability {
+//
+//    final float logProbability;
+//    final float logBackoff;
+//
+//    /**
+//     * Constructs a probability
+//     *
+//     * @param logProbability the probability
+//     * @param logBackoff the backoff probability
+//     */
+//    Probability(float logProbability, float logBackoff) {
+//        this.logProbability = logProbability;
+//        this.logBackoff = logBackoff;
+//    }
+//
+//    /**
+//     * Returns a string representation of this object
+//     *
+//     * @return the string form of this object
+//     */
+//    @Override
+//    public String toString() {
+//        return "Prob: " + logProbability + ' ' + logBackoff;
+//    }
+//}

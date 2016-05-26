@@ -14,7 +14,9 @@ package edu.cmu.sphinx.linguist.util;
 import edu.cmu.sphinx.linguist.*;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.Utilities;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Boolean;
 
 import java.io.PrintStream;
 import java.util.*;

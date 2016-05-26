@@ -1,14 +1,19 @@
 package edu.cmu.sphinx.frontend.util;
 
+import edu.cmu.sphinx.util.ReferenceSource;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
-
-import javax.sound.sampled.*;
-
-import edu.cmu.sphinx.util.ReferenceSource;
 
 
 /**

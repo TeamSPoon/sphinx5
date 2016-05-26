@@ -1,21 +1,16 @@
 package edu.cmu.sphinx.jsgf;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import edu.cmu.sphinx.jsgf.rule.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import edu.cmu.sphinx.jsgf.rule.JSGFRule;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleAlternatives;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleCount;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleSequence;
-import edu.cmu.sphinx.jsgf.rule.JSGFRuleToken;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GrXMLHandler extends DefaultHandler {
 
@@ -41,7 +36,7 @@ public class GrXMLHandler extends DefaultHandler {
         if (qName.equals("rule")) {
             String id = attributes.getValue("id");
             if (id != null) {
-                newRule = new JSGFRuleSequence(new ArrayList<>());
+                newRule = emptyRuleSequence();
                 topRuleMap.put(id, newRule);
                 topRule = newRule;
             }
@@ -49,11 +44,11 @@ public class GrXMLHandler extends DefaultHandler {
         if (qName.equals("item")) {
             String repeat = attributes.getValue("repeat");
             if (repeat != null) {
-                newRule = new JSGFRuleSequence(new ArrayList<>());
+                newRule = emptyRuleSequence();
                 JSGFRuleCount ruleCount = new JSGFRuleCount(newRule, JSGFRuleCount.ONCE_OR_MORE);
                 topRule = ruleCount;
             } else {
-                newRule = new JSGFRuleSequence(new ArrayList<>());
+                newRule = emptyRuleSequence();
                 topRule = newRule;
             }
         }
@@ -62,13 +57,17 @@ public class GrXMLHandler extends DefaultHandler {
             topRule = newRule;
         }
         addToCurrent(newRule, topRule);
-    }    
+    }
+
+    private JSGFRuleSequence emptyRuleSequence() {
+        return new JSGFRuleSequence(new ArrayList<>());
+    }
 
     @Override
     public void characters(char buf[], int offset, int len)throws SAXException {
         String item = new String(buf, offset, len).trim();
 
-        if (item.length() == 0)
+        if (item.isEmpty())
             return;
 
         if (logger.isLoggable(Level.FINE)) {

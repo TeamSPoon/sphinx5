@@ -12,7 +12,10 @@
 
 package edu.cmu.sphinx.linguist;
 
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.util.props.Configurable;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Component;
 
 /** A standard interface for a linguist processor */
 public class LinguistProcessor implements Configurable, Runnable {

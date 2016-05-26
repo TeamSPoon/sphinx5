@@ -12,10 +12,10 @@
 
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.trainer;
 
+import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Loader;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.Saver;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.TiedStateAcousticModel;
-import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.util.props.*;
 
 import java.io.FileNotFoundException;

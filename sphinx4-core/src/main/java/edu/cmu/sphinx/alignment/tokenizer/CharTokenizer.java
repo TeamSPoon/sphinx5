@@ -10,11 +10,11 @@
  */
 package edu.cmu.sphinx.alignment.tokenizer;
 
+import edu.cmu.sphinx.alignment.Token;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
-
-import edu.cmu.sphinx.alignment.Token;
 
 /**
  * Implements the tokenizer interface. Breaks an input sequence of characters

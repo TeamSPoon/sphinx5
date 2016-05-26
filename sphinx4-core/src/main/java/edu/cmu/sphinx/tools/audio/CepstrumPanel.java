@@ -12,16 +12,10 @@
 
 package edu.cmu.sphinx.tools.audio;
 
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DataEndSignal;
-import edu.cmu.sphinx.frontend.DoubleData;
-import edu.cmu.sphinx.frontend.FloatData;
-import edu.cmu.sphinx.frontend.FrontEnd;
+import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;

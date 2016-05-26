@@ -1,17 +1,10 @@
 package edu.cmu.sphinx.linguist.language.ngram.trie;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import edu.cmu.sphinx.linguist.language.ngram.trie.NgramTrieModel.TrieUnigram;
 import edu.cmu.sphinx.util.Utilities;
+
+import java.io.*;
+import java.net.URL;
 
 /**
  * Class that provides utils to load NgramTrieModel

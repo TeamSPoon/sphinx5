@@ -1,21 +1,5 @@
 package edu.cmu.sphinx.linguist.language.ngram.trie;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
@@ -23,13 +7,18 @@ import edu.cmu.sphinx.linguist.language.ngram.LanguageModel;
 import edu.cmu.sphinx.linguist.util.LRUCache;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.TimerPool;
-import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
-import edu.cmu.sphinx.util.props.S4Boolean;
-import edu.cmu.sphinx.util.props.S4Double;
-import edu.cmu.sphinx.util.props.S4Integer;
-import edu.cmu.sphinx.util.props.S4String;
+import edu.cmu.sphinx.util.props.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Language model that uses a binary NGram language model file ("binary trie file")

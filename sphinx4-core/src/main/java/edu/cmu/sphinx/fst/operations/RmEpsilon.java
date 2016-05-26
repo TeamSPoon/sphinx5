@@ -13,12 +13,12 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.HashMap;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.State;
 import edu.cmu.sphinx.fst.semiring.Semiring;
+
+import java.util.HashMap;
 
 /**
  * Remove epsilon operation.

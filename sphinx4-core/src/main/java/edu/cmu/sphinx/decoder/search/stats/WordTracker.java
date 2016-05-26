@@ -1,17 +1,11 @@
 package edu.cmu.sphinx.decoder.search.stats;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.linguist.WordSearchState;
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Word;
+
+import java.util.*;
 
 /** A class that keeps track of word histories */
 

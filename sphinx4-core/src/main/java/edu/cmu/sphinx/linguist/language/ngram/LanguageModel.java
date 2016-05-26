@@ -11,13 +11,13 @@
  */
 package edu.cmu.sphinx.linguist.language.ngram;
 
-import java.io.IOException;
-import java.util.Set;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist;
 import edu.cmu.sphinx.util.props.*;
+
+import java.io.IOException;
+import java.util.Set;
 
 
 /**

@@ -12,11 +12,11 @@
  */
 package edu.cmu.sphinx.instrumentation;
 
+import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.recognizer.Recognizer.State;
 import edu.cmu.sphinx.recognizer.StateListener;
 import edu.cmu.sphinx.result.Result;
-import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.util.props.*;
 
 import java.text.DecimalFormat;

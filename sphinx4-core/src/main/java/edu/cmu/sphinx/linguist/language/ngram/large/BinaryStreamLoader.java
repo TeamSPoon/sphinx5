@@ -13,11 +13,7 @@
 
 package edu.cmu.sphinx.linguist.language.ngram.large;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 
 /**

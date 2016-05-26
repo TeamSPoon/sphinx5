@@ -9,15 +9,15 @@
  */
 package edu.cmu.sphinx.linguist.language.ngram;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Set;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Component;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
 
 
 /*

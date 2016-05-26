@@ -10,16 +10,14 @@
 
 package edu.cmu.sphinx.alignment;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import static java.util.Arrays.fill;
-import static java.util.Collections.emptyList;
+import edu.cmu.sphinx.util.Range;
+import edu.cmu.sphinx.util.Utilities;
 
 import java.util.*;
 
-import edu.cmu.sphinx.util.Range;
-import edu.cmu.sphinx.util.Utilities;
+import static java.lang.Math.*;
+import static java.util.Arrays.fill;
+import static java.util.Collections.emptyList;
 
 /**
  *

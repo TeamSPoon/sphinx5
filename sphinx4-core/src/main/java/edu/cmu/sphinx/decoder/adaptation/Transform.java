@@ -1,17 +1,11 @@
 package edu.cmu.sphinx.decoder.adaptation;
 
+import edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader;
+import org.apache.commons.math3.linear.*;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Scanner;
-
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.DecompositionSolver;
-import org.apache.commons.math3.linear.LUDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
-
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader;
 
 public class Transform {
 

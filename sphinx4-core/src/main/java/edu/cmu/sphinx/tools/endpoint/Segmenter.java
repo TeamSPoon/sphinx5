@@ -1,16 +1,16 @@
 package edu.cmu.sphinx.tools.endpoint;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Scanner;
-
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.FrontEnd;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.frontend.util.WavWriter;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Scanner;
 
 public class Segmenter {
 

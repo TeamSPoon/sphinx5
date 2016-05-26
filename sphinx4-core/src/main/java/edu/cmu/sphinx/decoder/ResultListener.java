@@ -12,8 +12,8 @@
 
 package edu.cmu.sphinx.decoder;
 
-import edu.cmu.sphinx.util.props.Configurable;
 import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.util.props.Configurable;
 
 import java.util.EventListener;
 

@@ -3,14 +3,17 @@
  */
 package edu.cmu.sphinx.linguist.language.ngram;
 
+import edu.cmu.sphinx.linguist.WordSequence;
+import edu.cmu.sphinx.util.LogMath;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4ComponentList;
+import edu.cmu.sphinx.util.props.S4StringList;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import edu.cmu.sphinx.linguist.WordSequence;
-import edu.cmu.sphinx.util.LogMath;
-import edu.cmu.sphinx.util.props.*;
 
 
 /**

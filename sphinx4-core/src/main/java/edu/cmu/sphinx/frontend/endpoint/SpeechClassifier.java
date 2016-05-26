@@ -13,7 +13,10 @@
 
 package edu.cmu.sphinx.frontend.endpoint;
 
-import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DataProcessingException;
+import edu.cmu.sphinx.frontend.DataStartSignal;
+import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;

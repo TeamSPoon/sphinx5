@@ -9,17 +9,6 @@
 
 package edu.cmu.sphinx.api;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.TreeMap;
-import java.util.logging.Logger;
-
 import edu.cmu.sphinx.alignment.LongTextAligner;
 import edu.cmu.sphinx.alignment.SimpleTokenizer;
 import edu.cmu.sphinx.alignment.TextTokenizer;
@@ -30,6 +19,11 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
 import edu.cmu.sphinx.util.Range;
 import edu.cmu.sphinx.util.TimeFrame;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class SpeechAligner {
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());

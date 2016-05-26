@@ -11,13 +11,13 @@
  */
 package edu.cmu.sphinx.linguist.language.grammar;
 
-import static java.util.Arrays.asList;
+import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.util.LogMath;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.cmu.sphinx.linguist.dictionary.Dictionary;
-import edu.cmu.sphinx.util.LogMath;
+import static java.util.Arrays.asList;
 
 public class AlignerGrammar extends Grammar {
 

@@ -12,9 +12,9 @@
 
 package edu.cmu.sphinx.linguist.dictionary;
 
-import java.util.List;
-
 import edu.cmu.sphinx.linguist.acoustic.Unit;
+
+import java.util.List;
 
 
 /** Provides pronunciation information for a word. */

@@ -13,9 +13,9 @@
 
 package edu.cmu.sphinx.fst.operations;
 
-import java.util.Comparator;
-
 import edu.cmu.sphinx.fst.Arc;
+
+import java.util.Comparator;
 
 /**
  * Comparator used in {@link edu.cmu.sphinx.fst.operations.ArcSort} for sorting

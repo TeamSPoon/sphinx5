@@ -8,11 +8,7 @@
  */
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.HTK;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 

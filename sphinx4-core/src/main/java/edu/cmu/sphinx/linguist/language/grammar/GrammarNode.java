@@ -14,6 +14,7 @@ package edu.cmu.sphinx.linguist.language.grammar;
 
 
 import edu.cmu.sphinx.linguist.dictionary.Word;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;

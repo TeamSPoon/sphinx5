@@ -12,8 +12,9 @@
 
 package edu.cmu.sphinx.decoder.search;
 
-import java.util.Arrays;
 import edu.cmu.sphinx.decoder.scorer.Scoreable;
+
+import java.util.Arrays;
 
 /**
  * Partitions a list of tokens according to the token score, used

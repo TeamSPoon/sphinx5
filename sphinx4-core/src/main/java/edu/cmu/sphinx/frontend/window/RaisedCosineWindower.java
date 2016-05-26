@@ -13,7 +13,8 @@
 package edu.cmu.sphinx.frontend.window;
 
 import edu.cmu.sphinx.frontend.*;
-import edu.cmu.sphinx.frontend.endpoint.*;
+import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
+import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
 import edu.cmu.sphinx.frontend.util.DataUtil;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;

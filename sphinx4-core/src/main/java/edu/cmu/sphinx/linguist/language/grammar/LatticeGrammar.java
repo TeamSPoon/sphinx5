@@ -10,9 +10,9 @@
 package edu.cmu.sphinx.linguist.language.grammar;
 
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.result.Edge;
 import edu.cmu.sphinx.result.Lattice;
 import edu.cmu.sphinx.result.Node;
-import edu.cmu.sphinx.result.Edge;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 

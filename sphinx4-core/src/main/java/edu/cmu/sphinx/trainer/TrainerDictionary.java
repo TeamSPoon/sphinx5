@@ -13,8 +13,8 @@
 package edu.cmu.sphinx.trainer;
 
 import edu.cmu.sphinx.linguist.acoustic.Unit;
-import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
 import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
+import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
 
 /** Dummy trainer dictionary. */
 public class TrainerDictionary extends TextDictionary {

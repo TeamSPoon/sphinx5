@@ -13,32 +13,19 @@
 
 package edu.cmu.sphinx.linguist.g2p;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.regex.Pattern;
-
 import edu.cmu.sphinx.fst.Arc;
 import edu.cmu.sphinx.fst.Fst;
 import edu.cmu.sphinx.fst.ImmutableFst;
 import edu.cmu.sphinx.fst.State;
-import edu.cmu.sphinx.fst.operations.ArcSort;
-import edu.cmu.sphinx.fst.operations.Compose;
-import edu.cmu.sphinx.fst.operations.ILabelCompare;
-import edu.cmu.sphinx.fst.operations.NShortestPaths;
-import edu.cmu.sphinx.fst.operations.OLabelCompare;
-import edu.cmu.sphinx.fst.operations.Project;
-import edu.cmu.sphinx.fst.operations.ProjectType;
-import edu.cmu.sphinx.fst.operations.RmEpsilon;
+import edu.cmu.sphinx.fst.operations.*;
 import edu.cmu.sphinx.fst.semiring.Semiring;
 import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
 import edu.cmu.sphinx.fst.utils.Utils;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * The grapheme-to-phoneme (g2p) decoder

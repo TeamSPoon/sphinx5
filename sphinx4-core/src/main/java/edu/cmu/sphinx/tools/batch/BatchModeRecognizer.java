@@ -24,7 +24,6 @@ import edu.cmu.sphinx.util.props.*;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -620,7 +619,7 @@ public class BatchModeRecognizer implements Configurable {
             } else {
                 bmr.decode(batchFile);
             }
-            System.out.println("Tokens created: " + StatisticsVariable.getStatisticsVariable("totalTokensScored").value);
+            System.out.println("Tokens created: " + StatisticsVariable.the("totalTokensScored").value);
             /*
            } catch (IOException ioe) {
                System.err.println("I/O error: \n");

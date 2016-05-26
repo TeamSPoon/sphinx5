@@ -12,11 +12,7 @@
 
 package edu.cmu.sphinx.trainer;
 
-import edu.cmu.sphinx.linguist.acoustic.AcousticModel;
-import edu.cmu.sphinx.linguist.acoustic.HMM;
-import edu.cmu.sphinx.linguist.acoustic.HMMPosition;
-import edu.cmu.sphinx.linguist.acoustic.Unit;
-import edu.cmu.sphinx.linguist.acoustic.UnitManager;
+import edu.cmu.sphinx.linguist.acoustic.*;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.SenoneHMM;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Pronunciation;

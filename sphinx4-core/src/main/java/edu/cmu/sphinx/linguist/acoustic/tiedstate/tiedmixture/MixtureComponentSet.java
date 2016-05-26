@@ -10,16 +10,16 @@
 
 package edu.cmu.sphinx.linguist.acoustic.tiedstate.tiedmixture;
 
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.FloatData;
+import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
-
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DoubleData;
-import edu.cmu.sphinx.frontend.FloatData;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
 
 /**
  * MixtureComponentsSet - phonetically tied set of gaussians

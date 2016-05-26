@@ -9,16 +9,19 @@
 
 package edu.cmu.sphinx.tools.bandwidth;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import edu.cmu.sphinx.frontend.*;
+import edu.cmu.sphinx.frontend.Data;
+import edu.cmu.sphinx.frontend.DataProcessor;
+import edu.cmu.sphinx.frontend.DoubleData;
+import edu.cmu.sphinx.frontend.FrontEnd;
 import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.frontend.window.RaisedCosineWindower;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * A simple energy-based detector for upsampled audio. Could be used to detect

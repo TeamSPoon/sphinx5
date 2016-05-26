@@ -12,12 +12,15 @@
 
 package edu.cmu.sphinx.linguist;
 
-import static java.lang.Math.min;
-
-import java.util.*;
-
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+import static java.lang.Math.min;
 
 /**
  * This class can be used to keep track of a word sequence. This class is an

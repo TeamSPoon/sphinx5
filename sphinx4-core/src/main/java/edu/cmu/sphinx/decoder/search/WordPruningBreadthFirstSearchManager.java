@@ -235,9 +235,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         pruneTimer = TimerPool.getTimer(this, "Prune");
         growTimer = TimerPool.getTimer(this, "Grow");
 
-        totalTokensScored = StatisticsVariable.getStatisticsVariable("totalTokensScored");
-        curTokensScored = StatisticsVariable.getStatisticsVariable("curTokensScored");
-        tokensCreated = StatisticsVariable.getStatisticsVariable("tokensCreated");
+        totalTokensScored = StatisticsVariable.the("totalTokensScored");
+        curTokensScored = StatisticsVariable.the("curTokensScored");
+        tokensCreated = StatisticsVariable.the("tokensCreated");
 
         try {
             linguist.allocate();

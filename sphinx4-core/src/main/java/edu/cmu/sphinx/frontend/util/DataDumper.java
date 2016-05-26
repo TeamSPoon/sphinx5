@@ -13,7 +13,10 @@ package edu.cmu.sphinx.frontend.util;
 
 import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
-import edu.cmu.sphinx.util.props.*;
+import edu.cmu.sphinx.util.props.PropertyException;
+import edu.cmu.sphinx.util.props.PropertySheet;
+import edu.cmu.sphinx.util.props.S4Boolean;
+import edu.cmu.sphinx.util.props.S4String;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

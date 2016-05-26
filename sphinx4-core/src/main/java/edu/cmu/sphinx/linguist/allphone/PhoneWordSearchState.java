@@ -1,7 +1,5 @@
 package edu.cmu.sphinx.linguist.allphone;
 
-import java.util.ArrayList;
-
 import edu.cmu.sphinx.linguist.SearchStateArc;
 import edu.cmu.sphinx.linguist.WordSearchState;
 import edu.cmu.sphinx.linguist.acoustic.HMM;
@@ -11,6 +9,8 @@ import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
+
+import java.util.ArrayList;
 
 public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements WordSearchState {
     

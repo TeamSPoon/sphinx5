@@ -12,17 +12,17 @@
 
 package edu.cmu.sphinx.frontend.feature;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
 import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Subtracts the mean of all the input so far from the Data objects.

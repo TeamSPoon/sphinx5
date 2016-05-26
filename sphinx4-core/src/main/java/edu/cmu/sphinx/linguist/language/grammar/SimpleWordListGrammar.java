@@ -16,7 +16,8 @@ import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.props.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Defines a grammar based upon a list of words in a file. The format of the file is just one word per line. For

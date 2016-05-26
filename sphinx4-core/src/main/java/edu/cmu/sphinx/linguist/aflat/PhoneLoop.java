@@ -11,10 +11,6 @@
  */
 package edu.cmu.sphinx.linguist.aflat;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import edu.cmu.sphinx.decoder.scorer.ScoreProvider;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.linguist.*;
@@ -22,6 +18,10 @@ import edu.cmu.sphinx.linguist.acoustic.*;
 import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
 import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /** Builds a grammar sub-graph that matches all phones. This is suitable for use as an out-of-grammar detector */

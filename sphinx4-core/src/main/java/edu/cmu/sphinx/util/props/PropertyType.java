@@ -12,8 +12,8 @@
  */
 package edu.cmu.sphinx.util.props;
 
-import java.util.List;
 import java.net.URL;
+import java.util.List;
 
 /** An enum type that defines the possible property types. */
 public enum PropertyType {

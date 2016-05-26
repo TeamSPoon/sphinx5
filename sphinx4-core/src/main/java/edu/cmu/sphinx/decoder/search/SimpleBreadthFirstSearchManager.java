@@ -25,10 +25,10 @@ import edu.cmu.sphinx.util.Timer;
 import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * Provides the breadth first search. To perform recognition an application should call initialize before recognition
@@ -631,16 +631,16 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
     */
     public void allocate() {
         totalTokensScored = StatisticsVariable
-                .getStatisticsVariable("totalTokensScored");
+                .the("totalTokensScored");
         tokensPerSecond = StatisticsVariable
-                .getStatisticsVariable("tokensScoredPerSecond");
+                .the("tokensScoredPerSecond");
         curTokensScored = StatisticsVariable
-                .getStatisticsVariable("curTokensScored");
+                .the("curTokensScored");
         tokensCreated = StatisticsVariable
-                .getStatisticsVariable("tokensCreated");
+                .the("tokensCreated");
         viterbiPruned = StatisticsVariable
-                .getStatisticsVariable("viterbiPruned");
-        beamPruned = StatisticsVariable.getStatisticsVariable("beamPruned");
+                .the("viterbiPruned");
+        beamPruned = StatisticsVariable.the("beamPruned");
 
 
         try {
