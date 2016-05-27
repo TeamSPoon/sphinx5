@@ -9,15 +9,14 @@
  */
 package edu.cmu.sphinx.alignment;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import edu.cmu.sphinx.util.Utilities;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.util.Utilities;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class SpeechAlignerTest {
 

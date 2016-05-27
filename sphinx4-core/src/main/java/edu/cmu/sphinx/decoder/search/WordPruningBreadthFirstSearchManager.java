@@ -130,9 +130,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     // -----------------------------------
     // Instrumentation
     // -----------------------------------
-    protected Timer scoreTimer;
-    protected Timer pruneTimer;
-    protected Timer growTimer;
+    //protected Timer scoreTimer;
+    //protected Timer pruneTimer;
+    //protected Timer growTimer;
     protected StatisticsVariable totalTokensScored;
     protected StatisticsVariable curTokensScored;
     protected StatisticsVariable tokensCreated;
@@ -231,9 +231,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         // tokenTracker = new TokenTracker();
         // tokenTypeTracker = new TokenTypeTracker();
 
-        scoreTimer = TimerPool.getTimer(this, "Score");
-        pruneTimer = TimerPool.getTimer(this, "Prune");
-        growTimer = TimerPool.getTimer(this, "Grow");
+        //scoreTimer = TimerPool.getTimer(this, "Score");
+        //pruneTimer = TimerPool.getTimer(this, "Prune");
+        //growTimer = TimerPool.getTimer(this, "Grow");
 
         totalTokensScored = StatisticsVariable.the("totalTokensScored");
         curTokensScored = StatisticsVariable.the("curTokensScored");
@@ -336,7 +336,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         if (mapSize == 0) {
             mapSize = 1;
         }
-        bestTokenMap = new HashMap<>(mapSize, 0.3F);
+        bestTokenMap = new HashMap<>(mapSize);//, 0.3F);
     }
 
     /** Terminates a recognition */
@@ -385,18 +385,19 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * tokens.
      */
     protected void growBranches() {
-        growTimer.start();
+        //growTimer.start();
         float relativeBeamThreshold = activeList.getBeamThreshold();
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
                     + activeList.getBestScore() + " tok " + activeList.getBestToken());
         }
+        
         for (Token token : activeList) {
             if (token.getScore() >= relativeBeamThreshold && allowExpansion(token)) {
                 collectSuccessorTokens(token);
             }
         }
-        growTimer.stop();
+        //growTimer.stop();
     }
 
     /**
@@ -408,7 +409,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             growBranches();
             return;
         }
-        growTimer.start();
+        //growTimer.start();
         float bestScore = -Float.MAX_VALUE;
         for (Token t : activeList) {
             float score = t.getScore() + t.getAcousticScore() * acousticLookaheadFrames;
@@ -421,7 +422,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             if (t.getScore() + t.getAcousticScore() * acousticLookaheadFrames > relativeBeamThreshold)
                 collectSuccessorTokens(t);
         }
-        growTimer.stop();
+        //growTimer.stop();
     }
 
     /**
@@ -447,9 +448,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     protected boolean scoreTokens() {
         boolean moreTokens;
-        scoreTimer.start();
+        //scoreTimer.start();
         Data data = scorer.calculateScores(activeList.getTokens());
-        scoreTimer.stop();
+        //scoreTimer.stop();
 
         Token bestToken = null;
         if (data instanceof Token) {
@@ -535,9 +536,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
     /** Removes unpromising branches from the active list */
     protected void pruneBranches() {
-        pruneTimer.start();
+        //pruneTimer.start();
         activeList = pruner.prune(activeList);
-        pruneTimer.stop();
+        //pruneTimer.stop();
     }
 
     /**
@@ -775,14 +776,14 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         return currentFrameNumber;
     }
 
-    /**
-     * Returns the Timer for growing.
-     * 
-     * @return the Timer for growing
-     */
-    public Timer getGrowTimer() {
-        return growTimer;
-    }
+//    /**
+//     * Returns the Timer for growing.
+//     *
+//     * @return the Timer for growing
+//     */
+//    public Timer getGrowTimer() {
+//        return growTimer;
+//    }
 
     /**
      * Returns the tokensCreated StatisticsVariable.

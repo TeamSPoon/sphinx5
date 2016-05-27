@@ -8,18 +8,15 @@
  */
 package edu.cmu.sphinx.linguist.dictionary;
 
-import static org.testng.AssertJUnit.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import edu.cmu.sphinx.linguist.acoustic.UnitManager;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URL;
 
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.linguist.acoustic.UnitManager;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.testng.AssertJUnit.assertTrue;
 
 
 public class DictionaryTest {

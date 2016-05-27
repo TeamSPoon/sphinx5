@@ -1,9 +1,7 @@
 package edu.cmu.sphinx.util.props;
 
-import static java.lang.Double.MIN_VALUE;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.assertEquals;
+import org.hamcrest.Matchers;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +10,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hamcrest.Matchers;
-import org.testng.annotations.Test;
+import static java.lang.Double.MIN_VALUE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.assertEquals;
 
 
 /**

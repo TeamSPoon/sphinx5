@@ -1334,6 +1334,7 @@ public class LexTreeLinguist implements Linguist {
             implements
             WordSearchState {
 
+        private final int hash;
         private HMMNode lastNode;
         private float logLanguageProbability;
 
@@ -1353,6 +1354,7 @@ public class LexTreeLinguist implements Linguist {
             // System.out.println("LTWS " + wordSequence);
             this.lastNode = lastNode;
             this.logLanguageProbability = languageProbability;
+            this.hash = super.hashCode() * 41 + lastNode.hashCode();
         }
 
 
@@ -1384,7 +1386,7 @@ public class LexTreeLinguist implements Linguist {
          */
         @Override
         public int hashCode() {
-            return super.hashCode() * 41 + lastNode.hashCode();
+            return hash;
         }
 
 

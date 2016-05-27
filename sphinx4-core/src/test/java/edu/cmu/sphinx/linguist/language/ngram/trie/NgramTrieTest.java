@@ -8,20 +8,19 @@
  */
 package edu.cmu.sphinx.linguist.language.ngram.trie;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.equalTo;
-
-import java.io.IOException;
-import java.net.URL;
-
-import org.testng.annotations.Test;
-
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.net.URL;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.equalTo;
 
 
 public class NgramTrieTest {

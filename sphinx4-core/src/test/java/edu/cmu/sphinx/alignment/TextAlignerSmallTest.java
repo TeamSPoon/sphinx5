@@ -1,8 +1,10 @@
 package edu.cmu.sphinx.alignment;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import edu.cmu.sphinx.util.Utilities;
+import org.hamcrest.Matcher;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,12 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.hamcrest.Matcher;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.util.Utilities;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class TextAlignerSmallTest {
 

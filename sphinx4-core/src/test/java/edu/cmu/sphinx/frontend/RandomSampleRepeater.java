@@ -1,23 +1,11 @@
 package edu.cmu.sphinx.frontend;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
+import edu.cmu.sphinx.util.props.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import edu.cmu.sphinx.frontend.BaseDataProcessor;
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DataProcessingException;
-import edu.cmu.sphinx.frontend.DataStartSignal;
-import edu.cmu.sphinx.frontend.DoubleData;
-import edu.cmu.sphinx.frontend.FloatData;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
-import edu.cmu.sphinx.util.props.S4Boolean;
-import edu.cmu.sphinx.util.props.S4Double;
-import edu.cmu.sphinx.util.props.S4Integer;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * A DataProcessor which inserts short speech snippets with variable length into a speech stream. The snippets are takes

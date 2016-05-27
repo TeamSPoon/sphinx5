@@ -19,12 +19,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,6 +36,7 @@ public class GrXMLGrammar extends JSGFGrammar {
     protected void loadXML() throws IOException {
         try {
             SAXParserFactoryImpl spf = new SAXParserFactoryImpl();
+            spf.setValidating(false);
             SAXParser parser = spf.newSAXParser();
 
 

@@ -13,6 +13,7 @@ package edu.cmu.sphinx.demo.transcriber;
 
 import java.io.InputStream;
 
+import edu.cmu.sphinx.api.AbstractSpeechRecognizer;
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
@@ -52,20 +53,9 @@ public class TranscriberDemo {
         // Simple recognition with generic model
         recognizer.startRecognition(stream);
         SpeechResult result;
-        while ((result = recognizer.getResult()) != null) {
 
-            System.out.format("Hypothesis: %s\n", result.getHypothesis());
+        printResults(recognizer);
 
-            System.out.println("List of recognized words and their times:");
-            for (WordResult r : result.getWords()) {
-                System.out.println(r);
-            }
-
-            System.out.println("Best 3 hypothesis:");
-            for (String s : result.getNbest(3))
-                System.out.println(s);
-
-        }
         recognizer.stopRecognition();
 
         // Live adaptation to speaker with speaker profiles
@@ -97,4 +87,23 @@ public class TranscriberDemo {
         recognizer.stopRecognition();
 
     }
+
+    public static void printResults(AbstractSpeechRecognizer recognizer) {
+        SpeechResult result;
+        while ((result = recognizer.getResult()) != null) {
+
+            System.out.format("Hypothesis: %s\n", result.getHypothesis());
+
+            System.out.println("List of recognized words and their times:");
+            for (WordResult r : result.getWords()) {
+                System.out.println(r);
+            }
+
+            System.out.println("Best 3 hypothesis:");
+            for (String s : result.getNbest(3))
+                System.out.println(s);
+
+        }
+    }
+
 }

@@ -8,20 +8,18 @@
 
 package edu.cmu.sphinx.result;
 
-import static org.testng.AssertJUnit.assertTrue;
+import edu.cmu.sphinx.api.Configuration;
+import edu.cmu.sphinx.api.SpeechResult;
+import edu.cmu.sphinx.api.StreamSpeechRecognizer;
+import org.testng.annotations.Test;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.api.Configuration;
-import edu.cmu.sphinx.api.SpeechResult;
-import edu.cmu.sphinx.api.StreamSpeechRecognizer;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Compares the lattices generated when the LexTreeLinguist flag 'keepAllTokens'

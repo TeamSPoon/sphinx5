@@ -1,19 +1,15 @@
 package edu.cmu.sphinx.util.props;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import edu.cmu.sphinx.frontend.DataProcessor;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FrontEnd;
 import edu.cmu.sphinx.instrumentation.AccuracyTracker;
 import edu.cmu.sphinx.instrumentation.BestPathAccuracyTracker;
-import edu.cmu.sphinx.util.props.Configurable;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
-import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 /** Some unit-tests for the ConfigurationManagerUtils. */
 public class CMUTests {

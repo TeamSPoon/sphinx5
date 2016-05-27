@@ -13,16 +13,15 @@
 
 package edu.cmu.sphinx.fst;
 
+import edu.cmu.sphinx.fst.operations.ILabelCompare;
+import edu.cmu.sphinx.fst.operations.OLabelCompare;
+import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+import org.testng.annotations.Test;
+
 import static edu.cmu.sphinx.fst.operations.ArcSort.apply;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.fst.operations.ILabelCompare;
-import edu.cmu.sphinx.fst.operations.OLabelCompare;
-import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
 
 public class ArcSortTest {
 

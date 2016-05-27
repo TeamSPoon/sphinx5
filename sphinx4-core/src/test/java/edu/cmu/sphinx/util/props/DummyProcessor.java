@@ -1,8 +1,5 @@
 package edu.cmu.sphinx.util.props;
 
-import edu.cmu.sphinx.util.props.PropertyException;
-import edu.cmu.sphinx.util.props.PropertySheet;
-
 /**
  * DOCUMENT ME!
  *

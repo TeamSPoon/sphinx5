@@ -1,12 +1,10 @@
 package edu.cmu.sphinx.util.props;
 
+import org.testng.annotations.Test;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.util.props.ConfigurationManager;
 
 /**
  * DOCUMENT ME!

@@ -7,13 +7,13 @@
 
 package edu.cmu.sphinx.tools.bandwidth;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 
 public class BandDetectorTest {

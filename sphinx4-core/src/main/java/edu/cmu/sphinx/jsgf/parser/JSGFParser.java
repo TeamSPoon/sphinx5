@@ -55,7 +55,7 @@ public class JSGFParser implements JSGFParserConstants {
                     System.out.println("Could not get URL for current directory " + e);
                     return;
                 }
-                BufferedInputStream i = new BufferedInputStream(codeBase.openStream(), 256);
+                BufferedInputStream i = new BufferedInputStream(codeBase.openStream(), 1024*512);
                 JSGFEncoding encoding = getJSGFEncoding(i);
                 Reader rdr;
                 if ((encoding != null) && (encoding.encoding != null)) {

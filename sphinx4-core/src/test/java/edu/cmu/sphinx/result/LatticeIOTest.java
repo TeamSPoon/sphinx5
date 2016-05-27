@@ -7,23 +7,19 @@
 
 package edu.cmu.sphinx.result;
 
+import edu.cmu.sphinx.api.Configuration;
+import edu.cmu.sphinx.api.SpeechResult;
+import edu.cmu.sphinx.api.StreamSpeechRecognizer;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.Test;
+
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-
-import javax.sound.sampled.UnsupportedAudioFileException;
-
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.Test;
-import org.testng.Assert;
-
-import edu.cmu.sphinx.api.Configuration;
-import edu.cmu.sphinx.api.SpeechResult;
-import edu.cmu.sphinx.api.StreamSpeechRecognizer;
-import edu.cmu.sphinx.result.Lattice;
-import edu.cmu.sphinx.result.WordResult;
 
 /**
  * Compares the lattices after recognition and loaded from file for LAT and HTK

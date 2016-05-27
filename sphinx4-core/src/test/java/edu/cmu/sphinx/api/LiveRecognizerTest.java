@@ -1,13 +1,12 @@
 package edu.cmu.sphinx.api;
 
-import static org.testng.AssertJUnit.assertEquals;
+import edu.cmu.sphinx.result.WordResult;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.result.WordResult;
+import static org.testng.AssertJUnit.assertEquals;
 
 public class LiveRecognizerTest {
     @Test

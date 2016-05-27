@@ -1,16 +1,15 @@
 package edu.cmu.sphinx.alignment;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import edu.cmu.sphinx.util.Utilities;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.util.Utilities;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 
 public class TextAlignerLargeTest {
 

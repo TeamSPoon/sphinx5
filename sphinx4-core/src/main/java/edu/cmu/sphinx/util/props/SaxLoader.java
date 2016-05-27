@@ -12,15 +12,14 @@
  */
 package edu.cmu.sphinx.util.props;
 
+import com.fasterxml.aalto.sax.SAXParserFactoryImpl;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.SAXParser;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** Loads configuration from an XML file */
@@ -43,7 +42,7 @@ public class SaxLoader {
         this.url = url;
         this.globalProperties = globalProperties;
         this.replaceDuplicates = replaceDuplicates;
-        this.rpdMap = initRPD == null ? new HashMap<>() : initRPD;
+        this.rpdMap = initRPD == null ? new LinkedHashMap<>(16*1024) : initRPD;
     }
 
     /**
@@ -64,17 +63,23 @@ public class SaxLoader {
      */
     public Map<String, RawPropertyData> load() throws IOException {
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            XMLReader xr = factory.newSAXParser().getXMLReader();
-            ConfigHandler handler = new ConfigHandler(rpdMap, globalProperties, replaceDuplicates, url);
-            xr.setContentHandler(handler);
-            xr.parse(url.toString());
+            //SAXParserFactory factory = SAXParserFactory.newInstance();
+            //XMLReader xr = factory.newSAXParser().getXMLReader();
+
+            SAXParserFactoryImpl factory = new SAXParserFactoryImpl();
+            factory.setValidating(false);
+            SAXParser xr = factory.newSAXParser();
+
+            xr.parse(url.toString(),new ConfigHandler(rpdMap, globalProperties, replaceDuplicates, url) );
+
+            //xr.setContentHandler(handler);
+            //xr.parse(url.toString());
         } catch (SAXParseException e) {
             String msg = "Error while parsing line " + e.getLineNumber() + " of " + url + ": " + e.getMessage();
             throw new IOException(msg);
         } catch (SAXException e) {
             throw new IOException("Problem with XML: " + e);
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             throw new IOException(e.getMessage());
         }
 

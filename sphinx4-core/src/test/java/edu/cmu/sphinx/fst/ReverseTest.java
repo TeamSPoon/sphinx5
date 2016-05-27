@@ -3,18 +3,17 @@
  */
 package edu.cmu.sphinx.fst;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import edu.cmu.sphinx.fst.operations.Reverse;
+import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.fst.operations.Reverse;
-import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 
 /**

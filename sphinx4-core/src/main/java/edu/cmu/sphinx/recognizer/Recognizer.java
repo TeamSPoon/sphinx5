@@ -21,7 +21,6 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

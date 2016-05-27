@@ -21,7 +21,7 @@ public class VUMeter {
     private static final double log10 = Math.log(10.0);
     private static final double maxDB = Math.max(0.0, 20.0 * Math.log(Short.MAX_VALUE) / log10);
 
-    private final int peakHoldTime = 1000;
+    private final int peakHoldTime = 200;
     private long then = System.currentTimeMillis();
 
     private final float a2 = -1.9556f;

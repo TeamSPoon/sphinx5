@@ -1,12 +1,12 @@
 package edu.cmu.sphinx.linguist.language.ngram;
 
 
-import static edu.cmu.sphinx.util.LogMath.getLogMath;
-import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
+import edu.cmu.sphinx.linguist.WordSequence;
+import edu.cmu.sphinx.linguist.acoustic.UnitManager;
+import edu.cmu.sphinx.linguist.dictionary.Dictionary;
+import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.linguist.WordSequence;
-import edu.cmu.sphinx.linguist.acoustic.UnitManager;
-import edu.cmu.sphinx.linguist.dictionary.Dictionary;
-import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
+import static edu.cmu.sphinx.util.LogMath.getLogMath;
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 
 public class DynamicTrigramModelTest {

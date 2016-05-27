@@ -1,25 +1,22 @@
 package edu.cmu.sphinx.frontend;
 
+import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
+import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
+import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
+import edu.cmu.sphinx.util.props.ConfigurationManager;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.io.*;
+import java.net.URL;
+
 import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
-
-import java.io.*;
-import java.net.URL;
-
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
-import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
-import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
-import edu.cmu.sphinx.util.props.ConfigurationManager;
+import static org.hamcrest.Matchers.*;
 
 
 public class FrontendElementTest {

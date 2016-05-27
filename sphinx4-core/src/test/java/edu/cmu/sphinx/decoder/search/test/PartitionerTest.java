@@ -1,18 +1,12 @@
 package edu.cmu.sphinx.decoder.search.test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import edu.cmu.sphinx.decoder.scorer.Scoreable;
 import edu.cmu.sphinx.decoder.search.Partitioner;
 import edu.cmu.sphinx.decoder.search.Token;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.*;
 
 public class PartitionerTest {
 

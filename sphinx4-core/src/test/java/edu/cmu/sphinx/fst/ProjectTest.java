@@ -13,15 +13,11 @@
 
 package edu.cmu.sphinx.fst;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.fst.Arc;
-import edu.cmu.sphinx.fst.Fst;
-import edu.cmu.sphinx.fst.State;
 import edu.cmu.sphinx.fst.operations.Project;
 import edu.cmu.sphinx.fst.operations.ProjectType;
 import edu.cmu.sphinx.fst.semiring.TropicalSemiring;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author John Salatas

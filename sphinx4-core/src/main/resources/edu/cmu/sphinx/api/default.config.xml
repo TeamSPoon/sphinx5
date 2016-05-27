@@ -2,7 +2,7 @@
 
 <config>
 
-  <property name="logLevel" value="INFO"/>
+  <property name="logLevel" value="SEVERE"/>
 
   <property name="absoluteBeamWidth"  value="20000"/>
   <property name="relativeBeamWidth"  value="1e-60"/>

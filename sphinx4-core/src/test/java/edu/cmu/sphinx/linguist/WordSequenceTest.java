@@ -1,19 +1,18 @@
 package edu.cmu.sphinx.linguist;
 
-import static edu.cmu.sphinx.linguist.WordSequence.asWordSequence;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-
-import java.io.IOException;
-import java.net.URL;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
 import edu.cmu.sphinx.linguist.dictionary.Word;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.net.URL;
+
+import static edu.cmu.sphinx.linguist.WordSequence.asWordSequence;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class WordSequenceTest {
 

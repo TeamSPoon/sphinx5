@@ -1,17 +1,19 @@
 package edu.cmu.sphinx.frontend;
 
-import static edu.cmu.sphinx.util.props.ConfigurationManager.getInstance;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
+import edu.cmu.sphinx.frontend.endpoint.SpeechClassifiedData;
+import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
+import edu.cmu.sphinx.frontend.endpoint.SpeechMarker;
+import edu.cmu.sphinx.frontend.endpoint.SpeechStartSignal;
+import edu.cmu.sphinx.util.props.PropertyException;
+import org.hamcrest.Matchers;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.Matchers;
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.frontend.endpoint.*;
-import edu.cmu.sphinx.util.props.PropertyException;
+import static edu.cmu.sphinx.util.props.ConfigurationManager.getInstance;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 
 
 /**

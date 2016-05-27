@@ -1,19 +1,11 @@
 package edu.cmu.sphinx.frontend;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import edu.cmu.sphinx.frontend.BaseDataProcessor;
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DataBlocker;
-import edu.cmu.sphinx.frontend.DataEndSignal;
-import edu.cmu.sphinx.frontend.DataProcessingException;
-import edu.cmu.sphinx.frontend.DataStartSignal;
-import edu.cmu.sphinx.frontend.DoubleData;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Some small tests which ensure that the <code>DataBlocker</code> works properly. */
 public class DataBlockerTest extends BaseDataProcessor {

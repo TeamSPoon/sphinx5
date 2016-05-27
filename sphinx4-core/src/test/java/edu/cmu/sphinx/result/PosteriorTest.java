@@ -12,12 +12,9 @@
 
 package edu.cmu.sphinx.result;
 
+import edu.cmu.sphinx.util.LogMath;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.result.Lattice;
-import edu.cmu.sphinx.result.Node;
-import edu.cmu.sphinx.util.LogMath;
 
 /**
  * Tests the posterior score computation code. Sets up a simple lattice, and

@@ -248,7 +248,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      * emitting tokens.
      */
     protected void growFastmatchBranches() {
-        growTimer.start();
+        //growTimer.start();
         ActiveList oldActiveList = fastmatchActiveList;
         fastmatchActiveList = fastmatchActiveListFactory.newInstance();
         float fastmathThreshold = oldActiveList.getBeamThreshold();
@@ -273,14 +273,14 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             collectFastMatchSuccessorTokens(token);
         }
         ciScores.add(new FrameCiScores(frameCiScores, frameMaxCiScore));
-        growTimer.stop();
+        //growTimer.stop();
     }
 
     protected boolean scoreFastMatchTokens() {
         boolean moreTokens;
-        scoreTimer.start();
+        //scoreTimer.start();
         Data data = scorer.calculateScoresAndStoreData(fastmatchActiveList.getTokens());
-        scoreTimer.stop();
+        //scoreTimer.stop();
 
         Token bestToken = null;
         if (data instanceof Token) {
@@ -305,9 +305,9 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
 
     /** Removes unpromising branches from the fast match active list */
     protected void pruneFastMatchBranches() {
-        pruneTimer.start();
+        //pruneTimer.start();
         fastmatchActiveList = pruner.prune(fastmatchActiveList);
-        pruneTimer.stop();
+        //pruneTimer.stop();
     }
 
     protected Token getFastMatchBestToken(SearchState state) {

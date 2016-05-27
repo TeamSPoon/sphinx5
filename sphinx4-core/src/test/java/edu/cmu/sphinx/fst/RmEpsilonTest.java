@@ -11,18 +11,17 @@
 
 package edu.cmu.sphinx.fst;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import edu.cmu.sphinx.fst.operations.RmEpsilon;
+import edu.cmu.sphinx.fst.semiring.ProbabilitySemiring;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.testng.annotations.Test;
-
-import edu.cmu.sphinx.fst.operations.RmEpsilon;
-import edu.cmu.sphinx.fst.semiring.ProbabilitySemiring;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 
 /**
