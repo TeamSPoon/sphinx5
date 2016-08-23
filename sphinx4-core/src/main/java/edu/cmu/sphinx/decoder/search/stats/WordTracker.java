@@ -125,7 +125,7 @@ public class WordTracker {
          */
         void update(Token t) {
             size++;
-            float score = t.getScore();
+            float score = t.score();
             if (score > maxScore) {
                 maxScore = score;
             }

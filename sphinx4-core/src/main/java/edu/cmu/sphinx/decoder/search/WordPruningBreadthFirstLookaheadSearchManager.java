@@ -65,6 +65,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     @S4Integer(defaultValue = 5)
     public final static String PROP_LOOKAHEAD_WINDOW = "lookaheadWindow";
 
+    public static final int FRAME_CI_SIZE = 100; // TODO more precise range of baseIds, remove magic number
+
     // -----------------------------------
     // Configured Subcomponents
     // -----------------------------------
@@ -184,8 +186,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         }
 
         if (!streamEnd) {
-            result = new Result(loserManager, activeList, resultList, currentCollectTime, done, linguist.getSearchGraph()
-                    .getWordTokenFirst(), true);
+            result = new Result(loserManager, activeList, resultList, currentCollectTime, done,
+                    linguist.getSearchGraph().getWordTokenFirst(), true);
         }
 
         // tokenTypeTracker.show();
@@ -199,8 +201,12 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         boolean more = scoreFastMatchTokens();
 
         if (more) {
-            pruneFastMatchBranches();
+            //pruneTimer.start();
+            fastmatchActiveList = fastmatchActiveList.commit();
+            //pruneTimer.stop();
+
             currentFastMatchFrameNumber++;
+
             createFastMatchBestTokenMap();
             growFastmatchBranches();
         }
@@ -211,10 +217,11 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      */
     protected void createFastMatchBestTokenMap() {
         int mapSize = fastmatchActiveList.size() * 10;
-        if (mapSize == 0) {
-            mapSize = 1;
+        if (mapSize != 0) {
+            fastMatchBestTokenMap = new HashMap<>(mapSize);
+        } else {
+            fastMatchBestTokenMap = Collections.emptyMap();
         }
-        fastMatchBestTokenMap = new HashMap<>(mapSize);
     }
 
     /**
@@ -246,16 +253,20 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      */
     protected void growFastmatchBranches() {
         //growTimer.start();
+
         ActiveList oldActiveList = fastmatchActiveList;
+
         fastmatchActiveList = fastmatchActiveListFactory.newInstance();
+
         float fastmathThreshold = oldActiveList.getBeamThreshold();
-        // TODO more precise range of baseIds, remove magic number
-        float[] frameCiScores = new float[100];
+
+
+        float[] frameCiScores = new float[FRAME_CI_SIZE];
 
         Arrays.fill(frameCiScores, -Float.MAX_VALUE);
         float frameMaxCiScore = -Float.MAX_VALUE;
         for (Token token : oldActiveList) {
-            float tokenScore = token.getScore();
+            float tokenScore = token.score();
             if (tokenScore < fastmathThreshold)
                 continue;
             // filling max ci scores array that will be used in general search
@@ -300,13 +311,6 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         return moreTokens;
     }
 
-    /** Removes unpromising branches from the fast match active list */
-    protected void pruneFastMatchBranches() {
-        //pruneTimer.start();
-        fastmatchActiveList = pruner.prune(fastmatchActiveList);
-        //pruneTimer.stop();
-    }
-
     protected Token getFastMatchBestToken(SearchState state) {
         return fastMatchBestTokenMap.get(state);
     }
@@ -330,7 +334,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             SearchState nextState = arc.getState();
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
-            float logEntryScore = token.getScore() + arc.getProbability();
+            float logEntryScore = token.score() + arc.getProbability();
             Token predecessor = getResultListPredecessor(token);
 
             // if not emitting, check to see if we've already visited
@@ -357,7 +361,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 setFastMatchBestToken(newToken, nextState);
                 fastmatchActiveList.add(newToken);
             } else {
-                if (bestToken.getScore() <= logEntryScore) {
+                if (bestToken.score() <= logEntryScore) {
                     bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                             arc.getLanguageProbability(), currentFastMatchFrameNumber);
                 }
@@ -412,7 +416,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         // If the token is an emitting token add it to the list,
         // otherwise recursively collect the new tokens successors.
 
-        float tokenScore = token.getScore();
+        float tokenScore = token.score();
         float beamThreshold = activeList.getBeamThreshold();
         boolean stateProducesPhoneHmms = state instanceof LexTreeNonEmittingHMMState || state instanceof LexTreeWordState
                 || state instanceof LexTreeEndUnitState;
@@ -447,7 +451,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 tokensCreated.value++;
                 setBestToken(newBestToken, nextState);
                 activeListAdd(newBestToken);
-            } else if (bestToken.getScore() < logEntryScore) {
+            } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
                 Token oldPredecessor = bestToken.getPredecessor();

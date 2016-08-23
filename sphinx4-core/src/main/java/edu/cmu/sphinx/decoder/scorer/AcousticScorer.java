@@ -41,7 +41,7 @@ public interface AcousticScorer extends Configurable {
      * @param scorableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    Data calculateScores(List<? extends Scoreable> scorableList);
+    Data calculateScores(Iterable<? extends Scoreable> scorableList);
     
     /**
      * Scores the given set of states over previously acoustic data from frontend
@@ -50,7 +50,7 @@ public interface AcousticScorer extends Configurable {
      * @param scorableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    Data calculateScoresAndStoreData(List<? extends Scoreable> scorableList);
+    Data calculateScoresAndStoreData(Iterable<? extends Scoreable> scorableList);
 
 }
 

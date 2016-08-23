@@ -77,7 +77,7 @@ abstract public class TokenSearchManager implements SearchManager {
             token = token.getPredecessor();
         }
 
-        return new Token(token, token.getScore(), logInsertionScore, logAcousticScore, logLanguageScore);
+        return new Token(token, token.score(), logInsertionScore, logAcousticScore, logLanguageScore);
     }
 
 }

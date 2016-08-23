@@ -17,7 +17,7 @@ import edu.cmu.sphinx.frontend.Data;
 import java.util.Comparator;
 
 /** Represents an entity that can be scored against a data */
-public interface Scoreable extends Data {
+public interface Scoreable extends Data, Comparable<Scoreable> {
 
     /**
      * A {@code Scoreable} comparator that is used to order scoreables according to their score,
@@ -28,9 +28,9 @@ public interface Scoreable extends Data {
      * actually return the Scoreable with the <b>highest</b> score,
      * in contrast to the natural meaning of the word "min".   
      */
-    Comparator<Scoreable> COMPARATOR = (t1, t2) -> {
-        float s1 = t1.getScore();
-        float s2 = t2.getScore();
+    @Deprecated Comparator<Scoreable> COMPARATOR = (t1, t2) -> {
+        float s1 = t1.score();
+        float s2 = t2.score();
         if (s1 > s2) {
             return -1;
         } else if (s1 == s2) {
@@ -39,6 +39,21 @@ public interface Scoreable extends Data {
             return 1;
         }
     };
+
+    @Override
+    default int compareTo(Scoreable o) {
+        if (this == o) return 0;
+
+        float s1 = score();
+        float s2 = o.score();
+        if (s1 > s2) {
+            return -1;
+        } else if (s1 == s2) {
+            return Integer.compare(hashCode(), o.hashCode()); //same score but ensure that different instances are not destructively merged
+        } else {
+            return 1;
+        }
+    }
 
     /**
      * Calculates a score against the given data. The score can be retrieved with get score
@@ -54,7 +69,7 @@ public interface Scoreable extends Data {
      *
      * @return the score
      */
-    float getScore();
+    float score();
 
 
     /**

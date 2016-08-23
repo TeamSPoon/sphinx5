@@ -25,6 +25,7 @@ import edu.cmu.sphinx.util.props.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -322,8 +323,8 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * Clears lists and maps before next expansion stage
      */
     private void clearCollectors() {
-        resultList = new LinkedList<>();
-        bestTokenMap = new HashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
+        resultList = Collections.synchronizedList( new LinkedList<>() );
+        bestTokenMap = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
         activeListManager.clearEmittingList();
     }
 
@@ -380,12 +381,12 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 //            logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
 //                    + activeList.getBestScore() + " tok " + activeList.getBestToken());
 //        }
-        
-        for (Token token : activeList) {
-            if (token.getScore() >= relativeBeamThreshold && allowExpansion(token)) {
-                collectSuccessorTokens(token);
+
+        activeList.forEach( (Token t) -> {
+            if (t.score() >= relativeBeamThreshold && allowExpansion(t)) {
+                collectSuccessorTokens(t);
             }
-        }
+        });
         //growTimer.stop();
     }
 
@@ -399,18 +400,25 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             return;
         }
         //growTimer.start();
-        float bestScore = -Float.MAX_VALUE;
-        for (Token t : activeList) {
-            float score = t.getScore() + t.getAcousticScore() * acousticLookaheadFrames;
-            if (score > bestScore) {
-                bestScore = score;
+        final float[] bestScore = {-Float.MAX_VALUE};
+
+        activeList.forEach( (Token t) -> {
+            float score = t.score() + t.getAcousticScore() * acousticLookaheadFrames;
+            if (score > bestScore[0]) {
+                bestScore[0] = score;
             }
-        }
-        float relativeBeamThreshold = bestScore + relativeBeamWidth;
-        for (Token t : activeList) {
-            if (t.getScore() + t.getAcousticScore() * acousticLookaheadFrames > relativeBeamThreshold)
+        });
+
+        float relativeBeamThreshold = bestScore[0] + relativeBeamWidth;
+
+
+        activeList.forEach( (Token t) -> {
+            if (t.score() + t.getAcousticScore() * acousticLookaheadFrames > relativeBeamThreshold)
                 collectSuccessorTokens(t);
-        }
+        });
+
+//        for (Token t : activeList) {
+//        }
         //growTimer.stop();
     }
 
@@ -420,11 +428,11 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     private void growNonEmittingBranches() {
         for (Iterator<ActiveList> i = activeListManager.getNonEmittingListIterator(); i.hasNext();) {
             activeList = i.next();
-            if (activeList != null) {
+            //if (activeList != null) {
                 i.remove();
                 pruneBranches();
                 growBranches();
-            }
+            //}
         }
     }
 
@@ -527,7 +535,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     /** Removes unpromising branches from the active list */
     protected void pruneBranches() {
         //pruneTimer.start();
-        activeList = pruner.prune(activeList);
+        activeList = activeList.commit();
         //pruneTimer.stop();
     }
 
@@ -605,6 +613,10 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             return;
         }
 
+        expandSuccessorTokens(token);
+    }
+
+    private synchronized void expandSuccessorTokens(Token token) {
         SearchState state = token.getSearchState();
         SearchStateArc[] arcs = state.getSuccessors();
         Token predecessor = getResultListPredecessor(token);
@@ -627,7 +639,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
-            float logEntryScore = token.getScore() + arc.getProbability();
+            float logEntryScore = token.score() + arc.getProbability();
 
             Token bestToken = getBestToken(nextState);
 
@@ -637,7 +649,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
                 tokensCreated.value++;
                 setBestToken(newBestToken, nextState);
                 activeListAdd(newBestToken);
-            } else if (bestToken.getScore() < logEntryScore) {
+            } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
                 Token oldPredecessor = bestToken.getPredecessor();
@@ -747,15 +759,15 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         return resultList;
     }
 
-    /**
-     * Sets the result list.
-     * 
-     * @param resultList
-     *            the new result list
-     */
-    public void setResultList(List<Token> resultList) {
-        this.resultList = resultList;
-    }
+//    /**
+//     * Sets the result list.
+//     *
+//     * @param resultList
+//     *            the new result list
+//     */
+//    public void setResultList(List<Token> resultList) {
+//        this.resultList = resultList;
+//    }
 
     /**
      * Returns the current frame number.

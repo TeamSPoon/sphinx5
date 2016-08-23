@@ -23,13 +23,6 @@ public interface Pruner extends Configurable {
     void startRecognition();
 
 
-    /**
-     * prunes the given set of states
-     *
-     * @param stateTokenList a list containing StateToken objects to be scored
-     * @return the pruned list, (may be the sample list as stateTokenList)
-     */
-    ActiveList prune(ActiveList stateTokenList);
 
 
     /** Performs post-recognition cleanup. */

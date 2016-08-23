@@ -13,6 +13,8 @@ package edu.cmu.sphinx.frontend;
 
 import edu.cmu.sphinx.util.MatrixUtils;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * A Data object that holds data of primitive type float.
  *
@@ -22,6 +24,7 @@ public class FloatData implements Data, Cloneable {
 
     public final float[] values;
     public final int sampleRate;
+    private static final AtomicInteger serial = new AtomicInteger(0);
 
 
     /**
@@ -36,6 +39,7 @@ public class FloatData implements Data, Cloneable {
      *         1970
      */
     public final long collectTime;
+    private final int hash;
 
     /**
      * Constructs a Data object with the given values, sample rate, collect time, and first sample number.
@@ -62,8 +66,13 @@ public class FloatData implements Data, Cloneable {
         this.sampleRate = sampleRate;
         this.collectTime = collectTime;
         this.firstSampleNumber = firstSampleNumber;
+        this.hash = serial.getAndIncrement();
     }
 
+    @Override
+    public final int hashCode() {
+        return hash;
+    }
 
     @Override
     public FloatData clone() throws CloneNotSupportedException {

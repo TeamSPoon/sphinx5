@@ -18,14 +18,14 @@ import java.util.Arrays;
 
 /**
  * Partitions a list of tokens according to the token score, used
- * in {@link PartitionActiveListFactory}. This method is supposed 
- * to provide O(n) performance so it's more preferable than 
+ * in {@link PartitionActiveListFactory}. This method is supposed
+ * to provide O(n) performance so it's more preferable than
  */
-public class Partitioner {
+public enum Partitioner { ;
 
 
     /**
-     * Partitions sub-array of tokens around the end token. 
+     * Partitions sub-array of tokens around the end token.
      * Put all elements less or equal then pivot to the start of the array,
      * shifting new pivot position
      *
@@ -36,24 +36,26 @@ public class Partitioner {
      */
     private static int endPointPartition(Token[] tokens, int start, int end) {
         Token pivot = tokens[end];
-        float pivotScore = pivot.getScore();
-               
+        float pivotScore = pivot.score();
+
         int i = start;
         int j = end - 1;
-        
+
         while (true) {
 
-            while (i < end && tokens[i].getScore() >= pivotScore)
-                i++;                
-            while (j > i && tokens[j].getScore() < pivotScore)
+
+            while (i < end && tokens[i].score() >= pivotScore) {
+                i++;
+            }
+            while (j > i && tokens[j].score() < pivotScore)
                 j--;
-            
+
             if (j <= i)
                 break;
-            
+
             Token current = tokens[j];
             setToken(tokens, j, tokens[i]);
-            setToken(tokens, i, current);            
+            setToken(tokens, i, current);
         }
 
         setToken(tokens, end, tokens[i]);
@@ -99,7 +101,7 @@ public class Partitioner {
 
     /**
      * Simply find the best token and put it in the last slot
-     * 
+     *
      * @param tokens array of tokens
      * @param size the number of tokens to partition
      * @return index of the best token
@@ -108,7 +110,7 @@ public class Partitioner {
         int r = -1;
         float lowestScore = Float.MAX_VALUE;
         for (int i = 0; i < tokens.length; i++) {
-            float currentScore = tokens[i].getScore();
+            float currentScore = tokens[i].score();
             if (currentScore <= lowestScore) {
                 lowestScore = currentScore;
                 r = i; // "r" is the returned index
@@ -130,6 +132,8 @@ public class Partitioner {
 
 
     private static void setToken(Token[] list, int index, Token token) {
+        if (token == null)
+            throw new NullPointerException();
         list[index] = token;
     }
 
@@ -167,7 +171,7 @@ public class Partitioner {
             }
         }
     }
-    
+
     /**
      * Fallback method to get the partition
      *
@@ -181,5 +185,5 @@ public class Partitioner {
         Arrays.sort(tokens, start, end + 1, Scoreable.COMPARATOR);
         return start + targetSize - 1;
     }
-    
+
 }

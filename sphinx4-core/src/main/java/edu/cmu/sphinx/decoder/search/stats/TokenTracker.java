@@ -181,12 +181,12 @@ public class TokenTracker {
          * @param t*/
         public void update(Token t) {
             count++;
-            if (t.getScore() > maxScore) {
-                maxScore = t.getScore();
+            if (t.score() > maxScore) {
+                maxScore = t.score();
             }
 
-            if (t.getScore() < minScore) {
-                minScore = t.getScore();
+            if (t.score() < minScore) {
+                minScore = t.score();
             }
 
             isHMM = t.getSearchState() instanceof HMMSearchState;

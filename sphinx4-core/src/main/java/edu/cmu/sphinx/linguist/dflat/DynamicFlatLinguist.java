@@ -607,7 +607,6 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
         public SearchStateArc[] getSuccessors() {
 
             SearchStateArc[] arcs = getCachedSuccessors();
-
             if (arcs != null) {
                 return arcs;
             }
@@ -617,18 +616,17 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             } else if (node.isEmpty()) {
                 arcs = getNextGrammarStates(lc, nextBaseID);
             } else {
-                Word word = node.getWord();
-                Pronunciation[] pronunciations = word.getPronunciations();
+                Pronunciation[] pronunciations = node.getWord().getPronunciations();
 
                 // This can potentially speedup computation
                 // pronunciations = filter(pronunciations, nextBaseID);
 
-                SearchStateArc[] nextArcs = new SearchStateArc[pronunciations.length];
-
-                for (int i = 0; i < pronunciations.length; i++) {
-                    nextArcs[i] = new PronunciationState(this,
-                            pronunciations[i]);
+                int np = pronunciations.length;
+                SearchStateArc[] nextArcs = new SearchStateArc[np];
+                for (int i = 0; i < np; i++) {
+                    nextArcs[i] = new PronunciationState(this, pronunciations[i]);
                 }
+
                 arcs = nextArcs;
             }
 

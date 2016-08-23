@@ -109,11 +109,11 @@ public class StateHistoryTracker {
          */
         void update(Token t) {
             size++;
-            if (t.getScore() > maxScore) {
-                maxScore = t.getScore();
+            if (t.score() > maxScore) {
+                maxScore = t.score();
             }
-            if (t.getScore() < minScore) {
-                minScore = t.getScore();
+            if (t.score() < minScore) {
+                minScore = t.score();
             }
         }
 

@@ -239,7 +239,7 @@ public class SimpleActiveListManager implements ActiveListManager {
      * @param al the active list to dump
      */
     private static void dumpList(ActiveList al) {
-        System.out.println("Size: " + al.size() + " Best token: " + al.getBestToken());
+        System.out.println("Size: " + al.size() + " Best token: " + al.best());
     }
 
 }

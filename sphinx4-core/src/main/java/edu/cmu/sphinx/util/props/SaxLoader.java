@@ -68,6 +68,7 @@ public class SaxLoader {
 
             SAXParserFactoryImpl factory = new SAXParserFactoryImpl();
             factory.setValidating(false);
+
             SAXParser xr = factory.newSAXParser();
 
             xr.parse(url.toString(),new ConfigHandler(rpdMap, globalProperties, replaceDuplicates, url) );

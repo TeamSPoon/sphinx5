@@ -99,7 +99,7 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
             if (!tryReplace(token)) {
                 if (curSize < tokens.length) {
                     tokens[curSize++] = token;
-                } else if (token.getScore() > tokens[curSize - 1].getScore()) {
+                } else if (token.score() > tokens[curSize - 1].score()) {
                     tokens[curSize - 1] = token;
                 }
             }
@@ -139,7 +139,7 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
         private boolean tryReplace(Token t) {
             for (int i = 0; i < curSize; i++) {
                 if (t.getSearchState().equals(tokens[i].getSearchState())) {
-                    assert t.getScore() > tokens[i].getScore();
+                    assert t.score() > tokens[i].score();
                     tokens[i] = t;
                     return true;
                 }

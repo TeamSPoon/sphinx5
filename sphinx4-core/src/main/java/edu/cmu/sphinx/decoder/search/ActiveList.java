@@ -60,7 +60,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return a purged active list
      */
-    ActiveList purge();
+    ActiveList commit();
 
 
     /**
@@ -76,7 +76,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the set of tokens
      */
-    List<Token> getTokens();
+    Iterable<Token> getTokens();
 
     /**
      * gets the beam threshold best upon the best scoring token
@@ -91,7 +91,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the best score
      */
-    float getBestScore();
+    float bestScore();
 
 
     /**
@@ -107,7 +107,7 @@ public interface ActiveList extends Iterable<Token> {
      *
      * @return the best scoring token
      */
-    Token getBestToken();
+    Token best();
 
 
     /**

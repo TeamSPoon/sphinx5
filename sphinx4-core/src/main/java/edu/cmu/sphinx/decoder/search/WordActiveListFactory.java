@@ -103,7 +103,7 @@ public class WordActiveListFactory extends ActiveListFactory {
          */
         public void add(Token token) {
             tokenList.add(token);
-            if (bestToken == null || token.getScore() > bestToken.getScore()) {
+            if (bestToken == null || token.score() > bestToken.score()) {
                 bestToken = token;
             }
         }
@@ -129,7 +129,7 @@ public class WordActiveListFactory extends ActiveListFactory {
          * @return a (possible new) active list
          */
 
-        public ActiveList purge() {
+        public ActiveList commit() {
             int fillerCount = 0;
             Map<Word, Integer> countMap = new HashMap<>();
             Collections.sort(tokenList, Scoreable.COMPARATOR);
@@ -190,7 +190,7 @@ public class WordActiveListFactory extends ActiveListFactory {
          *
          * @return the set of tokens
          */
-        public List<Token> getTokens() {
+        public Iterable<Token> getTokens() {
             return tokenList;
         }
 
@@ -211,7 +211,7 @@ public class WordActiveListFactory extends ActiveListFactory {
          * @return the beam threshold
          */
         public float getBeamThreshold() {
-            return getBestScore() + logRelativeBeamWidth;
+            return bestScore() + logRelativeBeamWidth;
         }
 
 
@@ -220,10 +220,10 @@ public class WordActiveListFactory extends ActiveListFactory {
          *
          * @return the best score
          */
-        public float getBestScore() {
+        public float bestScore() {
             float bestScore = -Float.MAX_VALUE;
             if (bestToken != null) {
-                bestScore = bestToken.getScore();
+                bestScore = bestToken.score();
             }
             return bestScore;
         }
@@ -244,7 +244,7 @@ public class WordActiveListFactory extends ActiveListFactory {
          *
          * @return the best scoring token
          */
-        public Token getBestToken() {
+        public Token best() {
             return bestToken;
         }
 

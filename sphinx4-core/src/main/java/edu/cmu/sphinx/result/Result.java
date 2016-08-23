@@ -181,7 +181,7 @@ public class Result {
         Token bestToken = null;
         float bestScore = Float.NEGATIVE_INFINITY;
         for (Token token : resultList) {
-            float ts = token.getScore();
+            float ts = token.score();
             if (bestToken == null || ts > bestScore) {
                 bestToken = token;
                 bestScore = ts;
@@ -217,7 +217,7 @@ public class Result {
         Token bestToken = null;
         if (activeList != null) {
             for (Token token : activeList) {
-                if (bestToken == null || token.getScore() > bestToken.getScore()) {
+                if (bestToken == null || token.score() > bestToken.score()) {
                     bestToken = token;
                 }
             }
@@ -274,7 +274,7 @@ public class Result {
         List<Token> matchingList = findPartialMatchingTokens(text);
         Token bestToken = null;
         for (Token token : matchingList) {
-            if (bestToken == null || token.getScore() > bestToken.getScore()) {
+            if (bestToken == null || token.score() > bestToken.score()) {
                 bestToken = token;
             }
         }
@@ -432,7 +432,7 @@ public class Result {
                 Word word = token.getWord();
                 if (withFillers || !word.isFiller()) {
                     TimeFrame timeFrame = new TimeFrame(token.getCollectTime(), prevWordEnd);
-                    result.add(new WordResult(word, timeFrame, token.getScore(), 1.));
+                    result.add(new WordResult(word, timeFrame, token.score(), 1.));
                 }
                 prevWordEnd = token.getCollectTime();
             }
@@ -461,7 +461,7 @@ public class Result {
                 if (word != null && lastWordEnd >= 0) {
                     if (withFillers || !word.isFiller()) {
                         TimeFrame timeFrame = new TimeFrame(lastWordStart, lastWordEnd);
-                        result.add(new WordResult(word, timeFrame, token.getScore(), 1.));
+                        result.add(new WordResult(word, timeFrame, token.score(), 1.));
                     }
                 }
                 lastWordEnd = token.getCollectTime();

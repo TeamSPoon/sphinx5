@@ -75,7 +75,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
      * @return The best scoring scoreable, or <code>null</code> if there are no
      * more features to score
      */
-    public Data calculateScores(List<? extends Scoreable> scoreableList) {
+    public Data calculateScores(Iterable<? extends Scoreable> scoreableList) {
         Data data;
         if (storedData.isEmpty()) {
             while ((data = getNextData()) instanceof Signal) {
@@ -99,7 +99,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         return calculateScoresForData(scoreableList, data);
     }
 
-    public Data calculateScoresAndStoreData(List<? extends Scoreable> scoreableList) {
+    public Data calculateScoresAndStoreData(Iterable<? extends Scoreable> scoreableList) {
         Data data;
         while ((data = getNextData()) instanceof Signal) {
             if (data instanceof SpeechEndSignal) {
@@ -121,13 +121,13 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         return calculateScoresForData(scoreableList, data);
     }
 
-    protected Data calculateScoresForData(List<? extends Scoreable> scoreableList, Data data) {
+    protected Data calculateScoresForData(Iterable<? extends Scoreable> scoreableList, Data data) {
         if (data instanceof SpeechEndSignal || data instanceof DataEndSignal) {
             return data;
         }
 
-        if (scoreableList.isEmpty())
-            return null;
+        //if (scoreableList.isEmpty())
+            //return null;
 
         // convert the data to FloatData if not yet done
         if (data instanceof DoubleData)
@@ -155,15 +155,18 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         // nothing needs to be done here
     }
 
-    protected <T extends Scoreable> T doScoring(List<T> scoreableList, Data data) {
+    protected <T extends Scoreable> T doScoring(Iterable<T> scoreableList, Data data) {
         //return doScoring(scoreableList, 0, scoreableList.size(), data);
 
 
         AtomicReference<Double> bestScore = new AtomicReference(Double.NEGATIVE_INFINITY);
         Scoreable[] best = new Scoreable[1];
 
-        scoreableList.stream().parallel().forEach(
+        scoreableList./*stream().parallel().*/forEach(
                 (x) -> {
+                    if (x == null)
+                        return;
+
                     float s = x.calculateScore(data);
                     bestScore.updateAndGet((Double b) -> {
                         if (b < s) {

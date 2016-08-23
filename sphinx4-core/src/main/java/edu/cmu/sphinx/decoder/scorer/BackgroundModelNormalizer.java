@@ -47,14 +47,14 @@ public class BackgroundModelNormalizer implements ScoreNormalizer {
         logger.warning("no active list set.");
     }
     
-    public Scoreable normalize(List<? extends Scoreable> scoreableList, Scoreable bestToken) {
+    public Scoreable normalize(Iterable<? extends Scoreable> scoreableList, Scoreable bestToken) {
         if (activeListProvider == null) {
             return bestToken;
         }
 
-        Token normToken = activeListProvider.getActiveList().getBestToken();
+        Token normToken = activeListProvider.getActiveList().best();
 
-        float normScore = normToken.getScore();
+        float normScore = normToken.score();
 
         for (Scoreable scoreable : scoreableList) {
             if (scoreable instanceof Token) {

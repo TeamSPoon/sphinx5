@@ -99,32 +99,32 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          */
         public void add(Token token) {
             tokenList.add(token);
-            if (bestToken == null || token.getScore() > bestToken.getScore()) {
+            if (bestToken == null || token.score() > bestToken.score()) {
                 bestToken = token;
             }
         }
 
 
-        /**
-         * Replaces an old token with a new token
-         *
-         * @param oldToken the token to replace (or null in which case, replace works like add).
-         * @param newToken the new token to be placed in the list.
-         */
-        public void replace(Token oldToken, Token newToken) {
-            add(newToken);
-            if (oldToken != null) {
-                if (!tokenList.remove(oldToken)) {
-                    // Some optional debugging code here to dump out the paths
-                    // when this "should never happen" error happens
-                    // System.out.println("SimpleActiveList: remove "
-                    //         + oldToken + " missing, but replaced by "
-                    //         + newToken);
-                    // oldToken.dumpTokenPath(true);
-                    // newToken.dumpTokenPath(true);
-                }
-            }
-        }
+//        /**
+//         * Replaces an old token with a new token
+//         *
+//         * @param oldToken the token to replace (or null in which case, replace works like add).
+//         * @param newToken the new token to be placed in the list.
+//         */
+//        public void replace(Token oldToken, Token newToken) {
+//            add(newToken);
+//            if (oldToken != null) {
+//                if (!tokenList.remove(oldToken)) {
+//                    // Some optional debugging code here to dump out the paths
+//                    // when this "should never happen" error happens
+//                    // System.out.println("SimpleActiveList: remove "
+//                    //         + oldToken + " missing, but replaced by "
+//                    //         + newToken);
+//                    // oldToken.dumpTokenPath(true);
+//                    // newToken.dumpTokenPath(true);
+//                }
+//            }
+//        }
 
 
         /**
@@ -132,7 +132,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          *
          * @return a (possible new) active list
          */
-        public ActiveList purge() {
+        public ActiveList commit() {
             int s = size();
             if (absoluteBeamWidth > 0 && s > absoluteBeamWidth) {
                 Collections.sort(tokenList, Scoreable.COMPARATOR);
@@ -157,11 +157,21 @@ public class SimpleActiveListFactory extends ActiveListFactory {
 
 
         /**
+         * Retrieves the spliterator for this tree.
+         *
+         * @return the iterator for this token list
+         */
+        @Override
+        public Spliterator<Token> spliterator() {
+            return tokenList.spliterator();
+        }
+
+        /**
          * Gets the set of all tokens
          *
          * @return the set of tokens
          */
-        public List<Token> getTokens() {
+        public Iterable<Token> getTokens() {
             return tokenList;
         }
 
@@ -182,7 +192,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          * @return the beam threshold
          */
         public float getBeamThreshold() {
-            return getBestScore() + logRelativeBeamWidth;
+            return bestScore() + logRelativeBeamWidth;
         }
 
 
@@ -191,9 +201,9 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          *
          * @return the best score
          */
-        public final float getBestScore() {
+        public final float bestScore() {
             if (bestToken != null) {
-                return bestToken.getScore();
+                return bestToken.score();
             } else {
                 return -Float.MAX_VALUE;
             }
@@ -215,7 +225,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          *
          * @return the best scoring token
          */
-        public Token getBestToken() {
+        public Token best() {
             return bestToken;
         }
 

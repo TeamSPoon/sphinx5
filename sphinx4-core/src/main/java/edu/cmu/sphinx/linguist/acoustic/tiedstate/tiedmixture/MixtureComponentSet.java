@@ -17,6 +17,7 @@ import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -35,6 +36,8 @@ public class MixtureComponentSet {
     public final int topGauNum;
     public final int gauNum;
     private long gauCalcSampleNumber;
+
+    private final ConcurrentSkipListSet<Long> sampleTimes = new ConcurrentSkipListSet<>();
     private final AtomicLong lastSample = new AtomicLong(Long.MIN_VALUE);
     
     public MixtureComponentSet(PrunableMixtureComponent[][] components, int topGauNum) {
@@ -51,14 +54,27 @@ public class MixtureComponentSet {
         }
         gauCalcSampleNumber = -1;
         toStoreScore = false;
-        storedScores = new ConcurrentHashMap(); //ArrayDeque<>();
+        storedScores = //new ConcurrentHashMap<>();
+                        new HashMap();
     }
     
-    private void storeScores(MixtureComponentSetScores scores) {
+    private void add(MixtureComponentSetScores scores) {
         long start = scores.getFrameStartSample();
         storedScores.put(start, scores);
+        sampleTimes.add(start);
         if (start > lastSample.get())
             lastSample.set(start);
+    }
+
+    private MixtureComponentSetScores removeFirst() {
+        if (!sampleTimes.isEmpty()) {
+            long when = sampleTimes.pollFirst();
+            //if (when != null) {
+                MixtureComponentSetScores s = storedScores.remove(when);
+                return s;
+            //}
+        }
+        return null;
     }
     
     private MixtureComponentSetScores getStoredScores(long frameFirstSample) {
@@ -132,6 +148,7 @@ public class MixtureComponentSet {
             //update scores in top gaussians from previous frame
             for (PrunableMixtureComponent topComponent : featTopComponents)
                 topComponent.updateScore(streamVector);
+
             Arrays.sort(featTopComponents, componentComparator);
             
             //Check if there is any gaussians that should float into top
@@ -153,34 +170,30 @@ public class MixtureComponentSet {
             System.err.println("DoubleData conversion required on mixture level!");
 
         FloatData featureFloat = FloatData.toFloatData(feature);
+
         long firstSampleNumber = featureFloat.firstSampleNumber;
-        MixtureComponentSetScores s;
 
         if (toStoreScore) {
-            s = getStoredScores(firstSampleNumber);
-        } else {
-            //if (s != null && curScores.getFrameStartSample() != firstSampleNumber)
-            s = null;
+            MixtureComponentSetScores s = getStoredScores(firstSampleNumber);
+            if (s != null)
+                //component scores for this frame was already calculated
+                return s;
         }
-
-        if (s != null)
-            //component scores for this frame was already calculated
-            return s;
 
         float[] featureVector = featureFloat.values;
         updateTopScores(featureVector);
         //store just calculated score in list
 
+        int size = storedScores.size();
+        int toRemove = (size+1) - scoresQueueLen;
+        MixtureComponentSetScores lastRemoved = null;
+        for (int i = 0; i < toRemove; i++) {
+            lastRemoved = toRemove > 0 ? removeFirst() : null; //recycle the first
+        }
 
-//        int size = storedScores.size();
-//        int toRemove = (size+1) - scoresQueueLen;
-//        MixtureComponentSetScores lastRemoved = null;
-//        for (int i = 0; i < toRemove; i++)
-//            lastRemoved = storedScores.poll();
-
-        s = createFromTopGau(firstSampleNumber, null);
+        MixtureComponentSetScores s = createFromTopGau(firstSampleNumber, lastRemoved);
         if (toStoreScore)
-            storeScores(s);
+            add(s);
         return s;
     }
     
@@ -202,8 +215,7 @@ public class MixtureComponentSet {
         FloatData featureFloat = FloatData.toFloatData(feature);
         long firstSampleNumber = featureFloat.firstSampleNumber;
         if (gauCalcSampleNumber != firstSampleNumber) {
-            float[] featureVector = featureFloat.values;
-            updateScores(featureVector);
+            updateScores(featureFloat.values);
             gauCalcSampleNumber = firstSampleNumber;
         }
     }

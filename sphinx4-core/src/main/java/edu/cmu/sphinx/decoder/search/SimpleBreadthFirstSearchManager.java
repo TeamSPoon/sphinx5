@@ -219,7 +219,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
 
         // generate a new temporary result if the current token is based on a final search state
         // remark: the first check for not null is necessary in cases that the search space does not contain scoreable tokens.
-        if (activeList.getBestToken() != null) {
+        if (activeList.best() != null) {
             // to make the current result as correct as possible we undo the last search graph expansion here
             ActiveList fixedList = undoLastGrowStep();
             	
@@ -327,7 +327,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         resultList = new LinkedList<>();
         activeList = activeListFactory.newInstance();
         threshold = oldActiveList.getBeamThreshold();
-        wordThreshold = oldActiveList.getBestScore() + logRelativeWordBeamWidth;
+        wordThreshold = oldActiveList.bestScore() + logRelativeWordBeamWidth;
 
         for (Token token : oldActiveList) {
             collectSuccessorTokens(token);
@@ -368,8 +368,9 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         }
 
         // update statistics
-        curTokensScored.value += activeList.size();
-        totalTokensScored.value += activeList.size();
+        int s = activeList.size();
+        curTokensScored.value += s;
+        totalTokensScored.value += s;
         tokensPerSecond.value = totalTokensScored.value / getTotalTime();
 
 //        if (logger.isLoggable(Level.FINE)) {
@@ -396,7 +397,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
     protected void pruneBranches() {
         int startSize = activeList.size();
         pruneTimer.start();
-        activeList = pruner.prune(activeList);
+        activeList = activeList.commit();
         beamPruned.value += startSize - activeList.size();
         pruneTimer.stop();
     }
@@ -445,11 +446,11 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         if (token.isFinal()) {
             resultList.add(token);
         }
-        if (token.getScore() < threshold) {
+        if (token.score() < threshold) {
             return;
         }
         if (state instanceof WordSearchState
-                && token.getScore() < wordThreshold) {
+                && token.score() < wordThreshold) {
             return;
         }
         SearchStateArc[] arcs = state.getSuccessors();
@@ -465,7 +466,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
             SearchState nextState = arc.getState();
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
-            float logEntryScore = token.getScore() + arc.getProbability();
+            float logEntryScore = token.score() + arc.getProbability();
             if (wantEntryPruning) { // false by default
                 if (logEntryScore < threshold) {
                     continue;
@@ -505,7 +506,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
                 setBestToken(newToken, nextState);
                 activeList.add(newToken);
             } else {
-                if (bestToken.getScore() <= logEntryScore) {
+                if (bestToken.score() <= logEntryScore) {
                     bestToken.update(predecessor, nextState, logEntryScore,
                             arc.getInsertionProbability(),
                             arc.getLanguageProbability(), 

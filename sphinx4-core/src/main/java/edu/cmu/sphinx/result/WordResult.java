@@ -116,6 +116,10 @@ public class WordResult {
 
     @Override
     public String toString() {
-        return String.format(Locale.US, "{%s, %.3f, [%s]}", word, LogMath.logToLinear((float)getConfidence()), timeFrame);
+        return String.format(Locale.US, "{%s, %.3f, [%s]}", word, confLinear(), timeFrame);
+    }
+
+    public double confLinear() {
+        return LogMath.logToLinear((float)getConfidence());
     }
 }

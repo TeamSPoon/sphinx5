@@ -2,6 +2,8 @@ package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
 import edu.cmu.sphinx.frontend.Data;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Implements a Senone that contains a cache of the last scored data.
  * <p>
@@ -17,17 +19,9 @@ import edu.cmu.sphinx.frontend.Data;
 @SuppressWarnings("serial")
 public abstract class ScoreCachingSenone implements Senone {
 
-    private static final class ScoreCache {
-        private final Data feature;
-        private final float score;
 
-        public ScoreCache(Data feature, float score) {
-            this.feature = feature;
-            this.score = score;
-        }
-    }
-
-    //private volatile ScoreCache scoreCache = new ScoreCache(null, 0.0f);
+    final ConcurrentHashMap<Data,Float> scoreCache = new ConcurrentHashMap<>();
+    //long tries, miss;
 
     /**
      * Gets the cached score for this senone based upon the given feature.
@@ -42,7 +36,21 @@ public abstract class ScoreCachingSenone implements Senone {
 //        }
 //        return cached.score;
 
-        return calculateScore(feature);
+        //System.out.println("scorecache: " + scoreCache.size());
+
+
+        return scoreCache.computeIfAbsent(feature, this::calculateScore);
+
+        /*
+        tries++;
+        float score = scoreCache.computeIfAbsent(feature, (f) -> {
+            miss++;
+            return calculateScore(f);
+        });*/
+        //System.out.println( "hit rate: " + (tries-miss) + " / " + (tries) );
+        //return score;
+
+        //return calculateScore(feature);
     }
 
     /**

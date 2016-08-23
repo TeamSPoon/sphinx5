@@ -45,16 +45,6 @@ public class SimplePruner implements Pruner {
     }
 
 
-    /**
-     * prunes the given set of states
-     *
-     * @param activeList a activeList of tokens
-     */
-    public ActiveList prune(ActiveList activeList) {
-        return activeList.purge();
-    }
-
-
     /** Performs post-recognition cleanup. */
     public void stopRecognition() {
     }

@@ -173,31 +173,31 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
     }
 
     @Override
-    protected <T extends Scoreable> T doScoring(List<T> scoreableList, final Data data) {
+    protected <T extends Scoreable> T doScoring(Iterable<T> scoreableList, final Data data) {
         if (numThreads > 1) {
-            int totalSize = scoreableList.size();
-            int jobSize = Math.max((totalSize + numThreads - 1) / numThreads, minScoreablesPerThread);
-
-            if (jobSize < totalSize) {
-                List<Callable<T>> tasks = new ArrayList<>();
-                for (int from = 0, to = jobSize; from < totalSize; from = to, to += jobSize) {
-                    final List<T> scoringJob = scoreableList.subList(from, Math.min(to, totalSize));
-                    tasks.add(() ->
-                            ThreadedAcousticScorer.super.doScoring(scoringJob, data)
-                    );
-                }
-
-                List<T> finalists = new ArrayList<>(tasks.size());
-
-                try {
-                    for (Future<T> result : executorService.invokeAll(tasks))
-                        finalists.add(result.get());
-                } catch (Exception e) {
-                    throw new DataProcessingException("No scoring jobs ended", e);
-                }
-
-                return Collections.min(finalists, Scoreable.COMPARATOR);
-            }
+//            int totalSize = scoreableList.size();
+//            int jobSize = Math.max((totalSize + numThreads - 1) / numThreads, minScoreablesPerThread);
+//
+//            if (jobSize < totalSize) {
+//                List<Callable<T>> tasks = new ArrayList<>();
+//                for (int from = 0, to = jobSize; from < totalSize; from = to, to += jobSize) {
+//                    final List<T> scoringJob = scoreableList.subList(from, Math.min(to, totalSize));
+//                    tasks.add(() ->
+//                            ThreadedAcousticScorer.super.doScoring(scoringJob, data)
+//                    );
+//                }
+//
+//                List<T> finalists = new ArrayList<>(tasks.size());
+//
+//                try {
+//                    for (Future<T> result : executorService.invokeAll(tasks))
+//                        finalists.add(result.get());
+//                } catch (Exception e) {
+//                    throw new DataProcessingException("No scoring jobs ended", e);
+//                }
+//
+//                return Collections.min(finalists, Scoreable.COMPARATOR);
+//            }
         }
         // if no additional threads are necessary, do the scoring in the calling thread
         return super.doScoring(scoreableList, data);

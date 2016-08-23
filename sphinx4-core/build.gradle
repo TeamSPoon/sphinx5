@@ -3,9 +3,12 @@ description = 'Sphinx4 core'
 dependencies {
     compile project(':sphinx4-data')
 
+
     compile group:'org.apache.commons', name: 'commons-math3', version:'3.6.1'
 
     compile group:'com.fasterxml', name:'aalto-xml', version:'1.0.0'
+
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
     testCompile group: 'org.testng', name: 'testng', version:'6.9.10'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version:'1.3'

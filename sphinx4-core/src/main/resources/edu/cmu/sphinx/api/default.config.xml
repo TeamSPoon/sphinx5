@@ -2,7 +2,10 @@
 
 <config>
 
-  <property name="logLevel" value="SEVERE"/>
+  <property name="logLevel"
+            value="INFO"/>
+            <!--"SEVERE"-->
+
 
   <property name="absoluteBeamWidth"  value="20000"/>
   <property name="relativeBeamWidth"  value="1e-60"/>
@@ -96,13 +99,13 @@
   </component>
 
   <component name="activeList"
-    type="edu.cmu.sphinx.decoder.search.PartitionActiveListFactory">
+    type="edu.cmu.sphinx.decoder.search.SortingActiveListFactory">
     <property name="absoluteBeamWidth" value="${absoluteBeamWidth}"/>
     <property name="relativeBeamWidth" value="${relativeBeamWidth}"/>
   </component>
   
   <component name="fastmatchActiveList"
-    type="edu.cmu.sphinx.decoder.search.PartitionActiveListFactory">
+    type="edu.cmu.sphinx.decoder.search.SortingActiveListFactory">
     <property name="absoluteBeamWidth" value="${absoluteBeamWidth}"/>
     <property name="relativeBeamWidth" value="${phoneticBeam}"/>
   </component>
@@ -120,13 +123,13 @@
   </component>
 
   <component name="standardActiveListFactory"
-    type="edu.cmu.sphinx.decoder.search.PartitionActiveListFactory">
+    type="edu.cmu.sphinx.decoder.search.SortingActiveListFactory">
     <property name="absoluteBeamWidth" value="${absoluteBeamWidth}"/>
     <property name="relativeBeamWidth" value="${relativeBeamWidth}"/>
   </component>
 
   <component name="wordActiveListFactory"
-    type="edu.cmu.sphinx.decoder.search.PartitionActiveListFactory">
+    type="edu.cmu.sphinx.decoder.search.SortingActiveListFactory">
     <property name="absoluteBeamWidth" value="${absoluteWordBeamWidth}"/>
     <property name="relativeBeamWidth" value="${relativeWordBeamWidth}"/>
   </component>

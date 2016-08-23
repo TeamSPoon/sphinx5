@@ -39,7 +39,9 @@ public class Token implements Scoreable {
 
 //    private static int curCount;
 //    private static int lastCount;
+
     private static final AtomicInteger serial = new AtomicInteger(0);
+
     private static final ThreadLocal<DecimalFormat> scoreFmt = new ThreadLocal<DecimalFormat>() {
         @Override
         protected DecimalFormat initialValue() {
@@ -179,7 +181,7 @@ public class Token implements Scoreable {
      *
      * @return the score of this frame (in logMath log base)
      */
-    public float getScore() {
+    public final float score() {
         return logTotalScore;
     }
 

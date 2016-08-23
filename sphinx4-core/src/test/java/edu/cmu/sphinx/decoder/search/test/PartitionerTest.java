@@ -12,10 +12,10 @@ public class PartitionerTest {
 
 	public static void testSorted(Token[] tokens, int p) {
 		for (int i = 0; i < p; i++) {
-			Assert.assertTrue(tokens[i].getScore() >= tokens[p].getScore());
+			Assert.assertTrue(tokens[i].score() >= tokens[p].score());
 		}
 		for (int i = p; i < tokens.length; i++) {
-			Assert.assertTrue(tokens[i].getScore() <= tokens[p].getScore());
+			Assert.assertTrue(tokens[i].score() <= tokens[p].score());
 		}
 	}
 
@@ -23,7 +23,6 @@ public class PartitionerTest {
 												  int tokenListSize, boolean tokenListLarger) {
 
 		Random random = new Random(System.currentTimeMillis());
-		Partitioner partitioner = new Partitioner();
 
 		Token parent = new Token(null, 0);
 		Token[] tokens = new Token[tokenListSize];
@@ -33,7 +32,7 @@ public class PartitionerTest {
 			tokens[i] = new Token(parent, null, logTotalScore, 0.0f, 0.0f, i);
 		}
 
-		final int r = partitioner.partition(tokens, tokens.length,
+		final int r = Partitioner.partition(tokens, tokens.length,
 				absoluteBeamWidth);
 
 		if (tokenListLarger) {
@@ -44,14 +43,14 @@ public class PartitionerTest {
 
 		List<Token> firstList = new LinkedList<>();
 		if (r >= 0) {
-			float lowestScore = tokens[r].getScore();
+			float lowestScore = tokens[r].score();
 
 			for (int i = 0; i <= r; i++) {
-				Assert.assertTrue(tokens[i].getScore() >= lowestScore);
+				Assert.assertTrue(tokens[i].score() >= lowestScore);
 				firstList.add(tokens[i]);
 			}
 			for (int i = r + 1; i < tokens.length; i++) {
-				Assert.assertTrue(lowestScore > tokens[i].getScore());
+				Assert.assertTrue(lowestScore > tokens[i].score());
 			}
 
 			Collections.sort(firstList, Scoreable.COMPARATOR);
@@ -72,29 +71,28 @@ public class PartitionerTest {
 	public void testPartitionOrders() {
 		int p;
 		Token[] tokens = new Token[100000];
-		Partitioner partitioner = new Partitioner();
 
 		for (int i = 0; i < 100000; i++)
 			tokens[i] = new Token(null, null, 1 - i, 0, 0, 0);
-		p = partitioner.partition(tokens, 100000, 3000);
+		p = Partitioner.partition(tokens, 100000, 3000);
 		Assert.assertEquals(p, 2999);
 		testSorted(tokens, p);
 
 		for (int i = 0; i < 100000; i++)
 			tokens[i] = new Token(null, null, i, 0, 0, 0);
-		p = partitioner.partition(tokens, 100000, 3000);
+		p = Partitioner.partition(tokens, 100000, 3000);
 		Assert.assertEquals(p, 2999);
 		testSorted(tokens, p);
 
 		for (int i = 0; i < 100000; i++)
 			tokens[i] = new Token(null, null, 0, 0, 0, 0);
-		p = partitioner.partition(tokens, 100000, 3000);
+		p = Partitioner.partition(tokens, 100000, 3000);
 		Assert.assertEquals(p, 2999);
 		testSorted(tokens, p);
 
 		for (int i = 0; i < 100000; i++)
 			tokens[i] = new Token(null, null, (float) Math.random(), 0, 0, 0);
-		p = partitioner.partition(tokens, 100000, 3000);
+		p = Partitioner.partition(tokens, 100000, 3000);
 		Assert.assertEquals(p, 2999);
 		testSorted(tokens, p);
 	}

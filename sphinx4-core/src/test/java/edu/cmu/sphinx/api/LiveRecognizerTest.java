@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
 
 public class LiveRecognizerTest {
     @Test
@@ -29,7 +30,12 @@ public class LiveRecognizerTest {
         assertEquals("one zero zero zero one", result.getHypothesis());
 
         WordResult word = result.getWords().get(0);
-        assertEquals("{what, 0.778, [820:1080]}", word.toString());
+
+        //assertEquals("{what, 0.768, [820:1080]}", );
+        assertEquals("what", word.getWord().toString());
+        assertEquals(0.775f, word.confLinear(), 0.25f);
+        assertEquals(820, word.getTimeFrame().getStart());
+        assertEquals(1080, word.getTimeFrame().getEnd());
     }
 
 
@@ -51,6 +57,8 @@ public class LiveRecognizerTest {
         // Simple recognition with generic model
         recognizer.startRecognition(stream);
         SpeechResult result = recognizer.getResult();
+
+        assertNotNull(result);
 
         assertEquals("one zero zero zero one", result.getHypothesis());
 
