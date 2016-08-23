@@ -266,6 +266,8 @@ public class LexTreeLinguist implements Linguist {
         cacheEnabled = maxArcCacheSize > 0;
         if( cacheEnabled ) {
             arcCache = new LRUCache<>(maxArcCacheSize);
+        } else {
+            arcCache = null;
         }
     }
 
@@ -955,7 +957,7 @@ public class LexTreeLinguist implements Linguist {
 
         private float logInsertionProbability;
         private float logLanguageProbability;
-        private Node parentNode;
+        private final Node parentNode;
         private int hashCode = -1;
 
 

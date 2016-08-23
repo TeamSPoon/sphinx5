@@ -58,7 +58,12 @@ public class SpeedTracker
     @S4Boolean(defaultValue = false)
     public final static String PROP_SHOW_TIMERS = "showTimers";
 
-    private static final DecimalFormat timeFormat = new DecimalFormat("0.00");
+    private static final ThreadLocal<DecimalFormat> timeFormat = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("0.00");
+        }
+    };
 
 
     // ------------------------------
@@ -168,10 +173,10 @@ public class SpeedTracker
 
     /** Shows the audio usage data */
     protected void showAudioUsage() {
-        logger.info("   This  Time Audio: " + timeFormat.format(audioTime)
+        logger.info("   This  Time Audio: " + timeFormat.get().format(audioTime)
                 + 's'
-                + "  Proc: " + timeFormat.format(processingTime) + 's'
-                + "  Speed: " + timeFormat.format(getSpeed())
+                + "  Proc: " + timeFormat.get().format(processingTime) + 's'
+                + "  Speed: " + timeFormat.get().format(getSpeed())
                 + " X real time");
         showAudioSummary();
     }
@@ -180,10 +185,10 @@ public class SpeedTracker
     /** Shows the audio summary data */
     protected void showAudioSummary() {
         logger.info("   Total Time Audio: "
-                + timeFormat.format(totalAudioTime) + 's'
-                + "  Proc: " + timeFormat.format(totalProcessingTime)
+                + timeFormat.get().format(totalAudioTime) + 's'
+                + "  Proc: " + timeFormat.get().format(totalProcessingTime)
                 + "s "
-                + timeFormat.format(getCumulativeSpeed()) + " X real time");
+                + timeFormat.get().format(getCumulativeSpeed()) + " X real time");
 
         if (showResponseTime) {
             float avgResponseTime =

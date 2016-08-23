@@ -503,18 +503,20 @@ public class PropertySheet implements Cloneable {
      * instrumented by this property sheet.
      */
     public synchronized Configurable getOwner() {
+
         try {
 
-            if (!isInstanciated()) {
-                // ensure that all mandatory properties are set before instantiating the component
-                Collection<String> undefProps = getUndefinedMandatoryProps();
-                if (!undefProps.isEmpty()) {
-                    throw new InternalConfigurationException(instanceName,
-                            undefProps.toString(), "not all mandatory properties are defined");
-                }
+                if (!isInstanciated()) {
+                    // ensure that all mandatory properties are set before instantiating the component
+                    Collection<String> undefProps = getUndefinedMandatoryProps();
+                    if (!undefProps.isEmpty()) {
+                        throw new InternalConfigurationException(instanceName,
+                                undefProps.toString(), "not all mandatory properties are defined");
+                    }
 
-                owner = ownerClass.newInstance();
-                owner.newProperties(this);
+                    owner = ownerClass.newInstance();
+                    owner.newProperties(this);
+
             }
         } catch (IllegalAccessException e) {
             throw new InternalConfigurationException(e, instanceName, null, "Can't access class " + ownerClass);
@@ -880,7 +882,7 @@ public class PropertySheet implements Cloneable {
         ps.registeredProperties = new HashMap<>(this.registeredProperties);
         ps.propValues = new HashMap<>(this.propValues);
 
-        ps.rawProps = new HashMap<>(this.rawProps);
+        ps.rawProps = new HashMap(this.rawProps);
 
         // make deep copy of raw-lists
         for (String regProp : ps.getRegisteredProperties()) {

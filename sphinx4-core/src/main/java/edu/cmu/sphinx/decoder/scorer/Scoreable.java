@@ -29,9 +29,11 @@ public interface Scoreable extends Data {
      * in contrast to the natural meaning of the word "min".   
      */
     Comparator<Scoreable> COMPARATOR = (t1, t2) -> {
-        if (t1.getScore() > t2.getScore()) {
+        float s1 = t1.getScore();
+        float s2 = t2.getScore();
+        if (s1 > s2) {
             return -1;
-        } else if (t1.getScore() == t2.getScore()) {
+        } else if (s1 == s2) {
             return 0;
         } else {
             return 1;

@@ -63,10 +63,7 @@ abstract public class TokenSearchManager implements SearchManager {
         }
 
         if(!buildWordLattice) {
-            if (token.isWord())
-                return token;
-            else
-                return token.getPredecessor();
+            return token.isWord() ? token : token.getPredecessor();
         }
 
         float logAcousticScore = 0.0f;

@@ -40,8 +40,18 @@ public class Token implements Scoreable {
 //    private static int curCount;
 //    private static int lastCount;
     private static final AtomicInteger serial = new AtomicInteger(0);
-    private static final DecimalFormat scoreFmt = new DecimalFormat("0.0000000E00");
-    private static final DecimalFormat numFmt = new DecimalFormat("0000");
+    private static final ThreadLocal<DecimalFormat> scoreFmt = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("0.0000000E00");
+        }
+    };
+    private static final ThreadLocal<DecimalFormat> numFmt = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("0000");
+        }
+    };
     private final int hash;
 
     private Token predecessor;
@@ -302,10 +312,10 @@ public class Token implements Scoreable {
     @Override
     public String toString() {
         return
-            numFmt.format(collectTime) + ' ' +
-            scoreFmt.format(logTotalScore) + ' ' +
-            scoreFmt.format(logAcousticScore) + ' ' +
-            scoreFmt.format(logLanguageScore) + ' ' +
+            numFmt.get().format(collectTime) + ' ' +
+            scoreFmt.get().format(logTotalScore) + ' ' +
+            scoreFmt.get().format(logAcousticScore) + ' ' +
+            scoreFmt.get().format(logLanguageScore) + ' ' +
                     searchState;
     }
 
@@ -466,7 +476,7 @@ public class Token implements Scoreable {
      * @return the DecimalFormat object for formatting score print outs
      */
     protected static DecimalFormat getScoreFormat() {
-        return scoreFmt;
+        return scoreFmt.get();
     }
 
 
@@ -476,7 +486,7 @@ public class Token implements Scoreable {
      * @return the DecimalFormat object for formatting number print outs
      */
     protected static DecimalFormat getNumberFormat() {
-        return numFmt;
+        return numFmt.get();
     }
 
     public void update(Token predecessor, SearchState nextState,

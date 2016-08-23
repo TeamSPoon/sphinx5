@@ -17,7 +17,7 @@ import java.util.Comparator;
 public class ImmutableState extends State {
 
     // Outgoing arcs
-    private Arc[] arcs = null;
+    private final Arc[] arcs;
 
     /**
      * Default protected constructor.
@@ -29,6 +29,7 @@ public class ImmutableState extends State {
      * 
      */
     protected ImmutableState() {
+        arcs = null;
     }
 
     /**
@@ -85,14 +86,14 @@ public class ImmutableState extends State {
                 "You cannot modify an ImmutableState.");
     }
 
-    /**
-     * Set the state's arcs array
-     * 
-     * @param arcs the arcs array to set
-     */
-    public void setArcs(Arc[] arcs) {
-        this.arcs = arcs;
-    }
+//    /**
+//     * Set the state's arcs array
+//     *
+//     * @param arcs the arcs array to set
+//     */
+//    public void setArcs(Arc[] arcs) {
+//        this.arcs = arcs;
+//    }
 
     /*
      * (non-Javadoc)
@@ -141,6 +142,6 @@ public class ImmutableState extends State {
         ImmutableState other = (ImmutableState) obj;
         if (!Arrays.equals(arcs, other.arcs))
             return false;
-        return super.equals(obj);
+        return equalsWeightAndID(other);
     }
 }

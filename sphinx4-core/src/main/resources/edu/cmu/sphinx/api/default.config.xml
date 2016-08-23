@@ -136,6 +136,7 @@
 
   <component name="trivialScorer"
     type="edu.cmu.sphinx.decoder.scorer.SimpleAcousticScorer">
+      <!--type="edu.cmu.sphinx.decoder.scorer.ThreadedAcousticScorer"-->
     <property name="frontend" value="liveFrontEnd"/>
   </component>
 

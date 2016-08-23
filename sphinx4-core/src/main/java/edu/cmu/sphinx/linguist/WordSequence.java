@@ -77,7 +77,8 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @param words the word IDs of the word sequence
      */
     public WordSequence(Word... words) {
-        this(Arrays.asList(words));
+        this.words = words;
+        check();
     }
 
     /**
@@ -86,8 +87,7 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @param list the list of words
      */
     public WordSequence(List<Word> list) {
-        this.words = list.toArray(new Word[list.size()]);
-        check();
+        this(list.toArray(new Word[list.size()]));
     }
 
     private void check() {

@@ -31,8 +31,15 @@ public class DataUtil {
     private static final int DECIMAL = 3;
 
 
-    /** DecimalFormat object to be used by all the methods. */
-    private static final DecimalFormat format = new DecimalFormat();
+    /**
+     * DecimalFormat object to be used by all the methods.
+     */
+    public static final ThreadLocal<DecimalFormat> format = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat();
+        }
+    };
 
 
     private static final int decimalIntegerDigits = 10;
@@ -351,8 +358,8 @@ public class DataUtil {
             formatter.append('0');
         }
 
-        format.applyPattern(formatter.toString());
-        String formatted = format.format(number);
+        format.get().applyPattern(formatter.toString());
+        String formatted = format.get().format(number);
 
         // pad preceding spaces before the number
         int dotIndex = formatted.indexOf('.');

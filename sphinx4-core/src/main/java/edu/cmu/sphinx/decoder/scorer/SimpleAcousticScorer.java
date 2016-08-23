@@ -16,15 +16,17 @@ import java.util.List;
  * Implements some basic scorer functionality, including a simple default
  * acoustic scoring implementation which scores within the current thread, that
  * can be changed by overriding the {@link #doScoring} method.
- * 
+ * <p>
  * <p>
  * Note that all scores are maintained in LogMath log base.
- * 
+ *
  * @author Holger Brandl
  */
 public class SimpleAcousticScorer extends ConfigurableAdapter implements AcousticScorer {
 
-    /** Property the defines the frontend to retrieve features from for scoring */
+    /**
+     * Property the defines the frontend to retrieve features from for scoring
+     */
     @S4Component(type = BaseDataProcessor.class)
     public final static String FEATURE_FRONTEND = "frontend";
     protected BaseDataProcessor frontEnd;
@@ -50,12 +52,10 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
     }
 
     /**
-     * @param frontEnd
-     *            the frontend to retrieve features from for scoring
-     * @param scoreNormalizer
-     *            optional post-processor for computed scores that will
-     *            normalize scores. If not set, no normalization will applied
-     *            and the token scores will be returned unchanged.
+     * @param frontEnd        the frontend to retrieve features from for scoring
+     * @param scoreNormalizer optional post-processor for computed scores that will
+     *                        normalize scores. If not set, no normalization will applied
+     *                        and the token scores will be returned unchanged.
      */
     public SimpleAcousticScorer(BaseDataProcessor frontEnd, ScoreNormalizer scoreNormalizer) {
         initLogger();
@@ -69,11 +69,10 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
 
     /**
      * Scores the given set of states.
-     * 
-     * @param scoreableList
-     *            A list containing scoreable objects to be scored
+     *
+     * @param scoreableList A list containing scoreable objects to be scored
      * @return The best scoring scoreable, or <code>null</code> if there are no
-     *         more features to score
+     * more features to score
      */
     public Data calculateScores(List<? extends Scoreable> scoreableList) {
         Data data;
@@ -155,29 +154,35 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         // nothing needs to be done here
     }
 
+    protected <T extends Scoreable> T doScoring(List<T> scoreableList, Data data) {
+        return doScoring(scoreableList, 0, scoreableList.size(), data);
+    }
+
     /**
      * Scores a a list of <code>Scoreable</code>s given a <code>Data</code>
      * -object.
-     * 
-     * @param scoreableList
-     *            The list of Scoreables to be scored
-     * @param data
-     *            The <code>Data</code>-object to be used for scoring.
-     * @param <T> type for scorables
+     *
+     * @param scoreableList The list of Scoreables to be scored
+     * @param data          The <code>Data</code>-object to be used for scoring.
+     * @param <T>           type for scorables
      * @return the best scoring <code>Scoreable</code> or <code>null</code> if
-     *         the list of scoreables was empty.
+     * the list of scoreables was empty.
      */
-    protected <T extends Scoreable> T doScoring(List<T> scoreableList, Data data) {
+    protected <T extends Scoreable> T doScoring(List<T> scoreableList, int from, int to, Data data) {
+
+        //return scoreableList.subList(from, to).stream()
+            /*.reduce(
+                (x, y) -> x.calculateScore(data) <= y.calculateScore(data) ? x : y).get();*/
 
         T best = null;
         float bestScore = -Float.MAX_VALUE;
-
-        for (T item : scoreableList) {
-    	    item.calculateScore(data);
-    	    if (item.getScore() > bestScore) {
-    		bestScore = item.getScore();
-    		best = item;
-    	    }
+        for (int i = from; i < to; i++) {
+            T item = scoreableList.get(i);
+            float s = item.calculateScore(data);
+            if (s > bestScore) {
+                bestScore = s;
+                best = item;
+            }
         }
         return best;
     }

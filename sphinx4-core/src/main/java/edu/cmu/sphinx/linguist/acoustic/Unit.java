@@ -26,7 +26,7 @@ public class Unit {
     private final Unit baseUnit;
     private final Context context;
 
-    private volatile String key;
+    public final String key;
 
     /**
      * Constructs a context independent unit. Constructors are package private, use the UnitManager to create and access
@@ -43,6 +43,8 @@ public class Unit {
         this.baseID = id;
         this.baseUnit = this;
         this.context = Context.EMPTY_CONTEXT;
+        this.key = (filler ? "*" : "") + name;
+
     }
 
     /**
@@ -60,6 +62,8 @@ public class Unit {
         this.baseID = baseUnit.baseID;
         this.baseUnit = baseUnit;
         this.context = context;
+        this.key = (filler ? "*" : "") + name + '[' + context + ']';
+
     }
 
     /**
@@ -129,7 +133,7 @@ public class Unit {
      * @return the key
      */
     private String getKey() {
-        return toString();
+        return key;
     }
 
     /**
@@ -144,7 +148,7 @@ public class Unit {
             return true;
         } else if (o instanceof Unit) {
             Unit otherUnit = (Unit) o;
-            return getKey().equals(otherUnit.getKey());
+            return key.equals(otherUnit.key);
         } else {
             return false;
         }
@@ -157,7 +161,7 @@ public class Unit {
      */
     @Override
     public int hashCode() {
-        return getKey().hashCode();
+        return key.hashCode();
     }
 
     /**
@@ -167,13 +171,6 @@ public class Unit {
      */
     @Override
     public String toString() {
-        if (key == null) {
-            if (context == Context.EMPTY_CONTEXT) {
-                key = (filler ? "*" : "") + name;
-            } else {
-                key = (filler ? "*" : "") + name + '[' + context + ']';
-            }
-        }
         return key;
     }
 

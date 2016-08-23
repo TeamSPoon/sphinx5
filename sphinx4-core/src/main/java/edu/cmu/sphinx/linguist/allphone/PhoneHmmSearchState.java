@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScoreProvider {
 
-    private HMMState state;
+    private final HMMState state;
     private AllphoneLinguist linguist;
     
     private float insertionProb;

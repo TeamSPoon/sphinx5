@@ -152,18 +152,23 @@ public class State {
         if (getClass() != obj.getClass())
             return false;
         State other = (State) obj;
-        if (id != other.id)
+        if (!equalsWeightAndID(other))
             return false;
-        if (!(fnlWeight == other.fnlWeight)) {
-            if (Float.floatToIntBits(fnlWeight) != Float
-                    .floatToIntBits(other.fnlWeight))
-                return false;
-        }
         if (arcs == null) {
             if (other.arcs != null)
                 return false;
         } else if (!arcs.equals(other.arcs))
             return false;
+        return true;
+    }
+
+    protected boolean equalsWeightAndID(State other) {
+        if (id != other.id)
+            return false;
+        if (!(fnlWeight == other.fnlWeight)) {
+            if (Float.floatToIntBits(fnlWeight) != Float.floatToIntBits(other.fnlWeight))
+                return false;
+        }
         return true;
     }
 

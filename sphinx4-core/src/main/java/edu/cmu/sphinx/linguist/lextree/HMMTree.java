@@ -27,6 +27,7 @@ import edu.cmu.sphinx.util.Utilities;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 /** Represents a node in the HMM Tree */
@@ -394,7 +395,7 @@ abstract class UnitNode extends Node {
     public final static int SILENCE_UNIT = 3;
     public final static int FILLER_UNIT = 4;
 
-    private int type;
+
 
 
     /**
@@ -426,19 +427,17 @@ abstract class UnitNode extends Node {
      *
      * @return the unit type
      */
-    int getType() {
-        return type;
-    }
+    abstract int getType();
 
-
-    /**
-     * Sets the unit type
-     *
-     * @param type the unit type
-     */
-    void setType(int type) {
-        this.type = type;
-    }
+//
+//    /**
+//     * Sets the unit type
+//     *
+//     * @param type the unit type
+//     */
+//    void setType(int type) {
+//        this.type = type;
+//    }
 
 }
 
@@ -446,7 +445,7 @@ abstract class UnitNode extends Node {
 
 class HMMNode extends UnitNode {
 
-    private final HMM hmm;
+    public final HMM hmm;
 
     // There can potentially be a large number of nodes (millions),
     // therefore it is important to conserve space as much as
@@ -459,6 +458,7 @@ class HMMNode extends UnitNode {
 
     private Object rcSet;
 
+    private final int type;
 
     /**
      * Creates the node, wrapping the given hmm
@@ -479,9 +479,13 @@ class HMMNode extends UnitNode {
         } else if (hmm.getPosition().isWordBeginning()) {
             type = WORD_BEGINNING_UNIT;
         }
-        setType(type);
+        this.type = type;
     }
 
+    @Override
+    public final int getType() {
+        return type;
+    }
 
     /**
      * Returns the base unit for this hmm node
@@ -614,6 +618,11 @@ class EndNode extends UnitNode {
     }
 
 
+    @Override
+    final int getType() {
+        return 0;
+    }
+
     /**
      * Returns the base unit for this hmm node
      *
@@ -668,8 +677,8 @@ class HMMTree {
 
     private LanguageModel lm;
     private final boolean addFillerWords;
-    private final Set<Unit> entryPoints = new HashSet<>();
-    private Set<Unit> exitPoints = new HashSet<>();
+    private final Set<Unit> entryPoints = new LinkedHashSet<>();
+    private Set<Unit> exitPoints = new LinkedHashSet<>();
     private Set<Word> allWords;
     private EntryPointTable entryPointTable;
     private boolean debug;
@@ -730,7 +739,7 @@ class HMMTree {
         if (results == null) {
             // System.out.println("Filling cache for " + endNode.getKey()
             //        + " size " + endNodeMap.size());
-            Map<HMM, HMMNode> resultMap = new HashMap<>();
+            Map<HMM, HMMNode> resultMap = new HashMap<>(entryPoints.size());
             Unit baseUnit = endNode.getBaseUnit();
             Unit lc = endNode.getLeftContext();
             for (Unit rc : entryPoints) {
@@ -1092,9 +1101,7 @@ class HMMTree {
 
         /** Once we have built the full entry point we can eliminate some fields */
         void freeze() {
-            for (Node node : unitToEntryPointMap.values()) {
-                node.freeze();
-            }
+            unitToEntryPointMap.values().forEach(Node::freeze);
             singleUnitWords = null;
             rcSet = null;
         }
@@ -1127,11 +1134,9 @@ class HMMTree {
          */
         private Collection<Unit> getEntryPointRC() {
             if (rcSet == null) {
-                rcSet = new HashSet<>();
-                for (Node node : baseNode.getSuccessorMap().values()) {
-                    UnitNode unitNode = (UnitNode) node;
-                    rcSet.add(unitNode.getBaseUnit());
-                }
+                rcSet = baseNode.getSuccessorMap().values().stream().map(
+                        node -> ((UnitNode) node).getBaseUnit()
+                ).collect(Collectors.toSet());
             }
             return rcSet;
         }

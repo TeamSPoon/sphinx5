@@ -31,11 +31,7 @@ public class TimerPool {
      * @return the timer
      */
     public static synchronized Timer getTimer(Object owner, String timerName) {
-        if (!weakRefTimerPool.containsKey(owner))
-            weakRefTimerPool.put(owner, new ArrayList<>());
-
-        List<Timer> ownerTimers = weakRefTimerPool.get(owner);
-
+        List<Timer> ownerTimers = weakRefTimerPool.computeIfAbsent(owner, x -> new ArrayList());
         for (Timer timer : ownerTimers) {
             if (timer.getName().equals(timerName))
                 return timer;

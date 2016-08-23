@@ -89,9 +89,11 @@ public class WordTracker {
     static class WordStats {
 
         public final static Comparator<WordStats> COMPARATOR = (ws1, ws2) -> {
-            if (ws1.maxScore > ws2.maxScore) {
+            float m1 = ws1.maxScore;
+            float m2 = ws2.maxScore;
+            if (m1 > m2) {
                 return -1;
-            } else if (ws1.maxScore == ws2.maxScore) {
+            } else if (m1 == m2) {
                 return 0;
             } else {
                 return 1;
@@ -123,11 +125,12 @@ public class WordTracker {
          */
         void update(Token t) {
             size++;
-            if (t.getScore() > maxScore) {
-                maxScore = t.getScore();
+            float score = t.getScore();
+            if (score > maxScore) {
+                maxScore = score;
             }
-            if (t.getScore() < minScore) {
-                minScore = t.getScore();
+            if (score < minScore) {
+                minScore = score;
             }
         }
 

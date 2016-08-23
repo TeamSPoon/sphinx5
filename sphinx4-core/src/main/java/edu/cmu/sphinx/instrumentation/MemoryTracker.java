@@ -42,7 +42,13 @@ public class MemoryTracker
     @S4Boolean(defaultValue = true)
     public final static String PROP_SHOW_DETAILS = "showDetails";
 
-    private static final DecimalFormat memFormat = new DecimalFormat("0.00 Mb");
+    private static final ThreadLocal<DecimalFormat> memFormat = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("0.00 Mb");
+        }
+    };
+
     // ------------------------------
     // Configuration data
     // ------------------------------
@@ -120,11 +126,11 @@ public class MemoryTracker
                 / numMemoryStats;
 
         if (show) {
-            logger.info("   Mem  Total: " + memFormat.format(totalMem)
-                    + "  " + "Free: " + memFormat.format(freeMem));
-            logger.info("   Used: This: " + memFormat.format(usedMem) + "  "
-                    + "Avg: " + memFormat.format(avgMemoryUsed) + "  " + "Max: "
-                    + memFormat.format(maxMemoryUsed));
+            logger.info("   Mem  Total: " + memFormat.get().format(totalMem)
+                    + "  " + "Free: " + memFormat.get().format(freeMem));
+            logger.info("   Used: This: " + memFormat.get().format(usedMem) + "  "
+                    + "Avg: " + memFormat.get().format(avgMemoryUsed) + "  " + "Max: "
+                    + memFormat.get().format(maxMemoryUsed));
         }
     }
 

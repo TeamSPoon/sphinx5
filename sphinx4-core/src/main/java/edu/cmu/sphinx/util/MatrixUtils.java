@@ -1,11 +1,12 @@
 package edu.cmu.sphinx.util;
 
+import edu.cmu.sphinx.frontend.util.DataUtil;
+
 import java.text.DecimalFormat;
 
 /** Some simple matrix and vector manipulation methods. */
 public class MatrixUtils {
 
-    private static final DecimalFormat df = new DecimalFormat("0.00");
 
 
     public static String toString(double[][] m) {
@@ -23,6 +24,7 @@ public class MatrixUtils {
     public static String toString(double[] m) {
         StringBuilder s = new StringBuilder("[");
 
+        DecimalFormat df = DataUtil.format.get();
         for (double val : m) {
             s.append(' ').append(df.format(val));
         }

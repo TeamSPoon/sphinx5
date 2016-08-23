@@ -135,7 +135,7 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
         init(ps.getInt(PROP_MIN_SCOREABLES_PER_THREAD), ps.getBoolean(PROP_IS_CPU_RELATIVE),
-            ps.getInt(PROP_NUM_THREADS), ps.getInt(PROP_THREAD_PRIORITY));
+                ps.getInt(PROP_NUM_THREADS), ps.getInt(PROP_THREAD_PRIORITY));
     }
 
     private void init(int minScoreablesPerThread, boolean cpuRelative, int numThreads, int threadPriority) {
@@ -156,7 +156,7 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
                     logger.fine("# of scoring threads: " + numThreads);
                 }
                 executorService = Executors.newFixedThreadPool(numThreads,
-                    new CustomThreadFactory(className, true, threadPriority));
+                        new CustomThreadFactory(className, true, threadPriority));
             } else {
                 logger.fine("no scoring threads");
             }
@@ -182,18 +182,20 @@ public class ThreadedAcousticScorer extends SimpleAcousticScorer {
                 List<Callable<T>> tasks = new ArrayList<>();
                 for (int from = 0, to = jobSize; from < totalSize; from = to, to += jobSize) {
                     final List<T> scoringJob = scoreableList.subList(from, Math.min(to, totalSize));
-                    tasks.add(() -> ThreadedAcousticScorer.super.doScoring(scoringJob, data));
+                    tasks.add(() ->
+                            ThreadedAcousticScorer.super.doScoring(scoringJob, data)
+                    );
                 }
 
                 List<T> finalists = new ArrayList<>(tasks.size());
-       
+
                 try {
                     for (Future<T> result : executorService.invokeAll(tasks))
                         finalists.add(result.get());
                 } catch (Exception e) {
                     throw new DataProcessingException("No scoring jobs ended", e);
                 }
-                
+
                 return Collections.min(finalists, Scoreable.COMPARATOR);
             }
         }

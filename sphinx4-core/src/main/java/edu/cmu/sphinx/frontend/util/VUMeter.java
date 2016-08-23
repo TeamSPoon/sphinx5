@@ -63,7 +63,7 @@ public class VUMeter {
 
             double[] samples = ((DoubleData) data).getValues();
 
-            calculateVULevels(samples);
+            calculateVULevels(samples, System.currentTimeMillis());
         }
     }
 
@@ -75,11 +75,12 @@ public class VUMeter {
             samples[i] = (short) ((data[o] << 8) | (0x000000FF & data[o + 1]));
             //System.out.print(data[2*i] + "+" +data[(2*i)+1] + "=" + samples[i] + " ");
         }
-        calculateVULevels(samples);
+        long now = System.currentTimeMillis();
+        calculateVULevels(samples, now);
     }
 
 
-    private synchronized void calculateVULevels(double[] samples) {
+    private synchronized void calculateVULevels(double[] samples, long now) {
         double energy = 0.0;
         average = 0.0;
 
@@ -111,7 +112,6 @@ public class VUMeter {
 
             double v2 = Math.abs(y);
 
-            long now = System.currentTimeMillis();
 
             energy += v2 * v2;
             average += v2;
@@ -131,7 +131,7 @@ public class VUMeter {
     }
 
 
-    private synchronized void calculateVULevels(short[] samples) {
+    private synchronized void calculateVULevels(short[] samples, long now) {
 
         double energy = 0.0;
         average = 0.0;
@@ -164,7 +164,6 @@ public class VUMeter {
 
             double v2 = Math.abs(y);
 
-            long now = System.currentTimeMillis();
 
             energy += v2 * v2;
             average += v2;

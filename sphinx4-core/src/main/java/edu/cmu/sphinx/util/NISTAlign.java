@@ -96,8 +96,15 @@ public class NISTAlign {
     /** Aligned list of words from rawHypothesis.  Created in alignWords.  Updated with each call to 'align'. */
     private LinkedList<String> alignedHypothesisWords;
 
-    /** Helpers to create percentage strings. */
-    static final DecimalFormat percentageFormat = new DecimalFormat("##0.0%");
+    /**
+     * Helpers to create percentage strings.
+     */
+    static final ThreadLocal<DecimalFormat> percentageFormat = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("##0.0%");
+        }
+    };
 
 
     private boolean showResults;
@@ -820,10 +827,10 @@ public class NISTAlign {
      * @return a String that represents the percentage value.
      */
     static String toPercentage(String pattern, int numerator, int denominator) {
-        percentageFormat.applyPattern(pattern);
+        percentageFormat.get().applyPattern(pattern);
         return padLeft(
                 6,
-                percentageFormat.format((double) numerator
+                percentageFormat.get().format((double) numerator
                         / (double) denominator));
     }
 
@@ -836,8 +843,8 @@ public class NISTAlign {
      * @return a String that represents the percentage value.
      */
     static String toPercentage(String pattern, float value) {
-        percentageFormat.applyPattern(pattern);
-        return percentageFormat.format(value);
+        percentageFormat.get().applyPattern(pattern);
+        return percentageFormat.get().format(value);
     }
 
 

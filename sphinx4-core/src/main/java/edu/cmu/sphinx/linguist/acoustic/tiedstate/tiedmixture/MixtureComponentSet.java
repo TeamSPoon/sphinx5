@@ -92,17 +92,18 @@ public class MixtureComponentSet {
     
     private static void insertTopComponent(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
         int i;
-        for (i = 0; i < topComponents.length - 1; i++) {
+        int l = topComponents.length;
+        for (i = 0; i < l - 1; i++) {
             if (component.getPartialScore() < topComponents[i].getPartialScore()) {
                 topComponents[i - 1] = component;
                 return;
             }
             topComponents[i] = topComponents[i + 1];
         }
-        if (component.getPartialScore() < topComponents[topComponents.length - 1].getPartialScore())
-            topComponents[topComponents.length - 2] = component;
+        if (component.getPartialScore() < topComponents[l - 1].getPartialScore())
+            topComponents[l - 2] = component;
         else
-            topComponents[topComponents.length - 1] = component;
+            topComponents[l - 1] = component;
     }
     
     private static boolean isInTopComponents(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {

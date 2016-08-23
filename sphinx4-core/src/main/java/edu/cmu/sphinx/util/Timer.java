@@ -27,7 +27,12 @@ import java.util.logging.Logger;
  */
 public class Timer {
 
-    private final static DecimalFormat timeFormatter = new DecimalFormat("###0.0000");
+    private final static ThreadLocal<DecimalFormat> timeFormatter = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("###0.0000");
+        }
+    };
 
     private final String name;
 
@@ -218,7 +223,7 @@ public class Timer {
      * @return a string representation of the time.
      */
     private static String fmtTime(double time) {
-        return Utilities.pad(timeFormatter.format(time) + 's', 10);
+        return Utilities.pad(timeFormatter.get().format(time) + 's', 10);
     }
 
 
