@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author plamere
@@ -72,15 +74,16 @@ public class SortingActiveListFactory extends ActiveListFactory {
 
     class SortingActiveList implements ActiveList {
 
-        private final static int DEFAULT_SIZE = 1000;
         private final int absoluteBeamWidth;
         private final float logRelativeBeamWidth;
         private Token bestToken;
         // when the list is changed these things should be
         // changed/updated as well
         //private List<Token> tokenList;
-        private final ConcurrentSkipListSet<Token> tokens = new ConcurrentSkipListSet<>();
 
+        private final ConcurrentSkipListSet<Token> tokens = new ConcurrentSkipListSet<>();
+        private final List copy = new ArrayList(); //copy where the set is buffered for traversal
+        private final AtomicInteger size = new AtomicInteger(0); //concurrent skiplist set is slow tracking its own size so it can be done here
 
 
         /** 
@@ -93,7 +96,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
             this.absoluteBeamWidth = absoluteBeamWidth;
             this.logRelativeBeamWidth = logRelativeBeamWidth;
 
-            int initListSize = absoluteBeamWidth > 0 ? absoluteBeamWidth : DEFAULT_SIZE;
+            //int initListSize = absoluteBeamWidth > 0 ? absoluteBeamWidth : DEFAULT_SIZE;
             //this.tokens = new ArrayList<>(initListSize);
         }
 
@@ -104,7 +107,28 @@ public class SortingActiveListFactory extends ActiveListFactory {
          * @param token the token to add
          */
         public void add(Token token) {
-            tokens.add(token);
+
+
+
+            int nt = size.get();
+            int capacity = absoluteBeamWidth;
+            boolean atCapacity = (nt >= capacity);
+            if (atCapacity) {
+                if (token.score() <= tokens.last().score())
+                    return; //reject immediately
+            }
+
+            if (tokens.add(token))  {
+                size.incrementAndGet();
+                if (atCapacity) {
+                    int toRemove = (nt+1) - (capacity);
+                    for (int i = 0; i < toRemove; i++) {
+                        if (tokens.pollLast()!=null)
+                            size.decrementAndGet();
+                    }
+                }
+            }
+
             if (bestToken == null || token.score() > bestToken.score()) {
                 bestToken = token;
             }
@@ -120,22 +144,22 @@ public class SortingActiveListFactory extends ActiveListFactory {
             // should be no constraint on the abs beam size at all
             // so we will only be relative beam pruning, which means
             // that we don't have to sort the list
-            int s = tokens.size();
-            int capacity = this.absoluteBeamWidth;
-
-            //System.out.println(tokens.first() + " " + tokens.first().score() + "   -- - - - - - - " + tokens.last() + " " + tokens.last().score());
-
-            if (capacity > 0 && s > capacity) {
-//                Collections.sort(tokens, Scoreable.COMPARATOR);
-//                tokens = tokens.subList(0, absoluteBeamWidth);
-
-                int toRemove = s - (capacity-1);
-                for (int i = 0; i < toRemove; i++)
-                    tokens.pollLast();
-
-                //System.out.println("\t" + tokens.first() + " " + tokens.first().score() + " " + tokens.last() + " " + tokens.last().score());
-
-            }
+//            int s = tokens.size();
+//            int capacity = this.absoluteBeamWidth;
+//
+//            //System.out.println(tokens.first() + " " + tokens.first().score() + "   -- - - - - - - " + tokens.last() + " " + tokens.last().score());
+//
+//            if (capacity > 0 && s > capacity) {
+////                Collections.sort(tokens, Scoreable.COMPARATOR);
+////                tokens = tokens.subList(0, absoluteBeamWidth);
+//
+//                int toRemove = s - (capacity-1);
+//                for (int i = 0; i < toRemove; i++)
+//                    tokens.pollLast();
+//
+//                //System.out.println("\t" + tokens.first() + " " + tokens.first().score() + " " + tokens.last() + " " + tokens.last().score());
+//
+//            }
             return this;
         }
 
@@ -156,11 +180,15 @@ public class SortingActiveListFactory extends ActiveListFactory {
          * @return the best score
          */
         public float bestScore() {
-            float bestScore = -Float.MAX_VALUE;
-            if (bestToken != null) {
-                bestScore = bestToken.score();
-            }
-            return bestScore;
+//            float bestScore = -Float.MAX_VALUE;
+//            if (bestToken != null) {
+//                bestScore = bestToken.score();
+//            }
+//            return bestScore;
+            if (tokens.isEmpty())
+                return -Float.MAX_VALUE;
+            else
+                return tokens.first().score();
         }
 
 
@@ -169,8 +197,8 @@ public class SortingActiveListFactory extends ActiveListFactory {
          *
          * @param token the best scoring token
          */
-        public void setBestToken(Token token) {
-            bestToken = token;
+        @Deprecated public void setBestToken(Token token) {
+            //bestToken = token;
         }
 
 
@@ -180,7 +208,11 @@ public class SortingActiveListFactory extends ActiveListFactory {
          * @return the best scoring token
          */
         public Token best() {
-            return bestToken;
+            //return bestToken;
+            if (!tokens.isEmpty())
+                return tokens.first();
+            return
+                null;
         }
 
 
@@ -193,15 +225,14 @@ public class SortingActiveListFactory extends ActiveListFactory {
             return tokens.iterator();
         }
 
+        @Override
+        public void forEach(Consumer<? super Token> action) {
+            copy.clear();
+            copy.addAll(tokens);
 
-        /**
-         * Gets the list of all tokens
-         *
-         * @return the list of tokens
-         */
-        public Iterable<Token> getTokens() {
-            return tokens;
+            copy.parallelStream().forEach(action);
         }
+
 
         /**
          * Returns the number of tokens on this active list
@@ -209,7 +240,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
          * @return the size of the active list
          */
         public final int size() {
-            return tokens.size();
+            return size.get();
         }
 
 

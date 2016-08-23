@@ -30,7 +30,7 @@ public class UnitManager implements Configurable {
     /** The silence unit */
     public final static Unit SILENCE = new Unit(SILENCE_NAME, true, SILENCE_ID);
 
-    private final Map<String, Unit> ciMap = new HashMap<>();
+    private final Map<String, Unit> ciMap = new HashMap<>(128*1024);
     {
         ciMap.put(SILENCE_NAME, SILENCE);
     }

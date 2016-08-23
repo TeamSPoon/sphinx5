@@ -16,6 +16,7 @@ package edu.cmu.sphinx.decoder.search;
 import edu.cmu.sphinx.decoder.scorer.Scoreable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manager for pruned hypothesis
@@ -24,7 +25,7 @@ import java.util.*;
  */
 public class AlternateHypothesisManager {
 
-    private final Map<Token, List<Token>> viterbiLoserMap = new HashMap<>();
+    private final Map<Token, List<Token>> viterbiLoserMap = new ConcurrentHashMap<>();
     private final int maxEdges;
 
 
@@ -48,7 +49,7 @@ public class AlternateHypothesisManager {
     public void addAlternatePredecessor(Token token, Token predecessor) {
         assert predecessor != token.getPredecessor();
 
-        viterbiLoserMap.computeIfAbsent(token, t -> new ArrayList<>() ).add(predecessor);
+        viterbiLoserMap.computeIfAbsent(token, t -> Collections.synchronizedList(new ArrayList<>()) ).add(predecessor);
     }
 
 

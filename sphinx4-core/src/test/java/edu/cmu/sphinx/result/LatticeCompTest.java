@@ -8,6 +8,8 @@
 
 package edu.cmu.sphinx.result;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
@@ -17,6 +19,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import static org.testng.AssertJUnit.assertTrue;
@@ -56,6 +59,10 @@ public class LatticeCompTest {
 
         Collection<Node> latNodes = lattice.getNodes();
         Collection<Node> otherLatNodes = otherLattice.getNodes();
+
+        Sets.SetView diff = Sets.symmetricDifference(new HashSet(lattice.getNodes()), new HashSet(otherLattice.getNodes()));
+        System.out.println("diff=" + diff.size() + "\n" + Joiner.on("\n").join(diff));
+
         Iterator<Node> it = latNodes.iterator();
 
         int edgeCountTolerance = 10; //to account for variability due to multithreading. if this test is using the single threaded scorer, this should be zero

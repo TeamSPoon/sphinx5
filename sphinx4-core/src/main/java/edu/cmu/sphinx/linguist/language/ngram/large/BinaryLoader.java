@@ -46,9 +46,9 @@ public class BinaryLoader {
     
     private static final float MIN_PROBABILITY = -99.0f;
     private static final int MAX_PROB_TABLE_SIZE = java.lang.Integer.MAX_VALUE;
+    private static final int BUFFER_SIZE = 1024 * 1024;
 
 
-    
     private int maxNGram;
     
     private final float unigramWeight;
@@ -386,7 +386,7 @@ public class BinaryLoader {
     protected void loadModelLayout(InputStream inputStream) throws IOException {
 
         DataInputStream stream = new DataInputStream
-                (new BufferedInputStream(inputStream));
+                (new BufferedInputStream(inputStream, BUFFER_SIZE));
 
         // read standard header string-size; set bigEndian flag
         readHeader(stream);

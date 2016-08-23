@@ -446,7 +446,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected boolean scoreTokens() {
         boolean moreTokens;
         //scoreTimer.start();
-        Data data = scorer.calculateScores(activeList.getTokens());
+        Data data = scorer.calculateScores(activeList);
         //scoreTimer.stop();
 
         Token bestToken = null;
@@ -616,7 +616,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         expandSuccessorTokens(token);
     }
 
-    private synchronized void expandSuccessorTokens(Token token) {
+    private void expandSuccessorTokens(Token token) {
         SearchState state = token.getSearchState();
         SearchStateArc[] arcs = state.getSuccessors();
         Token predecessor = getResultListPredecessor(token);

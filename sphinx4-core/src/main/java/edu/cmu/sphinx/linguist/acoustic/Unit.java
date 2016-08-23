@@ -43,7 +43,7 @@ public class Unit {
         this.baseID = id;
         this.baseUnit = this;
         this.context = Context.EMPTY_CONTEXT;
-        this.key = (filler ? "*" : "") + name;
+        this.key = (filler ? ("*" + name) : name);
 
     }
 

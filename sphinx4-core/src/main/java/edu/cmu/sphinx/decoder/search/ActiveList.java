@@ -71,12 +71,7 @@ public interface ActiveList extends Iterable<Token> {
     int size();
 
 
-    /**
-     * Gets the list of all tokens
-     *
-     * @return the set of tokens
-     */
-    Iterable<Token> getTokens();
+
 
     /**
      * gets the beam threshold best upon the best scoring token

@@ -287,7 +287,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     protected boolean scoreFastMatchTokens() {
         boolean moreTokens;
         //scoreTimer.start();
-        Data data = scorer.calculateScoresAndStoreData(fastmatchActiveList.getTokens());
+        Data data = scorer.calculateScoresAndStoreData(fastmatchActiveList);
         //scoreTimer.stop();
 
         Token bestToken = null;

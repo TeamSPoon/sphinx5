@@ -351,7 +351,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         boolean hasMoreFrames = false;
 
         scoreTimer.start();
-        Data data = scorer.calculateScores(activeList.getTokens());
+        Data data = scorer.calculateScores(activeList);
         scoreTimer.stop();
         
         Token bestToken = null;
