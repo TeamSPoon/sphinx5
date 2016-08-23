@@ -598,7 +598,7 @@ public class FlatLinguist implements Linguist, Configurable {
          */
         private UnitContext getStartingContext(Pronunciation pronunciation) {
             int maxSize = getRightContextSize();
-            Unit[] units = pronunciation.getUnits();
+            Unit[] units = pronunciation.units;
             Unit[] context = units.length > maxSize ? Arrays.copyOf(units, maxSize) : units;
             return UnitContext.get(context);
         }
@@ -616,7 +616,7 @@ public class FlatLinguist implements Linguist, Configurable {
                 Word word = node.getWord();
                 Pronunciation[] prons = word.getPronunciations();
                 for (Pronunciation pron : prons) {
-                    Unit[] units = pron.getUnits();
+                    Unit[] units = pron.units;
                     int size = units.length;
                     Unit[] context = size > maxSize ? Arrays.copyOfRange(units, size - maxSize, size) : units;
                     endingContexts.add(UnitContext.get(context));
@@ -919,7 +919,7 @@ public class FlatLinguist implements Linguist, Configurable {
             } else {
                 epList.add(ps);
             }
-            Unit[] units = pronunciation.getUnits();
+            Unit[] units = pronunciation.units;
             int fanOutPoint = units.length - getRightContextSize();
             if (fanOutPoint < 0) {
                 fanOutPoint = 0;

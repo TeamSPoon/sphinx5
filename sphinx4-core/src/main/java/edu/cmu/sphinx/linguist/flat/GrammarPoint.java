@@ -121,7 +121,7 @@ public class GrammarPoint {
                         words[wordIndex].getPronunciations();
                 if (pronunciationIndex < pronunciations.length) {
                     Unit[] units =
-                            pronunciations[pronunciationIndex].getUnits();
+                            pronunciations[pronunciationIndex].units;
                     if (unitIndex < units.length) {
                         unit = units[unitIndex];
                     }
@@ -251,7 +251,7 @@ public class GrammarPoint {
                     getAlternatives()[alternativeIndex][wordIndex].
                     getPronunciations();
 
-            unitsLength = pronunciations[pronunciationIndex].getUnits().length;
+            unitsLength = pronunciations[pronunciationIndex].units.length;
 
             if (next.unitIndex < unitsLength) {
                 nextPoints.add(next);

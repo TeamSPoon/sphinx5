@@ -22,10 +22,39 @@ public class Pronunciation {
 
     public static final Pronunciation UNKNOWN = new Pronunciation(Unit.EMPTY_ARRAY, null, 1.0f);
 
+    /**
+     * Retrieves the word that this Pronunciation object represents.
+     *
+     * @return the word
+     */
     private Word word;
-    private final Unit[] units;
-    private final String tag;
-    private final float probability;
+
+    /**
+     * Retrieves the units for this pronunciation
+     *
+     * @return the units for this pronunciation
+     */
+    public final Unit[] units;
+
+    /**
+     * Retrieves the tag associated with the pronunciation or null if there is no tag associated with this
+     * pronunciation. Pronunciations can optionally be tagged to allow applications to distinguish between different
+     * pronunciations.
+     *
+     * @return the tag or null if no tag is available.
+     */
+    public final String tag;
+
+    /**
+     * Retrieves the probability for the pronunciation. A word may have multiple pronunciations that are not all equally
+     * probable. All probabilities for particular word sum to 1.0.
+     *
+     * @return the probability of this pronunciation as a value between 0 and 1.0.
+     *         <p>
+     *         TODO: FIX Note that probabilities are currently maintained in the linear domain (unlike just about
+     *         everything else)
+     */
+    public final float probability;
 
 
     /**
@@ -83,49 +112,9 @@ public class Pronunciation {
     }
 
 
-    /**
-     * Retrieves the word that this Pronunciation object represents.
-     *
-     * @return the word
-     */
+
     public Word getWord() {
         return word;
-    }
-
-
-    /**
-     * Retrieves the units for this pronunciation
-     *
-     * @return the units for this pronunciation
-     */
-    public Unit[] getUnits() {
-        return units;
-    }
-
-
-    /**
-     * Retrieves the tag associated with the pronunciation or null if there is no tag associated with this
-     * pronunciation. Pronunciations can optionally be tagged to allow applications to distinguish between different
-     * pronunciations.
-     *
-     * @return the tag or null if no tag is available.
-     */
-    public String getTag() {
-        return tag;
-    }
-
-
-    /**
-     * Retrieves the probability for the pronunciation. A word may have multiple pronunciations that are not all equally
-     * probable. All probabilities for particular word sum to 1.0.
-     *
-     * @return the probability of this pronunciation as a value between 0 and 1.0.
-     *         <p>
-     *         TODO: FIX Note that probabilities are currently maintained in the linear domain (unlike just about
-     *         everything else)
-     */
-    public float getProbability() {
-        return probability;
     }
 
 

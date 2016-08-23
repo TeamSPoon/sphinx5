@@ -17,7 +17,7 @@ import edu.cmu.sphinx.frontend.Data;
 @SuppressWarnings("serial")
 public abstract class ScoreCachingSenone implements Senone {
 
-    private class ScoreCache {
+    private static final class ScoreCache {
         private final Data feature;
         private final float score;
 

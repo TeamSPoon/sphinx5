@@ -29,7 +29,6 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
 
     Map<Object, TokenHeap> bestTokenMap;
 
-    @Override
     protected void createBestTokenMap() {
         int mapSize = activeList.size() << 2;
         if (mapSize == 0) {

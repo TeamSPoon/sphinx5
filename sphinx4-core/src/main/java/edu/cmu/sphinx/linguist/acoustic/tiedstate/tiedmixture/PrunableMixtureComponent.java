@@ -22,7 +22,7 @@ public class PrunableMixtureComponent extends MixtureComponent {
 
     private float score = LogMath.LOG_ZERO;
     private float partScore = LogMath.LOG_ZERO;
-    private int id;
+    public final int id;
     
     public PrunableMixtureComponent(
             float[] mean,
@@ -99,10 +99,6 @@ public class PrunableMixtureComponent extends MixtureComponent {
     
     public float getPartialScore() {
         return partScore;
-    }
-    
-    public int getId() {
-        return id;
     }
 
 }

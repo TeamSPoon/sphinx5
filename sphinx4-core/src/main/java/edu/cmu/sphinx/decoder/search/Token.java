@@ -363,7 +363,7 @@ public class Token implements Scoreable {
                 if (wantFiller || !word.isFiller()) {
                     if (wantPronunciations) {
                         sb.insert(0, ']');
-                        Unit[] u = pron.getUnits();
+                        Unit[] u = pron.units;
                         for (int i = u.length - 1; i >= 0; i--) {
                             if (i < u.length - 1) sb.insert(0, ',');
                             sb.insert(0, u[i].getName());

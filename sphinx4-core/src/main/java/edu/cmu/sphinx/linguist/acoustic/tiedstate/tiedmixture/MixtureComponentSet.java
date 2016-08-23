@@ -16,10 +16,7 @@ import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * MixtureComponentsSet - phonetically tied set of gaussians
@@ -28,7 +25,7 @@ public class MixtureComponentSet {
     
     private int scoresQueueLen;
     private boolean toStoreScore;
-    private LinkedList<MixtureComponentSetScores> storedScores;
+    private Deque<MixtureComponentSetScores> storedScores;
     MixtureComponentSetScores curScores;
 
     private ArrayList<PrunableMixtureComponent[]> components;
@@ -52,14 +49,18 @@ public class MixtureComponentSet {
         }
         gauCalcSampleNumber = -1;
         toStoreScore = false;
-        storedScores = new LinkedList<>();
+        storedScores = new ArrayDeque<>();
         curScores = null;
     }
     
     private void storeScores(MixtureComponentSetScores scores) {
-        storedScores.add(scores);
-        while(storedScores.size() > scoresQueueLen)
+
+        int size = storedScores.size();
+        int toRemove = (size+1) - scoresQueueLen;
+        for (int i = 0; i < toRemove; i++)
             storedScores.poll();
+
+        storedScores.add(scores);
     }
     
     private MixtureComponentSetScores getStoredScores(long frameFirstSample) {
@@ -79,9 +80,11 @@ public class MixtureComponentSet {
     private MixtureComponentSetScores createFromTopGau(long firstFrameSample) {
         MixtureComponentSetScores scores = new MixtureComponentSetScores(numStreams, topGauNum, firstFrameSample);
         for (int i = 0; i < numStreams; i++) {
+            PrunableMixtureComponent[] topI = topComponents.get(i);
             for (int j = 0; j < topGauNum; j++) {
-                scores.setScore(i, j, topComponents.get(i)[j].getStoredScore());
-                scores.setGauId(i, j, topComponents.get(i)[j].getId());
+                PrunableMixtureComponent topIJ = topI[j];
+                scores.setScore(i, j, topIJ.getStoredScore());
+                scores.setGauId(i, j, topIJ.id);
             }
         }
         return scores;
@@ -104,7 +107,7 @@ public class MixtureComponentSet {
     
     private static boolean isInTopComponents(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
         for (PrunableMixtureComponent topComponent : topComponents)
-            if (topComponent.getId() == component.getId())
+            if (topComponent.id == component.id)
                 return true;
         return false;
     }
@@ -220,7 +223,7 @@ public class MixtureComponentSet {
     }
     
     public int getGauId(int streamId, int topGauId) {
-        return components.get(streamId)[topGauId].getId();
+        return components.get(streamId)[topGauId].id;
     }
     
     private static <T> T[] concatenate(T[] A, T[] B) {

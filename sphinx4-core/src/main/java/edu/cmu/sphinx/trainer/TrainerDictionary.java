@@ -64,7 +64,7 @@ public class TrainerDictionary extends TextDictionary {
                     " for word " + word);
             return null;
         }
-        units = pronunciations[pronunciationID].getUnits();
+        units = pronunciations[pronunciationID].units;
         assert units != null : "units is empty: problem with dictionary?";
 
         // Now, create the graph, where each node contains a single unit

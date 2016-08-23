@@ -42,8 +42,9 @@ public class MatrixUtils {
 
 
     public static float[] double2float(double[] values) { // what a mess !!! -> fixme: how to convert number arrays ?
-        float[] newVals = new float[values.length];
-        for (int i = 0; i < newVals.length; i++) {
+        int l = values.length;
+        float[] newVals = new float[l];
+        for (int i = 0; i < l; i++) {
             newVals[i] = (float) values[i];
         }
 
@@ -61,8 +62,9 @@ public class MatrixUtils {
 
 
     public static double[] float2double(float[] values) {
-        double[] doubArr = new double[values.length];
-        for (int i = 0; i < doubArr.length; i++)
+        int l = values.length;
+        double[] doubArr = new double[l];
+        for (int i = 0; i < l; i++)
             doubArr[i] = values[i];
 
         return doubArr;

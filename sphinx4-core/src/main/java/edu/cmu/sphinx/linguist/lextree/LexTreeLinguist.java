@@ -1322,12 +1322,10 @@ public class LexTreeLinguist implements Linguist {
     }
 
     /** Represents a word state in the search space */
-    public class LexTreeWordState extends LexTreeState
-            implements
-            WordSearchState {
+    public class LexTreeWordState extends LexTreeState implements WordSearchState {
 
         private final int hash;
-        private HMMNode lastNode;
+        private final HMMNode lastNode;
         private float logLanguageProbability;
 
 
@@ -1356,7 +1354,7 @@ public class LexTreeLinguist implements Linguist {
          * @return the pronunciation for this word
          */
         public Pronunciation getPronunciation() {
-            return ((WordNode) node).getPronunciation();
+            return ((WordNode) node).pronunciation;
         }
 
 
@@ -1367,7 +1365,7 @@ public class LexTreeLinguist implements Linguist {
          */
         @Override
         public boolean isFinal() {
-            return ((WordNode) node).isFinal();
+            return ((WordNode) node).isFinal;
         }
 
 

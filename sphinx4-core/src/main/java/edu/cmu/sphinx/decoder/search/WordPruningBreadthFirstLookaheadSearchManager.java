@@ -29,10 +29,7 @@ import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeWordState;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Provides the breadth first search with fast match heuristic included to
@@ -81,7 +78,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     private int lookaheadWindow;
     private float lookaheadWeight;
     private HashMap<Integer, Float> penalties;
-    private LinkedList<FrameCiScores> ciScores;
+    private Deque<FrameCiScores> ciScores;
 
     // -----------------------------------
     // Working data
@@ -130,7 +127,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         if (lookaheadWindow < 1 || lookaheadWindow > 10)
             throw new IllegalArgumentException("Unsupported lookahead window size: " + lookaheadWindow
                     + ". Value in range [1..10] is expected");
-        this.ciScores = new LinkedList<>();
+        this.ciScores = new ArrayDeque<>();
         this.penalties = new HashMap<>();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);
@@ -159,7 +156,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         if (lookaheadWindow < 1 || lookaheadWindow > 10)
             throw new PropertyException(WordPruningBreadthFirstLookaheadSearchManager.class.getName(), PROP_LOOKAHEAD_WINDOW,
                     "Unsupported lookahead window size: " + lookaheadWindow + ". Value in range [1..10] is expected");
-        ciScores = new LinkedList<>();
+        ciScores = new ArrayDeque<>();
         penalties = new HashMap<>();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);

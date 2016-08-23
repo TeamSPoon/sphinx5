@@ -105,6 +105,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     // TODO: this should be a more meaningful default e.g. the common 1E-80
     public final static String PROP_RELATIVE_BEAM_WIDTH = "relativeBeamWidth";
 
+
+    private static final int DEFAULT_BESTTOKENMAP_SIZE = 16384;
+
     // -----------------------------------
     // Configured Subcomponents
     // -----------------------------------
@@ -321,23 +324,13 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     private void clearCollectors() {
         resultList = new LinkedList<>();
-        createBestTokenMap();
+        bestTokenMap = new HashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
         activeListManager.clearEmittingList();
-    }
-
-    /**
-     * creates a new best token map with the best size
-     */
-    protected void createBestTokenMap() {
-        int mapSize = activeList.size() * 10;
-        if (mapSize == 0) {
-            mapSize = 1;
-        }
-        bestTokenMap = new HashMap<>(mapSize);//, 0.3F);
     }
 
     /** Terminates a recognition */
     public void stopRecognition() {
+
         localStop();
         scorer.stopRecognition();
         pruner.stopRecognition();

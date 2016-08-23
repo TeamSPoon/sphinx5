@@ -98,8 +98,8 @@ public class Word implements Comparable<Word> {
         float bestScore = Float.NEGATIVE_INFINITY;
         Pronunciation best = null;
         for (Pronunciation pronunciation : pronunciations) {
-            if (pronunciation.getProbability() > bestScore) {
-                bestScore = pronunciation.getProbability();
+            if (pronunciation.probability > bestScore) {
+                bestScore = pronunciation.probability;
                 best = pronunciation;
             }
         }

@@ -35,7 +35,7 @@ public class UnitState extends SentenceHMMState implements UnitSearchState {
     public UnitState(PronunciationState parent, int which, Unit unit) {
         super("U", parent, which);
         this.unit = unit;
-        Unit[] units = parent.getPronunciation().getUnits();
+        Unit[] units = parent.getPronunciation().units;
         int length = units.length;
 
         // If the last phone is SIL, then we should be using

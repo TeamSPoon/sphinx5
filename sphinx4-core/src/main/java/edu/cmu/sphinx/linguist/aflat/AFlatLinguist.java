@@ -370,7 +370,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 			Word word = thisNode.getWord();
 			Pronunciation[] pronunciations = word.getPronunciations();
 			for (Pronunciation pronunciation : pronunciations) {
-				unitSet.add(pronunciation.getUnits()[0]);
+				unitSet.add(pronunciation.units[0]);
 			}
 		} else {
 			GrammarArc[] arcs = thisNode.getSuccessors();
@@ -988,8 +988,8 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 */
 		SearchStateArc[] getSuccessors(int lc, int index) {
 			SearchStateArc[] arcs;
-			if (index == pronunciation.getUnits().length - 1) {
-				if (isContextIndependentUnit(pronunciation.getUnits()[index])) {
+			if (index == pronunciation.units.length - 1) {
+				if (isContextIndependentUnit(pronunciation.units[index])) {
 					arcs = new SearchStateArc[1];
 					arcs[0] = new FullHMMSearchState(this, index, lc, ANY);
 				} else {
@@ -1100,7 +1100,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 *            the ID of the left context
 		 */
 		FullHMMSearchState(PronunciationState p, int which, int lc) {
-			this(p, which, lc, p.getPronunciation().getUnits()[which + 1]
+			this(p, which, lc, p.getPronunciation().units[which + 1]
 					.getBaseID());
 		}
 
@@ -1121,10 +1121,10 @@ public class AFlatLinguist implements Linguist, Configurable {
 			this.index = which;
 			this.lc = lc;
 			this.rc = rc;
-			int base = p.getPronunciation().getUnits()[which].getBaseID();
+			int base = p.getPronunciation().units[which].getBaseID();
 			int id = hmmPool.buildID(base, lc, rc);
 			hmm = hmmPool.getHMM(id, getPosition());
-			isLastUnitOfWord = which == p.getPronunciation().getUnits().length - 1;
+			isLastUnitOfWord = which == p.getPronunciation().units.length - 1;
 		}
 
 		/**
@@ -1237,7 +1237,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 * @return the position of the unit within the word
 		 */
 		HMMPosition getPosition() {
-			int len = pState.getPronunciation().getUnits().length;
+			int len = pState.getPronunciation().units.length;
 			if (len == 1) {
 				return HMMPosition.SINGLE;
 			} else if (index == 0) {

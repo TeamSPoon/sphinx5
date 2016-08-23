@@ -291,8 +291,8 @@ class Node {
 /** A node representing a word in the HMM tree */
 class WordNode extends Node {
 
-    private final Pronunciation pronunciation;
-    private final boolean isFinal;
+    public final Pronunciation pronunciation;
+    public final boolean isFinal;
 
     /**
      * Creates a word node
@@ -318,22 +318,12 @@ class WordNode extends Node {
 
 
     /**
-     * Gets the pronunciation associated with this node
-     *
-     * @return the pronunciation
-     */
-    Pronunciation getPronunciation() {
-        return pronunciation;
-    }
-
-
-    /**
      * Gets the last unit for this word
      *
      * @return the last unit
      */
     Unit getLastUnit() {
-        Unit[] units = pronunciation.getUnits();
+        Unit[] units = pronunciation.units;
         return units[units.length - 1];
     }
 
@@ -361,9 +351,6 @@ class WordNode extends Node {
     }
 
 
-    public boolean isFinal() {
-        return isFinal;
-    }
 }
 
 
@@ -833,8 +820,8 @@ class HMMTree {
         for (Word word : words) {
             for (int j = 0; j < word.getPronunciations().length; j++) {
                 Pronunciation p = word.getPronunciations()[j];
-                Unit first = p.getUnits()[0];
-                Unit last = p.getUnits()[p.getUnits().length - 1];
+                Unit first = p.units[0];
+                Unit last = p.units[p.units.length - 1];
                 entryPoints.add(first);
                 exitPoints.add(last);
             }
@@ -899,7 +886,7 @@ class HMMTree {
         Node curNode;
         WordNode wordNode;
 
-        Unit[] units = pronunciation.getUnits();
+        Unit[] units = pronunciation.units;
         baseUnit = units[0];
         EntryPoint ep = entryPointTable.getEntryPoint(baseUnit);
 
