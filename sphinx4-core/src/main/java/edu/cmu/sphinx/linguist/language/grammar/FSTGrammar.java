@@ -127,8 +127,9 @@ public class FSTGrammar extends Grammar {
 
     public FSTGrammar(String path, boolean showGrammar, boolean optimizeGrammar, boolean addSilenceWords, boolean addFillerWords, Dictionary dictionary) {
         super(showGrammar,optimizeGrammar,addSilenceWords,addFillerWords,dictionary);
-        this.path = path;
         logMath = LogMath.getLogMath();
+
+        this.path = path;
     }
 
     public FSTGrammar() {
@@ -144,6 +145,7 @@ public class FSTGrammar extends Grammar {
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
+        logMath = LogMath.getLogMath();
         
         path = ps.getString(PROP_PATH);
     }
