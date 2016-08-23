@@ -9,12 +9,12 @@ import edu.cmu.sphinx.linguist.language.ngram.trie.NgramTrieModel.TrieRange;
 
 public class NgramTrie {
 
-    private MiddleNgramSet[] middles;
-    private LongestNgramSet longest;
-    private NgramTrieBitarr bitArr;
-    private int ordersNum;
-    private int quantProbBoLen;
-    private int quantProbLen;
+    private final MiddleNgramSet[] middles;
+    private final LongestNgramSet longest;
+    private final NgramTrieBitarr bitArr;
+    private final int ordersNum;
+    private final int quantProbBoLen;
+    private final int quantProbLen;
 
     public NgramTrie(int[] counts, int quantProbBoLen, int quantProbLen) {
         int memLen = 0;

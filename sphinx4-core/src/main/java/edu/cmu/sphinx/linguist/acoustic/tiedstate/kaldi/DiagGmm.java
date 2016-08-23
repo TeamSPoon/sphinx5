@@ -16,10 +16,10 @@ import java.util.Arrays;
 @SuppressWarnings("serial")
 public class DiagGmm extends ScoreCachingSenone {
 
-    private int id;
-    private float[] gconsts;
-    private float[] invVars;
-    private float[] meansInvVars;
+    private final int id;
+    private final float[] gconsts;
+    private final float[] invVars;
+    private final float[] meansInvVars;
 
     /**
      * Constructs new mixture model.

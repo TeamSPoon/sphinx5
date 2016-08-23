@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -44,7 +45,7 @@ public class DynamicTrigramModelTest {
     @Test
     public void unigramModel() throws IOException {
         DynamicTrigramModel model = new DynamicTrigramModel(dictionary);
-        model.setText(asList("one"));
+        model.setText(Collections.singletonList("one"));
         model.allocate();
         assertThat(model.getVocabulary(), contains("one"));
         assertThat(model.getProbability(new WordSequence(dictionary
@@ -75,7 +76,7 @@ public class DynamicTrigramModelTest {
         URL url = getClass().getResource("npr.transcript");
         
         Scanner scanner = new Scanner(new File("../words"));
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         while (scanner.hasNext()) {
             words.add(scanner.next());
         }

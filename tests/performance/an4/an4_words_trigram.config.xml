@@ -101,7 +101,7 @@
         <property name="logMath" value="logMath"/>
         <property name="dictionary" value="dictionary"/>
         <property name="unigramSmearWeight" value="1.2"/>
-        <property name="cacheSize" value="0"/>
+        <property name="cacheSize" value="16384"/>
         <property name="wantUnigramSmear" value="true"/>
         <property name="unitManager" value="unitManager"/>
     </component>

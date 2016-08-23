@@ -288,8 +288,7 @@ public class G2PConverter {
 
                 String[] symsArray = sym.split('\\' + tie);
 
-                for (int i = 0; i < symsArray.length; i++) {
-                    String phone = symsArray[i];
+                for (String phone : symsArray) {
                     if (!skipSeqs.contains(phone)) {
                         p.getPath().add(phone);
                     }

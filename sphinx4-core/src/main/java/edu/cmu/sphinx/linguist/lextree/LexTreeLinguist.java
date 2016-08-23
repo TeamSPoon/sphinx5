@@ -213,7 +213,7 @@ public class LexTreeLinguist implements Linguist {
     private boolean generateUnitStates;
     private boolean wantUnigramSmear = true;
     private float unigramSmearWeight = 1.0f;
-    private boolean cacheEnabled;
+    //private boolean cacheEnabled;
     private int maxArcCacheSize;
 
     protected float languageWeight;
@@ -263,12 +263,12 @@ public class LexTreeLinguist implements Linguist {
         this.unigramSmearWeight = unigramSmearWeight;
         this.maxArcCacheSize = maxArcCacheSize;
 
-        cacheEnabled = maxArcCacheSize > 0;
-        if( cacheEnabled ) {
+        //cacheEnabled = maxArcCacheSize > 0;
+        //if( cacheEnabled ) {
             arcCache = new LRUCache<>(maxArcCacheSize);
-        } else {
-            arcCache = null;
-        }
+        ///} else {
+           // arcCache = null;
+        //}
     }
 
     public LexTreeLinguist() {
@@ -299,10 +299,10 @@ public class LexTreeLinguist implements Linguist {
         unigramSmearWeight = ps.getFloat(PROP_UNIGRAM_SMEAR_WEIGHT);
         maxArcCacheSize = ps.getInt(PROP_CACHE_SIZE);
 
-        cacheEnabled = maxArcCacheSize > 0;
-        if(cacheEnabled) {
+        //cacheEnabled = maxArcCacheSize > 0;
+        //if(cacheEnabled) {
             arcCache = new LRUCache<>(maxArcCacheSize);
-        }
+        //}
     }
 
 
@@ -415,11 +415,11 @@ public class LexTreeLinguist implements Linguist {
     }
 
 
-    class LexTreeSearchGraph implements SearchGraph {
+    static class LexTreeSearchGraph implements SearchGraph {
 
         /** An array of classes that represents the order in which the states will be returned. */
 
-        private SearchState initialState;
+        private final SearchState initialState;
 
 
         /**
@@ -779,20 +779,20 @@ public class LexTreeLinguist implements Linguist {
          * @return the next set of arcs for this state, or null if none can be found or if caching is disabled.
          */
         SearchStateArc[] getCachedArcs() {
-            if (cacheEnabled) {
+            //if (cacheEnabled) {
                 SearchStateArc[] arcs = arcCache.get(this);
                 if (arcs != null) {
                     cacheHits++;
                 }
-                /*if (++cacheTrys % 1000000 == 0) {
+                /*if (++cacheTrys % 1000 == 0) {
                     System.out.println("Hits: " + cacheHits
                             + " of " + cacheTrys + ' ' +
                             ((float) cacheHits) / cacheTrys * 100f);
                 }*/
                 return arcs;
-            } else {
+            /*} else {
                 return null;
-            }
+            }*/
         }
 
 
@@ -802,9 +802,9 @@ public class LexTreeLinguist implements Linguist {
          * @param arcs the arcs to cache.
          */
         void putCachedArcs(SearchStateArc[] arcs) {
-            if (cacheEnabled) {
+            //if (cacheEnabled) {
                 arcCache.put(this, arcs);
-            }
+            //}
         }
 
 
@@ -955,8 +955,8 @@ public class LexTreeLinguist implements Linguist {
     public class LexTreeUnitState extends LexTreeState
             implements UnitSearchState {
 
-        private float logInsertionProbability;
-        private float logLanguageProbability;
+        private final float logInsertionProbability;
+        private final float logLanguageProbability;
         private final Node parentNode;
         private int hashCode = -1;
 
@@ -1328,7 +1328,7 @@ public class LexTreeLinguist implements Linguist {
 
         private final int hash;
         private final HMMNode lastNode;
-        private float logLanguageProbability;
+        private final float logLanguageProbability;
 
 
         /**

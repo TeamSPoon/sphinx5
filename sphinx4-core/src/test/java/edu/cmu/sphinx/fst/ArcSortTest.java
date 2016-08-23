@@ -31,7 +31,7 @@ public class ArcSortTest {
      * 
      * @return the created fst
      */
-    private Fst createOsorted() {
+    private static Fst createOsorted() {
         Fst fst = new Fst(new TropicalSemiring());
 
         State s1 = new State(0.f);
@@ -64,7 +64,7 @@ public class ArcSortTest {
      * 
      * @return the created fst
      */
-    private Fst createIsorted() {
+    private static Fst createIsorted() {
         Fst fst = new Fst(new TropicalSemiring());
 
         State s1 = new State(0.f);
@@ -97,7 +97,7 @@ public class ArcSortTest {
      * 
      * @return the created fst
      */
-    private Fst createUnsorted() {
+    private static Fst createUnsorted() {
         Fst fst = new Fst(new TropicalSemiring());
 
         State s1 = new State(0.f);

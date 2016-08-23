@@ -25,19 +25,19 @@ import java.util.logging.Logger;
 /** Manages the HMM pools. */
 class HMMPoolManager {
 
-    private HMMManager hmmManager;
-    private HashMap<Object, Integer> indexMap;
-    private Pool<float[]> meansPool;
-    private Pool<float[]> variancePool;
-    private Pool<float[][]> matrixPool;
-    private GaussianWeights mixtureWeights;
+    private final HMMManager hmmManager;
+    private final HashMap<Object, Integer> indexMap;
+    private final Pool<float[]> meansPool;
+    private final Pool<float[]> variancePool;
+    private final Pool<float[][]> matrixPool;
+    private final GaussianWeights mixtureWeights;
     
     private Pool<Buffer> meansBufferPool;
     private Pool<Buffer> varianceBufferPool;
     private Pool<Buffer[]> matrixBufferPool;
     private Pool<Buffer> mixtureWeightsBufferPool;
 
-    private Pool<Senone> senonePool;
+    private final Pool<Senone> senonePool;
 
 
     private float logMixtureWeightFloor;

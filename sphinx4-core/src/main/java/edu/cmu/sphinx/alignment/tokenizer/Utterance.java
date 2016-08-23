@@ -25,8 +25,8 @@ import java.util.Iterator;
  * of the voice associated with the utterance.
  */
 public class Utterance {
-    private FeatureSet features;
-    private FeatureSet relations;
+    private final FeatureSet features;
+    private final FeatureSet relations;
 
     /**
      * Creates an utterance with the given set of tokenized text.

@@ -68,7 +68,7 @@ public class TestConfigurable implements Configurable {
 
     @Test
     public void testNullStringProperty() throws PropertyException, InstantiationException {
-        HashMap<String, Object> props = new HashMap<String, Object>();
+        HashMap<String, Object> props = new HashMap<>();
         props.put("dataProc", new AnotherDummyProcessor());
 
         TestConfigurable teco = ConfigurationManager.getInstance(TestConfigurable.class, props);
@@ -80,7 +80,7 @@ public class TestConfigurable implements Configurable {
     public void testPropSheetFromConfigurableInstance() throws PropertyException, InstantiationException {
         String testString = "test";
 
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put(PROP_ASTRING, testString);
         props.put(PROP_DATA_PROC, new DummyProcessor());
         TestConfigurable tc = ConfigurationManager.getInstance(TestConfigurable.class, props);

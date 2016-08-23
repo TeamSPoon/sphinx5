@@ -477,7 +477,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         return penalty;
     }
 
-    private class FrameCiScores {
+    private static final class FrameCiScores {
         public final float[] scores;
         public final float maxScore;
 

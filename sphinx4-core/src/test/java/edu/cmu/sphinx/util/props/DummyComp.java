@@ -82,7 +82,7 @@ public class DummyComp implements Configurable {
     }
 
 
-    public String getName() {
+    public static String getName() {
         return "lalala";
     }
 
@@ -111,7 +111,7 @@ public class DummyComp implements Configurable {
     /** Use the all defaults defined by the annotations to instantiate a Configurable. */
     @Test
     public void testCustomizedDefaultInstance() throws PropertyException, InstantiationException {
-        Map<String, Object> defaultProps = new HashMap<String, Object>();
+        Map<String, Object> defaultProps = new HashMap<>();
         defaultProps.put(DummyComp.PROP_FRONTEND, new DummyFrontEnd());
 
         DummyComp dc = ConfigurationManager.getInstance(DummyComp.class, defaultProps);

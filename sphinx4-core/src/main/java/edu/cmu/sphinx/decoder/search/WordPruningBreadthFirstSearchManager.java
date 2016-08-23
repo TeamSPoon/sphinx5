@@ -25,7 +25,6 @@ import edu.cmu.sphinx.util.props.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -377,10 +376,10 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected void growBranches() {
         //growTimer.start();
         float relativeBeamThreshold = activeList.getBeamThreshold();
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
-                    + activeList.getBestScore() + " tok " + activeList.getBestToken());
-        }
+//        if (logger.isLoggable(Level.FINE)) {
+//            logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
+//                    + activeList.getBestScore() + " tok " + activeList.getBestToken());
+//        }
         
         for (Token token : activeList) {
             if (token.getScore() >= relativeBeamThreshold && allowExpansion(token)) {
@@ -461,8 +460,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
         // System.out.println("BEST " + bestToken);
 
-        curTokensScored.value += activeList.size();
-        totalTokensScored.value += activeList.size();
+        int s = activeList.size();
+        curTokensScored.value += s;
+        totalTokensScored.value += s;
 
         return moreTokens;
     }
@@ -519,9 +519,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         tokenSum += activeList.size();
         tokenCount++;
 
-        if ((tokenCount % 1000) == 0) {
-            logger.info("Average Tokens/State: " + (tokenSum / tokenCount));
-        }
+//        if ((tokenCount % 1000) == 0) {
+//            logger.info("Average Tokens/State: " + (tokenSum / tokenCount));
+//        }
     }
 
     /** Removes unpromising branches from the active list */

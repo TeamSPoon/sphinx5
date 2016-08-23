@@ -16,14 +16,20 @@ package edu.cmu.sphinx.linguist.acoustic.tiedstate.tiedmixture;
  */
 public class MixtureComponentSetScores {
 
-    private float[][] scores; //scores[featureStreamIdx][gaussianIndex]
-    private int[][] ids;       //id[featureStreamIdx][gaussianIndex]
+    protected float[][] scores; //scores[featureStreamIdx][gaussianIndex]
+    protected int[][] ids;       //id[featureStreamIdx][gaussianIndex]
     private long frameStartSample;
     
-    public MixtureComponentSetScores(int numStreams, int gauNum, long frameStartSample) {
-        scores = new float[numStreams][gauNum];
-        ids = new int[numStreams][gauNum];
-        this.frameStartSample = frameStartSample;
+
+
+    public MixtureComponentSetScores clear(int numStreams, int gauNum, long frameSample) {
+        if (scores == null || scores.length!=numStreams || scores[0].length!=gauNum) {
+            //reallocate
+            scores = new float[numStreams][gauNum];
+            ids = new int[numStreams][gauNum];
+        }
+        this.frameStartSample = frameSample;
+        return this;
     }
     
     public void setScore(int featStream, int gauIdx, float score) {
@@ -45,6 +51,7 @@ public class MixtureComponentSetScores {
     public long getFrameStartSample() {
         return frameStartSample;
     }
-    
-    
+
+
+
 }

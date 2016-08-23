@@ -384,7 +384,7 @@ public class DecisionTree {
         /**
          * The feature used to find a value from an Item.
          */
-        private PathExtractor path;
+        private final PathExtractor path;
 
         /**
          * Index of Node to go to if the comparison doesn't match.

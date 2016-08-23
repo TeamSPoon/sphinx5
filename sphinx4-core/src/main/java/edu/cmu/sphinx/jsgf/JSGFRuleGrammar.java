@@ -31,8 +31,8 @@ public class JSGFRuleGrammar {
 
     protected final Map<String, Collection<String>> ruleTags = new HashMap<>();
 
-    private String name;
-    private JSGFRuleGrammarManager manager;
+    private final String name;
+    private final JSGFRuleGrammarManager manager;
 
     /** Storage for documentation comments for rules for JSGF doc. */
     final Properties ruleDocComments = new Properties();
@@ -44,7 +44,7 @@ public class JSGFRuleGrammar {
     String grammarDocComment;
 
     /* Holds the state of the rule in grammar */
-    class JSGFRuleState {
+    static class JSGFRuleState {
 
         public boolean isPublic;
         public boolean isEnabled;

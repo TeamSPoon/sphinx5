@@ -30,7 +30,7 @@ public class GaussianMixture extends ScoreCachingSenone {
     // these data element in a senone may be shared with other senones
     // and therefore should not be written to.
     protected GaussianWeights mixtureWeights;
-    private MixtureComponent[] mixtureComponents;
+    private final MixtureComponent[] mixtureComponents;
     protected int id;
 
 

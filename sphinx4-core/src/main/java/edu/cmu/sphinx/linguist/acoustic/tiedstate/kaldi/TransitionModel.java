@@ -41,9 +41,9 @@ final class HmmState {
 
 final class Triple {
 
-    private int phone;
-    private int hmmState;
-    private int pdf;
+    private final int phone;
+    private final int hmmState;
+    private final int pdf;
 
     public Triple(int phone, int hmmState, int pdf) {
         this.phone = phone;
@@ -80,8 +80,8 @@ final class Triple {
 public class TransitionModel {
 
     private Map<Integer, List<HmmState>> phoneStates;
-    private Map<Triple, Integer> transitionStates;
-    private float[] logProbabilities;
+    private final Map<Triple, Integer> transitionStates;
+    private final float[] logProbabilities;
 
     /**
      * Loads transition model using provided parser.

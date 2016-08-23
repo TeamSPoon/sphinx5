@@ -6,7 +6,7 @@ package edu.cmu.sphinx.linguist.language.ngram.trie;
 
 public class NgramTrieBitarr {
 
-    private byte[] mem;
+    private final byte[] mem;
     
     public NgramTrieBitarr(int memLen) {
         mem = new byte[memLen];

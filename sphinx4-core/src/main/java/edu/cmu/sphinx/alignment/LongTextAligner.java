@@ -200,7 +200,7 @@ public class LongTextAligner {
     private final int tupleSize;
     private final List<String> reftup;
     private final HashMap<String, ArrayList<Integer>> tupleIndex;
-    private List<String> refWords;
+    private final List<String> refWords;
 
     /**
      * Constructs new text aligner that servers requests for alignment of

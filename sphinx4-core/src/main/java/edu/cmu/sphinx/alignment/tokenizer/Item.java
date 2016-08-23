@@ -22,8 +22,8 @@ import java.util.StringTokenizer;
  * instances of item that reference the same shared ItemContents.
  */
 public class Item {
-    private Relation ownerRelation;
-    private ItemContents contents;
+    private final Relation ownerRelation;
+    private final ItemContents contents;
     private Item parent;
     private Item daughter;
     private Item next;

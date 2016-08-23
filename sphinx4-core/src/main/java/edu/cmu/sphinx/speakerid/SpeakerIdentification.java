@@ -33,8 +33,8 @@ public class SpeakerIdentification {
 
     public static final String FRONTEND_NAME = "plpFrontEnd";
 
-    private FrontEnd frontEnd;
-    private StreamDataSource audioSource;
+    private final FrontEnd frontEnd;
+    private final StreamDataSource audioSource;
 
     public SpeakerIdentification() {
         URL url = getClass().getResource("frontend.config.xml");

@@ -51,7 +51,7 @@ public class TextAlignerSmallTest {
     @BeforeClass
     public void setUp() throws IOException {
         URL url = getClass().getResource("transcription-small.txt");
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         Scanner scanner = new Scanner(url.openStream());
         while (scanner.hasNext()) {
             words.add(scanner.next());

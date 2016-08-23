@@ -43,7 +43,7 @@ public class Result {
     private final List<Token> resultList;
     private AlternateHypothesisManager alternateHypothesisManager;
     private boolean isFinal;
-    private boolean wordTokenFirst;
+    private final boolean wordTokenFirst;
     private final long currentCollectTime;
     private String reference;
     private final boolean toCreateLattice;

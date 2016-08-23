@@ -20,7 +20,7 @@ package edu.cmu.sphinx.trainer;
  */
 public class Stage {
 
-    private String name;
+    private final String name;
 
     /** Initialization stage. */
     public static final Stage _00_INITIALIZATION =

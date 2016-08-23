@@ -30,7 +30,7 @@ public class ProjectTest {
      * 
      * @return the created fst
      */
-    private Fst createFst() {
+    private static Fst createFst() {
         TropicalSemiring ts = new TropicalSemiring();
         Fst fst = new Fst(ts);
 
@@ -66,7 +66,7 @@ public class ProjectTest {
      * 
      * @return the created fst
      */
-    private Fst createPi() {
+    private static Fst createPi() {
         TropicalSemiring ts = new TropicalSemiring();
         Fst fst = new Fst(ts);
         State s1 = new State(ts.zero());
@@ -101,7 +101,7 @@ public class ProjectTest {
      * 
      * @return the created fst
      */
-    private Fst createPo() {
+    private static Fst createPo() {
         TropicalSemiring ts = new TropicalSemiring();
         Fst fst = new Fst(ts);
 

@@ -22,8 +22,8 @@ package edu.cmu.sphinx.linguist.language.grammar;
  */
 public class GrammarArc {
 
-    private GrammarNode grammarNode;
-    private float logProbability;
+    private final GrammarNode grammarNode;
+    private final float logProbability;
 
     /**
      * Create a grammar arc

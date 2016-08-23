@@ -17,7 +17,7 @@ public class Segment implements Comparable<Segment> {
 
     public final static int FRAME_LENGTH = 10;
 
-    private int startTime, length;
+    private final int startTime, length;
 
     public Segment(Segment ref) {
         this.startTime = ref.startTime;
@@ -38,13 +38,7 @@ public class Segment implements Comparable<Segment> {
         this.startTime = this.length = 0;
     }
 
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
 
-    public void setLength(int length) {
-        this.length = length;
-    }
 
     public int getStartTime() {
         return this.startTime;

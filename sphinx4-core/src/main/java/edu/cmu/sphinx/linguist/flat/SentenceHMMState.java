@@ -40,7 +40,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
 
     private static int globalStateNumber = -1000;
 
-    private int stateNumber;
+    private final int stateNumber;
 
     // a number of separate variables are maintained in 'fields'
     // inorder to reduce the size of the SentenceHMM

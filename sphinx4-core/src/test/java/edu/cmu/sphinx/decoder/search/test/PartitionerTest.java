@@ -10,7 +10,7 @@ import java.util.*;
 
 public class PartitionerTest {
 
-	public void testSorted(Token[] tokens, int p) {
+	public static void testSorted(Token[] tokens, int p) {
 		for (int i = 0; i < p; i++) {
 			Assert.assertTrue(tokens[i].getScore() >= tokens[p].getScore());
 		}
@@ -19,8 +19,8 @@ public class PartitionerTest {
 		}
 	}
 
-	private void performTestPartitionSizes(int absoluteBeamWidth,
-			int tokenListSize, boolean tokenListLarger) {
+	private static void performTestPartitionSizes(int absoluteBeamWidth,
+												  int tokenListSize, boolean tokenListLarger) {
 
 		Random random = new Random(System.currentTimeMillis());
 		Partitioner partitioner = new Partitioner();
@@ -42,7 +42,7 @@ public class PartitionerTest {
 			Assert.assertEquals (r, tokenListSize - 1);
 		}
 
-		List<Token> firstList = new LinkedList<Token>();
+		List<Token> firstList = new LinkedList<>();
 		if (r >= 0) {
 			float lowestScore = tokens[r].getScore();
 
@@ -100,7 +100,7 @@ public class PartitionerTest {
 	}
 
 	@Test
-	public void testPartitionSizes() {
+	public static void testPartitionSizes() {
 
 		int absoluteBeamWidth = 1500;
 		int tokenListSize = 3000;

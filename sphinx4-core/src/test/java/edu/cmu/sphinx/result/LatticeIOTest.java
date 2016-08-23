@@ -27,8 +27,8 @@ import java.util.Iterator;
  */
 public class LatticeIOTest {
 
-    private File latFile = new File("tmp.lat");
-    private File slfFile = new File("tmp.slf");
+    private final File latFile = new File("tmp.lat");
+    private final File slfFile = new File("tmp.slf");
 
     /**
      * Method for cleaning tmp files if any was created

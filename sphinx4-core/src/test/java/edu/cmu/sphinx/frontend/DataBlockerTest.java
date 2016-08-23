@@ -15,7 +15,7 @@ public class DataBlockerTest extends BaseDataProcessor {
 
     @BeforeMethod
     public void setUp() {
-        input = new ArrayList<Data>();
+        input = new ArrayList<>();
     }
 
 
@@ -83,7 +83,7 @@ public class DataBlockerTest extends BaseDataProcessor {
         DataBlocker dataBlocker = new DataBlocker(blocSizeMs);
         dataBlocker.setPredecessor(this);
 
-        List<Data> output = new ArrayList<Data>();
+        List<Data> output = new ArrayList<>();
 
         while (true) {
             Data d = dataBlocker.getData();
@@ -96,7 +96,7 @@ public class DataBlockerTest extends BaseDataProcessor {
 
 
     public static List<DoubleData> createDataInput(int numSamples, int blockSize, int sampleRate, int offSet) {
-        List<DoubleData> datas = new ArrayList<DoubleData>();
+        List<DoubleData> datas = new ArrayList<>();
 
         double counter = 1;
         for (int i = 0; i < numSamples / blockSize; i++) {

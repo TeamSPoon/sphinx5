@@ -484,7 +484,7 @@ public class FlatLinguist implements Linguist, Configurable {
     /**
      * The search graph that is produced by the flat linguist.
      */
-    protected class FlatSearchGraph implements SearchGraph {
+    protected static class FlatSearchGraph implements SearchGraph {
 
         /**
          * An array of classes that represents the order in which the states will be returned.

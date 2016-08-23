@@ -162,7 +162,7 @@ public class TokenTracker {
      * A class for keeping track of statistics about tokens. Tracks the count,
      * minimum and maximum score for a particular state.
      */
-    class TokenStats {
+    static class TokenStats {
 
         int count;
         float maxScore;

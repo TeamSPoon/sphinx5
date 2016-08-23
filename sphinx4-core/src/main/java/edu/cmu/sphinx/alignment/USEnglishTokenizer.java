@@ -342,7 +342,7 @@ public class USEnglishTokenizer implements TextTokenizer {
     private Item tokenItem;
 
     // a CART for classifying numbers
-    private DecisionTree cart;
+    private final DecisionTree cart;
 
     /**
      * Constructs a default USTokenWordProcessor. It uses the USEnglish regular

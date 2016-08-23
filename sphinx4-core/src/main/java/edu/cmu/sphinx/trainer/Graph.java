@@ -19,8 +19,8 @@ import java.util.Iterator;
 
 public class Graph {
 
-    private ArrayList<Edge> edges; // The list of edges.
-    private ArrayList<Node> nodes; // The list of nodes.
+    private final ArrayList<Edge> edges; // The list of edges.
+    private final ArrayList<Node> nodes; // The list of nodes.
     private Iterator<Edge> edgeIterator; // The iterator for the list of edges.
     private Iterator<Node> nodeIterator; // The iterator for the list of nodes.
 

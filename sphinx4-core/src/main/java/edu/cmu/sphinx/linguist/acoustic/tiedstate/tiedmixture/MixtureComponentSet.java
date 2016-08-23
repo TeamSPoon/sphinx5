@@ -25,14 +25,14 @@ public class MixtureComponentSet {
     
     private int scoresQueueLen;
     private boolean toStoreScore;
-    private Deque<MixtureComponentSetScores> storedScores;
+    private final Deque<MixtureComponentSetScores> storedScores;
     MixtureComponentSetScores curScores;
 
-    private ArrayList<PrunableMixtureComponent[]> components;
-    private ArrayList<PrunableMixtureComponent[]> topComponents;
-    private int numStreams;
-    private int topGauNum;
-    private int gauNum;
+    private final ArrayList<PrunableMixtureComponent[]> components;
+    private final ArrayList<PrunableMixtureComponent[]> topComponents;
+    private final int numStreams;
+    private final int topGauNum;
+    private final int gauNum;
     private long gauCalcSampleNumber;
     
     public MixtureComponentSet(ArrayList<PrunableMixtureComponent[]> components, int topGauNum) {
@@ -55,10 +55,6 @@ public class MixtureComponentSet {
     
     private void storeScores(MixtureComponentSetScores scores) {
 
-        int size = storedScores.size();
-        int toRemove = (size+1) - scoresQueueLen;
-        for (int i = 0; i < toRemove; i++)
-            storedScores.poll();
 
         storedScores.add(scores);
     }
@@ -77,14 +73,24 @@ public class MixtureComponentSet {
         return null;
     }
     
-    private MixtureComponentSetScores createFromTopGau(long firstFrameSample) {
-        MixtureComponentSetScores scores = new MixtureComponentSetScores(numStreams, topGauNum, firstFrameSample);
-        for (int i = 0; i < numStreams; i++) {
+    private MixtureComponentSetScores createFromTopGau(long firstFrameSample, MixtureComponentSetScores recycle) {
+
+        int s = this.numStreams;
+        int n = this.topGauNum;
+        MixtureComponentSetScores scores =
+                (recycle == null ? new MixtureComponentSetScores() : recycle)
+                        .clear(s, n, firstFrameSample);
+
+        for (int i = 0; i < s; i++) {
+            ArrayList<PrunableMixtureComponent[]> topComponents = this.topComponents;
+
             PrunableMixtureComponent[] topI = topComponents.get(i);
-            for (int j = 0; j < topGauNum; j++) {
+            float[] scoreRow = scores.scores[i];
+            int[] idRow = scores.ids[i];
+            for (int j = 0; j < n; j++) {
                 PrunableMixtureComponent topIJ = topI[j];
-                scores.setScore(i, j, topIJ.getStoredScore());
-                scores.setGauId(i, j, topIJ.id);
+                scoreRow[j] = topIJ.score;
+                idRow[j] = topIJ.id;
             }
         }
         return scores;
@@ -93,14 +99,16 @@ public class MixtureComponentSet {
     private static void insertTopComponent(PrunableMixtureComponent[] topComponents, PrunableMixtureComponent component) {
         int i;
         int l = topComponents.length;
+        float cScore = component.getPartialScore();
         for (i = 0; i < l - 1; i++) {
-            if (component.getPartialScore() < topComponents[i].getPartialScore()) {
+            if (cScore < topComponents[i].getPartialScore()) {
                 topComponents[i - 1] = component;
                 return;
             }
             topComponents[i] = topComponents[i + 1];
         }
-        if (component.getPartialScore() < topComponents[l - 1].getPartialScore())
+
+        if (cScore < topComponents[l - 1].getPartialScore())
             topComponents[l - 2] = component;
         else
             topComponents[l - 1] = component;
@@ -158,7 +166,15 @@ public class MixtureComponentSet {
         float[] featureVector = FloatData.toFloatData(feature).getValues();
         updateTopScores(featureVector);
         //store just calculated score in list
-        curScores = createFromTopGau(firstSampleNumber);
+
+
+        int size = storedScores.size();
+        int toRemove = (size+1) - scoresQueueLen;
+        MixtureComponentSetScores lastRemoved = null;
+        for (int i = 0; i < toRemove; i++)
+            lastRemoved = storedScores.poll();
+
+        curScores = createFromTopGau(firstSampleNumber, lastRemoved);
         if (toStoreScore)
             storeScores(curScores);
     }
@@ -227,22 +243,31 @@ public class MixtureComponentSet {
         return components.get(streamId)[topGauId].id;
     }
     
-    private static <T> T[] concatenate(T[] A, T[] B) {
-        int aLen = A.length;
-        int bLen = B.length;
-
-        @SuppressWarnings("unchecked")
-        T[] C = (T[]) Array.newInstance(A.getClass().getComponentType(), aLen+bLen);
-        System.arraycopy(A, 0, C, 0, aLen);
-        System.arraycopy(B, 0, C, aLen, bLen);
-
-        return C;
-    }
+//    private static <T> T[] concatenate(T[] A, T[] B) {
+//        int aLen = A.length;
+//        int bLen = B.length;
+//
+//        @SuppressWarnings("unchecked")
+//        T[] C = (T[]) Array.newInstance(A.getClass().getComponentType(), aLen+bLen);
+//        System.arraycopy(A, 0, C, 0, aLen);
+//        System.arraycopy(B, 0, C, aLen, bLen);
+//
+//        return C;
+//    }
     
     protected MixtureComponent[] toArray() {
-        PrunableMixtureComponent[] allComponents = new PrunableMixtureComponent[0];
+        int total = 0;
         for (int i = 0; i < numStreams; i++)
-            concatenate(allComponents, components.get(i));
+            total += components.get(i).length;
+
+        PrunableMixtureComponent[] allComponents = new PrunableMixtureComponent[total];
+        int p = 0;
+        for (int i = 0; i < numStreams; i++) {
+            PrunableMixtureComponent[] c = components.get(i);
+            int cl = c.length;
+            System.arraycopy(c, 0, allComponents, p, cl);
+            p += cl;
+        }
         return allComponents;
     }
     
@@ -262,12 +287,6 @@ public class MixtureComponentSet {
         return size;
     }
     
-    private final Comparator<PrunableMixtureComponent> componentComparator = new PrunableMixtureComponentComparator();
+    static final Comparator<PrunableMixtureComponent> componentComparator = (a, b) -> (int)(a.score - b.score);
 
-    private static class PrunableMixtureComponentComparator implements Comparator<PrunableMixtureComponent> {
-
-        public int compare(PrunableMixtureComponent a, PrunableMixtureComponent b) {
-            return (int)(a.getStoredScore() - b.getStoredScore());
-        }
-    }
 }

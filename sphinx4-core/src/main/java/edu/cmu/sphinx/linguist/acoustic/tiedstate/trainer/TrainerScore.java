@@ -21,8 +21,8 @@ import edu.cmu.sphinx.linguist.acoustic.tiedstate.SenoneSequence;
 /** Used to transfer data from the trainer to the acoustic model */
 public class TrainerScore {
 
-    private Data feature;
-    private float logOutputProbability;
+    private final Data feature;
+    private final float logOutputProbability;
     private float logScalingFactor;
     private int senoneID;
     private HMMState hmmState;
@@ -30,8 +30,8 @@ public class TrainerScore {
     private float logAlpha;
     private float logBeta;
     private float logGamma;
-    private float[] logComponentGamma;
-    private float[] logComponentProb;
+    private final float[] logComponentGamma;
+    private final float[] logComponentProb;
     static private float logLikelihood;
 
 

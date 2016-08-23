@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class ClusteredDensityFileData {
 
-    private int numberOfClusters;
+    private final int numberOfClusters;
     private int[] corespondingClass;
 
     public ClusteredDensityFileData(Loader loader, int numberOfClusters) {

@@ -21,7 +21,7 @@ public abstract class RandomDataProcessor extends BaseDataProcessor {
 
     @BeforeMethod
     public void setUp() {
-        input = new ArrayList<Data>();
+        input = new ArrayList<>();
     }
 
 
@@ -34,7 +34,7 @@ public abstract class RandomDataProcessor extends BaseDataProcessor {
     public List<Data> collectOutput(BaseDataProcessor dataProc) throws DataProcessingException {
         dataProc.setPredecessor(this);
 
-        List<Data> output = new ArrayList<Data>();
+        List<Data> output = new ArrayList<>();
 
         Data d;
         while ((d = dataProc.getData()) != null) {
@@ -47,7 +47,7 @@ public abstract class RandomDataProcessor extends BaseDataProcessor {
 
     public static List<DoubleData> createFeatVectors(double lengthSec, int sampleRate, long startSample, int featDim, double shiftMs) {
         int numFrames = (int) Math.ceil((lengthSec * 1000) / shiftMs);
-        List<DoubleData> datas = new ArrayList<DoubleData>(numFrames);
+        List<DoubleData> datas = new ArrayList<>(numFrames);
 
         long curStartSample = startSample;
         long shiftSamples = ms2samples((int) shiftMs, sampleRate);

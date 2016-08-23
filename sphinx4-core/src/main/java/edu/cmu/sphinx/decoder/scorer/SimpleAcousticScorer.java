@@ -11,6 +11,7 @@ import edu.cmu.sphinx.util.props.S4Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Implements some basic scorer functionality, including a simple default
@@ -155,37 +156,54 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
     }
 
     protected <T extends Scoreable> T doScoring(List<T> scoreableList, Data data) {
-        return doScoring(scoreableList, 0, scoreableList.size(), data);
+        //return doScoring(scoreableList, 0, scoreableList.size(), data);
+
+
+        AtomicReference<Double> bestScore = new AtomicReference(Double.NEGATIVE_INFINITY);
+        Scoreable[] best = new Scoreable[1];
+
+        scoreableList.forEach(
+                (x) -> {
+                    float s = x.calculateScore(data);
+                    bestScore.updateAndGet((Double b) -> {
+                        if (b < s) {
+                            best[0] = x;
+                            return (double) s;
+                        }
+                        return b;
+                    });
+                });
+
+        return (T) best[0];
+
+
+//        T best = null;
+//        float bestScore = -Float.MAX_VALUE;
+//        for (int i = 0; i < scoreableList.size(); i++) {
+//            T item = scoreableList.get(i);
+//            float s = item.calculateScore(data);
+//            if (s > bestScore) {
+//                bestScore = s;
+//                best = item;
+//            }
+//        }
+//        return best;
     }
 
-    /**
-     * Scores a a list of <code>Scoreable</code>s given a <code>Data</code>
-     * -object.
-     *
-     * @param scoreableList The list of Scoreables to be scored
-     * @param data          The <code>Data</code>-object to be used for scoring.
-     * @param <T>           type for scorables
-     * @return the best scoring <code>Scoreable</code> or <code>null</code> if
-     * the list of scoreables was empty.
-     */
-    protected <T extends Scoreable> T doScoring(List<T> scoreableList, int from, int to, Data data) {
+//    /**
+//     * Scores a a list of <code>Scoreable</code>s given a <code>Data</code>
+//     * -object.
+//     *
+//     * @param scoreableList The list of Scoreables to be scored
+//     * @param data          The <code>Data</code>-object to be used for scoring.
+//     * @param <T>           type for scorables
+//     * @return the best scoring <code>Scoreable</code> or <code>null</code> if
+//     * the list of scoreables was empty.
+//     */
+//    protected <T extends Scoreable> T doScoring(List<T> scoreableList, int from, int to, Data data) {
+//
 
-        //return scoreableList.subList(from, to).stream()
-            /*.reduce(
-                (x, y) -> x.calculateScore(data) <= y.calculateScore(data) ? x : y).get();*/
-
-        T best = null;
-        float bestScore = -Float.MAX_VALUE;
-        for (int i = from; i < to; i++) {
-            T item = scoreableList.get(i);
-            float s = item.calculateScore(data);
-            if (s > bestScore) {
-                bestScore = s;
-                best = item;
-            }
-        }
-        return best;
-    }
+//    }
 
     // Even if we don't do any meaningful allocation here, we implement the
     // methods because most extending scorers do need them either.

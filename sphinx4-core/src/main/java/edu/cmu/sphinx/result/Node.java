@@ -42,8 +42,8 @@ public class Node {
     // used to generate unique IDs for new Nodes.
     private static int nodeCount;
 
-    private String id;
-    private Word word;
+    private final String id;
+    private final Word word;
     private long beginTime = -1;
     private long endTime = -1;
     private final List<Edge> enteringEdges;
@@ -517,8 +517,9 @@ public class Node {
     private void calculateBeginTime() {
         beginTime = 0;
         for (Edge edge : enteringEdges) {
-            if (edge.getFromNode().endTime > beginTime) {
-                beginTime = edge.getFromNode().endTime;
+            Node from = edge.getFromNode();
+            if (from.endTime > beginTime) {
+                beginTime = from.endTime;
             }
         }
     }

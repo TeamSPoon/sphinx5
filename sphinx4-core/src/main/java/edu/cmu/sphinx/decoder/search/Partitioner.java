@@ -71,7 +71,7 @@ public class Partitioner {
      * @param end      the ending index of the subarray, inclusive
      * @return the index of the element around which the array is partitioned
      */
-    private int midPointPartition(Token[] tokens, int start, int end) {
+    private static int midPointPartition(Token[] tokens, int start, int end) {
         int middle = (start + end) >>> 1;
         Token temp = tokens[end];
         setToken(tokens, end, tokens[middle]);
@@ -89,7 +89,7 @@ public class Partitioner {
      * @param n      the number of tokens in the final partition
      * @return the index of the last element in the partition
      */
-    public int partition(Token[] tokens, int size, int n) {
+    public static int partition(Token[] tokens, int size, int n) {
         if (tokens.length > n) {
             return midPointSelect(tokens, 0, size - 1, n, 0);
         } else {
@@ -143,7 +143,7 @@ public class Partitioner {
      * @param depth      recursion depth to avoid stack overflow and fall back to simple partition.
      * @return the index of the token with the ith largest score
      */
-    private int midPointSelect(Token[] tokens, int start, int end, int targetSize, int depth) {
+    private static int midPointSelect(Token[] tokens, int start, int end, int targetSize, int depth) {
         while (true) {
             /* Max recursion depth */
             int MAX_DEPTH = 50;

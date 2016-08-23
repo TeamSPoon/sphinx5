@@ -51,13 +51,13 @@ public class BinaryLoader {
     
     private int maxNGram;
     
-    private float unigramWeight;
-    private float languageWeight;
+    private final float unigramWeight;
+    private final float languageWeight;
     
-    private double wip;
+    private final double wip;
     
     private boolean bigEndian = true;
-    private boolean applyLanguageWeightAndWip;
+    private final boolean applyLanguageWeightAndWip;
 
     private long bytesRead;
 
@@ -643,7 +643,7 @@ public class BinaryLoader {
 
     /** Apply the WIP to the given array of probabilities.
     */
-    private void applyWip(float[] logProbabilities, double wip) {
+    private static void applyWip(float[] logProbabilities, double wip) {
         float logWip = LogMath.linearToLog(wip);
         for (int i = 0; i < logProbabilities.length; i++) {
             logProbabilities[i] = logProbabilities[i] + logWip;

@@ -26,8 +26,8 @@ public class DynamicTrigramModel implements LanguageModel {
     private float unigramWeight;
 
     private List<String> sentences;
-    private Map<WordSequence, Float> logProbs;
-    private Map<WordSequence, Float> logBackoffs;
+    private final Map<WordSequence, Float> logProbs;
+    private final Map<WordSequence, Float> logBackoffs;
 
     public DynamicTrigramModel() {
         vocabulary = new HashSet<>();

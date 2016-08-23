@@ -137,7 +137,7 @@ class Node {
     @SuppressWarnings({"unchecked"})
     public Map<Object, Node> getSuccessorMap() {
         if (successors == null) {
-            successors = new HashMap<Object, Node>(4);
+            successors = new HashMap<Object, Node>(1);
         }
 
         assert successors instanceof Map;
@@ -200,11 +200,7 @@ class Node {
         WordNode child = null;
         WordNode matchingChild = (WordNode) getSuccessor(pronunciation);
         if (matchingChild == null) {
-            child = wordNodeMap.get(pronunciation);
-            if (child == null) {
-                child = new WordNode(pronunciation, probability);
-                wordNodeMap.put(pronunciation, child);
-            }
+            child = wordNodeMap.computeIfAbsent(pronunciation, c -> new WordNode(pronunciation, probability));
             putSuccessor(pronunciation, child);
         } else {
             if (matchingChild.getUnigramProbability() < probability) {
@@ -688,7 +684,7 @@ class HMMTree {
     private final Map<Pronunciation, WordNode> wordNodeMap;
     
     private WordNode sentenceEndWordNode;
-    private Logger logger;
+    private final Logger logger;
 
 
     /**
@@ -861,9 +857,7 @@ class HMMTree {
     /** Adds the given collection of words to the lex tree */
     private void addWords() {
         Set<Word> words = getAllWords();
-        for (Word word : words) {
-            addWord(word);
-        }
+        words.forEach(this::addWord);
     }
 
 
@@ -1017,25 +1011,19 @@ class HMMTree {
 
         /** Creates the entry point maps for all entry points. */
         void createEntryPointMaps() {
-            for (EntryPoint ep : entryPoints.values()) {
-                ep.createEntryPointMap();
-            }
+            entryPoints.values().forEach(EntryPoint::createEntryPointMap);
         }
 
 
         /** Freezes the entry point table */
         void freeze() {
-            for (EntryPoint ep : entryPoints.values()) {
-                ep.freeze();
-            }
+            entryPoints.values().forEach(EntryPoint::freeze);
         }
 
 
         /** Dumps the entry point table */
         void dump() {
-            for (EntryPoint ep : entryPoints.values()) {
-                ep.dump();
-            }
+            entryPoints.values().forEach(EntryPoint::dump);
         }
     }
 

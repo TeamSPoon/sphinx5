@@ -15,8 +15,8 @@ package edu.cmu.sphinx.alignment.tokenizer;
  * Contains the information that is shared between multiple items.
  */
 public class ItemContents {
-    private FeatureSet features;
-    private FeatureSet relations;
+    private final FeatureSet features;
+    private final FeatureSet relations;
 
     /**
      * Class Constructor.

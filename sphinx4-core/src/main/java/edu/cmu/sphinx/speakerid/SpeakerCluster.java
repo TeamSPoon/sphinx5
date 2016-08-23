@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 public class SpeakerCluster {
-    private TreeSet<Segment> segmentSet;
+    private final TreeSet<Segment> segmentSet;
     private double bicValue;
 
     public double getBicValue() {

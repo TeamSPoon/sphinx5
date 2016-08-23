@@ -53,8 +53,8 @@ public class PathExtractor {
     private final static boolean LAZY_COMPILE = System.getProperty(
             LAZY_COMPILE_PROPERTY, "true").equals("true");
 
-    private String pathAndFeature;
-    private String path;
+    private final String pathAndFeature;
+    private final String path;
     private String feature;
     private Object[] compiledPath;
 
@@ -232,7 +232,7 @@ class OpEnum {
     public final static OpEnum LAST_DAUGHTER = new OpEnum("daughtern");
     public final static OpEnum RELATION = new OpEnum("R");
 
-    private String name;
+    private final String name;
 
     /**
      * Creates a new OpEnum.. There is a limited set of OpEnums

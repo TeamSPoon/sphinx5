@@ -21,10 +21,10 @@ import edu.cmu.sphinx.util.LogMath;
 /** This class builds an HMM from a transcript, at increasing levels of details. */
 public class BuildTranscriptHMM {
 
-    private Graph hmmGraph;
+    private final Graph hmmGraph;
     private TrainerDictionary dictionary;
-    private AcousticModel acousticModel;
-    private UnitManager unitManager;
+    private final AcousticModel acousticModel;
+    private final UnitManager unitManager;
 
 
     /**

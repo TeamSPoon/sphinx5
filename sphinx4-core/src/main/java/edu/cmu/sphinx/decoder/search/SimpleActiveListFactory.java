@@ -16,10 +16,7 @@ import edu.cmu.sphinx.decoder.scorer.Scoreable;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /** A factory for simple active lists */
 public class SimpleActiveListFactory extends ActiveListFactory {
@@ -69,12 +66,12 @@ public class SimpleActiveListFactory extends ActiveListFactory {
      * <p>
      * Note that all scores are maintained in the LogMath log domain
      */
-    class SimpleActiveList implements ActiveList {
+    static class SimpleActiveList implements ActiveList {
 
         private int absoluteBeamWidth = 2000;
         private final float logRelativeBeamWidth;
         private Token bestToken;
-        private List<Token> tokenList = new LinkedList<>();
+        private final List<Token> tokenList = new ArrayList<>();
 
 
         /**
@@ -87,6 +84,11 @@ public class SimpleActiveListFactory extends ActiveListFactory {
                                 float logRelativeBeamWidth) {
             this.absoluteBeamWidth = absoluteBeamWidth;
             this.logRelativeBeamWidth = logRelativeBeamWidth;
+        }
+
+        public void clear() {
+            tokenList.clear();
+            bestToken = null;
         }
 
 
@@ -131,9 +133,14 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          * @return a (possible new) active list
          */
         public ActiveList purge() {
-            if (absoluteBeamWidth > 0 && tokenList.size() > absoluteBeamWidth) {
+            int s = size();
+            if (absoluteBeamWidth > 0 && s > absoluteBeamWidth) {
                 Collections.sort(tokenList, Scoreable.COMPARATOR);
-                tokenList = tokenList.subList(0, absoluteBeamWidth);
+                int overflow = s - absoluteBeamWidth;
+                int last = s - 1;
+                for (int i = 0; i < overflow; i++) {
+                    tokenList.remove(last--);
+                }
             }
             return this;
         }
@@ -184,12 +191,12 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          *
          * @return the best score
          */
-        public float getBestScore() {
-            float bestScore = -Float.MAX_VALUE;
+        public final float getBestScore() {
             if (bestToken != null) {
-                bestScore = bestToken.getScore();
+                return bestToken.getScore();
+            } else {
+                return -Float.MAX_VALUE;
             }
-            return bestScore;
         }
 
 
@@ -217,7 +224,9 @@ public class SimpleActiveListFactory extends ActiveListFactory {
         * @see edu.cmu.sphinx.decoder.search.ActiveList#createNew()
         */
         public ActiveList newInstance() {
-            return SimpleActiveListFactory.this.newInstance();
+            //return SimpleActiveListFactory.this.newInstance();
+            clear();
+            return this;
         }
     }
 }

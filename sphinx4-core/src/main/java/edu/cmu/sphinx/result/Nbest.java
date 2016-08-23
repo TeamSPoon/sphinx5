@@ -26,11 +26,11 @@ public class Nbest {
         this.lattice = lattice;
     }
 
-    class NBestPath implements Comparable<NBestPath> {
-        String path;
-        Node node;
-        double score;
-        double forwardScore;
+    static class NBestPath implements Comparable<NBestPath> {
+        final String path;
+        final Node node;
+        final double score;
+        final double forwardScore;
 
         public NBestPath(String path, Node node, double score,
                 double forwardScore) {

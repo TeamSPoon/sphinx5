@@ -117,7 +117,7 @@
 
         <property name="wantUnigramSmear" value="true"/>
         <property name="unigramSmearWeight" value="1"/>
-        <property name="cacheSize" value="0"/>
+        <property name="cacheSize" value="16384"/>
     </component>
 
     <component name="trigramModel"
@@ -128,6 +128,7 @@
         <property name="dictionary" value="dictionary"/>
         <property name="location"
          value="etc/voxforge_en_sphinx.transcription.test.txt.lm.DMP"/>
+        <property name="ngramCacheSize" value="16384"/>
     </component>
 
     <component name="dictionary" 

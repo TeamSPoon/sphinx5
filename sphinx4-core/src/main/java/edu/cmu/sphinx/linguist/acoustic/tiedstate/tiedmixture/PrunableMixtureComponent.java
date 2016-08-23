@@ -20,8 +20,8 @@ import edu.cmu.sphinx.util.LogMath;
 @SuppressWarnings("serial")
 public class PrunableMixtureComponent extends MixtureComponent {
 
-    private float score = LogMath.LOG_ZERO;
-    private float partScore = LogMath.LOG_ZERO;
+    protected float score = LogMath.LOG_ZERO;
+    protected float partScore = LogMath.LOG_ZERO;
     public final int id;
     
     public PrunableMixtureComponent(
@@ -93,11 +93,11 @@ public class PrunableMixtureComponent extends MixtureComponent {
         score = convertScore(logDval);
     }
     
-    public float getStoredScore() {
+    public final float getStoredScore() {
         return score;
     }
     
-    public float getPartialScore() {
+    public final float getPartialScore() {
         return partScore;
     }
 

@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
  */
 public class SpeechMarkerTest extends RandomDataProcessor {
 
-    public BaseDataProcessor createDataFilter(boolean mergeSpeechSegments) {
+    public static BaseDataProcessor createDataFilter(boolean mergeSpeechSegments) {
         try {
             SpeechMarker speechMarker = getInstance(SpeechMarker.class);
             speechMarker.initialize();
@@ -58,10 +58,10 @@ public class SpeechMarkerTest extends RandomDataProcessor {
         assertThat(results.get(103), instanceOf(DataEndSignal.class));
     }
 
-    private List<SpeechClassifiedData> createClassifiedSpeech(int sampleRate,
-                                                              double lengthSec,
-                                                              boolean isSpeech) {
-        List<SpeechClassifiedData> datas = new ArrayList<SpeechClassifiedData>();
+    private static List<SpeechClassifiedData> createClassifiedSpeech(int sampleRate,
+                                                                     double lengthSec,
+                                                                     boolean isSpeech) {
+        List<SpeechClassifiedData> datas = new ArrayList<>();
         List<DoubleData> featVecs = createFeatVectors(1, sampleRate, 0, 10, 10);
 
         for (DoubleData featVec : featVecs)

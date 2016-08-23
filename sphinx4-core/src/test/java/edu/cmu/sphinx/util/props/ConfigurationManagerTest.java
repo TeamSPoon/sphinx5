@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class ConfigurationManagerTest {
         ConfigurationManager cm = new ConfigurationManager();
 
         String instanceName = "docu";
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put(DummyComp.PROP_FRONTEND, new DummyFrontEnd());
         cm.addConfigurable(DummyComp.class, instanceName, props);
 
@@ -87,8 +88,7 @@ public class ConfigurationManagerTest {
         cm.addConfigurable(DummyFrontEnd.class, frontEndName);
         PropertySheet propSheet = cm.getPropertySheet(frontEndName);
         propSheet
-                .setComponentList("dataProcs", Arrays.asList("fooBar"), Arrays
-                        .<Configurable> asList(new AnotherDummyProcessor()));
+                .setComponentList("dataProcs", Collections.singletonList("fooBar"), Collections.<Configurable>singletonList(new AnotherDummyProcessor()));
 
         String xmlString = ConfigurationManagerUtils.toXML(cm);
 

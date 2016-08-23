@@ -491,7 +491,7 @@ public class PhoneLoop {
     }
 
     /** The base search state for this dynamic flat linguist. */
-    abstract class OogSearchState implements SearchState, SearchStateArc {
+    abstract static class OogSearchState implements SearchState, SearchStateArc {
 
         final static int ANY = 0;
 

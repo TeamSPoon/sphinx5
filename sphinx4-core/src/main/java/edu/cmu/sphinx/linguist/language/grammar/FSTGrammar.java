@@ -370,7 +370,7 @@ public class FSTGrammar extends Grammar {
      *               convert them to LogMath.
      * @return the converted probability in logMath log base
      */
-    private float convertProbability(float lnProb) {
+    private static float convertProbability(float lnProb) {
         return LogMath.lnToLog(-lnProb);
     }
 

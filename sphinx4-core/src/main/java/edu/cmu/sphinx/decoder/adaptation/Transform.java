@@ -11,8 +11,8 @@ public class Transform {
 
     private float[][][][] As;
     private float[][][] Bs;
-    private Sphinx3Loader loader;
-    private int nrOfClusters;
+    private final Sphinx3Loader loader;
+    private final int nrOfClusters;
 
     public Transform(Sphinx3Loader loader, int nrOfClusters) {
         this.loader = loader;

@@ -16,10 +16,10 @@ import java.util.ArrayList;
 public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScoreProvider {
 
     private final HMMState state;
-    private AllphoneLinguist linguist;
+    private final AllphoneLinguist linguist;
     
-    private float insertionProb;
-    private float languageProb;
+    private final float insertionProb;
+    private final float languageProb;
     
     public PhoneHmmSearchState(HMMState hmmState, AllphoneLinguist linguist, float insertionProb, float languageProb) {
         this.state = hmmState;

@@ -27,7 +27,7 @@ public class LatticeRescorer {
 
     protected final Lattice lattice;
     protected final LanguageModel model;
-    private int depth;
+    private final int depth;
 
     /**
      * Create a new Lattice optimizer

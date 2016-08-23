@@ -17,15 +17,15 @@ import edu.cmu.sphinx.util.LogMath;
 /** Used to accumulate data for updating of models. */
 class Buffer {
 
-    private double[] numerator;
+    private final double[] numerator;
     private double denominator;
     private boolean wasUsed;
     // Maybe isLog should be used otherwise: one single, say,
     // accumulate(), which would be directed according to isLog. But
     // then again having accumulate() and logAccumulate() makes it
     // clearer if we're dealing with log scale or not...
-    private boolean isLog;
-    private int id;
+    private final boolean isLog;
+    private final int id;
 
 
     /**

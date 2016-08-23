@@ -9,7 +9,7 @@ import edu.cmu.sphinx.util.LogMath;
 
 public class AllphoneSearchGraph implements SearchGraph {
 
-    private AllphoneLinguist linguist;
+    private final AllphoneLinguist linguist;
     
     public AllphoneSearchGraph(AllphoneLinguist linguist) {
         this.linguist = linguist;

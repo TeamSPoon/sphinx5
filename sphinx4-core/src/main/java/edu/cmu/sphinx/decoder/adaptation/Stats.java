@@ -19,12 +19,12 @@ public class Stats {
     // Minimum number of frames to perform estimation
 
     private static final int MIN_FRAMES = 300;
-    private ClusteredDensityFileData means;
+    private final ClusteredDensityFileData means;
     private double[][][][][] regLs;
     private double[][][][] regRs;
-    private int nClusters;
-    private Sphinx3Loader loader;
-    private float varFlor;
+    private final int nClusters;
+    private final Sphinx3Loader loader;
+    private final float varFlor;
     private int nFrames;
 
     public Stats(Loader loader, ClusteredDensityFileData means) {
@@ -96,7 +96,7 @@ public class Stats {
      *            Number of feature streams
      * @return posterior values for all components.
      */
-    private float[] computePosterios(float[] componentScores, int numStreams) {
+    private static float[] computePosterios(float[] componentScores, int numStreams) {
         float[] posteriors = componentScores;
 
         int step = componentScores.length / numStreams;
@@ -157,7 +157,7 @@ public class Stats {
             len = loader.getVectorLength();
             numStreams = loader.getNumStreams();
             gauPerState = loader.getNumGaussiansPerState();
-            posteriors = this.computePosterios(componentScore, numStreams);
+            posteriors = Stats.computePosterios(componentScore, numStreams);
             int featVectorStartIdx = 0;
 
             for (int i = 0; i < numStreams; i++) {

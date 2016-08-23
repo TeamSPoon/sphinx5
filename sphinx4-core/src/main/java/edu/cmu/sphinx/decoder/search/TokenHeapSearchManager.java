@@ -71,7 +71,7 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
      * something better once we figure out how we want to prune things.
      */
 
-    class TokenHeap {
+    static class TokenHeap {
 
         final Token[] tokens;
         int curSize;

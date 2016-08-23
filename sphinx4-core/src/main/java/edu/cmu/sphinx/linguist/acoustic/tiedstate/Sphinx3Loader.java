@@ -324,7 +324,7 @@ public class Sphinx3Loader implements Loader {
     /**
      * Creates senone to CI phone mapping, reading model definition file
      */
-    private void getSenoneToCIPhone() throws IOException, URISyntaxException {
+    private void getSenoneToCIPhone() throws IOException {
         InputStream inputStream = getDataStream("mdef");
         if (inputStream == null) {
             throw new IOException("can't find model definition");

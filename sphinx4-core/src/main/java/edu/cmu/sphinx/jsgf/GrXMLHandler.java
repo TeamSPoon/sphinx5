@@ -59,7 +59,7 @@ public class GrXMLHandler extends DefaultHandler {
         addToCurrent(newRule, topRule);
     }
 
-    private JSGFRuleSequence emptyRuleSequence() {
+    private static JSGFRuleSequence emptyRuleSequence() {
         return new JSGFRuleSequence(new ArrayList<>());
     }
 

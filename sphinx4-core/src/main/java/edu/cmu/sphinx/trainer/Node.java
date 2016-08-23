@@ -22,20 +22,20 @@ public class Node {
     // Do we really need nodeId and object? Maybe we can use object as
     // the id when we assign a string to it.
     /** The identifier for this Node */
-    private String nodeId;
+    private final String nodeId;
 
     /** Object contained in this mode. Typically, an HMM state, a senone. */
     private Object object;
 
     /** The type of node, such as a dummy node or node represented by a specific type of symbol */
-    private NodeType nodeType;
+    private final NodeType nodeType;
 
     /** The list of incoming edges to this node. */
-    private List<Edge> incomingEdges;
+    private final List<Edge> incomingEdges;
     private Iterator<Edge> incomingEdgeIterator;
 
     /** The list of outgoing edges from this node */
-    private List<Edge> outgoingEdges;
+    private final List<Edge> outgoingEdges;
     private Iterator<Edge> outgoingEdgeIterator;
 
 

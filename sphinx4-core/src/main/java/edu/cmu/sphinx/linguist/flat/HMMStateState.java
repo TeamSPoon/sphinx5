@@ -25,8 +25,8 @@ import java.io.Serializable;
 public class HMMStateState extends SentenceHMMState
         implements Serializable, HMMSearchState, ScoreProvider {
 
-    private HMMState hmmState;
-    private boolean isEmitting;
+    private final HMMState hmmState;
+    private final boolean isEmitting;
 
 
     /**

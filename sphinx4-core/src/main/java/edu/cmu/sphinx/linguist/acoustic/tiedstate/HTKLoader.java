@@ -263,7 +263,7 @@ public class HTKLoader implements Loader {
      * 
      * @throws java.io.IOException
      */
-    private void loadModelFiles(String MMFname) throws IOException {
+    private void loadModelFiles(String MMFname) {
 
         logger.config("Loading HTK acoustic model: " + MMFname);
         logger.config("    Path      : " + location);

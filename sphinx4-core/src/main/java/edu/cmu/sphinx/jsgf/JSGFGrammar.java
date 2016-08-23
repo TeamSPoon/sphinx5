@@ -477,7 +477,7 @@ public class JSGFGrammar extends Grammar {
      * @param weights
      *            the weights to normalize
      */
-    private List<Float> getNormalizedWeights(List<Float> weights) {
+    private static List<Float> getNormalizedWeights(List<Float> weights) {
 
         if (weights == null) {
             return null;
@@ -796,8 +796,8 @@ public class JSGFGrammar extends Grammar {
      */
     static class GrammarGraph {
 
-        private GrammarNode startNode;
-        private GrammarNode endNode;
+        private final GrammarNode startNode;
+        private final GrammarNode endNode;
 
         /**
          * Creates a grammar graph with the given nodes

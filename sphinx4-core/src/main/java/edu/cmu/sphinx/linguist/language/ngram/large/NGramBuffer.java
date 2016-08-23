@@ -30,7 +30,7 @@ class NGramBuffer {
     private final boolean is32bits;
     private final int n;
     private boolean used;
-    private int firstNGramEntry;
+    private final int firstNGramEntry;
 
     /**
      * Constructs a NGramBuffer object with the given byte[].

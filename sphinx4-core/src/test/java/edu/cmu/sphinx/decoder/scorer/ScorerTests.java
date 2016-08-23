@@ -39,7 +39,7 @@ public class ScorerTests {
 
     @Test
     public void waitUntilSpeechStart() {
-        List<Class<? extends SimpleAcousticScorer>> scorerClasses = new ArrayList<Class<? extends SimpleAcousticScorer>>();
+        List<Class<? extends SimpleAcousticScorer>> scorerClasses = new ArrayList<>();
         scorerClasses.add(SimpleAcousticScorer.class);
         scorerClasses.add(ThreadedAcousticScorer.class);
 
@@ -47,7 +47,7 @@ public class ScorerTests {
             System.err.println("testing: " + scorerClass.getSimpleName());
             DataBufferProcessor dummyFrontEnd = createDummyFrontEnd();
 
-            Map<String, Object> props = new HashMap<String, Object>();
+            Map<String, Object> props = new HashMap<>();
             props.put(SimpleAcousticScorer.FEATURE_FRONTEND, dummyFrontEnd);
             AcousticScorer scorer = ConfigurationManager.getInstance(scorerClass, props);
 
@@ -56,7 +56,7 @@ public class ScorerTests {
             scorer.allocate();
             scorer.startRecognition();
 
-            List<Scoreable> dummyTokens = Arrays.asList(testToken);
+            List<Scoreable> dummyTokens = Collections.singletonList(testToken);
             for (int i = 0; i < 100; i++)
                 scorer.calculateScores(dummyTokens);
 
@@ -68,7 +68,7 @@ public class ScorerTests {
     }
 
 
-    private DataBufferProcessor createDummyFrontEnd() {
+    private static DataBufferProcessor createDummyFrontEnd() {
         DataBufferProcessor bufferProc = ConfigurationManager.getInstance(DataBufferProcessor.class);
         bufferProc.processDataFrame(new DataStartSignal(16000));
 
@@ -91,7 +91,7 @@ public class ScorerTests {
 
     @Test
     public void testThreadedScorerDeallocation() throws InterruptedException {
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         DataBufferProcessor dummyFrontEnd = createDummyFrontEnd();
 
         props.put(SimpleAcousticScorer.FEATURE_FRONTEND, dummyFrontEnd);
@@ -102,7 +102,7 @@ public class ScorerTests {
         scorer.allocate();
         scorer.startRecognition();
 
-        List<Scoreable> dummyTokens = Arrays.asList(testToken);
+        List<Scoreable> dummyTokens = Collections.singletonList(testToken);
 
         // score around a little
         scorer.calculateScores(dummyTokens);

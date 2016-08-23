@@ -36,9 +36,9 @@ package edu.cmu.sphinx.frontend.frequencywarp;
  */
 public class MelFilter {
 
-    private double[] weight;
+    private final double[] weight;
 
-    private int initialFreqIndex;
+    private final int initialFreqIndex;
 
 
     /**

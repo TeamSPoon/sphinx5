@@ -250,7 +250,7 @@ public class ConcatFileDataSource extends StreamDataSource implements ReferenceS
         private final int totalFiles;
         private boolean inSilence;
         private Random silenceRandom;
-        private BufferedReader reader;
+        private final BufferedReader reader;
 
 
         InputStreamEnumeration(String batchFile, int startFile,

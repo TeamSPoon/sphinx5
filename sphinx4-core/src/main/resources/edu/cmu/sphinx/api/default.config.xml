@@ -136,7 +136,7 @@
 
   <component name="trivialScorer"
     type="edu.cmu.sphinx.decoder.scorer.SimpleAcousticScorer">
-      <!--type="edu.cmu.sphinx.decoder.scorer.ThreadedAcousticScorer"-->
+      <!--type="edu.cmu.sphinx.decoder.scorer.ThreadedAcousticScorer SimpleAcousticScorer"-->
     <property name="frontend" value="liveFrontEnd"/>
   </component>
 
@@ -190,6 +190,7 @@
     <property name="fillerInsertionProbability" value="${fillerInsertionProbability}"/>
     <property name="languageWeight" value="${languageWeight}"/>
     <property name="unitManager" value="unitManager"/>
+    <property name="cacheSize" value="131072"/>
   </component>
 
   <component name="trieNgramModel"

@@ -163,7 +163,7 @@ public enum LogMath { ;
      * @return the value pointed to by index
      */
     @SuppressWarnings("unused")
-    private float addTableActualComputation(float index) {
+    private static float addTableActualComputation(float index) {
         double logInnerSummation;
         // Negate index, since the derivation of this formula implies
         // the smallest number as a numerator, therefore the log of the
@@ -220,7 +220,7 @@ public enum LogMath { ;
      * @throws IllegalArgumentException <p> This is a very slow way to do this, but this method should rarely be used.
      *                                  </p>
      */
-    public final float subtractAsLinear(float logMinuend, float logSubtrahend)
+    public static float subtractAsLinear(float logMinuend, float logSubtrahend)
             throws IllegalArgumentException {
         double logInnerSummation;
         if (logMinuend < logSubtrahend) {

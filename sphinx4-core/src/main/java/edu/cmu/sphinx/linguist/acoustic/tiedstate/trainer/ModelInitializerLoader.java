@@ -443,7 +443,7 @@ public class ModelInitializerLoader implements Loader {
      * @param floor                the minimum mixture weight allowed
      * @return mixtureWeights      the gaussian weights holder
      */
-    private GaussianWeights initMixtureWeights(int numStates, int numStreams, int numGaussiansPerState, float floor) {
+    private static GaussianWeights initMixtureWeights(int numStates, int numStreams, int numGaussiansPerState, float floor) {
 
         // TODO: allow any number for numStreams
         assert numStreams == 1;
@@ -470,8 +470,8 @@ public class ModelInitializerLoader implements Loader {
      * @param skip              if true, states can be skipped
      * @throws IOException if an error occurs while loading the data
      */
-    private void addModelToTransitionMatrixPool(Pool<float[][]> pool, int hmmId, int numEmittingStates,
-                                                float floor, boolean skip) {
+    private static void addModelToTransitionMatrixPool(Pool<float[][]> pool, int hmmId, int numEmittingStates,
+                                                       float floor, boolean skip) {
 
         assert pool != null;
 

@@ -19,7 +19,7 @@ public class TextAlignerLargeTest {
     @BeforeClass
     public void setUp() {
         Random rng = new Random(42);
-        database = new ArrayList<String>();
+        database = new ArrayList<>();
         String[] dictionary = new String[] {"foo", "bar", "baz", "quz"};
         for (int i = 0; i < 100000; ++i)
             database.add(dictionary[rng.nextInt(dictionary.length)]);

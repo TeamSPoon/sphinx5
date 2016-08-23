@@ -30,8 +30,8 @@ import java.util.StringTokenizer;
 public class GapInsertionDetector {
 
 
-    private ReferenceFile referenceFile;
-    private HypothesisFile hypothesisFile;
+    private final ReferenceFile referenceFile;
+    private final HypothesisFile hypothesisFile;
     private boolean showGapInsertions;
 
 
@@ -146,7 +146,7 @@ public class GapInsertionDetector {
  */
 class ReferenceFile {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
 
 
     /**
@@ -256,7 +256,7 @@ class ReferenceUtterance {
 
 class HypothesisFile {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
     private Iterator<HypothesisWord> iterator;
     private int utteranceCount;
 

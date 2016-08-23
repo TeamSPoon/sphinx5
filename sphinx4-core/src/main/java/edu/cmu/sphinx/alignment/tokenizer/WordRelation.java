@@ -17,8 +17,8 @@ import edu.cmu.sphinx.alignment.USEnglishTokenizer;
  */
 public class WordRelation {
 
-    private Relation relation;
-    private USEnglishTokenizer tokenToWords;
+    private final Relation relation;
+    private final USEnglishTokenizer tokenToWords;
 
     private WordRelation(Relation parentRelation, USEnglishTokenizer tokenToWords) {
         this.relation = parentRelation;

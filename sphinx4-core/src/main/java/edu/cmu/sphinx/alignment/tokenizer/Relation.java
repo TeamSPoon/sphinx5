@@ -20,8 +20,8 @@ import edu.cmu.sphinx.alignment.USEnglishTokenizer;
  * {@link Utterance} via an {@link USEnglishTokenizer}.
  */
 public class Relation {
-    private String name;
-    private Utterance owner;
+    private final String name;
+    private final Utterance owner;
     private Item head;
     private Item tail;
 

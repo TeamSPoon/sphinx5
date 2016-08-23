@@ -57,8 +57,8 @@ public class BandDetector {
     // Don't care if intensity is very low
     static final double lowIntensity = 1e+5;
 
-    private FrontEnd frontend;
-    private AudioFileDataSource source;
+    private final FrontEnd frontend;
+    private final AudioFileDataSource source;
 
     public BandDetector() {
 

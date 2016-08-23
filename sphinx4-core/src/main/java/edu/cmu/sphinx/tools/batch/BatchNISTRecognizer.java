@@ -176,7 +176,7 @@ public class BatchNISTRecognizer extends BatchModeRecognizer {
 
 
     @SuppressWarnings("serial")
-    protected class CTLException extends Exception {
+    protected static class CTLException extends Exception {
         CTLException(String msg) {
             super(msg);
         }

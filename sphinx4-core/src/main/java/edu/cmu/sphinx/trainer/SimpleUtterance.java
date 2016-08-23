@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class SimpleUtterance implements Utterance {
 
     private String utteranceID;
-    private Collection<SimpleTranscript> transcriptSet;
+    private final Collection<SimpleTranscript> transcriptSet;
     private Iterator<SimpleTranscript> transcriptIterator;
 
     /*

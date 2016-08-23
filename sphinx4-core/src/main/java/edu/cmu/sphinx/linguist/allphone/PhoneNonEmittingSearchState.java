@@ -9,8 +9,8 @@ public class PhoneNonEmittingSearchState implements SearchState, SearchStateArc 
     
     protected Unit unit;
     protected AllphoneLinguist linguist;
-    private float insertionProb;
-    private float languageProb;
+    private final float insertionProb;
+    private final float languageProb;
     
     public PhoneNonEmittingSearchState(Unit unit, AllphoneLinguist linguist, float insertionProb, float languageProb) {
         this.unit = unit;
