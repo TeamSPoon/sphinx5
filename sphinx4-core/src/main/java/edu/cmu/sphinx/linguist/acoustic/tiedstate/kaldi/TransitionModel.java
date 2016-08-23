@@ -113,9 +113,8 @@ public class TransitionModel {
         parser.expectToken("</LogProbs>");
         parser.expectToken("</TransitionModel>");
 
-        LogMath logMath = LogMath.getLogMath();
         for (int i = 0; i < logProbabilities.length; ++i)
-            logProbabilities[i] = logMath.lnToLog(logProbabilities[i]);
+            logProbabilities[i] = LogMath.lnToLog(logProbabilities[i]);
     }
 
     private void parseTopology(KaldiTextParser parser) {

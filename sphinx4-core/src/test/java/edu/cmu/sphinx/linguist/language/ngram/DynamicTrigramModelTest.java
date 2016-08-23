@@ -5,6 +5,7 @@ import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.acoustic.UnitManager;
 import edu.cmu.sphinx.linguist.dictionary.Dictionary;
 import edu.cmu.sphinx.linguist.dictionary.TextDictionary;
+import edu.cmu.sphinx.util.LogMath;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static edu.cmu.sphinx.util.LogMath.getLogMath;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -48,7 +48,7 @@ public class DynamicTrigramModelTest {
         model.allocate();
         assertThat(model.getVocabulary(), contains("one"));
         assertThat(model.getProbability(new WordSequence(dictionary
-                .getWord("one"))), equalTo(getLogMath().linearToLog(1.0/3)));
+                .getWord("one"))), equalTo(LogMath.linearToLog(1.0/3)));
     }
 
     @Test

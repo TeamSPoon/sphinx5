@@ -398,7 +398,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         // (lextree linguist for example). For these cases, it is perfectly
         // fine to disable this check by setting keepAllTokens to false
 
-        if (!token.isEmitting() && (keepAllTokens && isVisited(token))) {
+        if (keepAllTokens && !token.isEmitting() && isVisited(token)) {
             return;
         }
 

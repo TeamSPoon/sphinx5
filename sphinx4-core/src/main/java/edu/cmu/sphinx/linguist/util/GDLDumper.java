@@ -43,7 +43,7 @@ public class GDLDumper extends LinguistDumper {
     private boolean skipHMMs;
     private boolean verticalLayout;
     private boolean dumpArcLabels;
-    private LogMath logMath;
+
 
     public GDLDumper( String filename, Linguist linguist,
                       boolean verticalLayout, boolean skipHMMs, boolean dumpArcLabels)
@@ -54,7 +54,6 @@ public class GDLDumper extends LinguistDumper {
         this.skipHMMs = skipHMMs;
         this.dumpArcLabels = dumpArcLabels;
         setDepthFirst(false); // breadth first traversal
-        logMath = LogMath.getLogMath();
     }
 
     public GDLDumper() {
@@ -204,9 +203,9 @@ public class GDLDumper extends LinguistDumper {
             String label = "";
             String color = getArcColor(nextArc);
             if (dumpArcLabels) {
-                double language = logMath.logToLinear(nextArc
+                double language = LogMath.logToLinear(nextArc
                         .getLanguageProbability());
-                double insert = logMath.logToLinear(nextArc
+                double insert = LogMath.logToLinear(nextArc
                         .getInsertionProbability());
                 label = " label: "
                         + qs('('

@@ -17,16 +17,11 @@ package edu.cmu.sphinx.util;
  * The logarithmic base can be set by the
  * property: <code>edu.cmu.sphinx.util.LogMath.logBase</code>
  */
-public final class LogMath {
+public enum LogMath { ;
 
     public static final float LOG_ZERO = -Float.MAX_VALUE;
     public static final float LOG_ONE = 0.f;
 
-    // Singleton instance.
-    private static final LogMath instance;
-    static {
-        instance = new LogMath();
-    }
 
 
     private static final float logBase = 1.0001f;
@@ -35,7 +30,7 @@ public final class LogMath {
     private static final float naturalLogBase = (float) Math.log(logBase);
     private static final float inverseNaturalLogBase = 1f / naturalLogBase;
 
-    private float theAddTable[];
+    //private float theAddTable[];
 
     private LogMath() {
 
@@ -99,10 +94,6 @@ public final class LogMath {
     }
 
 
-    public static LogMath getLogMath() {
-        return instance;
-    }
-
     /**
      * Sets log base.
      * <p>
@@ -143,7 +134,7 @@ public final class LogMath {
      * @param logVal2 value in log domain (i.e. log(val2)) to add
      * @return sum of val1 and val2 in the log domain
      */
-    public final float addAsLinear(float logVal1, float logVal2) {
+    public final static float addAsLinear(float logVal1, float logVal2) {
         float logHighestValue = logVal1;
         float logDifference = logVal1 - logVal2;
         /*
@@ -274,7 +265,7 @@ public final class LogMath {
      * @return converted value
      * @param logSource the number in base Math.E to convert
      */
-    public final float lnToLog(float logSource) {
+    public static final float lnToLog(float logSource) {
         return (logSource * inverseNaturalLogBase);
     }
 
@@ -323,7 +314,7 @@ public final class LogMath {
 
     /** @return the actual log base. 
      */
-    public static float getLogBase() {
+    public static float logBase() {
         return logBase;
     }
 
@@ -348,7 +339,7 @@ public final class LogMath {
     /** Converts a vector from linear domain to log domain using a given <code>LogMath</code>-instance for conversion. 
      * @param vector to convert in-place
      */
-    public void linearToLog(float[] vector) {
+    public static void linearToLog(float[] vector) {
         int nbGaussians = vector.length;
         for (int i = 0; i < nbGaussians; i++) {
             vector[i] = linearToLog(vector[i]);
@@ -360,7 +351,7 @@ public final class LogMath {
      * @param vector to convert
      * @param out result
      */
-    public void logToLinear(float[] vector, float[] out) {
+    public static void logToLinear(float[] vector, float[] out) {
         for (int i = 0; i < vector.length; i++) {
             out[i] = (float)logToLinear(vector[i]);
         }

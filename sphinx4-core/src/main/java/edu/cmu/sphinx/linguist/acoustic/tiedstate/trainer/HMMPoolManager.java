@@ -38,7 +38,7 @@ class HMMPoolManager {
     private Pool<Buffer> mixtureWeightsBufferPool;
 
     private Pool<Senone> senonePool;
-    private LogMath logMath;
+
 
     private float logMixtureWeightFloor;
     private float logTransitionProbabilityFloor;
@@ -68,17 +68,17 @@ class HMMPoolManager {
 //	logMath = LogMath.getLogMath();
 //        float mixtureWeightFloor =
 //	    props.getFloat(TiedStateAcousticModel.PROP_MW_FLOOR);
-//	logMixtureWeightFloor = logMath.linearToLog(mixtureWeightFloor);
+//	logMixtureWeightFloor = LogMath.linearToLog(mixtureWeightFloor);
 //        float transitionProbabilityFloor =
 //	    props.getFloat(TiedStateAcousticModel.PROP_TP_FLOOR);
 //	logTransitionProbabilityFloor =
-//	    logMath.linearToLog(transitionProbabilityFloor);
+//	    LogMath.linearToLog(transitionProbabilityFloor);
 //        varianceFloor =
 //	    props.getFloat(TiedStateAcousticModel.PROP_VARIANCE_FLOOR);
 
         createBuffers();
         logLikelihood = 0.0f;
-        logMath = LogMath.getLogMath();
+
     }
 
     /** Recreates the buffers. */
@@ -213,11 +213,11 @@ class HMMPoolManager {
                 assert indexMean == senone;
                 Buffer buffer = meansBufferPool.get(indexMean);
                 float[] feature = ((FloatData) score.getData()).getValues();
-                double[] data = new double[feature.length];
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
-                double dprob = logMath.logToLinear(prob);
-                // prob = (float) logMath.logToLinear(prob);
+                double dprob = LogMath.logToLinear(prob);
+                // prob = (float) LogMath.logToLinear(prob);
+                double[] data = new double[feature.length];
                 for (int j = 0; j < data.length; j++) {
                     data[j] = feature[j] * dprob;
                 }
@@ -243,10 +243,10 @@ class HMMPoolManager {
                 int indexVariance = indexMap.get(variance);
                 Buffer buffer = varianceBufferPool.get(indexVariance);
                 float[] feature = ((FloatData) score.getData()).getValues();
-                double[] data = new double[feature.length];
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
-                double dprob = logMath.logToLinear(prob);
+                double dprob = LogMath.logToLinear(prob);
+                double[] data = new double[feature.length];
                 for (int j = 0; j < data.length; j++) {
                     data[j] = (feature[j] - mean[j]);
                     data[j] *= data[j] * dprob;
@@ -269,7 +269,7 @@ class HMMPoolManager {
             for (int i = 0; i < mixtureWeights.getGauPerState(); i++) {
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
-                buffer.logAccumulate(prob, i, logMath);
+                buffer.logAccumulate(prob, i);
             }
         }
     }
@@ -328,7 +328,7 @@ class HMMPoolManager {
                 float prob = alpha + beta + transitionProb + outputProb;
                 prob -= currentLogLikelihood;
                 // i is the index into the next state.
-                bufferArray[indexState].logAccumulate(prob, i, logMath);
+                bufferArray[indexState].logAccumulate(prob, i);
                 /*
         if ((indexMatrix == 0) && (i == 2)) {
             //    	    System.out.println("Out: " + outputProb);
@@ -367,7 +367,7 @@ class HMMPoolManager {
             // Make sure we're not trying to accumulate in an invalid
             // transition.
             if (stateVector[i] != LogMath.LOG_ZERO) {
-                bufferArray[indexState].logAccumulate(value, i, logMath);
+                bufferArray[indexState].logAccumulate(value, i);
             }
         }
     }
@@ -538,7 +538,7 @@ class HMMPoolManager {
                 Buffer buffer = mixtureWeightsBufferPool.get(id);
                 if (buffer.wasUsed()) {
                     if (buffer.logFloor(logMixtureWeightFloor)) {
-                        buffer.logNormalizeToSum(logMath);
+                        buffer.logNormalizeToSum();
                     }
                     float[] mixtureWeightsBuffer = buffer.getValues();
                     mixtureWeights.put(j, i, mixtureWeightsBuffer);
@@ -565,7 +565,7 @@ class HMMPoolManager {
                             }
                         }
                     }
-                    buffer.logNormalizeToSum(logMath);
+                    buffer.logNormalizeToSum();
                     copyVector(buffer.getValues(), matrix[j]);
                 }
             }

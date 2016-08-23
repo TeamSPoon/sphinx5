@@ -25,7 +25,6 @@ public class Stats {
     private int nClusters;
     private Sphinx3Loader loader;
     private float varFlor;
-    private final LogMath logMath = LogMath.getLogMath();
     private int nFrames;
 
     public Stats(Loader loader, ClusteredDensityFileData means) {
@@ -111,7 +110,7 @@ public class Stats {
             }
 
             for (int j = startIdx; j < startIdx + step; j++) {
-                posteriors[j] = (float) logMath.logToLinear(posteriors[j] - max);
+                posteriors[j] = (float) LogMath.logToLinear(posteriors[j] - max);
             }
             startIdx += step;
         }

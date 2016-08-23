@@ -97,7 +97,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
     protected long currentCollectTime; // the current frame number
     protected ActiveList activeList; // the list of active tokens
     protected List<Token> resultList; // the current set of results
-    protected LogMath logMath;
+
 
     private Logger logger;
     private String name;
@@ -154,7 +154,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
                                            int growSkipInterval, boolean wantEntryPruning) {
         this.name = getClass().getName();
         this.logger = Logger.getLogger(name);
-        this.logMath = LogMath.getLogMath();
+
         this.linguist = linguist;
         this.pruner = pruner;
         this.scorer = scorer;
@@ -162,15 +162,14 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         this.showTokenCount = showTokenCount;
         this.growSkipInterval = growSkipInterval;
         this.wantEntryPruning = wantEntryPruning;
-        this.logRelativeWordBeamWidth = logMath.linearToLog(relativeWordBeamWidth);
+        this.logRelativeWordBeamWidth = LogMath.linearToLog(relativeWordBeamWidth);
         this.keepAllTokens = true;
     }
 
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
-        
-        logMath = LogMath.getLogMath();
+
         logger = ps.getLogger();
         name = ps.getInstanceName();
 
@@ -183,7 +182,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         double relativeWordBeamWidth = ps.getDouble(PROP_RELATIVE_WORD_BEAM_WIDTH);
         growSkipInterval = ps.getInt(PROP_GROW_SKIP_INTERVAL);
         wantEntryPruning = ps.getBoolean(PROP_WANT_ENTRY_PRUNING);
-        logRelativeWordBeamWidth = logMath.linearToLog(relativeWordBeamWidth);
+        logRelativeWordBeamWidth = LogMath.linearToLog(relativeWordBeamWidth);
         
         this.keepAllTokens = true;      
     }

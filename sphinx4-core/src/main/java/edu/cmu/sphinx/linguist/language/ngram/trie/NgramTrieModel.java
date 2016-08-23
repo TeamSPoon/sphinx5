@@ -67,7 +67,6 @@ public class NgramTrieModel implements LanguageModel {
     // ------------------------------
     URL location;
     protected Logger logger;
-    protected LogMath logMath;
     protected int maxDepth;
     protected int curDepth;
     protected int[] counts;
@@ -120,11 +119,10 @@ public class NgramTrieModel implements LanguageModel {
         this.ngramCacheSize = maxNGramCacheSize;
         this.clearCacheAfterUtterance = clearCacheAfterUtterance;
         this.maxDepth = maxDepth;
-        logMath = LogMath.getLogMath();
         this.dictionary = dictionary;
         this.applyLanguageWeightAndWip = applyLanguageWeightAndWip;
         this.languageWeight = languageWeight;
-        this.logWip = logMath.linearToLog(wip);
+        this.logWip = LogMath.linearToLog(wip);
         this.unigramWeight = unigramWeight;
     }
 
@@ -140,7 +138,6 @@ public class NgramTrieModel implements LanguageModel {
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
         logger = ps.getLogger();
-        logMath = LogMath.getLogMath();
         location = ConfigurationManagerUtils.getResource(PROP_LOCATION, ps);
         ngramLogFile = ps.getString(PROP_QUERY_LOG_FILE);
         maxDepth = ps.getInt(LanguageModel.PROP_MAX_DEPTH);
@@ -151,7 +148,7 @@ public class NgramTrieModel implements LanguageModel {
         applyLanguageWeightAndWip = ps
                 .getBoolean(PROP_APPLY_LANGUAGE_WEIGHT_AND_WIP);
         languageWeight = ps.getFloat(PROP_LANGUAGE_WEIGHT);
-        logWip = logMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
+        logWip = LogMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
         unigramWeight = ps.getFloat(PROP_UNIGRAM_WEIGHT);
     }
 
@@ -163,9 +160,10 @@ public class NgramTrieModel implements LanguageModel {
      * */
     private void buildUnigramIDMap() {
         int missingWords = 0;
+        int nw = words.length;
         if (unigramIDMap == null)
-            unigramIDMap = new HashMap<>();
-        for (int i = 0; i < words.length; i++) {
+            unigramIDMap = new HashMap<>(nw);
+        for (int i = 0; i < nw; i++) {
             Word word = dictionary.getWord(words[i]);
             if (word == null) {
                 logger.warning("The dictionary is missing a phonetic transcription for the word '"

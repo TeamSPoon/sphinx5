@@ -24,7 +24,6 @@ import java.util.StringTokenizer;
 public class GMMDiag {
 	public int nT;
 	public String nom;
-	public LogMath logMath;
 
 	private int ncoefs;
 	private int ngauss;
@@ -48,7 +47,7 @@ public class GMMDiag {
 	}
 
 	public float getWeight(int i) {
-		return (float) logMath.logToLinear(weights[i]);
+		return (float) LogMath.logToLinear(weights[i]);
 	}
 
 	public float getVar(int i, int j) {
@@ -58,7 +57,7 @@ public class GMMDiag {
 	public void setWeight(int i, float w) {
 		if (weights == null)
 			weights = new float[ngauss];
-		weights[i] = logMath.linearToLog(w);
+		weights[i] = LogMath.linearToLog(w);
 	}
 
 	public void setVar(int i, int j, float v) {
@@ -348,7 +347,6 @@ public class GMMDiag {
 	}
 
 	private void allocateWeights() {
-		logMath = LogMath.getLogMath();
 		weights = new float[ngauss];
 		for (int i = 0; i < ngauss; i++) {
 			setWeight(i, 1f / ngauss);
@@ -359,9 +357,9 @@ public class GMMDiag {
 		for (int gidx = 0; gidx < ngauss; gidx++) {
 			float fact = 0.0f;
 			for (int i = 0; i < ncoefs; i++) {
-				fact += logMath.linearToLog(getVar(gidx, i));
+				fact += LogMath.linearToLog(getVar(gidx, i));
 			}
-			fact += logMath.linearToLog(2.0 * Math.PI) * ncoefs;
+			fact += LogMath.linearToLog(2.0 * Math.PI) * ncoefs;
 			logPreComputedGaussianFactor[gidx] = fact * 0.5f;
 		}
 	}
@@ -413,9 +411,10 @@ public class GMMDiag {
 	 * @return log likelihood
 	 */
 	public float getLogLike() {
-		float sc = loglikes[0];
+		float[] logLikes = this.loglikes;
+		float sc = logLikes[0];
 		for (int i = 1; i < ngauss; i++) {
-			sc = logMath.addAsLinear(sc, loglikes[i]);
+			sc = LogMath.addAsLinear(sc, logLikes[i]);
 		}
 		return sc;
 	}

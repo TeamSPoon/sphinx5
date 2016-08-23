@@ -98,13 +98,13 @@ public class ModelInitializerLoader implements Loader {
     @S4Double(defaultValue = 1e-7f)
     public final static String PROP_MW_FLOOR = "mixtureWeightFloor";
 
-    private LogMath logMath;
+
 
     /** The logger for this class */
     private Logger logger;
 
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logMath = LogMath.getLogMath();
+
         logger = ps.getLogger();
 
         unitManager = (UnitManager) ps.getComponent(PROP_UNIT_MANAGER);
@@ -454,7 +454,7 @@ public class ModelInitializerLoader implements Loader {
             floorData(logMixtureWeight, floor);
             // Normalize, so the numbers are not all too low
             normalize(logMixtureWeight);
-            logMath.linearToLog(logMixtureWeight);
+            LogMath.linearToLog(logMixtureWeight);
             mixtureWeights.put(i, 0, logMixtureWeight);
         }
         return mixtureWeights;
@@ -506,7 +506,7 @@ public class ModelInitializerLoader implements Loader {
                 }
             }
             normalize(tmat[j]);
-            logMath.linearToLog(tmat[j]);
+            LogMath.linearToLog(tmat[j]);
         }
         pool.put(hmmId, tmat);
     }

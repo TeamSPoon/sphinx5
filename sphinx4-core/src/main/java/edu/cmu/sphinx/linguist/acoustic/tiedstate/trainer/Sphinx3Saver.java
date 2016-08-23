@@ -87,7 +87,7 @@ public class Sphinx3Saver implements Saver {
 
     private Map<String, Unit>  contextIndependentUnits;
     private HMMManager hmmManager;
-    protected LogMath logMath;
+
     private boolean binary;
     private String location;
     private boolean swap;
@@ -116,7 +116,6 @@ public class Sphinx3Saver implements Saver {
 
         sparseForm = ps.getBoolean(PROP_SPARSE_FORM);
         useCDUnits = ps.getBoolean(PROP_USE_CD_UNITS);
-        logMath = LogMath.getLogMath();
 
         // extract the feature vector length
         vectorLength = ps.getInt(PROP_VECTOR_LENGTH);
@@ -587,7 +586,7 @@ public class Sphinx3Saver implements Saver {
                 float[] logMixtureWeight = new float[numGaussiansPerState];
                 for (int k = 0; k < numGaussiansPerState; k++)
                     logMixtureWeight[k] = mixtureWeights.get(i, j, k);
-                logMath.logToLinear(logMixtureWeight, mixtureWeight);
+                LogMath.logToLinear(logMixtureWeight, mixtureWeight);
                 float sum = 0.0f;
                 for (int k = 0; k < numGaussiansPerState; k++)
                     sum += mixtureWeight[k];
@@ -643,7 +642,7 @@ public class Sphinx3Saver implements Saver {
                 float[] logMixtureWeight = new float[numGaussiansPerState];
                 for (int k = 0; k < numGaussiansPerState; k++)
                     logMixtureWeight[k] = mixtureWeights.get(i, j, k);
-                logMath.logToLinear(logMixtureWeight, mixtureWeight);
+                LogMath.logToLinear(logMixtureWeight, mixtureWeight);
                 writeFloatArray(dos, mixtureWeight);
             }
         }
@@ -699,10 +698,10 @@ public class Sphinx3Saver implements Saver {
                             }
                             if (k == j || k == j + 1) {
                                 pw.print((float)
-                                        logMath.logToLinear(tmat[j][k]));
+                                        LogMath.logToLinear(tmat[j][k]));
                             }
                         } else {
-                            pw.print((float) logMath.logToLinear(tmat[j][k]));
+                            pw.print((float) LogMath.logToLinear(tmat[j][k]));
                         }
                         if (numStates - 1 == k) {
                             pw.println();
@@ -771,7 +770,7 @@ public class Sphinx3Saver implements Saver {
             for (int j = 0; j < numRows; j++) {
                 logTmatRow = tmat[j];
                 tmatRow = new float[logTmatRow.length];
-                logMath.logToLinear(logTmatRow, tmatRow);
+                LogMath.logToLinear(logTmatRow, tmatRow);
                 writeFloatArray(dos, tmatRow);
             }
         }

@@ -120,7 +120,6 @@ public class FlatLinguist implements Linguist, Configurable {
     protected Grammar grammar;
     private AcousticModel acousticModel;
     private UnitManager unitManager;
-    protected LogMath logMath;
 
     // ------------------------------------
     // Fields that define the OOV-behavior
@@ -181,14 +180,13 @@ public class FlatLinguist implements Linguist, Configurable {
             double outOfGrammarBranchProbability, double phoneInsertionProbability, AcousticModel phoneLoopAcousticModel    ) {
 
         this.acousticModel = acousticModel;
-        this.logMath = LogMath.getLogMath();
         this.grammar = grammar;
         this.unitManager = unitManager;
 
-        this.logWordInsertionProbability = logMath.linearToLog(wordInsertionProbability);
-        this.logSilenceInsertionProbability = logMath.linearToLog(silenceInsertionProbability);
-        this.logFillerInsertionProbability = logMath.linearToLog(fillerInsertionProbability);
-        this.logUnitInsertionProbability = logMath.linearToLog(unitInsertionProbability);
+        this.logWordInsertionProbability = LogMath.linearToLog(wordInsertionProbability);
+        this.logSilenceInsertionProbability = LogMath.linearToLog(silenceInsertionProbability);
+        this.logFillerInsertionProbability = LogMath.linearToLog(fillerInsertionProbability);
+        this.logUnitInsertionProbability = LogMath.linearToLog(unitInsertionProbability);
         this.languageWeight = languageWeight;
         
         this.dumpGStates = dumpGStates;
@@ -198,8 +196,8 @@ public class FlatLinguist implements Linguist, Configurable {
         this.addOutOfGrammarBranch = addOutOfGrammarBranch;
 
         if (addOutOfGrammarBranch) {
-            this.logOutOfGrammarBranchProbability = logMath.linearToLog(outOfGrammarBranchProbability);
-            this.logPhoneInsertionProbability = logMath.linearToLog(phoneInsertionProbability);
+            this.logOutOfGrammarBranchProbability = LogMath.linearToLog(outOfGrammarBranchProbability);
+            this.logPhoneInsertionProbability = LogMath.linearToLog(phoneInsertionProbability);
             this.phoneLoopAcousticModel = phoneLoopAcousticModel;
         }
 
@@ -216,17 +214,16 @@ public class FlatLinguist implements Linguist, Configurable {
     * @see edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
     */
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logMath = LogMath.getLogMath();
 
         acousticModel = (AcousticModel) ps.getComponent(PROP_ACOUSTIC_MODEL);
         grammar = (Grammar) ps.getComponent(PROP_GRAMMAR);
         unitManager = (UnitManager) ps.getComponent(PROP_UNIT_MANAGER);
 
         // get the rest of the configuration data
-        logWordInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
-        logSilenceInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
-        logFillerInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
-        logUnitInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
+        logWordInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
+        logSilenceInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
+        logFillerInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
+        logUnitInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
         languageWeight = ps.getFloat(Linguist.PROP_LANGUAGE_WEIGHT);
         dumpGStates = ps.getBoolean(PROP_DUMP_GSTATES);
         showCompilationProgress = ps.getBoolean(PROP_SHOW_COMPILATION_PROGRESS);
@@ -235,8 +232,8 @@ public class FlatLinguist implements Linguist, Configurable {
         addOutOfGrammarBranch = ps.getBoolean(PROP_ADD_OUT_OF_GRAMMAR_BRANCH);
 
         if (addOutOfGrammarBranch) {
-            logOutOfGrammarBranchProbability = logMath.linearToLog(ps.getDouble(PROP_OUT_OF_GRAMMAR_PROBABILITY));
-            logPhoneInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_PHONE_INSERTION_PROBABILITY));
+            logOutOfGrammarBranchProbability = LogMath.linearToLog(ps.getDouble(PROP_OUT_OF_GRAMMAR_PROBABILITY));
+            logPhoneInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_PHONE_INSERTION_PROBABILITY));
             phoneLoopAcousticModel = (AcousticModel)ps.getComponent(PROP_PHONE_LOOP_ACOUSTIC_MODEL);
         }
 
@@ -1224,7 +1221,7 @@ public class FlatLinguist implements Linguist, Configurable {
                 // probability.
                 if (spreadWordProbabilitiesAcrossPronunciations && !gstate.node.isEmpty()) {
                     int numPronunciations = gstate.node.getWord().getPronunciations().length;
-                    probability -= logMath.linearToLog(numPronunciations);
+                    probability -= LogMath.linearToLog(numPronunciations);
                 }
                 float fprob = probability;
                 for (Map.Entry<ContextPair, List<SearchState>> entry : exitPoints.entrySet()) {

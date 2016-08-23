@@ -92,7 +92,7 @@ public class LargeNGramModel implements LanguageModel {
     // ------------------------------
     URL location;
     protected Logger logger;
-    protected LogMath logMath;
+
     protected int maxDepth;
 
     protected int ngramCacheSize;
@@ -148,7 +148,7 @@ public class LargeNGramModel implements LanguageModel {
         this.ngramCacheSize = maxNGramCacheSize;
         this.clearCacheAfterUtterance = clearCacheAfterUtterance;
         this.maxDepth = maxDepth;
-        logMath = LogMath.getLogMath();
+        
         this.dictionary = dictionary;
         this.applyLanguageWeightAndWip = applyLanguageWeightAndWip;
         this.languageWeight = languageWeight;
@@ -355,7 +355,7 @@ public class LargeNGramModel implements LanguageModel {
      * 
      * @param wordSequence
      *            the word sequence
-     * @return the probability of the word sequence. Probability is in logMath
+     * @return the probability of the word sequence. Probability is in LogMath
      *         log base
      */
     public float getProbability(WordSequence wordSequence) {
@@ -836,7 +836,7 @@ public class LargeNGramModel implements LanguageModel {
 
         for (UnigramProbability unigram : unigrams) {
             float logp = unigram.getLogProbability();
-            double p = logMath.logToLinear(logp);
+            double p = LogMath.logToLinear(logp);
             S0 += p * logp;
             R0 += p * logp * logp;
         }
@@ -856,7 +856,7 @@ public class LargeNGramModel implements LanguageModel {
             ugAvgLogProb[i] = 0.0;
 
             float logugbackoff = unigrams[i].getLogBackoff();
-            double ugbackoff = logMath.logToLinear(logugbackoff);
+            double ugbackoff = LogMath.logToLinear(logugbackoff);
 
             for (int j = 0; j < bigram.getNumberNGrams(); j++) {
                 int wordID = bigram.getWordID(j);
@@ -865,11 +865,11 @@ public class LargeNGramModel implements LanguageModel {
                 float logugprob = unigrams[wordID].getLogProbability();
                 float logbgprob = ngramProbTable[1][bgProb.getProbabilityID()];
 
-                double ugprob = logMath.logToLinear(logugprob);
-                double bgprob = logMath.logToLinear(logbgprob);
+                double ugprob = LogMath.logToLinear(logugprob);
+                double bgprob = LogMath.logToLinear(logbgprob);
 
                 double backoffbgprob = ugbackoff * ugprob;
-                double logbackoffbgprob = logMath.linearToLog(backoffbgprob);
+                double logbackoffbgprob = LogMath.linearToLog(backoffbgprob);
 
                 ugNumerator[i] += (bgprob * logbgprob - backoffbgprob
                         * logbackoffbgprob)
@@ -890,7 +890,7 @@ public class LargeNGramModel implements LanguageModel {
 
             unigramSmearTerm[i] = (float) (ugNumerator[i] / ugDenominator[i]);
             // / unigramSmearTerm[i] =
-            // logMath.linearToLog(ugNumerator[i] / ugDenominator[i]);
+            // LogMath.linearToLog(ugNumerator[i] / ugDenominator[i]);
             // System.out.println("ugs " + unigramSmearTerm[i]);
         }
 
@@ -906,7 +906,7 @@ public class LargeNGramModel implements LanguageModel {
                 float smearTerm;
                 NGramProbability bgProb = bigram.getNGramProbability(j);
                 float logbgbackoff = ngramBackoffTable[2][bgProb.getBackoffID()];
-                double bgbackoff = logMath.logToLinear(logbgbackoff);
+                double bgbackoff = LogMath.logToLinear(logbgbackoff);
                 int k = bigram.getWordID(j);
                 NGramBuffer trigram = loadTrigramBuffer(i, k);
 
@@ -919,12 +919,12 @@ public class LargeNGramModel implements LanguageModel {
                         int m = trigram.getWordID(l);
                         float logtgprob = ngramProbTable[2][trigram
                                 .getProbabilityID(l)];
-                        double tgprob = logMath.logToLinear(logtgprob);
+                        double tgprob = LogMath.logToLinear(logtgprob);
                         float logbgprob = getBigramProb(k, m);
-                        double bgprob = logMath.logToLinear(logbgprob);
+                        double bgprob = LogMath.logToLinear(logbgprob);
                         float logugprob = unigrams[m].getLogProbability();
                         double backofftgprob = bgbackoff * bgprob;
-                        double logbackofftgprob = logMath
+                        double logbackofftgprob = LogMath
                                 .linearToLog(backofftgprob);
 
                         bg_numerator += (tgprob * logtgprob - backofftgprob

@@ -55,13 +55,12 @@ public class SimpleWordListGrammar extends Grammar implements Configurable {
     // ---------------------
     private String path;
     private boolean isLooping;
-    private LogMath logMath;
+
 
     public SimpleWordListGrammar(String path, boolean isLooping, boolean showGrammar, boolean optimizeGrammar, boolean addSilenceWords, boolean addFillerWords, edu.cmu.sphinx.linguist.dictionary.Dictionary dictionary) {
         super(showGrammar,optimizeGrammar,addSilenceWords,addFillerWords,dictionary);
         this.path = path;
         this.isLooping = isLooping;
-        logMath = LogMath.getLogMath();
     }
 
     public SimpleWordListGrammar() {
@@ -79,7 +78,6 @@ public class SimpleWordListGrammar extends Grammar implements Configurable {
         
         path = ps.getString(PROP_PATH);
         isLooping = ps.getBoolean(PROP_LOOP);
-        logMath = LogMath.getLogMath();
     }
 
 
@@ -114,7 +112,7 @@ public class SimpleWordListGrammar extends Grammar implements Configurable {
         }
         // now connect all the GrammarNodes together
         initialNode.add(branchNode, LogMath.LOG_ONE);
-        float branchScore = logMath.linearToLog(
+        float branchScore = LogMath.linearToLog(
                 1.0 / wordGrammarNodes.size());
         for (GrammarNode wordNode : wordGrammarNodes) {
             branchNode.add(wordNode, branchScore);

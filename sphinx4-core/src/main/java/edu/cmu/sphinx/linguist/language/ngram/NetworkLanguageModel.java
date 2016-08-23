@@ -30,7 +30,7 @@ public class NetworkLanguageModel implements LanguageModel {
     @S4Integer(defaultValue = 2525)
     public final static String PROP_PORT = "port";
 
-    LogMath logMath;
+
 
     private String host;
     private int port;
@@ -59,7 +59,6 @@ public class NetworkLanguageModel implements LanguageModel {
         this.port = port;
         this.maxDepth = maxDepth;
         this.location = location;
-        logMath = LogMath.getLogMath();
     }
 
     public NetworkLanguageModel() {

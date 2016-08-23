@@ -61,9 +61,8 @@ public class DiagGmm extends ScoreCachingSenone {
     @Override
     public float calculateScore(Data data) {
         float logTotal = LogMath.LOG_ZERO;
-        LogMath logMath = LogMath.getLogMath();
         for (Float mixtureScore : calculateComponentScore(data))
-            logTotal = logMath.addAsLinear(logTotal, mixtureScore);
+            logTotal = LogMath.addAsLinear(logTotal, mixtureScore);
 
         return logTotal;
     }
@@ -86,7 +85,7 @@ public class DiagGmm extends ScoreCachingSenone {
                 likelihoods[i] -= .5f * invVars[k] * features[j] * features[j];
             }
 
-            likelihoods[i] = LogMath.getLogMath().lnToLog(likelihoods[i]);
+            likelihoods[i] = LogMath.lnToLog(likelihoods[i]);
         }
 
         return likelihoods;

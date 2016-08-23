@@ -21,8 +21,6 @@ import edu.cmu.sphinx.linguist.*;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
-import edu.cmu.sphinx.util.Timer;
-import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.*;
 
 import java.io.IOException;
@@ -114,7 +112,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected Pruner pruner; // used to prune the active list
     protected AcousticScorer scorer; // used to score the active list
     private ActiveListManager activeListManager;
-    protected LogMath logMath;
+
 
     // -----------------------------------
     // Configuration data
@@ -174,7 +172,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             boolean keepAllTokens) {
 
         this.logger = Logger.getLogger(getClass().getName());
-        this.logMath = LogMath.getLogMath();
+        
         this.linguist = linguist;
         this.pruner = pruner;
         this.scorer = scorer;
@@ -187,7 +185,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         this.acousticLookaheadFrames = acousticLookaheadFrames;
         this.keepAllTokens = keepAllTokens;
 
-        this.relativeBeamWidth = logMath.linearToLog(relativeWordBeamWidth);
+        this.relativeBeamWidth = LogMath.linearToLog(relativeWordBeamWidth);
     }
 
     public WordPruningBreadthFirstSearchManager() {
@@ -205,7 +203,6 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
 
-        logMath = LogMath.getLogMath();
         logger = ps.getLogger();
 
         linguist = (Linguist) ps.getComponent(PROP_LINGUIST);
@@ -219,7 +216,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         maxLatticeEdges = ps.getInt(PROP_MAX_LATTICE_EDGES);
         acousticLookaheadFrames = ps.getFloat(PROP_ACOUSTIC_LOOKAHEAD_FRAMES);
 
-        relativeBeamWidth = logMath.linearToLog(ps.getDouble(PROP_RELATIVE_BEAM_WIDTH));
+        relativeBeamWidth = LogMath.linearToLog(ps.getDouble(PROP_RELATIVE_BEAM_WIDTH));
     }
 
     /*

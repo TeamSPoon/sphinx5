@@ -49,7 +49,7 @@ public class AllphoneLinguist implements Linguist {
     
     public void newProperties(PropertySheet ps) throws PropertyException {
         acousticModel = (AcousticModel) ps.getComponent(PROP_ACOUSTIC_MODEL);
-        pip = LogMath.getLogMath().linearToLog(ps.getFloat(PROP_PIP));
+        pip = LogMath.linearToLog(ps.getFloat(PROP_PIP));
         
         useCD = ps.getBoolean(PROP_CD);
         if (useCD)

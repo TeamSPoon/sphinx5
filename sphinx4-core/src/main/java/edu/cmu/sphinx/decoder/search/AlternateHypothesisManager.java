@@ -47,12 +47,8 @@ public class AlternateHypothesisManager {
 
     public void addAlternatePredecessor(Token token, Token predecessor) {
         assert predecessor != token.getPredecessor();
-        List<Token> list = viterbiLoserMap.get(token);
-        if (list == null) {
-            list = new ArrayList<>();
-            viterbiLoserMap.put(token, list);
-        }
-        list.add(predecessor);
+
+        viterbiLoserMap.computeIfAbsent(token, t -> new ArrayList<>() ).add(predecessor);
     }
 
 
@@ -76,7 +72,7 @@ public class AlternateHypothesisManager {
             List<Token> list = entry.getValue();
             Collections.sort(list, Scoreable.COMPARATOR);
             List<Token> newList = list.subList(0, list.size() > max ? max : list.size());
-            viterbiLoserMap.put(entry.getKey(), newList);
+            entry.setValue(newList);
         }
     }
 

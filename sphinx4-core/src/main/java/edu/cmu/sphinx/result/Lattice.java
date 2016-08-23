@@ -119,16 +119,21 @@ public class Lattice {
     protected Set<Edge> edges;
     protected Map<String, Node> nodes;
     protected double logBase;
-    protected LogMath logMath;
+    //protected LogMath logMath;
     private boolean wordTokenFirst;
     private Set<Token> visitedWordTokens;
-    private AlternateHypothesisManager loserManager;
+    private final AlternateHypothesisManager loserManager;
+
+    public Lattice() {
+        this((AlternateHypothesisManager)null);
+    }
 
     /** Create an empty Lattice. */
-    public Lattice() {
+    public Lattice(AlternateHypothesisManager loserManager) {
         edges = new HashSet<>();
         nodes = new HashMap<>();
-        logMath = LogMath.getLogMath();
+        //logMath = LogMath.getLogMath();
+        this.loserManager = loserManager;
     }
 
     /**
@@ -141,7 +146,7 @@ public class Lattice {
      *            the result to convert into a lattice
      */
     public Lattice(Result result) {
-        this();
+        this(result.getAlternateHypothesisManager());
         assert result != null;
         Token token = result.getBestFinalToken();
         if (token != null) {
@@ -152,7 +157,6 @@ public class Lattice {
 
             visitedWordTokens = new HashSet<>();
             wordTokenFirst = result.getWordTokenFirst();
-            loserManager = result.getAlternateHypothesisManager();
             if (loserManager != null) {
                 loserManager.purge();
             }
@@ -281,6 +285,9 @@ public class Lattice {
          * current totals, and then move on to the predecessor token. Fast
          * forward through the not so interesting states to save stack space.
          */
+
+        List<Token> alternates = null;
+        AlternateHypothesisManager loserManager = this.loserManager;
         while (true) {
             acousticScore += token.getAcousticScore() + token.getInsertionScore();
             languageScore += token.getLanguageScore();
@@ -289,7 +296,7 @@ public class Lattice {
             if (preToken == null)
                 return;
 
-            if (preToken.isWord() || (loserManager != null && loserManager.hasAlternatePredecessors(token)))
+            if (preToken.isWord() || (loserManager != null && (alternates = loserManager.getAlternatePredecessors(token))!=null))
                 break;
             token = preToken;
         }
@@ -297,8 +304,8 @@ public class Lattice {
         collapseWordPath(parentWordNode, token.getPredecessor(), acousticScore, languageScore);
 
         /* Traverse the path(s) for the loser token(s). */
-        if (loserManager != null && loserManager.hasAlternatePredecessors(token)) {
-            for (Token loser : loserManager.getAlternatePredecessors(token)) {
+        if (loserManager != null && alternates!=null) {
+            for (Token loser : alternates) {
                 collapseWordPath(parentWordNode, loser, acousticScore, languageScore);
             }
         }
@@ -743,7 +750,7 @@ public class Lattice {
         }
         out.println("initialNode: " + initialNode.getId());
         out.println("terminalNode: " + terminalNode.getId());
-        out.println("logBase: " + LogMath.getLogBase());
+        out.println("logBase: " + LogMath.logBase());
         out.flush();
     }
 
@@ -990,7 +997,7 @@ public class Lattice {
                 double edgeScore = computeEdgeScore(edge, languageModelWeightAdjustment, useAcousticScoresOnly);
                 forwardProb += edgeScore;
                 edge.getToNode().setForwardScore(
-                        logMath.addAsLinear((float) forwardProb, (float) edge.getToNode().getForwardScore()));
+                        LogMath.addAsLinear((float) forwardProb, (float) edge.getToNode().getForwardScore()));
                 double vs = edge.getFromNode().getViterbiScore() + edgeScore;
                 if (edge.getToNode().getBestPredecessor() == null || vs > edge.getToNode().getViterbiScore()) {
                     edge.getToNode().setBestPredecessor(currentNode);
@@ -1009,8 +1016,9 @@ public class Lattice {
             for (Edge edge : currentEdges) {
                 double backwardProb = edge.getToNode().getBackwardScore();
                 backwardProb += computeEdgeScore(edge, languageModelWeightAdjustment, useAcousticScoresOnly);
-                edge.getFromNode().setBackwardScore(
-                        logMath.addAsLinear((float) backwardProb, (float) edge.getFromNode().getBackwardScore()));
+                Node f = edge.getFromNode();
+                f.setBackwardScore(
+                        LogMath.addAsLinear((float) backwardProb, (float) f.getBackwardScore()));
             }
         }
 

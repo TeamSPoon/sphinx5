@@ -106,9 +106,8 @@ public class FSTGrammar extends Grammar {
 
     private boolean addOptionalSilence;
     private String path;
-    private LogMath logMath;
 
-    private final Map<String, GrammarNode> nodes = new HashMap<>();
+    private final Map<Integer, GrammarNode> nodes = new HashMap<>();
     private final Set<GrammarNode> expandedNodes = new HashSet<>();
 
 
@@ -127,7 +126,6 @@ public class FSTGrammar extends Grammar {
 
     public FSTGrammar(String path, boolean showGrammar, boolean optimizeGrammar, boolean addSilenceWords, boolean addFillerWords, Dictionary dictionary) {
         super(showGrammar,optimizeGrammar,addSilenceWords,addFillerWords,dictionary);
-        logMath = LogMath.getLogMath();
 
         this.path = path;
     }
@@ -145,8 +143,7 @@ public class FSTGrammar extends Grammar {
     @Override
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
-        logMath = LogMath.getLogMath();
-        
+
         path = ps.getString(PROP_PATH);
     }
 
@@ -191,7 +188,7 @@ public class FSTGrammar extends Grammar {
             } else if (token.equals("I")) {
                 assert initialNode == null;
                 int initialID = tok.getInt("initial ID");
-                String nodeName = "G" + initialID;
+                //String nodeName = "G" + initialID;
 
                 // TODO: FlatLinguist requires the initial grammar node
                 // to contain a single silence. We'll do that for now,
@@ -202,7 +199,7 @@ public class FSTGrammar extends Grammar {
 
                 initialNode = createGrammarNode(initialID,
                         Dictionary.SILENCE_SPELLING);
-                nodes.put(nodeName, initialNode);
+                nodes.put(initialID, initialNode);
 
                 // optionally add a silence node
                 if (addInitialSilenceNode) {
@@ -312,24 +309,24 @@ public class FSTGrammar extends Grammar {
                 }
                 String word2 = tok.getString(); // get word
                 tok.getString(); // toss probability
-                String nodeName = "G" + id;
-                GrammarNode node = nodes.get(nodeName);
-                if (node == null) {
+
+                //String nodeName = "G" + id;
+                GrammarNode node = nodes.computeIfAbsent(id, (iid) -> {
                     if (word2.equals(",")) {
-                        node = createGrammarNode(id, false);
+                        return createGrammarNode(iid, false);
                     } else {
-                        node = createGrammarNode(id, word2);
+                        return createGrammarNode(iid, word2);
                     }
-                    nodes.put(nodeName, node);
-                } else {
-                    if (!word2.equals(",")) {
-                        /*
-                         * if (!word2.equals(getWord(node))) {
-                         * System.out.println(node + ": " + word2 + ' ' + getWord(node)); }
-                         */
-                        assert (word2.equals(getWord(node)));
-                    }
-                }
+                });
+//                else {
+//                    if (!word2.equals(",")) {
+//                        /*
+//                         * if (!word2.equals(getWord(node))) {
+//                         * System.out.println(node + ": " + word2 + ' ' + getWord(node)); }
+//                         */
+//                        assert (word2.equals(getWord(node)));
+//                    }
+//                }
             }
         }
         tok.close();
@@ -370,11 +367,11 @@ public class FSTGrammar extends Grammar {
      * Converts the probability from -ln to logmath
      *
      * @param lnProb the probability to convert. Probabilities in the arpa format in negative natural log format. We
-     *               convert them to logmath.
+     *               convert them to LogMath.
      * @return the converted probability in logMath log base
      */
     private float convertProbability(float lnProb) {
-        return logMath.lnToLog(-lnProb);
+        return LogMath.lnToLog(-lnProb);
     }
 
 
@@ -385,13 +382,8 @@ public class FSTGrammar extends Grammar {
      * @return the grammar node or null if none could be found with the proper id
      */
     private GrammarNode get(int id) {
-        String name = "G" + id;
-        GrammarNode grammarNode = nodes.get(name);
-        if (grammarNode == null) {
-            grammarNode = createGrammarNode(id, false);
-            nodes.put(name, grammarNode);
-        }
-        return grammarNode;
+        //String name = "G" + id;
+        return nodes.computeIfAbsent(id, (iid) -> createGrammarNode(iid, false));
     }
 
 

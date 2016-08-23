@@ -24,7 +24,7 @@ public class ClassMap implements Configurable {
     private Logger logger;
     private boolean allocated;
     private URL classDefsLocation;
-    private LogMath logMath;
+
 
     /**
      * Maps class name to class as a Word
@@ -44,7 +44,6 @@ public class ClassMap implements Configurable {
     public ClassMap(URL classDefsLocation) {
         this.logger = Logger.getLogger(getClass().getName());
         this.classDefsLocation = classDefsLocation;
-        logMath = LogMath.getLogMath();
     }
 
     public ClassMap() {
@@ -128,7 +127,7 @@ public class ClassMap implements Configurable {
                 logger.fine(word + " --> " + className + ' ' + linearProb);
             }
             wordToClassProbabilities.put(word,
-                    new ClassProbability(className, logMath.linearToLog(linearProb)));
+                    new ClassProbability(className, LogMath.linearToLog(linearProb)));
             classVocabulary.put(className, new Word(className, null, false));
             addWordInClass(className, word);
         }
@@ -141,13 +140,15 @@ public class ClassMap implements Configurable {
      * Checks that word probabilities in each class sum to 1.
      */
     private void checkClasses() {
-        Map<String, Float> sums = new HashMap<>();
-        for (ClassProbability cp : wordToClassProbabilities.values()) {
+
+        Collection<ClassProbability> values = wordToClassProbabilities.values();
+        Map<String, Float> sums = new HashMap<>(values.size());
+        for (ClassProbability cp : values) {
             Float sum = sums.get(cp.getClassName());
             if (sum == null) {
                 sums.put(cp.getClassName(), 0f);
             } else {
-                sums.put(cp.getClassName(), (float) logMath.logToLinear(cp.getLogProbability()) + sum);
+                sums.put(cp.getClassName(), (float) LogMath.logToLinear(cp.getLogProbability()) + sum);
             }
         }
 

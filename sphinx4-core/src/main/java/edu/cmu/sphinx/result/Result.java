@@ -17,7 +17,6 @@ import edu.cmu.sphinx.decoder.search.AlternateHypothesisManager;
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.linguist.dictionary.Word;
-import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.TimeFrame;
 
 import java.util.ArrayList;
@@ -47,7 +46,6 @@ public class Result {
     private boolean wordTokenFirst;
     private final long currentCollectTime;
     private String reference;
-    private final LogMath logMath;
     private final boolean toCreateLattice;
 
     /**
@@ -93,7 +91,6 @@ public class Result {
         this.isFinal = isFinal;
         this.toCreateLattice = toCreateLattice;
         this.wordTokenFirst = wordTokenFirst;
-        logMath = LogMath.getLogMath();
     }
 
     /**
@@ -116,15 +113,6 @@ public class Result {
      */
     public boolean toCreateLattice() {
         return toCreateLattice;
-    }
-
-    /**
-     * Returns the log math used for this Result.
-     * 
-     * @return the log math used
-     */
-    public LogMath getLogMath() {
-        return logMath;
     }
 
     /**
@@ -191,9 +179,12 @@ public class Result {
      */
     public Token getBestFinalToken() {
         Token bestToken = null;
+        float bestScore = Float.NEGATIVE_INFINITY;
         for (Token token : resultList) {
-            if (bestToken == null || token.getScore() > bestToken.getScore()) {
+            float ts = token.getScore();
+            if (bestToken == null || ts > bestScore) {
                 bestToken = token;
+                bestScore = ts;
             }
         }
         return bestToken;

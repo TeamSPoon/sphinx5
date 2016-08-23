@@ -42,7 +42,7 @@ public abstract class ActiveListFactory implements Configurable {
     @S4Boolean(defaultValue = true)
     public final static String PROP_STRICT_PRUNING = "strictPruning";
 
-    protected LogMath logMath;
+
     protected int absoluteBeamWidth;
     protected float logRelativeBeamWidth;
 
@@ -52,9 +52,9 @@ public abstract class ActiveListFactory implements Configurable {
      * @param relativeBeamWidth beam for relative pruning
      */
     public ActiveListFactory(int absoluteBeamWidth,double relativeBeamWidth){
-        logMath = LogMath.getLogMath();
+
         this.absoluteBeamWidth = absoluteBeamWidth;
-        this.logRelativeBeamWidth = logMath.linearToLog(relativeBeamWidth);      
+        this.logRelativeBeamWidth = LogMath.linearToLog(relativeBeamWidth);
     }
 
     public ActiveListFactory() {
@@ -62,11 +62,10 @@ public abstract class ActiveListFactory implements Configurable {
 
 
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logMath = LogMath.getLogMath();
         absoluteBeamWidth = ps.getInt(PROP_ABSOLUTE_BEAM_WIDTH);
         double relativeBeamWidth = ps.getDouble(PROP_RELATIVE_BEAM_WIDTH);
 
-        logRelativeBeamWidth = logMath.linearToLog(relativeBeamWidth);
+        logRelativeBeamWidth = LogMath.linearToLog(relativeBeamWidth);
     }
 
 

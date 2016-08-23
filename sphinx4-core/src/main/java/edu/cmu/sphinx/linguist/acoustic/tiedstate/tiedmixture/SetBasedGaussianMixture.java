@@ -42,7 +42,7 @@ public class SetBasedGaussianMixture extends GaussianMixture {
             for (int j = 0; j < mixtureComponentSet.getTopGauNum(); j++) {
                 float gauScore = mixtureComponentSet.getTopGauScore(i, j);
                 int gauId = mixtureComponentSet.getTopGauId(i, j);
-                logTotal = logMath.addAsLinear(logTotal, gauScore + mixtureWeights.get(id, i, gauId));
+                logTotal = LogMath.addAsLinear(logTotal, gauScore + mixtureWeights.get(id, i, gauId));
             }
             ascore += logTotal;
         }

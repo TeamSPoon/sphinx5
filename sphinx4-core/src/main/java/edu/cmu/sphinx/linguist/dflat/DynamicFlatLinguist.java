@@ -78,7 +78,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
     private Grammar grammar;
     private AcousticModel acousticModel;
     private AcousticModel phoneLoopAcousticModel;
-    private LogMath logMath;
+
     private UnitManager unitManager;
     // ------------------------------------
     // Data that is configured by the
@@ -125,19 +125,18 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
 
         this.logger = Logger.getLogger(getClass().getName());
         this.acousticModel = acousticModel;
-        logMath = LogMath.getLogMath();
         this.grammar = grammar;
         this.unitManager = unitManager;
 
-        this.logWordInsertionProbability = logMath.linearToLog(wordInsertionProbability);
-        this.logSilenceInsertionProbability = logMath.linearToLog(silenceInsertionProbability);
-        this.logUnitInsertionProbability = logMath.linearToLog(unitInsertionProbability);
-        this.logFillerInsertionProbability = logMath.linearToLog(fillerInsertionProbability);
+        this.logWordInsertionProbability = LogMath.linearToLog(wordInsertionProbability);
+        this.logSilenceInsertionProbability = LogMath.linearToLog(silenceInsertionProbability);
+        this.logUnitInsertionProbability = LogMath.linearToLog(unitInsertionProbability);
+        this.logFillerInsertionProbability = LogMath.linearToLog(fillerInsertionProbability);
         this.languageWeight = languageWeight;
         this.addOutOfGrammarBranch = addOutOfGrammarBranch;
-        this.logOutOfGrammarBranchProbability = logMath.linearToLog(outOfGrammarBranchProbability);
+        this.logOutOfGrammarBranchProbability = LogMath.linearToLog(outOfGrammarBranchProbability);
 
-        this.logPhoneInsertionProbability = logMath.linearToLog(logPhoneInsertionProbability);
+        this.logPhoneInsertionProbability = LogMath.linearToLog(logPhoneInsertionProbability);
         if (addOutOfGrammarBranch) {
             this.phoneLoopAcousticModel = phoneLoopAcousticModel;
         }
@@ -153,22 +152,21 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
     */
     public void newProperties(PropertySheet ps) throws PropertyException {
         logger = ps.getLogger();
-        logMath = LogMath.getLogMath();
 
         acousticModel = (AcousticModel) ps.getComponent(ACOUSTIC_MODEL);
         grammar = (Grammar) ps.getComponent(GRAMMAR);
         unitManager = (UnitManager) ps.getComponent(UNIT_MANAGER);
 
         // get the rest of the configuration data
-        logWordInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
-        logSilenceInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
-        logUnitInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
-        logFillerInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
+        logWordInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
+        logSilenceInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
+        logUnitInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
+        logFillerInsertionProbability = LogMath.linearToLog(ps.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
         languageWeight = ps.getFloat(Linguist.PROP_LANGUAGE_WEIGHT);
         addOutOfGrammarBranch = ps.getBoolean(ADD_OUT_OF_GRAMMAR_BRANCH);
-        logOutOfGrammarBranchProbability = logMath.linearToLog(ps.getDouble(OUT_OF_GRAMMAR_PROBABILITY));
+        logOutOfGrammarBranchProbability = LogMath.linearToLog(ps.getDouble(OUT_OF_GRAMMAR_PROBABILITY));
         
-        logPhoneInsertionProbability = logMath.linearToLog(ps.getDouble(PHONE_INSERTION_PROBABILITY));
+        logPhoneInsertionProbability = LogMath.linearToLog(ps.getDouble(PHONE_INSERTION_PROBABILITY));
         if (addOutOfGrammarBranch) {
             phoneLoopAcousticModel = (AcousticModel) ps.getComponent(PHONE_LOOP_ACOUSTIC_MODEL);
         }

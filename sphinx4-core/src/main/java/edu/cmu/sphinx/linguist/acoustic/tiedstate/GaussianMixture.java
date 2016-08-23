@@ -33,7 +33,6 @@ public class GaussianMixture extends ScoreCachingSenone {
     private MixtureComponent[] mixtureComponents;
     protected int id;
 
-    protected LogMath logMath;
 
 
     /**
@@ -46,7 +45,6 @@ public class GaussianMixture extends ScoreCachingSenone {
     public GaussianMixture(GaussianWeights mixtureWeights,
                            MixtureComponent[] mixtureComponents, int id) {
 
-        logMath = LogMath.getLogMath();
         this.mixtureComponents = mixtureComponents;
         this.mixtureWeights = mixtureWeights;
         this.id = id;
@@ -120,7 +118,7 @@ public class GaussianMixture extends ScoreCachingSenone {
             // In linear form, this would be:
             //
             // Total += Mixture[i].score * MixtureWeight[i]
-            logTotal = logMath.addAsLinear(logTotal,
+            logTotal = LogMath.addAsLinear(logTotal,
                     mixtureComponents[i].getScore(featureVector) + mixtureWeights.get(id, 0, i));
         }
 
@@ -181,7 +179,7 @@ public class GaussianMixture extends ScoreCachingSenone {
     public float[] getComponentWeights() {
         float[] mixWeights = new float[getMixtureComponents().length];
         for (int i = 0; i < mixWeights.length; i++)
-            mixWeights[i] = (float) logMath.logToLinear(mixtureWeights.get(id, 0, i));
+            mixWeights[i] = (float) LogMath.logToLinear(mixtureWeights.get(id, 0, i));
 
         return mixWeights;
     }

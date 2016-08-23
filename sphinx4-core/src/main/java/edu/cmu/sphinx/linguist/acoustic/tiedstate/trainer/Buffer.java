@@ -71,13 +71,12 @@ class Buffer {
      *
      * @param data    the data to be added
      * @param entry   the numerator entry to be accumulated to
-     * @param logMath the logMath to use
      */
-    void logAccumulate(float data, int entry, LogMath logMath) {
+    void logAccumulate(float data, int entry) {
         assert numerator != null;
         assert isLog;
-        numerator[entry] = logMath.addAsLinear((float) numerator[entry], data);
-        denominator = logMath.addAsLinear((float) denominator, data);
+        numerator[entry] = LogMath.addAsLinear((float) numerator[entry], data);
+        denominator = LogMath.addAsLinear((float) denominator, data);
         wasUsed = true;
     }
 
@@ -116,9 +115,9 @@ class Buffer {
         assert isLog;
         for (int i = 0; i < numerator.length; i++) {
             numerator[i] =
-                    logMath.addAsLinear((float) numerator[i], logNumeratorData[i]);
+                    LogMath.addAsLinear((float) numerator[i], logNumeratorData[i]);
         }
-        denominator = logMath.addAsLinear((float) denominator, logDenominatorData);
+        denominator = LogMath.addAsLinear((float) denominator, logDenominatorData);
         wasUsed = true;
     }
 
@@ -198,17 +197,16 @@ class Buffer {
      *
      * @param logMath the logMath to use
      */
-    void logNormalizeToSum(LogMath logMath) {
+    void logNormalizeToSum() {
         assert isLog;
-        float logZero = LogMath.LOG_ZERO;
-        float den = logZero;
+        float den = LogMath.LOG_ZERO;
         for (double val : numerator) {
-            if (val != logZero) {
-                den = logMath.addAsLinear(den, (float)val);
+            if (val != LogMath.LOG_ZERO) {
+                den = LogMath.addAsLinear(den, (float)val);
             }
         }
         for (int i = 0; i < numerator.length; i++) {
-            if (numerator[i] != logZero) {
+            if (numerator[i] != LogMath.LOG_ZERO) {
                 numerator[i] -= den;
             }
         }

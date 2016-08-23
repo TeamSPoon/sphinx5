@@ -47,7 +47,7 @@ public class BinaryLoader {
     private static final float MIN_PROBABILITY = -99.0f;
     private static final int MAX_PROB_TABLE_SIZE = java.lang.Integer.MAX_VALUE;
 
-    private LogMath logMath;
+
     
     private int maxNGram;
     
@@ -116,7 +116,6 @@ public class BinaryLoader {
         startWordID = -1;
         endWordID = -1;
         this.applyLanguageWeightAndWip = applyLanguageWeightAndWip;
-        logMath = LogMath.getLogMath();
         this.languageWeight = languageWeight;
         this.wip = wip;
         this.unigramWeight = unigramWeight;
@@ -604,11 +603,11 @@ public class BinaryLoader {
 
     /** Apply the unigram weight to the set of unigrams */
     private void applyUnigramWeight() {
-        float logUnigramWeight = logMath.linearToLog(unigramWeight);
-        float logNotUnigramWeight = logMath.linearToLog(1.0f - unigramWeight);
-        float logUniform = logMath.linearToLog(1.0f / (numberNGrams[0]));
+        float logUnigramWeight = LogMath.linearToLog(unigramWeight);
+        float logNotUnigramWeight = LogMath.linearToLog(1.0f - unigramWeight);
+        float logUniform = LogMath.linearToLog(1.0f / (numberNGrams[0]));
 
-        float logWip = logMath.linearToLog(wip);
+        float logWip = LogMath.linearToLog(wip);
 
         float p2 = logUniform + logNotUnigramWeight;
 
@@ -619,7 +618,7 @@ public class BinaryLoader {
 
             if (i != startWordID) {
                 p1 += logUnigramWeight;
-                p1 = logMath.addAsLinear(p1, p2);
+                p1 = LogMath.addAsLinear(p1, p2);
             }
 
             if (applyLanguageWeightAndWip) {
@@ -645,7 +644,7 @@ public class BinaryLoader {
     /** Apply the WIP to the given array of probabilities.
     */
     private void applyWip(float[] logProbabilities, double wip) {
-        float logWip = logMath.linearToLog(wip);
+        float logWip = LogMath.linearToLog(wip);
         for (int i = 0; i < logProbabilities.length; i++) {
             logProbabilities[i] = logProbabilities[i] + logWip;
         }

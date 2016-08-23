@@ -1,4 +1,3 @@
-sphinx4*/build/
 classes/
 .idea/
 .gradle/
@@ -7,3 +6,9 @@ gradlew*
 *.iml
 *.ipr
 *.iws
+sphinx4-core/build/
+sphinx4-data/build/
+sphinx4-samples/build/
+.gradle/
+.idea/
+*.iml

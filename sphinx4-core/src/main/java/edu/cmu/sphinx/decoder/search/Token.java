@@ -27,6 +27,7 @@ import edu.cmu.sphinx.linguist.dictionary.Word;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a single state in the recognition trellis. Subclasses of a token are used to represent the various
@@ -36,10 +37,12 @@ import java.util.List;
  */
 public class Token implements Scoreable {
 
-    private static int curCount;
-    private static int lastCount;
+//    private static int curCount;
+//    private static int lastCount;
+    private static final AtomicInteger serial = new AtomicInteger(0);
     private static final DecimalFormat scoreFmt = new DecimalFormat("0.0000000E00");
     private static final DecimalFormat numFmt = new DecimalFormat("0000");
+    private final int hash;
 
     private Token predecessor;
 
@@ -67,7 +70,7 @@ public class Token implements Scoreable {
                  SearchState state,
                  float logTotalScore,
                  float logInsertionScore,
-                 float logLanguageScore,                 
+                 float logLanguageScore,
                  long collectTime) {
         this.predecessor = predecessor;
         this.searchState = state;
@@ -75,7 +78,7 @@ public class Token implements Scoreable {
         this.logInsertionScore = logInsertionScore;
         this.logLanguageScore = logLanguageScore;
         this.collectTime = collectTime;
-        curCount++;
+        this.hash = serial.getAndIncrement();
     }
 
 
@@ -100,12 +103,23 @@ public class Token implements Scoreable {
      * @param logLanguageScore the log language score
      */
     public Token(Token predecessor,
-                 float logTotalScore, 
+                 float logTotalScore,
                  float logAcousticScore,
                  float logInsertionScore,
                  float logLanguageScore) {
         this(predecessor, null, logTotalScore, logInsertionScore, logLanguageScore, 0);
         this.logAcousticScore = logAcousticScore;
+    }
+
+
+    @Override
+    public final int hashCode() {
+        return hash;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        return this == obj;
     }
 
 
@@ -428,12 +442,12 @@ public class Token implements Scoreable {
     }
 
 
-    /** Shows the token count */
-    public static void showCount() {
-        System.out.println("Cur count: " + curCount + " new " +
-                (curCount - lastCount));
-        lastCount = curCount;
-    }
+//    /** Shows the token count */
+//    public static void showCount() {
+//        System.out.println("Cur count: " + curCount + " new " +
+//                (curCount - lastCount));
+//        lastCount = curCount;
+//    }
 
 
     /**

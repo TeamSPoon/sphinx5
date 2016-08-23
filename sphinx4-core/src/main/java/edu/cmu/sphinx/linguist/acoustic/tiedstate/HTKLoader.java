@@ -138,7 +138,6 @@ public class HTKLoader implements Loader {
     private Pool<Senone> senonePool;
     private Map<String, Unit> contextIndependentUnits;
     private HMMManager hmmManager;
-    private LogMath logMath;
     private UnitManager unitManager;
     private Properties properties;
     private boolean swap;
@@ -171,7 +170,6 @@ public class HTKLoader implements Loader {
         this.propsFile = propsFile;
         loadProperties();
 
-        logMath = LogMath.getLogMath();
         this.unitManager = unitManager;
         this.model = model;
         this.tie1ph = tie1ph;
@@ -888,7 +886,7 @@ public class HTKLoader implements Loader {
                     logWeights[j] = gmm.getWeight(j);
                 }
                 Utilities.floorData(logWeights, mixtureWeightFloor);
-                logMath.linearToLog(logWeights);
+                LogMath.linearToLog(logWeights);
                 // the order of the weights is the order in the HMMSet.gmms
                 // vector which is the order of appearance in the MMF file
                 mixtureWeights.put(i, 0, logWeights);
@@ -914,7 +912,7 @@ public class HTKLoader implements Loader {
                     float[][] tmat = new float[tr.length][tr[0].length];
                     for (int j = 0; j < tmat.length; j++)
                         for (int k = 0; k < tmat[j].length; k++) {
-                            tmat[j][k] = logMath.linearToLog(tr[j][k]);
+                            tmat[j][k] = LogMath.linearToLog(tr[j][k]);
                         }
                     pool.put(i, tmat);
                 }
@@ -927,7 +925,7 @@ public class HTKLoader implements Loader {
                     float[][] tmat = new float[tr.length][tr[0].length];
                     for (int j = 0; j < tmat.length; j++)
                         for (int k = 0; k < tmat[j].length; k++) {
-                            tmat[j][k] = logMath.linearToLog(tr[j][k]);
+                            tmat[j][k] = LogMath.linearToLog(tr[j][k]);
                         }
                     hmm.trIdx = i;
                     pool.put(i++, tmat);

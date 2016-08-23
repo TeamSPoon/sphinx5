@@ -44,7 +44,7 @@ public class SimpleNGramModel implements LanguageModel {
     // Configuration data
     // ----------------------------
     private String name;
-    private LogMath logMath;
+
     private URL urlLocation;
     private float unigramWeight;
     private Dictionary dictionary;
@@ -75,7 +75,6 @@ public class SimpleNGramModel implements LanguageModel {
     {
         this.urlLocation = urlLocation;
         this.unigramWeight = unigramWeight;
-        this.logMath = LogMath.getLogMath();
         this.desiredMaxDepth = desiredMaxDepth;
         this.dictionary = dictionary;
         this.map = new HashMap<>();
@@ -94,7 +93,6 @@ public class SimpleNGramModel implements LanguageModel {
      * util.props.PropertySheet)
      */
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logMath = LogMath.getLogMath();
 
         if (allocated) {
             throw new RuntimeException("Can't change properties after allocation");
@@ -163,7 +161,7 @@ public class SimpleNGramModel implements LanguageModel {
         }
         // System.out.println("Search: " + wordSequence + " : "
         // + logProbability + " "
-        // + logMath.logToLinear(logProbability));
+        // + LogMath.logToLinear(logProbability));
         return logProbability;
     }
 
@@ -274,8 +272,8 @@ public class SimpleNGramModel implements LanguageModel {
     private void load(URL location, float unigramWeight,
                       Dictionary dictionary) throws IOException {
         String line;
-        float logUnigramWeight = logMath.linearToLog(unigramWeight);
-        float inverseLogUnigramWeight = logMath
+        float logUnigramWeight = LogMath.linearToLog(unigramWeight);
+        float inverseLogUnigramWeight = LogMath
                 .linearToLog(1.0 - unigramWeight);
 
         open(location);
@@ -304,7 +302,7 @@ public class SimpleNGramModel implements LanguageModel {
         }
         int numUnigrams = ngramList.get(0) - 1;
         // -log(x) = log(1/x)
-        float logUniformProbability = -logMath.linearToLog(numUnigrams);
+        float logUniformProbability = -LogMath.linearToLog(numUnigrams);
         for (int index = 0; index < ngramList.size(); index++) {
             int ngram = index + 1;
             int ngramCount = ngramList.get(index);
@@ -337,7 +335,7 @@ public class SimpleNGramModel implements LanguageModel {
                 if (ngram == 1) {
                     float p1 = logProb + logUnigramWeight;
                     float p2 = logUniformProbability + inverseLogUnigramWeight;
-                    logProb = logMath.addAsLinear(p1, p2);
+                    logProb = LogMath.addAsLinear(p1, p2);
                     // System.out
                     // .println("p1 " + p1 + " p2 " + p2 + " luw "
                     // + logUnigramWeight + " iluw "

@@ -43,7 +43,7 @@ public class BaumWelchLearner implements Learner {
     public static final String DATA_SOURCE = "source";
     private StreamCepstrumSource dataSource;
 
-    private LogMath logMath;
+
 
     /*
      * The logger for this class
@@ -64,7 +64,6 @@ public class BaumWelchLearner implements Learner {
 
 
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logMath = LogMath.getLogMath();
         dataSource = (StreamCepstrumSource) ps.getComponent(DATA_SOURCE);
 
         frontEnd = (FrontEnd) ps.getComponent(FRONT_END);
@@ -267,7 +266,7 @@ public class BaumWelchLearner implements Learner {
             backwardPass(score);
             for (int i = 0; i < betas.length; i++) {
                 score[i].setGamma();
-                logScore = logMath.addAsLinear(logScore, score[i].getGamma());
+                logScore = LogMath.addAsLinear(logScore, score[i].getGamma());
             }
             if (currentFeatureIndex == lastFeatureIndex - 1) {
                 TrainerScore.setLogLikelihood(logScore);
@@ -383,7 +382,7 @@ public class BaumWelchLearner implements Learner {
                 // Adds the alpha and transition from the previous
                 // state into the current alpha
                 probCurrentFrame[indexNode] =
-                        logMath.addAsLinear(probCurrentFrame[indexNode],
+                        LogMath.addAsLinear(probCurrentFrame[indexNode],
                                 probPreviousFrame[indexPreviousNode] +
                                         logTransitionProbability);
                 // System.out.println("State= " + indexNode + " curr "
@@ -446,7 +445,7 @@ public class BaumWelchLearner implements Learner {
                 // Adds the alpha and transition from the previous
                 // state into the current alpha
                 probCurrentFrame[indexNode] =
-                        logMath.addAsLinear(probCurrentFrame[indexNode],
+                        LogMath.addAsLinear(probCurrentFrame[indexNode],
                                 probCurrentFrame[indexPreviousNode] +
                                         logTransitionProbability);
                 // System.out.println("State= " + indexNode + " curr "
@@ -522,7 +521,7 @@ public class BaumWelchLearner implements Learner {
                 // Adds the beta, the output prob, and the transition
                 // from the next state into the current beta
                 probCurrentFrame[indexNode] =
-                        logMath.addAsLinear(probCurrentFrame[indexNode],
+                        LogMath.addAsLinear(probCurrentFrame[indexNode],
                                 probNextFrame[indexNextNode] +
                                         logTransitionProbability +
                                         outputProbs[indexNextNode]);
@@ -580,7 +579,7 @@ public class BaumWelchLearner implements Learner {
                 // Adds the beta, the transition, and the output prob
                 // from the next state into the current beta
                 probCurrentFrame[indexNode] =
-                        logMath.addAsLinear(probCurrentFrame[indexNode],
+                        LogMath.addAsLinear(probCurrentFrame[indexNode],
                                 probCurrentFrame[indexNextNode] +
                                         logTransitionProbability);
             }

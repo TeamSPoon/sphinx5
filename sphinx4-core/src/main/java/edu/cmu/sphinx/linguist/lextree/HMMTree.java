@@ -25,6 +25,7 @@ import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.Utilities;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 
@@ -45,8 +46,10 @@ import java.util.logging.Logger;
 
 class Node {
 
-    private static int nodeCount;
-    private static int successorCount;
+    final static AtomicInteger serial = new AtomicInteger(0);
+    private final int hash;
+    //private static int nodeCount;
+    //private static int successorCount;
     
     /** 
      * This can be either Map during tree construction or Array after
@@ -63,12 +66,23 @@ class Node {
      */
     Node(float probability) {
         logUnigramProbability = probability;
-        nodeCount++;
+        this.hash = serial.incrementAndGet();
+        //nodeCount++;
 //        if ((nodeCount % 10000) == 0) {
 //             System.out.println("NC " + nodeCount);
 //        }
     }
 
+
+    @Override
+    public final int hashCode() {
+        return hash;
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        return this == obj;
+    }
 
     /**
      * Returns the unigram probability
@@ -134,19 +148,18 @@ class Node {
     void freeze() {
         if (successors instanceof Map<?,?>) {
             Map<Object, Node> map = getSuccessorMap();
-            successors = map.values().toArray(new Node[map.size()]);
-            for (Node node : map.values()) {
-                node.freeze();
-            }
-            successorCount += map.size();
+            Collection<Node> values = map.values();
+            successors = values.toArray(new Node[map.size()]);
+            values.forEach(Node::freeze);
+            //successorCount += map.size();
         }
     }
 
 
-    static void dumpNodeInfo() {
-        System.out.println("Nodes: " + nodeCount + " successors " +
-                successorCount + " avg " + (successorCount / nodeCount));
-    }
+//    static void dumpNodeInfo() {
+//        System.out.println("Nodes: " + nodeCount + " successors " +
+//                successorCount + " avg " + (successorCount / nodeCount));
+//    }
 
 
     /**

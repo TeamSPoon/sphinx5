@@ -180,7 +180,6 @@ public class JSGFGrammar extends Grammar {
     protected RuleStack ruleStack;
     private String grammarName;
     protected URL baseURL;
-    private LogMath logMath;
 
     protected boolean loadGrammar = true;
     protected GrammarNode firstNode;
@@ -203,7 +202,6 @@ public class JSGFGrammar extends Grammar {
                 dictionary);
 
         logger = Logger.getLogger(getClass().getName());
-        logMath = LogMath.getLogMath();
 
         this.baseURL = baseURL;
         this.grammarName = grammarName;
@@ -225,7 +223,6 @@ public class JSGFGrammar extends Grammar {
     public void newProperties(PropertySheet ps) throws PropertyException {
         super.newProperties(ps);
         logger = ps.getLogger();
-        logMath = LogMath.getLogMath();
 
         baseURL = ConfigurationManagerUtils.getResource(PROP_BASE_GRAMMAR_URL,
                 ps);
@@ -500,7 +497,7 @@ public class JSGFGrammar extends Grammar {
             if (sum == 0.0f) {
                 normalized.set(i, LogMath.LOG_ZERO);
             } else {
-                normalized.set(i, logMath.linearToLog(weights.get(i) / sum));
+                normalized.set(i, LogMath.linearToLog(weights.get(i) / sum));
             }
         }
         return normalized;

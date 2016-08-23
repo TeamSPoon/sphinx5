@@ -36,7 +36,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
     public final static String PROP_LANGUAGE_MODEL_WEIGHTS =
         "languageModelWeights";
 
-    private LogMath logMath;
+
     private boolean allocated = false;
 
     private List<LanguageModel> languageModels;
@@ -47,7 +47,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
     private static final double EPSILON = 0.001;
 
     public InterpolatedLanguageModel(List<LanguageModel> languageModels, float [] floats ) {
-        logMath = LogMath.getLogMath();
+
         this.languageModels = languageModels;
         this.numberOfLanguageModels = languageModels.size();
 
@@ -55,7 +55,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
         float weightSum = 0;
         for (int i = 0; i < floats.length; i++) {
             weightSum += floats[i];
-            this.weights[i] = logMath.linearToLog(floats[i]);
+            this.weights[i] = LogMath.linearToLog(floats[i]);
         }
         if (weightSum < 1.0 - EPSILON || weightSum > 1.0 + EPSILON) {
             throw new PropertyException(
@@ -91,7 +91,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
             try {
                 floats[i] = Float.parseFloat(items.get(i));
                 weightSum += floats[i];
-                weights[i] = logMath.linearToLog(floats[i]);
+                weights[i] = LogMath.linearToLog(floats[i]);
             } catch (NumberFormatException e) {
                 throw new PropertyException(
                                             InterpolatedLanguageModel.class.getName(),
@@ -140,7 +140,7 @@ public class InterpolatedLanguageModel implements LanguageModel {
             if (i == 0) {
                 prob = p;
             } else {
-                prob = logMath.addAsLinear(prob, p);
+                prob = LogMath.addAsLinear(prob, p);
             }
         }
         return prob;

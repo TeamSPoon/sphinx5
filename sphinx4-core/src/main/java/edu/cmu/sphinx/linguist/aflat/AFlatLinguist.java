@@ -154,21 +154,20 @@ public class AFlatLinguist implements Linguist, Configurable {
 		this.grammar = grammar;
 		this.unitManager = unitManager;
 
-		LogMath logMath = LogMath.getLogMath();
-		this.logWordInsertionProbability = logMath
+		this.logWordInsertionProbability = LogMath
 				.linearToLog(wordInsertionProbability);
-		this.logSilenceInsertionProbability = logMath
+		this.logSilenceInsertionProbability = LogMath
 				.linearToLog(silenceInsertionProbability);
-		this.logUnitInsertionProbability = logMath
+		this.logUnitInsertionProbability = LogMath
 				.linearToLog(unitInsertionProbability);
-		this.logFillerInsertionProbability = logMath
+		this.logFillerInsertionProbability = LogMath
 				.linearToLog(fillerInsertionProbability);
 		this.languageWeight = languageWeight;
 		this.addOutOfGrammarBranch = addOutOfGrammarBranch;
-		this.logOutOfGrammarBranchProbability = logMath
+		this.logOutOfGrammarBranchProbability = LogMath
 				.linearToLog(outOfGrammarBranchProbability);
 
-		this.logPhoneInsertionProbability = logMath
+		this.logPhoneInsertionProbability = LogMath
 				.linearToLog(logPhoneInsertionProbability);
 		if (addOutOfGrammarBranch) {
 			this.phoneLoopAcousticModel = phoneLoopAcousticModel;
@@ -194,21 +193,20 @@ public class AFlatLinguist implements Linguist, Configurable {
 		unitManager = (UnitManager) ps.getComponent(UNIT_MANAGER);
 
 		// get the rest of the configuration data
-		LogMath logMath = LogMath.getLogMath();
-		logWordInsertionProbability = logMath.linearToLog(ps
+		logWordInsertionProbability = LogMath.linearToLog(ps
 				.getDouble(PROP_WORD_INSERTION_PROBABILITY));
-		logSilenceInsertionProbability = logMath.linearToLog(ps
+		logSilenceInsertionProbability = LogMath.linearToLog(ps
 				.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
-		logUnitInsertionProbability = logMath.linearToLog(ps
+		logUnitInsertionProbability = LogMath.linearToLog(ps
 				.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
-		logFillerInsertionProbability = logMath.linearToLog(ps
+		logFillerInsertionProbability = LogMath.linearToLog(ps
 				.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
 		languageWeight = ps.getFloat(Linguist.PROP_LANGUAGE_WEIGHT);
 		addOutOfGrammarBranch = ps.getBoolean(ADD_OUT_OF_GRAMMAR_BRANCH);
-		logOutOfGrammarBranchProbability = logMath.linearToLog(ps
+		logOutOfGrammarBranchProbability = LogMath.linearToLog(ps
 				.getDouble(OUT_OF_GRAMMAR_PROBABILITY));
 
-		logPhoneInsertionProbability = logMath.linearToLog(ps
+		logPhoneInsertionProbability = LogMath.linearToLog(ps
 				.getDouble(PHONE_INSERTION_PROBABILITY));
 		if (addOutOfGrammarBranch) {
 			phoneLoopAcousticModel = (AcousticModel) ps

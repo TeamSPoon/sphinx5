@@ -25,7 +25,6 @@ public class PosteriorTest {
 	@Test
 	public void testPosterior() {
 
-	    LogMath logMath = LogMath.getLogMath();
 	    
 		Lattice lattice = new Lattice();
 
@@ -43,11 +42,11 @@ public class PosteriorTest {
 		lattice.setInitialNode(a);
 		lattice.setTerminalNode(d);
 
-		lattice.addEdge(a, b, logMath.linearToLog(acousticAB), 0);
-		lattice.addEdge(a, c, logMath.linearToLog(acousticAC), 0);
-		lattice.addEdge(c, b, logMath.linearToLog(acousticCB), 0);
-		lattice.addEdge(b, d, logMath.linearToLog(acousticBD), 0);
-		lattice.addEdge(c, d, logMath.linearToLog(acousticCD), 0);
+		lattice.addEdge(a, b, LogMath.linearToLog(acousticAB), 0);
+		lattice.addEdge(a, c, LogMath.linearToLog(acousticAC), 0);
+		lattice.addEdge(c, b, LogMath.linearToLog(acousticCB), 0);
+		lattice.addEdge(b, d, LogMath.linearToLog(acousticBD), 0);
+		lattice.addEdge(c, d, LogMath.linearToLog(acousticCD), 0);
 
 		lattice.computeNodePosteriors(1.0f);
 		double pathABD = acousticAB * acousticBD;
@@ -59,9 +58,9 @@ public class PosteriorTest {
 		double cPosterior = (pathACBD + pathACD) / allPaths;
 
 		double delta = 1e-4;
-		Assert.assertEquals (logMath.logToLinear((float) a.getPosterior()), 1.0, delta);
-		Assert.assertEquals (logMath.logToLinear((float) b.getPosterior()), bPosterior, delta);
-		Assert.assertEquals (logMath.logToLinear((float) c.getPosterior()), cPosterior, delta);
-		Assert.assertEquals (logMath.logToLinear((float) d.getPosterior()), 1.0, delta);
+		Assert.assertEquals (LogMath.logToLinear((float) a.getPosterior()), 1.0, delta);
+		Assert.assertEquals (LogMath.logToLinear((float) b.getPosterior()), bPosterior, delta);
+		Assert.assertEquals (LogMath.logToLinear((float) c.getPosterior()), cPosterior, delta);
+		Assert.assertEquals (LogMath.logToLinear((float) d.getPosterior()), 1.0, delta);
 	}
 }

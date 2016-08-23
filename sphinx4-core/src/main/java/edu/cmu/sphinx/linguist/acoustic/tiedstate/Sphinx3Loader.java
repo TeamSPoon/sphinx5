@@ -125,7 +125,6 @@ public class Sphinx3Loader implements Loader {
 
     private Map<String, Unit> contextIndependentUnits;
     private HMMManager hmmManager;
-    protected LogMath logMath;
     private UnitManager unitManager;
     private boolean swap;
 
@@ -168,7 +167,7 @@ public class Sphinx3Loader implements Loader {
     protected void init(URL location,
             UnitManager unitManager, float distFloor, float mixtureWeightFloor,
             float varianceFloor, int topGauNum, boolean useCDUnits, Logger logger) {
-        logMath = LogMath.getLogMath();
+
         this.location = location;
         this.logger = logger;
         this.unitManager = unitManager;
@@ -1029,7 +1028,7 @@ public class Sphinx3Loader implements Loader {
                             numGaussiansPerState);
                     Utilities.normalize(logStreamMixtureWeight);
                     Utilities.floorData(logStreamMixtureWeight, floor);
-                    logMath.linearToLog(logStreamMixtureWeight);
+                    LogMath.linearToLog(logStreamMixtureWeight);
                     mixtureWeights.put(i, j, logStreamMixtureWeight);
                 }
             }
@@ -1082,13 +1081,13 @@ public class Sphinx3Loader implements Loader {
             float[][] tmat = new float[numStates][];
             // last row should be zeros
             tmat[numStates - 1] = new float[numStates];
-            logMath.linearToLog(tmat[numStates - 1]);
+            LogMath.linearToLog(tmat[numStates - 1]);
 
             for (int j = 0; j < numRows; j++) {
                 tmat[j] = readFloatArray(dis, numStates);
                 Utilities.nonZeroFloor(tmat[j], 0f);
                 Utilities.normalize(tmat[j]);
-                logMath.linearToLog(tmat[j]);
+                LogMath.linearToLog(tmat[j]);
             }
             pool.put(i, tmat);
         }
