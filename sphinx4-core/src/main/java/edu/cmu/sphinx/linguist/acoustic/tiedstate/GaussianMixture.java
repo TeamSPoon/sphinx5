@@ -31,7 +31,7 @@ public class GaussianMixture extends ScoreCachingSenone {
     // and therefore should not be written to.
     protected GaussianWeights mixtureWeights;
     private final MixtureComponent[] mixtureComponents;
-    protected int id;
+    protected final int id;
 
 
 
@@ -111,7 +111,7 @@ public class GaussianMixture extends ScoreCachingSenone {
         if (feature instanceof DoubleData)
             System.err.println("DoubleData conversion required on mixture level!");
 
-        float[] featureVector = FloatData.toFloatData(feature).getValues();
+        float[] featureVector = FloatData.toFloatData(feature).values;
 
         float logTotal = LogMath.LOG_ZERO;
         for (int i = 0; i < mixtureComponents.length; i++) {
@@ -136,7 +136,7 @@ public class GaussianMixture extends ScoreCachingSenone {
         if (feature instanceof DoubleData)
             System.err.println("DoubleData conversion required on mixture level!");
 
-        float[] featureVector = FloatData.toFloatData(feature).getValues();
+        float[] featureVector = FloatData.toFloatData(feature).values;
 
         float[] logComponentScore = new float[mixtureComponents.length];
         for (int i = 0; i < mixtureComponents.length; i++) {

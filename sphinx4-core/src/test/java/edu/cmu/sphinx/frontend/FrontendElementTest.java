@@ -104,7 +104,7 @@ public class FrontendElementTest {
             if (line.startsWith("FloatFrame")) {
                 String[] tokens = line.split(" ");
                 Assert.assertTrue(data instanceof FloatData);
-                float[] values = ((FloatData) data).getValues();
+                float[] values = ((FloatData) data).values;
                 Assert.assertEquals(values.length,
                                     (int) Integer.valueOf(tokens[1]));
                 for (int i = 0; i < values.length; i++)

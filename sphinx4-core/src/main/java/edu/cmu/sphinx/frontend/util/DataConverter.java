@@ -54,8 +54,8 @@ public class DataConverter extends BaseDataProcessor {
                     dd.getFirstSampleNumber());
         } else if (d instanceof FloatData && convMode.equals(CONVERT_F2D)) {
             FloatData fd = (FloatData) d;
-            d = new DoubleData(MatrixUtils.float2double(fd.getValues()), fd.getSampleRate(),
-                    fd.getFirstSampleNumber());
+            d = new DoubleData(MatrixUtils.float2double(fd.values), fd.sampleRate,
+                    fd.firstSampleNumber);
         }
 
         return d;

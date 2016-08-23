@@ -112,10 +112,10 @@ class HMMPoolManager {
     }
     
     private static Pool<Buffer> createWeightsPoolBuffer(GaussianWeights mixtureWeights) {
-         Pool<Buffer> bufferPool = new Pool<>(mixtureWeights.getName());
-         int statesNum = mixtureWeights.getStatesNum();
-         int streamsNum = mixtureWeights.getStreamsNum();
-         int gauPerState = mixtureWeights.getGauPerState();
+        Pool<Buffer> bufferPool = new Pool<>(mixtureWeights.name);
+        int statesNum = mixtureWeights.states;
+        int streamsNum = mixtureWeights.streams;
+        int gauPerState = mixtureWeights.gauPerState;
          for (int i = 0; i < streamsNum; i++) {
              for (int j = 0; j < statesNum; j++) {
                  int id = i * statesNum + j;
@@ -212,7 +212,7 @@ class HMMPoolManager {
                 assert indexMean >= 0;
                 assert indexMean == senone;
                 Buffer buffer = meansBufferPool.get(indexMean);
-                float[] feature = ((FloatData) score.getData()).getValues();
+                float[] feature = ((FloatData) score.getData()).values;
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
                 double dprob = LogMath.logToLinear(prob);
@@ -242,7 +242,7 @@ class HMMPoolManager {
                 // int indexVariance = variancePool.indexOf(variance);
                 int indexVariance = indexMap.get(variance);
                 Buffer buffer = varianceBufferPool.get(indexVariance);
-                float[] feature = ((FloatData) score.getData()).getValues();
+                float[] feature = ((FloatData) score.getData()).values;
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
                 double dprob = LogMath.logToLinear(prob);
@@ -266,7 +266,7 @@ class HMMPoolManager {
             }
         } else {
             Buffer buffer = mixtureWeightsBufferPool.get(senone);
-            for (int i = 0; i < mixtureWeights.getGauPerState(); i++) {
+            for (int i = 0; i < mixtureWeights.gauPerState; i++) {
                 float prob = score.getComponentGamma()[i];
                 prob -= currentLogLikelihood;
                 buffer.logAccumulate(prob, i);
@@ -529,8 +529,8 @@ class HMMPoolManager {
 
     /** Update the mixture weights. */
     private void updateMixtureWeights() {
-        int statesNum = mixtureWeights.getStatesNum();
-        int streamsNum = mixtureWeights.getStreamsNum();
+        int statesNum = mixtureWeights.states;
+        int streamsNum = mixtureWeights.streams;
         assert statesNum * streamsNum == mixtureWeightsBufferPool.size();
         for (int i = 0; i < streamsNum; i++) {
             for (int j = 0; j < statesNum; j++) {

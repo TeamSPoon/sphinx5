@@ -20,10 +20,22 @@ import edu.cmu.sphinx.util.MatrixUtils;
  */
 public class FloatData implements Data, Cloneable {
 
-    private final float[] values;
-    private final int sampleRate;
-    private final long firstSampleNumber;
-    private final long collectTime;
+    public final float[] values;
+    public final int sampleRate;
+
+
+    /**
+     * @return the position of the first sample in the original data. The very first sample number is zero.
+     */
+    public final long firstSampleNumber;
+
+    /**
+     * Returns the time in milliseconds at which the audio data is collected.
+     *
+     * @return the difference, in milliseconds, between the time the audio data is collected and midnight, January 1,
+     *         1970
+     */
+    public final long collectTime;
 
     /**
      * Constructs a Data object with the given values, sample rate, collect time, and first sample number.
@@ -52,40 +64,6 @@ public class FloatData implements Data, Cloneable {
         this.firstSampleNumber = firstSampleNumber;
     }
 
-
-    /**
-     * @return the values of this data.
-     */
-    public float[] getValues() {
-        return values;
-    }
-
-
-    /**
-     * @return the sample rate of this data.
-     */
-    public int getSampleRate() {
-        return sampleRate;
-    }
-
-
-    /**
-     * @return the position of the first sample in the original data. The very first sample number is zero.
-     */
-    public long getFirstSampleNumber() {
-        return firstSampleNumber;
-    }
-
-
-    /**
-     * Returns the time in milliseconds at which the audio data is collected.
-     *
-     * @return the difference, in milliseconds, between the time the audio data is collected and midnight, January 1,
-     *         1970
-     */
-    public long getCollectTime() {
-        return collectTime;
-    }
 
     @Override
     public FloatData clone() throws CloneNotSupportedException {

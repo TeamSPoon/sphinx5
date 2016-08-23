@@ -35,15 +35,28 @@ public class SetBasedGaussianMixture extends GaussianMixture {
 
     @Override
     public float calculateScore(Data feature) {
-        mixtureComponentSet.updateTopScores(feature);
+
+        MixtureComponentSetScores curScores = mixtureComponentSet.updateTopScores(feature);
+
         float ascore = 0;
-        for (int i = 0; i < mixtureWeights.getStreamsNum(); i++) {
+
+        int s = mixtureWeights.streams;
+        int t = mixtureComponentSet.topGauNum;
+
+        for (int i = 0; i < s; i++) {
+
             float logTotal = LogMath.LOG_ZERO;
-            for (int j = 0; j < mixtureComponentSet.getTopGauNum(); j++) {
-                float gauScore = mixtureComponentSet.getTopGauScore(i, j);
-                int gauId = mixtureComponentSet.getTopGauId(i, j);
+            float[] scoreRow = curScores.scores[i];
+            int[] idRow = curScores.ids[i];
+
+            for (int j = 0; j < t; j++) {
+
+                float gauScore = scoreRow[j];
+                int gauId = idRow[j];
+
                 logTotal = LogMath.addAsLinear(logTotal, gauScore + mixtureWeights.get(id, i, gauId));
             }
+
             ascore += logTotal;
         }
         return ascore;
@@ -60,8 +73,8 @@ public class SetBasedGaussianMixture extends GaussianMixture {
         mixtureComponentSet.updateScores(feature);
         float[] scores = new float[mixtureComponentSet.size()];
         int scoreIdx = 0;
-        for (int i = 0; i < mixtureWeights.getStreamsNum(); i++) {
-            for (int j = 0; j < mixtureComponentSet.getGauNum(); j++) {
+        for (int i = 0; i < mixtureWeights.streams; i++) {
+            for (int j = 0; j < mixtureComponentSet.gauNum; j++) {
                 scores[scoreIdx++] = mixtureComponentSet.getGauScore(i, j) + mixtureWeights.get(id, i, mixtureComponentSet.getGauId(i, j));
             }
         }

@@ -42,7 +42,7 @@ public class GainControlProcessor extends BaseDataProcessor {
         Data data = getPredecessor().getData();
 
         if (data instanceof FloatData) {
-            float[] values = ((FloatData) data).getValues();
+            float[] values = ((FloatData) data).values;
             if (gainFactor != 1.0) {
                 // apply the gain-factor
                 for (int i = 0; i < values.length; i++) {

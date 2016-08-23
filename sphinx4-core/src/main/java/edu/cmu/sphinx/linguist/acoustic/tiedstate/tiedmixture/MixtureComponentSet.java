@@ -15,8 +15,9 @@ import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
 
-import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * MixtureComponentsSet - phonetically tied set of gaussians
@@ -25,52 +26,49 @@ public class MixtureComponentSet {
     
     private int scoresQueueLen;
     private boolean toStoreScore;
-    private final Deque<MixtureComponentSetScores> storedScores;
-    MixtureComponentSetScores curScores;
+    //private final Deque<MixtureComponentSetScores> storedScores;
+    private final Map<Long,MixtureComponentSetScores> storedScores;
 
-    private final ArrayList<PrunableMixtureComponent[]> components;
-    private final ArrayList<PrunableMixtureComponent[]> topComponents;
-    private final int numStreams;
-    private final int topGauNum;
-    private final int gauNum;
+    private final PrunableMixtureComponent[][] components;
+    private final PrunableMixtureComponent[][] topComponents;
+    public final int numStreams;
+    public final int topGauNum;
+    public final int gauNum;
     private long gauCalcSampleNumber;
+    private final AtomicLong lastSample = new AtomicLong(Long.MIN_VALUE);
     
-    public MixtureComponentSet(ArrayList<PrunableMixtureComponent[]> components, int topGauNum) {
+    public MixtureComponentSet(PrunableMixtureComponent[][] components, int topGauNum) {
         this.components = components;
-        this.numStreams = components.size();
+        this.numStreams = components.length;
         this.topGauNum = topGauNum;
-        this.gauNum = components.get(0).length;
-        topComponents = new ArrayList<>();
+        this.gauNum = components[0].length;
+        topComponents = new PrunableMixtureComponent[numStreams][];
         for (int i = 0; i < numStreams; i++) {
             PrunableMixtureComponent[] featTopComponents = new PrunableMixtureComponent[topGauNum];
-            for (int j = 0; j < topGauNum; j++)
-                featTopComponents[j] = components.get(i)[j];
-            topComponents.add(featTopComponents);
+            PrunableMixtureComponent[] ci = components[i];
+            System.arraycopy(ci, 0, featTopComponents, 0, topGauNum);
+            topComponents[i] = featTopComponents;
         }
         gauCalcSampleNumber = -1;
         toStoreScore = false;
-        storedScores = new ArrayDeque<>();
-        curScores = null;
+        storedScores = new ConcurrentHashMap(); //ArrayDeque<>();
     }
     
     private void storeScores(MixtureComponentSetScores scores) {
-
-
-        storedScores.add(scores);
+        long start = scores.getFrameStartSample();
+        storedScores.put(start, scores);
+        if (start > lastSample.get())
+            lastSample.set(start);
     }
     
     private MixtureComponentSetScores getStoredScores(long frameFirstSample) {
         if (storedScores.isEmpty())
             return null;
-        if (storedScores.peekLast().getFrameStartSample() < frameFirstSample)
+        if (lastSample.get() < frameFirstSample)
             //new frame
             return null;
-        for (MixtureComponentSetScores scores : storedScores) {
-            if (scores.getFrameStartSample() == frameFirstSample)
-                return scores;
-        }
-        //Failed to find score. Seems it wasn't calculated yet
-        return null;
+
+        return storedScores.get(frameFirstSample);
     }
     
     private MixtureComponentSetScores createFromTopGau(long firstFrameSample, MixtureComponentSetScores recycle) {
@@ -81,12 +79,13 @@ public class MixtureComponentSet {
                 (recycle == null ? new MixtureComponentSetScores() : recycle)
                         .clear(s, n, firstFrameSample);
 
+        PrunableMixtureComponent[][] topComponents = this.topComponents;
         for (int i = 0; i < s; i++) {
-            ArrayList<PrunableMixtureComponent[]> topComponents = this.topComponents;
 
-            PrunableMixtureComponent[] topI = topComponents.get(i);
+            PrunableMixtureComponent[] topI = topComponents[i];
             float[] scoreRow = scores.scores[i];
             int[] idRow = scores.ids[i];
+
             for (int j = 0; j < n; j++) {
                 PrunableMixtureComponent topIJ = topI[j];
                 scoreRow[j] = topIJ.score;
@@ -101,16 +100,16 @@ public class MixtureComponentSet {
         int l = topComponents.length;
         float cScore = component.getPartialScore();
         for (i = 0; i < l - 1; i++) {
-            if (cScore < topComponents[i].getPartialScore()) {
+            if (i >= 1 && cScore < topComponents[i].partScore) {
                 topComponents[i - 1] = component;
                 return;
             }
             topComponents[i] = topComponents[i + 1];
         }
 
-        if (cScore < topComponents[l - 1].getPartialScore())
+        if (l >= 2 && cScore < topComponents[l - 1].partScore)
             topComponents[l - 2] = component;
-        else
+        else if (l >= 1)
             topComponents[l - 1] = component;
     }
     
@@ -127,8 +126,8 @@ public class MixtureComponentSet {
         float[] streamVector = new float[step];
         for (int i = 0; i < numStreams; i++) {
             System.arraycopy(featureVector, i * step, streamVector, 0, step);
-            PrunableMixtureComponent[] featTopComponents = topComponents.get(i);
-            PrunableMixtureComponent[] featComponents = components.get(i);
+            PrunableMixtureComponent[] featTopComponents = topComponents[i];
+            PrunableMixtureComponent[] featComponents = components[i];
             
             //update scores in top gaussians from previous frame
             for (PrunableMixtureComponent topComponent : featTopComponents)
@@ -142,41 +141,47 @@ public class MixtureComponentSet {
                     continue;
                 if (component.isTopComponent(streamVector, threshold)) {
                     insertTopComponent(featTopComponents, component);
-                    threshold = featTopComponents[0].getPartialScore();
+                    threshold = featTopComponents[0].partScore;
                 }
             }
         }
     }
     
-    public void updateTopScores(Data feature) {
+    public MixtureComponentSetScores updateTopScores(Data feature) {
         
         if (feature instanceof DoubleData)
             System.err.println("DoubleData conversion required on mixture level!");
-        
-        long firstSampleNumber = FloatData.toFloatData(feature).getFirstSampleNumber();
+
+        FloatData featureFloat = FloatData.toFloatData(feature);
+        long firstSampleNumber = featureFloat.firstSampleNumber;
+        MixtureComponentSetScores s;
+
         if (toStoreScore) {
-            curScores = getStoredScores(firstSampleNumber);
+            s = getStoredScores(firstSampleNumber);
         } else {
-            if (curScores != null && curScores.getFrameStartSample() != firstSampleNumber)
-                curScores = null;
+            //if (s != null && curScores.getFrameStartSample() != firstSampleNumber)
+            s = null;
         }
-        if (curScores != null)
+
+        if (s != null)
             //component scores for this frame was already calculated
-            return;
-        float[] featureVector = FloatData.toFloatData(feature).getValues();
+            return s;
+
+        float[] featureVector = featureFloat.values;
         updateTopScores(featureVector);
         //store just calculated score in list
 
 
-        int size = storedScores.size();
-        int toRemove = (size+1) - scoresQueueLen;
-        MixtureComponentSetScores lastRemoved = null;
-        for (int i = 0; i < toRemove; i++)
-            lastRemoved = storedScores.poll();
+//        int size = storedScores.size();
+//        int toRemove = (size+1) - scoresQueueLen;
+//        MixtureComponentSetScores lastRemoved = null;
+//        for (int i = 0; i < toRemove; i++)
+//            lastRemoved = storedScores.poll();
 
-        curScores = createFromTopGau(firstSampleNumber, lastRemoved);
+        s = createFromTopGau(firstSampleNumber, null);
         if (toStoreScore)
-            storeScores(curScores);
+            storeScores(s);
+        return s;
     }
     
     private void updateScores(float[] featureVector) {
@@ -184,7 +189,7 @@ public class MixtureComponentSet {
         float[] streamVector = new float[step];
         for (int i = 0; i < numStreams; i++) {
             System.arraycopy(featureVector, i * step, streamVector, 0, step);
-            for (PrunableMixtureComponent component : components.get(i)) {
+            for (PrunableMixtureComponent component : components[i]) {
                 component.updateScore(streamVector);
             }
         }
@@ -193,10 +198,11 @@ public class MixtureComponentSet {
     public void updateScores(Data feature) {
         if (feature instanceof DoubleData)
             System.err.println("DoubleData conversion required on mixture level!");
-        
-        long firstSampleNumber = FloatData.toFloatData(feature).getFirstSampleNumber();
+
+        FloatData featureFloat = FloatData.toFloatData(feature);
+        long firstSampleNumber = featureFloat.firstSampleNumber;
         if (gauCalcSampleNumber != firstSampleNumber) {
-            float[] featureVector = FloatData.toFloatData(feature).getValues();
+            float[] featureVector = featureFloat.values;
             updateScores(featureVector);
             gauCalcSampleNumber = firstSampleNumber;
         }
@@ -218,29 +224,21 @@ public class MixtureComponentSet {
         toStoreScore = scoresQueueLen > 0;
         this.scoresQueueLen = scoresQueueLen;
     }
-    
-    public int getTopGauNum() {
-        return topGauNum;
-    }
-    
-    public int getGauNum() {
-        return gauNum;
-    }
-    
-    public float getTopGauScore(int streamId, int topGauId) {
-        return curScores.getScore(streamId, topGauId);
-    }
-    
-    public int getTopGauId(int streamId, int topGauId) {
-        return curScores.getGauId(streamId, topGauId);
-    }
+
+//    public float getTopGauScore(int streamId, int topGauId) {
+//        return curScores.getScore(streamId, topGauId);
+//    }
+//
+//    public int getTopGauId(int streamId, int topGauId) {
+//        return curScores.getGauId(streamId, topGauId);
+//    }
     
     public float getGauScore(int streamId, int topGauId) {
-        return components.get(streamId)[topGauId].getStoredScore();
+        return components[streamId][topGauId].getStoredScore();
     }
     
     public int getGauId(int streamId, int topGauId) {
-        return components.get(streamId)[topGauId].id;
+        return components[streamId][topGauId].id;
     }
     
 //    private static <T> T[] concatenate(T[] A, T[] B) {
@@ -258,12 +256,12 @@ public class MixtureComponentSet {
     protected MixtureComponent[] toArray() {
         int total = 0;
         for (int i = 0; i < numStreams; i++)
-            total += components.get(i).length;
+            total += components[i].length;
 
         PrunableMixtureComponent[] allComponents = new PrunableMixtureComponent[total];
         int p = 0;
         for (int i = 0; i < numStreams; i++) {
-            PrunableMixtureComponent[] c = components.get(i);
+            PrunableMixtureComponent[] c = components[i];
             int cl = c.length;
             System.arraycopy(c, 0, allComponents, p, cl);
             p += cl;
@@ -274,17 +272,18 @@ public class MixtureComponentSet {
     protected int dimension() {
         int dimension = 0;
         for (int i = 0; i < numStreams; i++) {
-            dimension+= components.get(i)[0].getMean().length;
+            dimension+= components[i][0].getMean().length;
         }
         return dimension;
     }
 
     protected int size() {
-        int size = 0;
-        for (int i = 0; i < numStreams; i++) {
-            size += components.get(0).length;
-        }
-        return size;
+//        int size = 0;
+//        for (int i = 0; i < numStreams; i++) {
+//            size += components[0].length;
+//        }
+//        return size;
+        return components[0].length * numStreams;
     }
     
     static final Comparator<PrunableMixtureComponent> componentComparator = (a, b) -> (int)(a.score - b.score);

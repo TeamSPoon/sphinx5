@@ -107,7 +107,7 @@ public class FeatureFileDumper {
                     }
                     allFeatures.add(convertedData);
                 } else if (feature instanceof FloatData) {
-                    float[] featureData = ((FloatData) feature).getValues();
+                    float[] featureData = ((FloatData) feature).values;
                     if (featureLength < 0) {
                         featureLength = featureData.length;
                         logger.info("Feature length: " + featureLength);

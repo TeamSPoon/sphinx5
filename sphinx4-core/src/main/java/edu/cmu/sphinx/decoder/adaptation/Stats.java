@@ -149,7 +149,7 @@ public class Stats {
             nFrames++;
 
             componentScore = token.calculateComponentScore(feature);
-            featureVector = FloatData.toFloatData(feature).getValues();
+            featureVector = FloatData.toFloatData(feature).values;
             mId = (int) ((HMMSearchState) token.getSearchState()).getHMMState().getMixtureId();
             if (loader instanceof Sphinx3Loader && loader.hasTiedMixtures())
                 // use CI phone ID for tied mixture model

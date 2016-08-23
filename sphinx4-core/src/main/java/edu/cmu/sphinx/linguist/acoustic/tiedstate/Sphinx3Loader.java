@@ -360,7 +360,7 @@ public class Sphinx3Loader implements Loader {
 
         int numStatePerHMM = numStateMap / (numTri + numBase);
 
-        assert numTiedState == mixtureWeights.getStatesNum();
+        assert numTiedState == mixtureWeights.states;
         assert numTiedTransitionMatrices == transitionsPool.size();
 
         // Load the base phones
@@ -395,9 +395,9 @@ public class Sphinx3Loader implements Loader {
         
         int numMeans = meansPool.size();
         int numVariances = variancePool.size();
-        int numGaussiansPerSenone = mixtureWeights.getGauPerState();
-        int numSenones = mixtureWeights.getStatesNum();
-        int numStreams = mixtureWeights.getStreamsNum();
+        int numGaussiansPerSenone = mixtureWeights.gauPerState;
+        int numSenones = mixtureWeights.states;
+        int numStreams = mixtureWeights.streams;
         int whichGaussian = 0;
 
         if (logger.isLoggable(Level.FINE)) {
@@ -454,9 +454,9 @@ public class Sphinx3Loader implements Loader {
 
         int numMeans = meansPool.size();
         int numVariances = variancePool.size();
-        int numGaussiansPerState = mixtureWeights.getGauPerState();
-        int numSenones = mixtureWeights.getStatesNum();
-        int numStreams = mixtureWeights.getStreamsNum();
+        int numGaussiansPerState = mixtureWeights.gauPerState;
+        int numSenones = mixtureWeights.states;
+        int numStreams = mixtureWeights.streams;
 
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Senones " + numSenones);
@@ -480,7 +480,7 @@ public class Sphinx3Loader implements Loader {
         
         phoneticTiedMixtures = new MixtureComponentSet[numBase];
         for (int i = 0; i < numBase; i++) {
-            ArrayList<PrunableMixtureComponent[]> mixtureComponents = new ArrayList<>();
+            PrunableMixtureComponent[][] mixtureComponents = new PrunableMixtureComponent[numStreams][];
             for (int j = 0; j < numStreams; j++) {
             	PrunableMixtureComponent[] featMixtureComponents = new PrunableMixtureComponent[numGaussiansPerState];
                 for (int k = 0; k < numGaussiansPerState; k++) {
@@ -492,7 +492,7 @@ public class Sphinx3Loader implements Loader {
                             varianceTransformationMatrix,
                             varianceTransformationVector, distFloor, varianceFloor, k);
                 }
-                mixtureComponents.add(featMixtureComponents);
+                mixtureComponents[j] = featMixtureComponents;
             }
             phoneticTiedMixtures[i] = new MixtureComponentSet(mixtureComponents, topGauNum);
         }
@@ -817,7 +817,7 @@ public class Sphinx3Loader implements Loader {
 
         int numStatePerHMM = numStateMap / (numTri + numBase);
 
-        assert numTiedState == mixtureWeights.getStatesNum();
+        assert numTiedState == mixtureWeights.states;
         assert numTiedTransitionMatrices == transitionsPool.size();
 
         // Load the base phones

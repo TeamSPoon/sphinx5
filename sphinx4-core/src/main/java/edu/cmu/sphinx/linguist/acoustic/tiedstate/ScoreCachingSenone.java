@@ -27,7 +27,7 @@ public abstract class ScoreCachingSenone implements Senone {
         }
     }
 
-    private volatile ScoreCache scoreCache = new ScoreCache(null, 0.0f);
+    //private volatile ScoreCache scoreCache = new ScoreCache(null, 0.0f);
 
     /**
      * Gets the cached score for this senone based upon the given feature.
@@ -35,12 +35,14 @@ public abstract class ScoreCachingSenone implements Senone {
      * cached, and then returned.  
      */
     public float getScore(Data feature) {
-        ScoreCache cached = scoreCache;
-        if (feature != cached.feature) {
-            cached = new ScoreCache(feature, calculateScore(feature));
-            scoreCache = cached;
-        }
-        return cached.score;
+//        ScoreCache cached = scoreCache;
+//        if (feature != cached.feature) {
+//            cached = new ScoreCache(feature, calculateScore(feature));
+//            scoreCache = cached;
+//        }
+//        return cached.score;
+
+        return calculateScore(feature);
     }
 
     /**

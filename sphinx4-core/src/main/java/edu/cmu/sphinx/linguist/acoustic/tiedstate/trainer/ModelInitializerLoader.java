@@ -197,7 +197,7 @@ public class ModelInitializerLoader implements Loader {
       assert numVariances == numSenones * numGaussiansPerSenone;
       assert numMeans == numSenones * numGaussiansPerSenone;
       */
-        int numGaussiansPerSenone = mixtureWeights.getGauPerState();
+        int numGaussiansPerSenone = mixtureWeights.gauPerState;
         assert numGaussiansPerSenone > 0;
         for (int state : stateID) {
             MixtureComponent[] mixtureComponents = new MixtureComponent[numGaussiansPerSenone];

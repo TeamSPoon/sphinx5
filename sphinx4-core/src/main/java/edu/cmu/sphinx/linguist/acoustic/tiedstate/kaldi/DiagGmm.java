@@ -68,7 +68,7 @@ public class DiagGmm extends ScoreCachingSenone {
     }
 
     public float[] calculateComponentScore(Data data) {
-        float[] features = FloatData.toFloatData(data).getValues();
+        float[] features = FloatData.toFloatData(data).values;
         int dim = meansInvVars.length / gconsts.length;
 
         if (features.length != dim) {

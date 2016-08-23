@@ -162,7 +162,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         AtomicReference<Double> bestScore = new AtomicReference(Double.NEGATIVE_INFINITY);
         Scoreable[] best = new Scoreable[1];
 
-        scoreableList.forEach(
+        scoreableList.stream().parallel().forEach(
                 (x) -> {
                     float s = x.calculateScore(data);
                     bestScore.updateAndGet((Double b) -> {

@@ -156,7 +156,7 @@ public class MixtureComponent implements Cloneable, Serializable {
      * @return the score, in log, for the given feature
      */
     public float getScore(FloatData feature) {
-        return getScore(feature.getValues());
+        return getScore(feature.values);
     }
 
 

@@ -159,7 +159,7 @@ public class Token implements Scoreable {
     public void setData(Data data) {
         this.data = data;
         if (data instanceof FloatData) {
-            collectTime = ((FloatData)data).getCollectTime();
+            collectTime = ((FloatData) data).collectTime;
         }
     }
 

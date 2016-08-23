@@ -302,8 +302,8 @@ public class HTKLoader implements Loader {
         int numVariances = variancePool.size();
         // TODO: remove this variable to allow different number of states per
         // HMM
-        int numGaussiansPerSenone = mixtureWeights.getGauPerState();
-        int numSenones = mixtureWeights.getStatesNum();
+        int numGaussiansPerSenone = mixtureWeights.gauPerState;
+        int numSenones = mixtureWeights.states;
         int whichGaussian = 0;
 
         if (logger.isLoggable(Level.FINE)) {

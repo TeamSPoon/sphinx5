@@ -89,7 +89,7 @@ public class CepstrumPanel extends JPanel {
 
             while (!(spectrum instanceof DataEndSignal)) {
                 if (spectrum instanceof FloatData) {
-                    float[] spectrumData = ((FloatData) spectrum).getValues();
+                    float[] spectrumData = ((FloatData) spectrum).values;
                     float[] intensities = new float[spectrumData.length];
                     for (int i = 0; i < intensities.length; i++) {
                         intensities[i] = spectrumData[i];

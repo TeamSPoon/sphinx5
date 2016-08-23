@@ -92,8 +92,8 @@ public class FeatureTransform extends BaseDataProcessor {
         if (null == transform || null == data || !(data instanceof FloatData))
             return data;
 
-        FloatData floatData = (FloatData) data; 
-        float[] features = floatData.getValues();
+        FloatData floatData = (FloatData) data;
+        float[] features = floatData.values;
 
         if (features.length > transform[0].length + 1)
             throw new IllegalArgumentException("dimenstion mismatch");
@@ -111,7 +111,7 @@ public class FeatureTransform extends BaseDataProcessor {
         }
 
         return new FloatData(result,
-                             floatData.getSampleRate(),
-                             floatData.getFirstSampleNumber());
+                floatData.sampleRate,
+                floatData.firstSampleNumber);
     }
 }

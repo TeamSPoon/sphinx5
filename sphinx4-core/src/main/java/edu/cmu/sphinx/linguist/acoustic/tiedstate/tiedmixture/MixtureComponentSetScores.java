@@ -18,7 +18,7 @@ public class MixtureComponentSetScores {
 
     protected float[][] scores; //scores[featureStreamIdx][gaussianIndex]
     protected int[][] ids;       //id[featureStreamIdx][gaussianIndex]
-    private long frameStartSample;
+    long frameStartSample;
     
 
 

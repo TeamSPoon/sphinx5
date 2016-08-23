@@ -486,15 +486,15 @@ public class DataUtil {
      * @return converted data
      */
     public static DoubleData FloatData2DoubleData(FloatData data) {
-        int numSamples = data.getValues().length;
+        int numSamples = data.values.length;
 
         double[] doubleData = new double[numSamples];
-        float[] values = data.getValues();
+        float[] values = data.values;
         for (int i = 0; i < values.length; i++) {
             doubleData[i] = values[i];
         }
 
-        return new DoubleData(doubleData, data.getSampleRate(), data.getFirstSampleNumber());
+        return new DoubleData(doubleData, data.sampleRate, data.firstSampleNumber);
     }
 
 

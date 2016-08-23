@@ -329,7 +329,7 @@ class TrivialHMMState implements HMMState {
     }
     
     public float[] calculateComponentScore(Data feature){
-    	return new float[((FloatData) feature).getValues().length];
+        return new float[((FloatData) feature).values.length];
     }
 
 

@@ -454,7 +454,7 @@ public class Sphinx3Saver implements Saver {
         pw.println(numBase + " n_base");
         pw.println(numTri + " n_tri");
         pw.println(numStateMap + " n_state_map");
-        int numTiedState = mixtureWeights.getStatesNum();
+        int numTiedState = mixtureWeights.states;
         pw.println(numTiedState + " n_tied_state");
         pw.println(numContextIndependentTiedState + " n_tied_ci_state");
         int numTiedTransitionMatrices = numBase;
@@ -572,11 +572,11 @@ public class Sphinx3Saver implements Saver {
         PrintWriter pw = new PrintWriter(outputStream, true);
 
         pw.print("mixw ");
-        int numStates = mixtureWeights.getStatesNum();
+        int numStates = mixtureWeights.states;
         pw.print(numStates + " ");
-        int numStreams = mixtureWeights.getStreamsNum();
+        int numStreams = mixtureWeights.streams;
         pw.print(numStreams + " ");
-        int numGaussiansPerState = mixtureWeights.getGauPerState();
+        int numGaussiansPerState = mixtureWeights.gauPerState;
         pw.println(numGaussiansPerState);
 
         for (int i = 0; i < numStates; i++) {
@@ -623,9 +623,9 @@ public class Sphinx3Saver implements Saver {
 
         DataOutputStream dos = writeS3BinaryHeader(location, path, props, append);
 
-        int numStates = mixtureWeights.getStatesNum();
-        int numStreams = mixtureWeights.getStreamsNum();
-        int numGaussiansPerState = mixtureWeights.getGauPerState();
+        int numStates = mixtureWeights.states;
+        int numStreams = mixtureWeights.streams;
+        int numGaussiansPerState = mixtureWeights.gauPerState;
 
         writeInt(dos, numStates);
         writeInt(dos, numStreams);

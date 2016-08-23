@@ -126,7 +126,7 @@ public class DataDumper extends BaseDataProcessor {
             System.out.println();
         } else if (input instanceof FloatData) {
             FloatData fd = (FloatData) input;
-            float[] values = fd.getValues();
+            float[] values = fd.values;
             System.out.print("Frame " + values.length);
             for (float val : values) {
                 System.out.print(' ' + formatter.format(val));
