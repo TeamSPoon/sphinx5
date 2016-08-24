@@ -183,8 +183,8 @@ public class Fst {
     private static void writeStringMap(ObjectOutputStream out, String[] map)
             throws IOException {
         out.writeInt(map.length);
-        for (int i = 0; i < map.length; i++) {
-            out.writeObject(map[i]);
+        for (String aMap : map) {
+            out.writeObject(aMap);
         }
     }
 
@@ -215,8 +215,7 @@ public class Fst {
         }
 
         int numStates = states.size();
-        for (int i = 0; i < numStates; i++) {
-            State s = states.get(i);
+        for (State s : states) {
             int numArcs = s.getNumArcs();
             for (int j = 0; j < numArcs; j++) {
                 Arc a = s.getArc(j);
@@ -407,8 +406,7 @@ public class Fst {
         StringBuilder sb = new StringBuilder();
         sb.append("Fst(start=").append(start).append(", isyms=").append(Arrays.toString(isyms)).append(", osyms=").append(Arrays.toString(osyms)).append(", semiring=").append(semiring).append(")\n");
         int numStates = states.size();
-        for (int i = 0; i < numStates; i++) {
-            State s = states.get(i);
+        for (State s : states) {
             sb.append("  ").append(s).append('\n');
             int numArcs = s.getNumArcs();
             for (int j = 0; j < numArcs; j++) {

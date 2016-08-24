@@ -97,11 +97,12 @@ public class SimpleActiveListFactory extends ActiveListFactory {
          *
          * @param token the token to add
          */
-        public void add(Token token) {
+        public boolean add(Token token) {
             tokenList.add(token);
             if (bestToken == null || token.score() > bestToken.score()) {
                 bestToken = token;
             }
+            return true;
         }
 
 
@@ -145,6 +146,10 @@ public class SimpleActiveListFactory extends ActiveListFactory {
             return this;
         }
 
+        @Override
+        public float worstScore() {
+            throw new UnsupportedOperationException("yet");
+        }
 
         /**
          * Retrieves the iterator for this tree.

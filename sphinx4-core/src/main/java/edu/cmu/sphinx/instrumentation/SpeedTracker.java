@@ -159,7 +159,7 @@ public class SpeedTracker
     *
     * @see edu.cmu.sphinx.decoder.ResultListener#newResult(edu.cmu.sphinx.result.Result)
     */
-    public void newResult(Result result) {
+    public void accept(Result result) {
         if (result.isFinal()) {
             processingTime = (getTime() - startTime) / 1000.0f;
             totalAudioTime += audioTime;

@@ -61,7 +61,7 @@ public class DiagGmm extends ScoreCachingSenone {
     @Override
     public float calculateScore(Data data) {
         float logTotal = LogMath.LOG_ZERO;
-        for (Float mixtureScore : calculateComponentScore(data))
+        for (float mixtureScore : calculateComponentScore(data))
             logTotal = LogMath.addAsLinear(logTotal, mixtureScore);
 
         return logTotal;

@@ -4,19 +4,22 @@ import edu.cmu.sphinx.linguist.language.ngram.trie.NgramTrieModel.TrieUnigram;
 import edu.cmu.sphinx.util.Utilities;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Class that provides utils to load NgramTrieModel
  * from binary file created with sphinx_lm_convert.
  * Routines should be called in certain order according to format:
  * <ul>
- *     <li>verifyHeader</li>
- *     <li>readCounts</li>
- *     <li>readQuant</li>
- *     <li>readUnigrams</li>
- *     <li>readTrieByteArr</li>
- *     <li>readWords</li>
+ * <li>verifyHeader</li>
+ * <li>readCounts</li>
+ * <li>readQuant</li>
+ * <li>readUnigrams</li>
+ * <li>readTrieByteArr</li>
+ * <li>readWords</li>
  * </ul>
  */
 
@@ -30,24 +33,31 @@ public class BinaryLoader {
         inStream = new DataInputStream(new FileInputStream(location));
     }
 
-    private void loadModelData(InputStream stream) throws IOException {
-	DataInputStream dataStream = new DataInputStream(new BufferedInputStream(stream));
-	ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-	byte[] buffer = new byte[4096];
-	while (true) {
-	    if (dataStream.read(buffer) < 0)
-		break;
-	    bytes.write(buffer);
-	}
-	inStream = new DataInputStream(new ByteArrayInputStream(bytes.toByteArray()));
+    private void loadModelData(URL stream) throws IOException, URISyntaxException {
+//        DataInputStream dataStream = new DataInputStream(new BufferedInputStream(stream, BUFFER_SIZE));
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        byte[] buffer = new byte[BUFFER_SIZE / 4];
+//        while (true) {
+//            if (dataStream.read(buffer) < 0)
+//                break;
+//            bytes.write(buffer);
+//        }
+
+
+        inStream = new DataInputStream(new ByteArrayInputStream(Files.readAllBytes(Paths.get(stream.toURI()))));
     }
 
     public BinaryLoader(URL location) throws IOException {
-        loadModelData(location.openStream());
+        try {
+            loadModelData(location);
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
     }
 
     /**
      * Reads header from stream and checks if it matches trie header
+     *
      * @throws IOException if reading from stream failed
      */
     public void verifyHeader() throws IOException {
@@ -59,6 +69,7 @@ public class BinaryLoader {
 
     /**
      * Reads language model order and ngram counts
+     *
      * @return array of counts where ordinal number is ngram order
      * @throws IOException if reading from stream failed
      */
@@ -73,8 +84,9 @@ public class BinaryLoader {
 
     /**
      * Reads weights quantation object from stream
+     *
      * @param order - max order of ngrams for this model
-     * @return quantation object, see {@link NgramTrieQuant} 
+     * @return quantation object, see {@link NgramTrieQuant}
      * @throws IOException if reading from stream failed
      */
     public NgramTrieQuant readQuant(int order) throws IOException {
@@ -93,7 +105,8 @@ public class BinaryLoader {
     }
 
     /**
-     * Reads array of language model unigrams 
+     * Reads array of language model unigrams
+     *
      * @param count - amount of unigrams according to counts previously read
      * @return array of language model unigrams, see {@link NgramTrieModel.TrieUnigram}
      * @throws IOException if reading from stream failed
@@ -110,9 +123,10 @@ public class BinaryLoader {
     }
 
     /**
-     * Reads trie in form of byte array into provided array. 
+     * Reads trie in form of byte array into provided array.
      * Size of byte array is computed from previously read language model specifications,
      * see {@link NgramTrie}
+     *
      * @param arr - byte array to read trie to
      * @throws IOException if reading from stream failed
      */
@@ -122,6 +136,7 @@ public class BinaryLoader {
 
     /**
      * Reads vocabulary of language model. Ordinal number of word stays for wordId.
+     *
      * @param unigramNum - amount of unigrams
      * @return array of strings - vocabulary of language model
      * @throws IOException of reading from stream failed
@@ -152,6 +167,7 @@ public class BinaryLoader {
 
     /**
      * Should be called when model reading finished
+     *
      * @throws IOException if stream was corrupted
      */
     public void close() throws IOException {
@@ -159,19 +175,21 @@ public class BinaryLoader {
     }
 
     /**
-     * Reads language model max depth. 
+     * Reads language model max depth.
      * Order is stored in uint8 or in byte
+     *
      * @return order of language model
      * @throws IOException if reading from stream failed
      */
     private int readOrder() throws IOException {
-        return (int)inStream.readByte();
+        return (int) inStream.readByte();
     }
 
     /**
-     * Reads float array of specified length. 
+     * Reads float array of specified length.
      * Quantation tables are stored in form of float arrays,
      * see {@link readQuant}
+     *
      * @param len - length of array to read
      * @return array of floats that was read from stream
      * @throws IOException if reading from stream failed

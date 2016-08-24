@@ -252,8 +252,7 @@ public class ModelInitializerLoader implements Loader {
 
         // TODO: numStreams should be any number > 0, but for now....
         assert numStreams == 1;
-        for (int i = 0; i < numStates; i++) {
-            int state = stateID[i];
+        for (int state : stateID) {
             for (int j = 0; j < numGaussiansPerState; j++) {
                 // We're creating densities here, so it's ok if values
                 // are all zero.

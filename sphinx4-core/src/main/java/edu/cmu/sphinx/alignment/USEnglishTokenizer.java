@@ -243,14 +243,14 @@ public class USEnglishTokenizer implements TextTokenizer {
     private static final String SECTION_TYPES = "sectionTypes";
 
     static {
-        for (int i = 0; i < kingNames.length; i++) {
-            kingSectionLikeMap.put(kingNames[i], KING_NAMES);
+        for (String kingName : kingNames) {
+            kingSectionLikeMap.put(kingName, KING_NAMES);
         }
-        for (int i = 0; i < kingTitles.length; i++) {
-            kingSectionLikeMap.put(kingTitles[i], KING_TITLES);
+        for (String kingTitle : kingTitles) {
+            kingSectionLikeMap.put(kingTitle, KING_TITLES);
         }
-        for (int i = 0; i < sectionTypes.length; i++) {
-            kingSectionLikeMap.put(sectionTypes[i], SECTION_TYPES);
+        for (String sectionType : sectionTypes) {
+            kingSectionLikeMap.put(sectionType, SECTION_TYPES);
         }
     }
 
@@ -328,8 +328,8 @@ public class USEnglishTokenizer implements TextTokenizer {
     // Again map for constant time searching.
     private static final Map<String, String[]> usStatesMap = new HashMap<>();
     static {
-        for (int i = 0; i < usStates.length; i++) {
-            usStatesMap.put(usStates[i][0], usStates[i]);
+        for (String[] usState : usStates) {
+            usStatesMap.put(usState[0], usState);
         }
     }
 

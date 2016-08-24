@@ -6,6 +6,7 @@ import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectFloatHashMap;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,13 +27,13 @@ public class DynamicTrigramModel implements LanguageModel {
     private float unigramWeight;
 
     private List<String> sentences;
-    private final Map<WordSequence, Float> logProbs;
-    private final Map<WordSequence, Float> logBackoffs;
+    private final ObjectFloatHashMap<WordSequence> logProbs;
+    private final ObjectFloatHashMap<WordSequence> logBackoffs;
 
     public DynamicTrigramModel() {
         vocabulary = new HashSet<>();
-        logProbs = new HashMap<>();
-        logBackoffs = new HashMap<>();
+        logProbs = new ObjectFloatHashMap<>();
+        logBackoffs = new ObjectFloatHashMap<>();
     }
 
     public DynamicTrigramModel(Dictionary dictionary) {
@@ -159,6 +160,9 @@ public class DynamicTrigramModel implements LanguageModel {
             p /= bigrams.get(key.getOldest());
             logProbs.put(key, LogMath.linearToLog(p));
         }
+
+        logBackoffs.compact();
+        logProbs.compact();
     }
 
     private static void addSequence(HashMap<WordSequence, Integer> grams, WordSequence wordSequence) {
@@ -178,8 +182,8 @@ public class DynamicTrigramModel implements LanguageModel {
         if (logProbs.containsKey(wordSequence)) {
             prob = logProbs.get(wordSequence);
         } else if (wordSequence.size() > 1) {
-            Float backoff = logBackoffs.get(wordSequence.getOldest());
-            if (backoff == null) {
+            float backoff = logBackoffs.getIfAbsent(wordSequence.getOldest(), Float.NaN);
+            if (backoff != backoff  /* fast NaN test */) {
                 prob = LogMath.LOG_ONE + getProbability(wordSequence.getNewest());
             } else {
                 prob = backoff + getProbability(wordSequence.getNewest());

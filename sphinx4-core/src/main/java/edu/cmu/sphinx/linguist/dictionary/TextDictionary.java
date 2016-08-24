@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -174,7 +175,7 @@ public class TextDictionary implements Dictionary {
 
             loadTimer.start();
 
-            logger.info("Loading dictionary from: " + wordDictionaryFile);
+            logger.info(getClass().getSimpleName()+ " Loading dictionary from: " + wordDictionaryFile);
 
             loadDictionary(wordDictionaryFile.openStream(), false);
 
@@ -324,7 +325,8 @@ public class TextDictionary implements Dictionary {
 
         String word = dictionary.get(text);
         if (word == null) { // deal with 'not found' case
-            logger.info("The dictionary is missing a phonetic transcription for the word '" + text + '\'');
+            if (logger.isLoggable(Level.FINE))
+                logger.fine("The dictionary is missing a phonetic transcription for the word '" + text + '\'');
             if (wordReplacement != null) {
                 wordObject = getWord(wordReplacement);
             } else if (g2pModelFile != null && !g2pModelFile.getPath().isEmpty()) {

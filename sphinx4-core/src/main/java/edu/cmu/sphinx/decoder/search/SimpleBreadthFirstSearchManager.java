@@ -77,7 +77,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
      * The property that controls whether or not relative beam pruning will be performed on the entry into a
      * state.
      */
-    @S4Boolean(defaultValue = false)
+    @S4Boolean(defaultValue = true)
     public final static String PROP_WANT_ENTRY_PRUNING = "wantEntryPruning";
 
     /**
@@ -244,17 +244,24 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
      * @return newly created list
      */
     protected ActiveList undoLastGrowStep() {
-        ActiveList fixedList = activeList.newInstance();
+        ActiveList fixedList = new SortingActiveList(false, activeList);
 
         for (Token token : activeList) {
-            Token curToken = token.getPredecessor();
+            Token curToken = token.predecessor();
+
+            boolean f; //caches curToken.isfinal
+            boolean e; //caches curToken.isEmitting
+            Token p; //caches curToken.getPredecessor
 
             // remove the final states that are not the real final ones because they're just hide prior final tokens:
-            while (curToken.getPredecessor() != null && (
-                    (curToken.isFinal() && curToken.getPredecessor() != null && !curToken.getPredecessor().isFinal())
-                            || (curToken.isEmitting() && curToken.getData() == null) // the so long not scored tokens
-                            || (!curToken.isFinal() && !curToken.isEmitting()))) {
-                curToken = curToken.getPredecessor();
+            while (((p = curToken.predecessor()) != null) && (
+                        ((f = curToken.isFinal()) && (!p.isFinal()) )
+                            ||
+                        ((e = curToken.isEmitting()) && (curToken.getData() == null)) // the so long not scored tokens
+                            ||
+                        (!f && !e))
+                       ) {
+                curToken = p;
             }
 
             fixedList.add(curToken);
@@ -467,14 +474,15 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
             float logEntryScore = token.score() + arc.getProbability();
+
             if (wantEntryPruning) { // false by default
                 if (logEntryScore < threshold) {
                     continue;
                 }
-                if (nextState instanceof WordSearchState
+                /*if (nextState instanceof WordSearchState
                         && logEntryScore < wordThreshold) {
                     continue;
-                }
+                }*/
             }
             Token predecessor = getResultListPredecessor(token);
             
@@ -529,13 +537,13 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
     private static boolean isVisited(Token t) {
         SearchState curState = t.getSearchState();
 
-        t = t.getPredecessor();
+        t = t.predecessor();
 
         while (t != null && !t.isEmitting()) {
             if (curState.equals(t.getSearchState())) {
                 return true;
             }
-            t = t.getPredecessor();
+            t = t.predecessor();
         }
         return false;
     }
@@ -548,7 +556,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
             for (Token token : activeList) {
                 while (token != null) {
                     tokenSet.add(token);
-                    token = token.getPredecessor();
+                    token = token.predecessor();
                 }
             }
             logger.info("Token Lattice size: " + tokenSet.size());
@@ -556,7 +564,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
             for (Token token : resultList) {
                 while (token != null) {
                     tokenSet.add(token);
-                    token = token.getPredecessor();
+                    token = token.predecessor();
                 }
             }
             logger.info("Result Lattice size: " + tokenSet.size());

@@ -20,7 +20,7 @@ public class VUMeterMonitor extends BaseDataProcessor {
 
     final VUMeter vumeter;
     final VUMeterPanel vuMeterPanel;
-    final JDialog vuMeterDialog;
+    public final JDialog vuMeterDialog;
 
 
     public VUMeterMonitor() {

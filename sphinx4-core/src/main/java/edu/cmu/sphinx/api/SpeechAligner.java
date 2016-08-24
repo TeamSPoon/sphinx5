@@ -168,14 +168,14 @@ public class SpeechAligner {
 
         int[] aid = alignment;
         int lastId = -1;
-        for (int ij = 0; ij < aid.length; ++ij) {
-            if (aid[ij] == -1) {
+        for (int anAid : aid) {
+            if (anAid == -1) {
                 insertions++;
             } else {
-                if (aid[ij] - lastId > 1) {
-                    deletions += aid[ij] - lastId;
+                if (anAid - lastId > 1) {
+                    deletions += anAid - lastId;
                 }
-                lastId = aid[ij];
+                lastId = anAid;
             }
         }
 

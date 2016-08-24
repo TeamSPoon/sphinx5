@@ -282,7 +282,7 @@ public class SimpleNGramModel implements LanguageModel {
         // look for ngram statements
 
 
-        List<Integer> ngramList = new ArrayList<>();
+        List<Integer> ngramList = new ArrayList<>(64*1024);
 
         while ((line = readLine()) != null) {
             if (line.startsWith("ngram")) {

@@ -63,8 +63,8 @@ public class RmEpsilon {
     /**
      * Calculate the epsilon closure
      */
-    private static void calcClosure(Fst fst, State state,
-            HashMap<State, Float>[] cl, Semiring semiring) {
+    private static void calcClosure(State state,
+                                    HashMap<State, Float>[] cl, Semiring semiring) {
         State s = state;
 
         float pathWeight;
@@ -73,7 +73,7 @@ public class RmEpsilon {
             Arc a = s.getArc(j);
             if ((a.getIlabel() == 0) && (a.getOlabel() == 0)) {
                 if (cl[a.getNextState().getId()] == null) {
-                    calcClosure(fst, a.getNextState(), cl, semiring);
+                    calcClosure(a.getNextState(), cl, semiring);
                 }
                 if (cl[a.getNextState().getId()] != null) {
                     for (State pathFinalState : cl[a.getNextState().getId()]
@@ -156,7 +156,7 @@ public class RmEpsilon {
 
             // Compute e-Closure
             if (cl[s.getId()] == null) {
-                calcClosure(fst, s, cl, semiring);
+                calcClosure(s, cl, semiring);
             }
         }
 

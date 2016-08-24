@@ -143,7 +143,7 @@ public class Stats {
             SearchState ss = token.getSearchState();
 
             if (!(ss instanceof HMMSearchState && ss.isEmitting())) {
-                token = token.getPredecessor();
+                token = token.predecessor();
                 continue;
             }
             nFrames++;
@@ -191,7 +191,7 @@ public class Stats {
                 }
                 featVectorStartIdx += len[i];
             }
-            token = token.getPredecessor();
+            token = token.predecessor();
         } while (token != null);
     }
 

@@ -121,10 +121,10 @@ public class TokenGraphDumper {
 
             dumpedTokens.add(token);
 
-            if (token.getPredecessor() != null) {
+            if (token.predecessor() != null) {
                 gdl.append("edge: { sourcename: \"").append(getTokenID(token))
-                    .append("\" targetname: \"").append(getTokenID(token.getPredecessor()))
-                    .append("\" }").append('\n').append(dumpTokenGDL(token.getPredecessor()));
+                    .append("\" targetname: \"").append(getTokenID(token.predecessor()))
+                    .append("\" }").append('\n').append(dumpTokenGDL(token.predecessor()));
             }
 
             if (loserManager != null) {

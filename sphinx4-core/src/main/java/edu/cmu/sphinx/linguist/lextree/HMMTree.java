@@ -667,13 +667,13 @@ class EndNode extends UnitNode {
  */
 class HMMTree {
 
-    private final HMMPool hmmPool;
-    private InitialWordNode initialNode;
-    private Dictionary dictionary;
+    protected final HMMPool hmmPool;
+    protected InitialWordNode initialNode;
+    protected Dictionary dictionary;
 
     private LanguageModel lm;
     private final boolean addFillerWords;
-    private final Set<Unit> entryPoints = new LinkedHashSet<>();
+    protected final Set<Unit> entryPoints = new LinkedHashSet<>();
     private Set<Unit> exitPoints = new LinkedHashSet<>();
     private Set<Word> allWords;
     private EntryPointTable entryPointTable;
@@ -681,9 +681,9 @@ class HMMTree {
     private final float languageWeight;
     
     private final Map<Object, HMMNode[]> endNodeMap;
-    private final Map<Pronunciation, WordNode> wordNodeMap;
+    protected final Map<Pronunciation, WordNode> wordNodeMap;
     
-    private WordNode sentenceEndWordNode;
+    protected WordNode sentenceEndWordNode;
     private final Logger logger;
 
 
@@ -1011,7 +1011,7 @@ class HMMTree {
 
         /** Creates the entry point maps for all entry points. */
         void createEntryPointMaps() {
-            entryPoints.values().forEach(EntryPoint::createEntryPointMap);
+            entryPoints.values().forEach((entryPoint) -> entryPoint.createEntryPointMap(HMMTree.this));
         }
 
 
@@ -1029,7 +1029,8 @@ class HMMTree {
 
 
     /** Manages a single entry point. */
-    final class EntryPoint {
+    static final class EntryPoint {
+
 
         final Unit baseUnit;
         final Node baseNode;      // second units and beyond start here
@@ -1132,15 +1133,16 @@ class HMMTree {
 
         /**
          * A version of createEntryPointMap that compresses common hmms across all entry points.
+         * @param hmmTree
          */
-        void createEntryPointMap() {
+        void createEntryPointMap(HMMTree hmmTree) {
             HashMap<HMM, Node> map = new HashMap<>();
             HashMap<HMM, HMMNode> singleUnitMap = new HashMap<>();
 
-            for (Unit lc : exitPoints) {
+            for (Unit lc : hmmTree.exitPoints) {
                 Node epNode = new Node(LogMath.LOG_ZERO);
                 for (Unit rc : getEntryPointRC()) {
-                    HMM hmm = hmmPool.getHMM(baseUnit, lc, rc, HMMPosition.BEGIN);
+                    HMM hmm = hmmTree.hmmPool.getHMM(baseUnit, lc, rc, HMMPosition.BEGIN);
                     Node addedNode;
 
                     if ((addedNode = map.get(hmm)) == null) {
@@ -1153,7 +1155,7 @@ class HMMTree {
                     nodeCount++;
                     connectEntryPointNode(addedNode, rc);
                 }
-                connectSingleUnitWords(lc, epNode, singleUnitMap);
+                connectSingleUnitWords(hmmTree, lc, epNode, singleUnitMap);
                 unitToEntryPointMap.put(lc, epNode);
             }
         }
@@ -1164,15 +1166,16 @@ class HMMTree {
          * single unit pronunciations that have as their sole unit, the unit associated with this entry point. Entry
          * points for these words are added to the epNode for all possible left (exit) and right (entry) contexts.
          *
+         * @param hmmTree
          * @param lc     the left context
          * @param epNode the entry point node
          */
-        private void connectSingleUnitWords(Unit lc, Node epNode, HashMap<HMM, HMMNode> map) {
+        private void connectSingleUnitWords(HMMTree hmmTree, Unit lc, Node epNode, HashMap<HMM, HMMNode> map) {
             if (!singleUnitWords.isEmpty()) {
-                
-                for (Unit rc : entryPoints) {
-                    HMM hmm = hmmPool.getHMM(baseUnit, lc, rc, HMMPosition.SINGLE);
-                    
+
+                for (Unit rc : hmmTree.entryPoints) {
+                    HMM hmm = hmmTree.hmmPool.getHMM(baseUnit, lc, rc, HMMPosition.SINGLE);
+
                     HMMNode tailNode;
                     if (( tailNode = map.get(hmm)) == null) {
                         tailNode = (HMMNode)
@@ -1186,14 +1189,14 @@ class HMMTree {
                     nodeCount++;
 
                     for (Pronunciation p : singleUnitWords) {
-                        if (p.getWord() == dictionary.getSentenceStartWord()) {
-                            initialNode = new InitialWordNode(p, tailNode);
+                        if (p.getWord() == hmmTree.dictionary.getSentenceStartWord()) {
+                            hmmTree.initialNode = new InitialWordNode(p, tailNode);
                         } else {
-                            float prob = getWordUnigramProbability(p.getWord());
-                            wordNode = tailNode.addSuccessor(p, prob, wordNodeMap);
+                            float prob = hmmTree.getWordUnigramProbability(p.getWord());
+                            wordNode = tailNode.addSuccessor(p, prob, hmmTree.wordNodeMap);
                             if (p.getWord() ==
-                                dictionary.getSentenceEndWord()) {
-                                sentenceEndWordNode = wordNode;
+                                hmmTree.dictionary.getSentenceEndWord()) {
+                                hmmTree.sentenceEndWordNode = wordNode;
                             }
                         }
                         nodeCount++;
@@ -1237,7 +1240,5 @@ class HMMTree {
             System.out.println();
         }
     }
-
-
 }
 

@@ -123,15 +123,21 @@ public class SimpleActiveListManager implements ActiveListManager {
      *
      * @param token the token to add
      */
-    public void add(Token token) {
+    public boolean add(Token token) {
         ActiveList activeList = findListFor(token);
         if (activeList == null) {
             throw new Error("Cannot find ActiveList for "
                     + token.getSearchState().getClass());
         }
-        activeList.add(token);
+        return activeList.add(token);
     }
 
+    @Override public ActiveList canAdd(Token token) {
+        ActiveList activeList = findListFor(token);
+        if (activeList.worstScore() > token.score())
+            return null;
+        return activeList;
+    }
 
     /**
      * Given a token find the active list associated with the token type

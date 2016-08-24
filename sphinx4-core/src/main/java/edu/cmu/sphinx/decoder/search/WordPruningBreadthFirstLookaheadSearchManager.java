@@ -217,12 +217,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      * creates a new best token map with the best size
      */
     protected void createFastMatchBestTokenMap() {
-        int mapSize = fastmatchActiveList.size() * 2;
-        if (mapSize != 0) {
-            fastMatchBestTokenMap = new HashMap<>(mapSize);
-        } else {
-            fastMatchBestTokenMap = Collections.emptyMap();
-        }
+        int mapSize = Math.max(1, fastmatchActiveList.size() * 2);
+        fastMatchBestTokenMap = new HashMap<>(mapSize);
     }
 
     /**
@@ -338,6 +334,10 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
             float logEntryScore = token.score() + arc.getProbability();
+
+            if (logEntryScore < fastmatchActiveList.worstScore())
+                continue;
+
             Token predecessor = getResultListPredecessor(token);
 
             // if not emitting, check to see if we've already visited
@@ -429,7 +429,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // prune states using lookahead heuristics
             if (stateProducesPhoneHmms) {
                 if (nextState instanceof LexTreeHMMState) {
-                    Float penalty;
+                    float penalty;
                     int baseId = ((LexTreeHMMState) nextState).getHMMState().getHMM().getBaseUnit().getBaseID();
                     if ((penalty = penalties.getIfAbsent(baseId, -Float.MAX_VALUE)) == -Float.MAX_VALUE)
                         penalty = updateLookaheadPenalty(baseId);
@@ -445,33 +445,40 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
             float logEntryScore = tokenScore + arc.getProbability();
-
-            Token bestToken = bestTokens.get(nextState);
-
-            if (bestToken == null) {
-                Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
-                        arc.getLanguageProbability(), currentCollectTime);
-                tokensCreated.value++;
-                bestTokens.put(nextState, newBestToken);
-                activeListManager.add(newBestToken);
-            } else if (bestToken.score() < logEntryScore) {
-                // System.out.println("Updating " + bestToken + " with " +
-                // newBestToken);
-                Token oldPredecessor = bestToken.predecessor;
-                bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
-                        arc.getLanguageProbability(), currentCollectTime);
-                if (buildWordLattice && nextState instanceof WordSearchState) {
-                    loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
+            bestTokens.compute(nextState, (ns, bestToken) -> {
+                if (bestToken == null) {
+                    //create
+                    Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                            arc.getLanguageProbability(), currentCollectTime);
+                    if (activeListManager.add(newBestToken)) {
+                        tokensCreated.value++;
+                        return newBestToken;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    if (bestToken.score() < logEntryScore) {
+                        // System.out.println("Updating " + bestToken + " with " +
+                        // newBestToken);
+                        Token oldPredecessor = bestToken.predecessor;
+                        bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                                arc.getLanguageProbability(), currentCollectTime);
+                        if (buildWordLattice && nextState instanceof WordSearchState) {
+                            loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
+                        }
+                    } else if (buildWordLattice && nextState instanceof WordSearchState) {
+                        if (predecessor != null) {
+                            loserManager.addAlternatePredecessor(bestToken, predecessor);
+                        }
+                    }
+                    return bestToken;
                 }
-            } else if (buildWordLattice && nextState instanceof WordSearchState) {
-                if (predecessor != null) {
-                    loserManager.addAlternatePredecessor(bestToken, predecessor);
-                }
-            }
+            });
+
         }
     }
 
-    private Float updateLookaheadPenalty(int baseId) {
+    private float updateLookaheadPenalty(int baseId) {
         if (ciScores.isEmpty())
             return 0.0f;
         float penalty = -Float.MAX_VALUE;

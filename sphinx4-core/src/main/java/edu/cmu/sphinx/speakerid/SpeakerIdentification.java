@@ -168,8 +168,7 @@ public class SpeakerIdentification {
         double ret = 0;
         EigenDecomposition ed = new EigenDecomposition(new Covariance(mat).getCovarianceMatrix());
         double[] re = ed.getRealEigenvalues();
-        for (int i = 0; i < re.length; i++)
-            ret += Math.log(re[i]);
+        for (double aRe : re) ret += Math.log(aRe);
         return ret * (mat.getRowDimension() / 2f);
     }
 

@@ -12,9 +12,11 @@
  */
 package edu.cmu.sphinx.recognizer;
 
+import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.decoder.Decoder;
 import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.decoder.ResultProducer;
+import edu.cmu.sphinx.decoder.search.WordPruningBreadthFirstSearchManager;
 import edu.cmu.sphinx.instrumentation.Monitor;
 import edu.cmu.sphinx.instrumentation.Resetable;
 import edu.cmu.sphinx.result.Result;
@@ -22,6 +24,7 @@ import edu.cmu.sphinx.util.props.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 /**
  * The Sphinx-4 recognizer. This is the main entry point for Sphinx-4. Typical usage of a recognizer is like so:
@@ -57,6 +60,8 @@ public class Recognizer implements Configurable, ResultProducer {
     /** The property for the set of monitors for this recognizer */
     @S4ComponentList(type = Monitor.class)
     public final static String PROP_MONITORS = "monitors";
+
+
 
     /** Defines the possible states of the recognizer. */
     public enum State { DEALLOCATED, ALLOCATING, ALLOCATED, READY, RECOGNIZING, DEALLOCATING, ERROR }
@@ -109,6 +114,10 @@ public class Recognizer implements Configurable, ResultProducer {
         return result;
     }
 
+    public void recognize(BiPredicate<Decoder<WordPruningBreadthFirstSearchManager>, SpeechResult> eachResult) {
+        decoder.decode(eachResult);
+    }
+
 
     /**
      * Performs recognition for the given number of input frames, or until a 'final' result is generated. This method
@@ -118,7 +127,7 @@ public class Recognizer implements Configurable, ResultProducer {
      * @throws IllegalStateException if the recognizer is not in the <code>ALLOCATED</code> state
      */
     public Result recognize() throws IllegalStateException {
-        return recognize(null);
+        return recognize((String)null);
     }
 
 
@@ -146,9 +155,9 @@ public class Recognizer implements Configurable, ResultProducer {
         List<StateListener> sl = this.stateListeners;
         State cs = this.currentState;
         //synchronized (sl) {
-            for (int i = 0, stateListenersSize = sl.size(); i < stateListenersSize; i++) {
-                sl.get(i).statusChanged(cs);
-            }
+        for (StateListener aSl : sl) {
+            aSl.statusChanged(cs);
+        }
         //}
     }
 

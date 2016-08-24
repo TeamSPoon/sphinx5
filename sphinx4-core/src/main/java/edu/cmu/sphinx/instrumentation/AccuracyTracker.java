@@ -173,7 +173,7 @@ abstract public class AccuracyTracker
     *
     * @see edu.cmu.sphinx.decoder.ResultListener#newResult(edu.cmu.sphinx.result.Result)
     */
-    abstract public void newResult(Result result);
+    abstract public void accept(Result result);
 
     public void statusChanged(Recognizer.State status) {
         if (status == State.DEALLOCATED) {

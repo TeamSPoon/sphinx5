@@ -36,8 +36,10 @@ public interface ActiveListManager extends Configurable {
      *
      * @param token the token to add
      */
-    void add(Token token);
+    boolean add(Token token);
 
+    /** if the token score meets the minimum requirement for entering the list, returns which list it should be added to */
+    ActiveList canAdd(Token token);
 
     /**
      * Returns an Iterator of all the non-emitting ActiveLists. The iteration order is the same as the search state

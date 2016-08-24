@@ -8,6 +8,7 @@ import edu.cmu.sphinx.linguist.util.LRUCache;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.*;
+import org.eclipse.collections.impl.map.mutable.primitive.ObjectIntHashMap;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -104,7 +105,7 @@ public class NgramTrieModel implements LanguageModel {
     //-----------------------------
     // Working data
     //-----------------------------
-    protected Map<Word, Integer> unigramIDMap;
+    protected ObjectIntHashMap<Word> unigramIDMap;
     private LRUCache<WordSequence, Float> ngramProbCache;
     
     public NgramTrieModel(String format, URL location, String ngramLogFile,
@@ -159,27 +160,33 @@ public class NgramTrieModel implements LanguageModel {
      * @param dictionary
      * */
     private void buildUnigramIDMap() {
-        int missingWords = 0;
+        List<String> missing = new ArrayList();
+
         int nw = words.length;
         if (unigramIDMap == null)
-            unigramIDMap = new HashMap<>(nw);
+            unigramIDMap = new ObjectIntHashMap<>(nw);
+
         for (int i = 0; i < nw; i++) {
             Word word = dictionary.getWord(words[i]);
             if (word == null) {
-                logger.warning("The dictionary is missing a phonetic transcription for the word '"
-                        + words[i] + '\'');
-                missingWords++;
+                missing.add(words[i]);
+            } else {
+                unigramIDMap.put(word, i);
             }
 
-            unigramIDMap.put(word, i);
-
-            if (logger.isLoggable(Level.FINE))
-                logger.fine("Word: " + word);
+            /*if (logger.isLoggable(Level.FINE))
+                logger.fine("Word: " + word);*/
         }
 
-        if (missingWords > 0)
-            logger.warning("Dictionary is missing " + missingWords
-                    + " words that are contained in the language model.");
+        unigramIDMap.compact();
+
+        if (!missing.isEmpty()) {
+            if (logger.isLoggable(Level.FINE))
+                logger.fine("The dictionary is missing a phonetic transcription for the words: " + missing);
+        }
+
+        logger.info("loaded " + unigramIDMap.size() + " words");
+
     }
 
     /*
@@ -205,7 +212,9 @@ public class NgramTrieModel implements LanguageModel {
                 loader = new BinaryLoader(new File(location.getPath()));
             }
         } else {
+
             loader = new BinaryLoader(location);
+
         }
         loader.verifyHeader();
         counts = loader.readCounts();
@@ -297,8 +306,12 @@ public class NgramTrieModel implements LanguageModel {
     private float getProbabilityRaw(WordSequence wordSequence) {
         int wordsNum = wordSequence.size();
         int wordId = unigramIDMap.get(wordSequence.getWord(wordsNum - 1));
-        TrieRange range = new TrieRange(unigrams[wordId].next, unigrams[wordId + 1].next);
-        float prob = unigrams[wordId].prob;
+
+        TrieUnigram uw = unigrams[wordId];
+
+        TrieRange range = new TrieRange(uw.next, unigrams[wordId + 1].next);
+        float prob = uw.prob;
+
         curDepth = 1;
         if (wordsNum == 1)
             return prob;

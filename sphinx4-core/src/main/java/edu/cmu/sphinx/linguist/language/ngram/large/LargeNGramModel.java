@@ -290,7 +290,8 @@ public class LargeNGramModel implements LanguageModel {
             Word word = dictionary.getWord(words[i]);
 
             if (word == null) {
-                logger.warning("The dictionary is missing a phonetic transcription for the word '"
+                if (logger.isLoggable(Level.FINE))
+                    logger.fine("The dictionary is missing a phonetic transcription for the word '"
                         + words[i] + '\'');
                 missingWords++;
             }

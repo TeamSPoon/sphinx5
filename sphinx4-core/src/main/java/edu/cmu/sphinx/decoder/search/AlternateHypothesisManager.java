@@ -13,8 +13,6 @@
 package edu.cmu.sphinx.decoder.search;
 
 
-import edu.cmu.sphinx.decoder.scorer.Scoreable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +48,7 @@ public class AlternateHypothesisManager {
      */
 
     public void addAlternatePredecessor(Token token, Token predecessor) {
-        assert predecessor != token.getPredecessor();
+        assert predecessor != token.predecessor();
 
         viterbiLoserMap.computeIfAbsent(token, t -> Collections.synchronizedList(new ArrayList<>()) ).add(predecessor);
     }
@@ -74,9 +72,15 @@ public class AlternateHypothesisManager {
 
         for (Map.Entry<Token, List<Token>> entry : viterbiLoserMap.entrySet()) {
             List<Token> list = entry.getValue();
-            Collections.sort(list, Scoreable.COMPARATOR);
-            List<Token> newList = list.subList(0, list.size() > max ? max : list.size());
-            entry.setValue(newList);
+            Collections.sort(list);
+            int s = list.size();
+            for (int i = 0; i < (s - max); i++) {
+                list.remove(--s);
+            }
+
+             //   List<Token> newList = list.subList(0, max);
+             //   entry.setValue(newList);
+            //}
         }
     }
 

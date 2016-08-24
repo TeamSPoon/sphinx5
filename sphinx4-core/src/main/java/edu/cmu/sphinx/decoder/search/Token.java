@@ -140,7 +140,7 @@ public class Token implements Scoreable {
      *
      * @return the predecessor
      */
-    public Token getPredecessor() {
+    public Token predecessor() {
         return predecessor;
     }
 
@@ -487,9 +487,6 @@ public class Token implements Scoreable {
      *
      * @return the DecimalFormat object for formatting number print outs
      */
-    protected static DecimalFormat getNumberFormat() {
-        return numFmt.get();
-    }
 
     public void update(Token predecessor, SearchState nextState,
             float logEntryScore, float insertionProbability,

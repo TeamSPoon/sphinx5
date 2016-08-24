@@ -217,8 +217,8 @@ public class LiveCMN extends BaseDataProcessor {
             
             StringBuilder cmn = new StringBuilder();
             // calculate the mean first
-            for (int i = 0; i < currentMean.length; i++) {
-                cmn.append (formatter.format(currentMean[i]));
+            for (double aCurrentMean : currentMean) {
+                cmn.append(formatter.format(aCurrentMean));
                 cmn.append(' ');
             }
             logger.info(cmn.toString());

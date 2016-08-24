@@ -16,15 +16,10 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.Configurable;
 
 import java.util.EventListener;
+import java.util.function.Consumer;
 
 /** The listener interface for being informed when new results are generated. */
-public interface ResultListener extends EventListener, Configurable {
+public interface ResultListener extends EventListener, Configurable, Consumer<Result> {
 
-    /**
-     * Method called when a new result is generated
-     *
-     * @param result the new result
-     */
-    void newResult(Result result);
 }
 

@@ -332,7 +332,7 @@ public class Result {
             if (feature != null)
                 featureList.add(0, feature);
 
-            token = token.getPredecessor();
+            token = token.predecessor();
         } while (token != null);
 
         return featureList;
@@ -436,7 +436,7 @@ public class Result {
                 }
                 prevWordEnd = token.getCollectTime();
             }
-            token = token.getPredecessor();
+            token = token.predecessor();
         }
 
         reverse(result);
@@ -468,7 +468,7 @@ public class Result {
                 word = token.getWord();
             }
             lastWordStart = token.getCollectTime();
-            token = token.getPredecessor();
+            token = token.predecessor();
         }
 
         reverse(result);
@@ -486,15 +486,15 @@ public class Result {
         }
     }
 
-    /**
-     * Sets the results as a final result
-     * 
-     * @param finalResult
-     *            if true, the result should be made final
-     */
-    void setFinal(boolean finalResult) {
-        this.isFinal = finalResult;
-    }
+//    /**
+//     * Sets the results as a final result
+//     *
+//     * @param finalResult
+//     *            if true, the result should be made final
+//     */
+//    void setFinal(boolean finalResult) {
+//        this.isFinal = finalResult;
+//    }
 
     /**
      * Determines if the Result is valid. This is used for testing and debugging

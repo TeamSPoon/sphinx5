@@ -55,7 +55,7 @@ public class BatchForcedAlignerRecognizer extends BatchNISTRecognizer {
 
     static void dumpTokenTimes(Token token) {
         if (token != null) {
-            dumpTokenTimes(token.getPredecessor());
+            dumpTokenTimes(token.predecessor());
             System.out.println(token.getWord() + " " + token.getCollectTime());
         }
     }

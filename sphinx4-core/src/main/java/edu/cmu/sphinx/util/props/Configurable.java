@@ -12,6 +12,8 @@
  */
 package edu.cmu.sphinx.util.props;
 
+import java.io.IOException;
+
 /**
  * Defines the interface that must be implemented by any configurable component in Sphinx-4.  The life cycle of a
  * component is as follows:
@@ -70,4 +72,8 @@ public interface Configurable {
      * @throws PropertyException if there is a problem with the properties.
      */
     void newProperties(PropertySheet ps) throws PropertyException;
+
+    default void allocate() throws IOException {
+
+    }
 }

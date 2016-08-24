@@ -67,7 +67,7 @@ public class LatticeCompTest {
 
         int max = Math.max(latNodes.size(), otherLatNodes.size());
         assertTrue( max > 40 ); //min size
-        assertTrue( ((float)diff.size()) / max < 0.15f ); //% difference
+        assertTrue( ((float)diff.size()) / max < 0.2f ); //% difference
 
 //        Iterator<Node> it = latNodes.iterator();
 //

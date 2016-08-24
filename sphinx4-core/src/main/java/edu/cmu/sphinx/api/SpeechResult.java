@@ -15,7 +15,7 @@ import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.*;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -40,6 +40,17 @@ public final class SpeechResult {
             lattice.computeNodePosteriors(1.0f);
         } else
             lattice = null;
+    }
+
+    /** returns min and max start times as a 2-element long[].  if the result is empty, it returns null */
+    public long[] time() {
+        List<WordResult> w = result.getTimedBestResult(false);
+        if (!w.isEmpty()) {
+            long start = w.get(0).getTimeFrame().getStart();
+            long end = w.get(w.size() - 1).getTimeFrame().getEnd();
+            return new long[] { start, end };
+        }
+        return null;
     }
 
     /**
@@ -67,7 +78,7 @@ public final class SpeechResult {
      */
     public Collection<String> getNbest(int n) {
         if (lattice == null)
-            return new HashSet<>();
+            return Collections.emptySet();
         return new Nbest(lattice).getNbest(n);
     }
 

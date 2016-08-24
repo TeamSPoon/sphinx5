@@ -356,7 +356,7 @@ public class BatchNISTRecognizer extends BatchModeRecognizer {
 
         if (token == null) return 0;
 
-        Token pred = token.getPredecessor();
+        Token pred = token.predecessor();
         long startFrame = dumpBestPath(out, utt, pred);
         if (token.isWord()) {
 

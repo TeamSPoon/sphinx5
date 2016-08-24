@@ -112,8 +112,14 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     // Configured Subcomponents
     // -----------------------------------
     protected Linguist linguist; // Provides grammar/language info
+    public Linguist linguist() { return linguist; }
+
     protected Pruner pruner; // used to prune the active list
+    public Pruner pruner() { return pruner; }
+
     protected AcousticScorer scorer; // used to score the active list
+    public AcousticScorer scorer() { return scorer; }
+
     protected ActiveListManager activeListManager;
 
 
@@ -240,6 +246,13 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         tokensCreated = StatisticsVariable.the("tokensCreated");
 
         try {
+//            Stream.of(linguist, pruner, scorer).parallel().forEach((Configurable x) -> {
+//                try {
+//                    x.allocate();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
             linguist.allocate();
             pruner.allocate();
             scorer.allocate();
@@ -634,7 +647,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
-                Token oldPredecessor = bestToken.getPredecessor();
+                Token oldPredecessor = bestToken.predecessor();
                 bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
                 if (buildWordLattice && nextState instanceof WordSearchState) {
@@ -658,14 +671,14 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected static boolean isVisited(Token t) {
         SearchState curState = t.getSearchState();
 
-        t = t.getPredecessor();
+        t = t.predecessor();
 
         while (t != null && !t.isEmitting()) {
             if (curState.equals(t.getSearchState())) {
                 System.out.println("CS " + curState + " match " + t.getSearchState());
                 return true;
             }
-            t = t.getPredecessor();
+            t = t.predecessor();
         }
         return false;
     }
@@ -691,7 +704,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         for (Token token : activeList) {
             while (token != null) {
                 tokenSet.add(token);
-                token = token.getPredecessor();
+                token = token.predecessor();
             }
         }
 
@@ -702,7 +715,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         for (Token token : resultList) {
             while (token != null) {
                 tokenSet.add(token);
-                token = token.getPredecessor();
+                token = token.predecessor();
             }
         }
 

@@ -75,7 +75,7 @@ public class BestPathAccuracyTracker extends AccuracyTracker {
     * @see edu.cmu.sphinx.decoder.ResultListener#newResult(edu.cmu.sphinx.result.Result)
     */
     @Override
-    public void newResult(Result result) {
+    public void accept(Result result) {
         String ref = result.getReferenceText();
         if (result.isFinal() && ref != null) {
             String hyp = result.getBestResultNoFiller();

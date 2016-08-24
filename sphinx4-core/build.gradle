@@ -8,6 +8,7 @@ dependencies {
 
     compile group:'com.fasterxml', name:'aalto-xml', version:'1.0.0'
 
+//    compile group: 'org.javolution', name: 'javolution-core-java', version: '6.0.0'
 
     compile group: 'org.eclipse.collections', name: 'eclipse-collections', version: '8.0.0-M1'
 

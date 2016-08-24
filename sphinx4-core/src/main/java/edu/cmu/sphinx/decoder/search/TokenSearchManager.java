@@ -63,7 +63,7 @@ abstract public class TokenSearchManager implements SearchManager {
         }
 
         if(!buildWordLattice) {
-            return token.isWord() ? token : token.getPredecessor();
+            return token.isWord() ? token : token.predecessor();
         }
 
         float logAcousticScore = 0.0f;
@@ -74,7 +74,7 @@ abstract public class TokenSearchManager implements SearchManager {
             logAcousticScore += token.getAcousticScore();
             logLanguageScore += token.getLanguageScore();
             logInsertionScore += token.getInsertionScore();
-            token = token.getPredecessor();
+            token = token.predecessor();
         }
 
         return new Token(token, token.score(), logInsertionScore, logAcousticScore, logLanguageScore);

@@ -79,7 +79,7 @@ public class WordTracker {
                 Word word = wordState.getPronunciation().getWord();
                 wordList.add(0, word);
             }
-            token = token.getPredecessor();
+            token = token.predecessor();
         }
         return new WordSequence(wordList);
     }

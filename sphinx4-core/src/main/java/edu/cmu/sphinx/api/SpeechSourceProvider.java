@@ -15,6 +15,10 @@ package edu.cmu.sphinx.api;
 public class SpeechSourceProvider {
 
     static Microphone getMicrophone() {
-        return new Microphone(16000, 16, true, false);
+        return getMicrophone(16000);
+    }
+
+    static Microphone getMicrophone(int sampleRate) {
+        return new Microphone(sampleRate, 16, true, false);
     }
 }

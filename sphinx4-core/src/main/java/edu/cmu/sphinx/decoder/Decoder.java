@@ -11,6 +11,7 @@
  */
 package edu.cmu.sphinx.decoder;
 
+import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.decoder.search.SearchManager;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.PropertyException;
@@ -18,9 +19,10 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 /** The primary decoder class */
-public class Decoder extends AbstractDecoder {
+public class Decoder<S extends SearchManager> extends AbstractDecoder<S> {
 
     public Decoder() {
         // Keep this or else XML configuration fails.
@@ -46,10 +48,11 @@ public class Decoder extends AbstractDecoder {
      * @param resultListeners listeners to get signals
      * @param featureBlockSize frequency of notification about results
      */
-    public Decoder( SearchManager searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> resultListeners, int featureBlockSize) {
+    public Decoder( S searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> resultListeners, int featureBlockSize) {
         super( searchManager, fireNonFinalResults, autoAllocate, resultListeners);
         this.featureBlockSize = featureBlockSize;
     }
+
 
     /**
      * Decode frames until recognition is complete.
@@ -70,5 +73,32 @@ public class Decoder extends AbstractDecoder {
         } while (result != null && !result.isFinal());
         searchManager.stopRecognition();
         return result;
+    }
+
+    /** runs an asynchronous decode process, invoking the callback on each result */
+    public synchronized void decode(BiPredicate<Decoder<S>, SpeechResult> eachResult) {
+
+        Result result;
+        boolean running = true;
+        while (running) {
+            searchManager.startRecognition();
+
+            result = searchManager.recognize(featureBlockSize);
+
+            if (result != null) {
+                //result.setReferenceText(referenceText);
+                fireResultListeners(result);
+
+                if (!eachResult.test(this, new SpeechResult(result))) {
+                    running = false;
+                }
+
+            }
+            searchManager.stopRecognition();
+
+        }
+
+
+
     }
 }

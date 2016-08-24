@@ -11,9 +11,12 @@
 
 package edu.cmu.sphinx.api;
 
+import edu.cmu.sphinx.decoder.Decoder;
+import edu.cmu.sphinx.decoder.search.WordPruningBreadthFirstSearchManager;
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
 
 import java.io.IOException;
+import java.util.function.BiPredicate;
 
 
 /**
@@ -21,7 +24,14 @@ import java.io.IOException;
  */
 public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
 
-    private final Microphone microphone;
+    public final Microphone microphone;
+
+    public LiveSpeechRecognizer(Configuration configuration, int sampleRate) throws IOException {
+        super(configuration);
+        microphone = SpeechSourceProvider.getMicrophone(sampleRate);
+        context.getInstance(StreamDataSource.class)
+                .setInputStream(microphone.getStream());
+    }
 
     /**
      * Constructs new live recognition object.
@@ -31,21 +41,26 @@ public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
      */
     public LiveSpeechRecognizer(Configuration configuration) throws IOException
     {
-        super(configuration);
-        microphone = SpeechSourceProvider.getMicrophone();
-        context.getInstance(StreamDataSource.class)
-            .setInputStream(microphone.getStream());
+        this(configuration, 16000);
     }
 
     /**
      * Starts recognition process.
      *
-     * @param clear clear cached microphone data
      * @see         LiveSpeechRecognizer#stopRecognition()
      */
-    public void startRecognition(boolean clear) {
+    public void startRecognition() {
         recognizer.allocate();
         microphone.startRecording();
+    }
+
+    /** starts an async recognizer process, providing access to the recognizer and each result that it streams */
+    public void startRecognition(BiPredicate<Decoder<WordPruningBreadthFirstSearchManager>,SpeechResult> eachResult) {
+        startRecognition();
+
+        recognizer.recognize(eachResult);
+
+        stopRecognition();
     }
 
     /**
@@ -53,9 +68,9 @@ public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
      *
      * Recognition process is paused until the next call to startRecognition.
      *
-     * @see LiveSpeechRecognizer#startRecognition(boolean)
+     * @see #startRecognition()
      */
-    public void stopRecognition() {
+    public synchronized void stopRecognition() {
         microphone.stopRecording();
         recognizer.deallocate();
     }

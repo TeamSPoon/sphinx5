@@ -224,9 +224,7 @@ public class ImmutableFst extends Fst {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Fst(start=").append(start).append(", isyms=").append(Arrays.toString(isyms)).append(", osyms=").append(Arrays.toString(osyms)).append(", semiring=").append(semiring).append(")\n");
-        int numStates = states.length;
-        for (int i = 0; i < numStates; i++) {
-            State s = states[i];
+        for (ImmutableState s : states) {
             sb.append("  ").append(s).append('\n');
             int numArcs = s.getNumArcs();
             for (int j = 0; j < numArcs; j++) {

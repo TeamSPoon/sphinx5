@@ -21,14 +21,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** An abstract decoder which implements all functionality which is independent of the used decoding-paradigm (pull/push). */
-public abstract class AbstractDecoder implements ResultProducer, Configurable {
+public abstract class AbstractDecoder<S extends SearchManager> implements ResultProducer, Configurable {
 
     /**
      * The property that defines the name of the search manager to use
      * */
     @S4Component(type = SearchManager.class)
     public final static String PROP_SEARCH_MANAGER = "searchManager";
-    protected SearchManager searchManager;
+    protected S searchManager;
 
     @S4ComponentList(type = ResultListener.class)
     public static final String PROP_RESULT_LISTENERS = "resultListeners";
@@ -64,7 +64,7 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
      * @param autoAllocate automatic allocate all components
      * @param resultListeners listeners to get noification
      */
-    public AbstractDecoder(SearchManager searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> resultListeners) {
+    public AbstractDecoder(S searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> resultListeners) {
         String name = getClass().getName();
              init( name, Logger.getLogger(name),
                    searchManager, fireNonFinalResults, autoAllocate, resultListeners);        
@@ -78,11 +78,15 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
      */
     public abstract Result decode(String referenceText);
 
-    public void newProperties(PropertySheet ps) throws PropertyException {
-        init( ps.getInstanceName(), ps.getLogger(), (SearchManager) ps.getComponent(PROP_SEARCH_MANAGER), ps.getBoolean(FIRE_NON_FINAL_RESULTS), ps.getBoolean(AUTO_ALLOCATE), ps.getComponentList(PROP_RESULT_LISTENERS, ResultListener.class));
+    public S search() {
+        return searchManager;
     }
 
-    private void init(String name, Logger logger, SearchManager searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> listeners) {
+    public void newProperties(PropertySheet ps) throws PropertyException {
+        init( ps.getInstanceName(), ps.getLogger(), (S) ps.getComponent(PROP_SEARCH_MANAGER), ps.getBoolean(FIRE_NON_FINAL_RESULTS), ps.getBoolean(AUTO_ALLOCATE), ps.getComponentList(PROP_RESULT_LISTENERS, ResultListener.class));
+    }
+
+    private void init(String name, Logger logger, S searchManager, boolean fireNonFinalResults, boolean autoAllocate, List<ResultListener> listeners) {
         this.name = name;
         this.logger = logger;
 
@@ -140,7 +144,7 @@ public abstract class AbstractDecoder implements ResultProducer, Configurable {
     protected void fireResultListeners(Result result) {
         if (fireNonFinalResults || result.isFinal()) {
             for (ResultListener resultListener : resultListeners) {
-                resultListener.newResult(result);
+                resultListener.accept(result);
             }
         }else {
             if (logger.isLoggable(Level.FINER)) {

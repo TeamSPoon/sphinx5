@@ -50,8 +50,9 @@ public interface ActiveList extends Iterable<Token> {
      * Adds the given token to the list, keeping track of the lowest scoring token
      *
      * @param token the token to add
+     * @return whether it was successfully added
      */
-    void add(Token token);
+    boolean add(Token token);
 
     /**
      * Purges the active list of excess members returning a (potentially new) active list
@@ -102,5 +103,8 @@ public interface ActiveList extends Iterable<Token> {
      * @return a new active list.
      */
     ActiveList newInstance();
+
+    /** returns the worst score if at capacity, or -Float.MAX_VALUE if under capacity (allowing anything) */
+    float worstScore();
 }
 

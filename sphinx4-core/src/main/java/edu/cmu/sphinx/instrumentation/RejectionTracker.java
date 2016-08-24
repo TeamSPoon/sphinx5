@@ -133,7 +133,7 @@ public class RejectionTracker implements
     *
     * @see edu.cmu.sphinx.decoder.ResultListener#newResult(edu.cmu.sphinx.result.Result)
     */
-    public void newResult(Result result) {
+    public void accept(Result result) {
         String ref = result.getReferenceText();
         if (result.isFinal() && ref != null) {
             numUtterances++;

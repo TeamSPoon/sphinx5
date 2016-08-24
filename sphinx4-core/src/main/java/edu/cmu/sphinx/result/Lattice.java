@@ -186,7 +186,7 @@ public class Lattice {
                 lastEndTime = dataToken.getCollectTime();
             }
             lastStartTime = dataToken.getCollectTime();
-            dataToken = dataToken.getPredecessor();
+            dataToken = dataToken.predecessor();
         }
         if (lastEndTime >= 0 && lastStartTime >= 0)
             return new TimeFrame(lastStartTime, lastEndTime);
@@ -236,7 +236,7 @@ public class Lattice {
         }
         visitedWordTokens.add(token);
 
-        collapseWordPath(getNode(token), token.getPredecessor(), token.getAcousticScore() + token.getInsertionScore(),
+        collapseWordPath(getNode(token), token.predecessor(), token.getAcousticScore() + token.getInsertionScore(),
                 token.getLanguageScore());
 
         if (loserManager != null && loserManager.hasAlternatePredecessors(token)) {
@@ -269,7 +269,7 @@ public class Lattice {
              */
             Node fromNode = getNode(token);
             addEdge(fromNode, parentWordNode, acousticScore, languageScore);
-            if (token.getPredecessor() != null) {
+            if (token.predecessor() != null) {
                 /* Collapse the token sequence ending in this token. */
                 collapseWordToken(token);
             } else {
@@ -291,7 +291,7 @@ public class Lattice {
         while (true) {
             acousticScore += token.getAcousticScore() + token.getInsertionScore();
             languageScore += token.getLanguageScore();
-            Token preToken = token.getPredecessor();
+            Token preToken = token.predecessor();
 
             if (preToken == null)
                 return;
@@ -301,7 +301,7 @@ public class Lattice {
             token = preToken;
         }
 
-        collapseWordPath(parentWordNode, token.getPredecessor(), acousticScore, languageScore);
+        collapseWordPath(parentWordNode, token.predecessor(), acousticScore, languageScore);
 
         /* Traverse the path(s) for the loser token(s). */
         if (loserManager != null && alternates!=null) {
