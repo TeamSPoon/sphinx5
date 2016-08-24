@@ -192,9 +192,9 @@ public class SortingActiveList implements ActiveList {
 
 
         //this buffers the set into sublists and then parallel processes them in the fork join common pool
-        Stream<Token> stream = tokens.stream().sequential();
+        Stream<Token> stream = tokens.stream();//.sequential();
 
-        int loadsPerThread = 3; //workload granularity
+        int loadsPerThread = 2; //workload granularity
 
         int chunkSize = Math.max(1, size.get() / (loadsPerThread * sortingActiveListFactory.threads));
 
