@@ -335,8 +335,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // these come in log(), multiply gets converted to add
             float logEntryScore = token.score() + arc.getProbability();
 
-            if (logEntryScore < fastmatchActiveList.worstScore())
-                continue;
+            /*if (logEntryScore < fastmatchActiveList.worstScore())
+                continue;*/
 
             Token predecessor = getResultListPredecessor(token);
 

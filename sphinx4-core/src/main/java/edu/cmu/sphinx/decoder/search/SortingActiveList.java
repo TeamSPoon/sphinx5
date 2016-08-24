@@ -18,7 +18,7 @@ public class SortingActiveList implements ActiveList {
     protected final float logRelativeBeamWidth;
 
 
-    //private Token bestToken;
+    private Token bestCached = null, worstCached = null;
     // when the list is changed these things should be
     // changed/updated as well
     //private List<Token> tokenList;
@@ -72,20 +72,33 @@ public class SortingActiveList implements ActiveList {
         int nt = size.get();
         int capacity = absoluteBeamWidth;
 
+        float s = token.score();
+
         if (nt >= capacity) {
-            if (token.score() <= tokens.last().score())
+            if (s <= worstScore())
                 return false; //reject immediately
         }
 
         int delta = 0;
         if (tokens.add(token)) {
             delta++;
+
+            bestCached = tokens.first();
+
             int toRemove = (nt + 1) - (capacity);
+
+            int removed = 0;
             for (int i = 0; i < toRemove; i++) {
                 if (tokens.pollLast() != null) {
-                    delta--;
+                    removed++;
                 }
             }
+
+            if (removed > 0)
+                worstCached = tokens.last();
+
+            delta-=removed;
+
             size.addAndGet(delta);
         }
 
@@ -124,18 +137,27 @@ public class SortingActiveList implements ActiveList {
 //                bestScore = bestToken.score();
 //            }
 //            return bestScore;
-        if (isEmpty())
+
+        return score(bestCached);
+    }
+
+    private static float score(Token t) {
+        if (t == null)
             return -Float.MAX_VALUE;
         else
-            return tokens.first().score();
+            return t.score();
     }
 
     @Override
     public float worstScore() {
         if (size.get() < absoluteBeamWidth)
             return -Float.MAX_VALUE;
-        else
-            return tokens.last().score();
+        else {
+            if (worstCached!=null)
+                return worstCached.score();
+            else
+                return tokens.last().score(); //compute manually
+        }
     }
 
     private boolean isEmpty() {
@@ -150,7 +172,7 @@ public class SortingActiveList implements ActiveList {
      */
     public Token best() {
         //return bestToken;
-        return !isEmpty() ? tokens.first() : null;
+        return bestCached;
     }
 
 

@@ -62,7 +62,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
      * Note that all scores are maintained in the LogMath log base.
      */
 
-    int threads = Runtime.getRuntime().availableProcessors();
+    int threads = 1; // Runtime.getRuntime().availableProcessors();
 
 
 //    class SortingActiveListWorking implements ActiveList {
