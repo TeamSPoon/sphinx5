@@ -213,7 +213,7 @@ public class Unit {
             return false;
         } else {
             for (int i = 0; i < a.length; i++) {
-                if (!a[i].name.equals(b[i].getName())) {
+                if (!a[i].name.equals(b[i].name)) {
                     return false;
                 }
             }

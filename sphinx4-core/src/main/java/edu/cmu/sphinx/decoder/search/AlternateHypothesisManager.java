@@ -15,7 +15,10 @@ package edu.cmu.sphinx.decoder.search;
 
 import edu.cmu.sphinx.decoder.scorer.Scoreable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

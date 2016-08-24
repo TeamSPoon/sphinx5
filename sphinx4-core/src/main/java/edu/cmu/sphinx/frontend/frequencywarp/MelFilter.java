@@ -99,7 +99,7 @@ public class MelFilter {
         /**
          * Let's make the filter area equal to 1.
          */
-        filterHeight = 2.0f / (rightEdge - leftEdge);
+        filterHeight = 2.0 / (rightEdge - leftEdge);
 
         /**
          * Now let's compute the slopes based on the height.

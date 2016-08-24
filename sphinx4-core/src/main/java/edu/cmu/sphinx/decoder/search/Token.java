@@ -56,7 +56,7 @@ public class Token implements Scoreable {
     };
     private final int hash;
 
-    private Token predecessor;
+    protected Token predecessor;
 
     private float logLanguageScore;
     private float logTotalScore;

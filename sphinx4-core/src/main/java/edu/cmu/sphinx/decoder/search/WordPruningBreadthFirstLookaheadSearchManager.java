@@ -446,18 +446,18 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // these come in log(), multiply gets converted to add
             float logEntryScore = tokenScore + arc.getProbability();
 
-            Token bestToken = getBestToken(nextState);
+            Token bestToken = bestTokens.get(nextState);
 
             if (bestToken == null) {
                 Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
                 tokensCreated.value++;
-                setBestToken(newBestToken, nextState);
-                activeListAdd(newBestToken);
+                bestTokens.put(nextState, newBestToken);
+                activeListManager.add(newBestToken);
             } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
-                Token oldPredecessor = bestToken.getPredecessor();
+                Token oldPredecessor = bestToken.predecessor;
                 bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
                 if (buildWordLattice && nextState instanceof WordSearchState) {

@@ -133,7 +133,7 @@ public class DummyComp implements Configurable {
 
         ConfigurationManager cm = new ConfigurationManager(configFile.toURI().toURL());
 
-        DummyComp dc = (DummyComp) cm.lookup("duco");
+        DummyComp dc = cm.lookup("duco");
 
         Assert.assertEquals(dc.getBeamWidth(), 123);
         Assert.assertEquals(9.99, dc.getAlpha(), 1E-10);

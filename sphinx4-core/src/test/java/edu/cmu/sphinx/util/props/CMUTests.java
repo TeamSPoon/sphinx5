@@ -40,7 +40,7 @@ public class CMUTests {
         int newBeamWidth = 4711;
         ConfigurationManagerUtils.setProperty(cm, "beamWidth", String.valueOf(newBeamWidth));
 
-        DummyComp dummyComp = (DummyComp) cm.lookup("duco");
+        DummyComp dummyComp = cm.lookup("duco");
         Assert.assertEquals(newBeamWidth, dummyComp.getBeamWidth());
     }
 }

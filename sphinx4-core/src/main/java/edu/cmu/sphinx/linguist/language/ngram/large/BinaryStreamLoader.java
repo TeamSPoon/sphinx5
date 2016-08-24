@@ -50,9 +50,9 @@ public class BinaryStreamLoader extends BinaryLoader {
      * @throws IOException 
      */
     private void loadModelData(InputStream stream) throws IOException {
-        DataInputStream dataStream = new DataInputStream (new BufferedInputStream (stream));
+        DataInputStream dataStream = new DataInputStream (new BufferedInputStream (stream, BUFFER_SIZE));
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[BUFFER_SIZE/16];
         while (true) {
             if (dataStream.read(buffer) < 0)
                 break;

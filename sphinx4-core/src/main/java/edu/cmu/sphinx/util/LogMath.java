@@ -27,12 +27,12 @@ public enum LogMath { ;
     private static final float logBase = 1.0001f;
     //private static boolean useTable = false;
 
-    private static final float naturalLogBase = (float) Math.log(logBase);
-    private static final float inverseNaturalLogBase = 1f / naturalLogBase;
+    private static final double naturalLogBase = Math.log(logBase);
+    private static final double inverseNaturalLogBase = 1.0 / naturalLogBase;
 
     //private float theAddTable[];
 
-    private LogMath() {
+    LogMath() {
 
 //        if (useTable) {
 //            // Now create the addTable table.
@@ -134,9 +134,9 @@ public enum LogMath { ;
      * @param logVal2 value in log domain (i.e. log(val2)) to add
      * @return sum of val1 and val2 in the log domain
      */
-    public final static float addAsLinear(float logVal1, float logVal2) {
-        float logHighestValue = logVal1;
-        float logDifference = logVal1 - logVal2;
+    public static float addAsLinear(double logVal1, double logVal2) {
+        double logHighestValue = logVal1;
+        double logDifference = logVal1 - logVal2;
         /*
          * [ EBG: maybe we should also have a function to add many numbers, *
          * say, return the summation of all terms in a given vector, if *
@@ -147,7 +147,7 @@ public enum LogMath { ;
             logHighestValue = logVal2;
             logDifference = -logDifference;
         }
-        return logHighestValue + addTable(logDifference);
+        return (float) (logHighestValue + addTable(logDifference));
     }
 
     /**
@@ -163,7 +163,7 @@ public enum LogMath { ;
      * @return the value pointed to by index
      */
     @SuppressWarnings("unused")
-    private static float addTableActualComputation(float index) {
+    private static double addTableActualComputation(double index) {
         double logInnerSummation;
         // Negate index, since the derivation of this formula implies
         // the smallest number as a numerator, therefore the log of the
@@ -200,8 +200,8 @@ public enum LogMath { ;
 //
 //    }
 
-    static float addTable(float index) {
-        float innerSummation = (float) logToLinear(-index);
+    static double addTable(double index) {
+        double innerSummation = logToLinear(-index);
         innerSummation += 1.0f;
         return linearToLog(innerSummation);
     }
@@ -220,7 +220,7 @@ public enum LogMath { ;
      * @throws IllegalArgumentException <p> This is a very slow way to do this, but this method should rarely be used.
      *                                  </p>
      */
-    public static float subtractAsLinear(float logMinuend, float logSubtrahend)
+    public static float subtractAsLinear(double logMinuend, double logSubtrahend)
             throws IllegalArgumentException {
         double logInnerSummation;
         if (logMinuend < logSubtrahend) {
@@ -230,7 +230,7 @@ public enum LogMath { ;
         }
         logInnerSummation = 1.0;
         logInnerSummation -= logToLinear(logSubtrahend - logMinuend);
-        return logMinuend + linearToLog(logInnerSummation);
+        return (float) (logMinuend + linearToLog(logInnerSummation));
     }
 
     /**
@@ -247,15 +247,15 @@ public enum LogMath { ;
      * @return converted value
      * @throws IllegalArgumentException if arguments out of bounds
      */
-    public static float logToLog(float logSource, float sourceBase,
-                                 float resultBase) throws IllegalArgumentException {
+    public static double logToLog(double logSource, double sourceBase,
+                                 double resultBase) throws IllegalArgumentException {
         //  TODO: This is slow, but it probably doesn't need
 	//  to be too fast.
         // It can be made more efficient if one of the bases is
         // Math.E. So maybe we should consider two functions logToLn and
         // lnToLog instead of a generic function like this??
-        float lnSourceBase = (float) Math.log(sourceBase);
-        float lnResultBase = (float) Math.log(resultBase);
+        double lnSourceBase = Math.log(sourceBase);
+        double lnResultBase = Math.log(resultBase);
         return (logSource * lnSourceBase / lnResultBase);
     }
 
@@ -266,6 +266,9 @@ public enum LogMath { ;
      * @param logSource the number in base Math.E to convert
      */
     public static final float lnToLog(float logSource) {
+        return logSource * (float)inverseNaturalLogBase;
+    }
+    public static final double lnToLog(double logSource) {
         return (logSource * inverseNaturalLogBase);
     }
 
@@ -275,8 +278,8 @@ public enum LogMath { ;
      * @return converted value
      * @param logSource the number in base Math.E to convert
      */
-    public static float log10ToLog(float logSource) {
-        return logToLog(logSource, 10.0f, logBase);
+    public static float log10ToLog(double logSource) {
+        return (float) logToLog(logSource, 10.0, logBase);
     }
 
     /**
@@ -285,7 +288,7 @@ public enum LogMath { ;
      * @param logSource the number to convert to base Math.E
      * @return converted value
      */
-    public static final float logToLn(float logSource) {
+    public static final double logToLn(double logSource) {
         return logSource * naturalLogBase;
     }
 
@@ -297,10 +300,12 @@ public enum LogMath { ;
      * @return the value in log scale
      * @throws IllegalArgumentException if value out of range
      */
-    public static final float linearToLog(double linearValue)
-            throws IllegalArgumentException {
-           return (float)Math.log(linearValue) * inverseNaturalLogBase;
+    public static float linearToLog(double linearValue) throws IllegalArgumentException {
+       return (float)(Math.log(linearValue) * inverseNaturalLogBase);
     }
+//    public static float linearToLog(float linearValue) throws IllegalArgumentException {
+//        return (float)(Math.log(linearValue) * inverseNaturalLogBase);
+//    }
 
     /**
      * Converts the value from log scale to linear scale.
@@ -308,7 +313,7 @@ public enum LogMath { ;
      * @param logValue the value to be converted to the linear scale
      * @return the value in the linear scale
      */
-    public static final double logToLinear(float logValue) {
+    public static final double logToLinear(double logValue) {
         return Math.exp(logToLn(logValue));
     }
 

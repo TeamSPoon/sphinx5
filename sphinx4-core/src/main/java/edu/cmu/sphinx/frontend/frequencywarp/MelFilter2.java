@@ -71,8 +71,10 @@ public class MelFilter2 {
 
     public double apply(double[] powerSpectrum) {
         double result = 0;
-        for (int i = 0; i < weights.length; ++i)
-            result += weights[i] * powerSpectrum[offset + i];
+
+        double[] w = this.weights;
+        for (int i = 0; i < w.length; ++i)
+            result += w[i] * powerSpectrum[offset + i];
 
         return result;
     }

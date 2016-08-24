@@ -128,6 +128,6 @@ public class Word implements Comparable<Word> {
     }
 
     public int compareTo(Word other) {
-        return spelling.compareTo(other.getSpelling());
+        return spelling.compareTo(other.spelling);
     }
 }

@@ -431,7 +431,7 @@ public class GrammarNode {
             for (GrammarArc arc : arcs) {
                 GrammarNode child = arc.getGrammarNode();
                 float prob = arc.getProbability();
-                out.write("\tnode" + identity + " -> node" + child.getID()
+                out.write("\tnode" + identity + " -> node" + child.identity
                         + " [ label=" + prob + " ]\n");               
                 child.traverseDot(out, visitedNodes);
             }

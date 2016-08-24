@@ -221,9 +221,11 @@ public class AudioTool {
                             ((DoubleData) data).getSampleRate();
                     double[] values =
                             ((DoubleData) data).getValues();
-                    short[] newShorts = Arrays.copyOf(shorts, shorts.length + values.length);
-                    for (int i = 0; i < values.length; i++) {
-                        newShorts[shorts.length + i] = (short)values[i];
+                    int numValues = values.length;
+                    short[] newShorts = Arrays.copyOf(shorts, shorts.length + numValues);
+                    int numShorts = shorts.length;
+                    for (int i = 0; i < numValues; i++) {
+                        newShorts[numShorts + i] = (short)values[i];
                     }
                     shorts = newShorts;
                 }

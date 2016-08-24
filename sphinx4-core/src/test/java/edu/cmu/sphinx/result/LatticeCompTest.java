@@ -19,8 +19,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.stream.Collectors;
 
 import static org.testng.AssertJUnit.assertTrue;

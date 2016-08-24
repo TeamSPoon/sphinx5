@@ -22,8 +22,6 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
 import edu.cmu.sphinx.util.props.*;
-import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
-import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.io.IOException;
 import java.util.*;
@@ -116,7 +114,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected Linguist linguist; // Provides grammar/language info
     protected Pruner pruner; // used to prune the active list
     protected AcousticScorer scorer; // used to score the active list
-    private ActiveListManager activeListManager;
+    protected ActiveListManager activeListManager;
 
 
     // -----------------------------------
@@ -149,7 +147,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected long currentCollectTime; // the current frame number
     protected ActiveList activeList; // the list of active tokens
     protected List<Token> resultList; // the current set of results
-    protected final Map<SearchState, Token> bestTokenMap = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);;
+    protected final Map<SearchState, Token> bestTokens = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);;
     protected AlternateHypothesisManager loserManager;
     private int numStateOrder;
     // private TokenTracker tokenTracker;
@@ -326,7 +324,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     private void clearCollectors() {
         resultList = Collections.synchronizedList( new LinkedList<>() );
-        bestTokenMap.clear(); //=
+        bestTokens.clear(); //=
                 new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
                 //new ConcurrentHashMapUnsafe<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
                 //new UnifiedMap<>(DEFAULT_BESTTOKENMAP_SIZE);
@@ -547,30 +545,6 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     }
 
     /**
-     * Gets the best token for this state
-     * 
-     * @param state
-     *            the state of interest
-     * @return the best token
-     */
-    protected Token getBestToken(SearchState state) {
-        return bestTokenMap.get(state);
-    }
-
-    /**
-     * Sets the best token for a given state
-     * 
-     * @param token
-     *            the best token
-     * @param state
-     *            the state
-     */
-    protected void setBestToken(Token token, SearchState state) {
-
-        bestTokenMap.put(state, token);
-    }
-
-    /**
      * Checks that the given two states are in legitimate order.
      * 
      * @param fromState parent state
@@ -625,8 +599,6 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     }
 
     private void expandSuccessorTokens(Token token) {
-        SearchState state = token.getSearchState();
-        SearchStateArc[] arcs = state.getSuccessors();
         Token predecessor = getResultListPredecessor(token);
 
         // For each successor
@@ -638,6 +610,8 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         // If the token is an emitting token add it to the list,
         // otherwise recursively collect the new tokens successors.
 
+        SearchState state = token.getSearchState();
+        SearchStateArc[] arcs = state.getSuccessors();
         for (SearchStateArc arc : arcs) {
             SearchState nextState = arc.getState();
 
@@ -649,14 +623,14 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             // these come in log(), multiply gets converted to add
             float logEntryScore = token.score() + arc.getProbability();
 
-            Token bestToken = getBestToken(nextState);
+            Token bestToken = bestTokens.get(nextState);
 
             if (bestToken == null) {
                 Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
                 tokensCreated.value++;
-                setBestToken(newBestToken, nextState);
-                activeListAdd(newBestToken);
+                bestTokens.put(nextState, newBestToken);
+                activeListManager.add(newBestToken);
             } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
@@ -694,10 +668,6 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             t = t.getPredecessor();
         }
         return false;
-    }
-
-    protected void activeListAdd(Token token) {
-        activeListManager.add(token);
     }
 
     /**
@@ -739,33 +709,33 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         System.out.println("Result Lattice size: " + tokenSet.size());
     }
 
-    /**
-     * Returns the ActiveList.
-     * 
-     * @return the ActiveList
-     */
-    public ActiveList getActiveList() {
-        return activeList;
-    }
+//    /**
+//     * Returns the ActiveList.
+//     *
+//     * @return the ActiveList
+//     */
+//    public ActiveList getActiveList() {
+//        return activeList;
+//    }
 
-    /**
-     * Sets the ActiveList.
-     * 
-     * @param activeList
-     *            the new ActiveList
-     */
-    public void setActiveList(ActiveList activeList) {
-        this.activeList = activeList;
-    }
+//    /**
+//     * Sets the ActiveList.
+//     *
+//     * @param activeList
+//     *            the new ActiveList
+//     */
+//    public void setActiveList(ActiveList activeList) {
+//        this.activeList = activeList;
+//    }
 
-    /**
-     * Returns the result list.
-     * 
-     * @return the result list
-     */
-    public List<Token> getResultList() {
-        return resultList;
-    }
+//    /**
+//     * Returns the result list.
+//     *
+//     * @return the result list
+//     */
+//    public List<Token> getResultList() {
+//        return resultList;
+//    }
 
 //    /**
 //     * Sets the result list.
@@ -776,32 +746,32 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 //    public void setResultList(List<Token> resultList) {
 //        this.resultList = resultList;
 //    }
-
-    /**
-     * Returns the current frame number.
-     * 
-     * @return the current frame number
-     */
-    public int getCurrentFrameNumber() {
-        return currentFrameNumber;
-    }
-
+//
 //    /**
-//     * Returns the Timer for growing.
+//     * Returns the current frame number.
 //     *
-//     * @return the Timer for growing
+//     * @return the current frame number
 //     */
-//    public Timer getGrowTimer() {
-//        return growTimer;
+//    public int getCurrentFrameNumber() {
+//        return currentFrameNumber;
 //    }
-
-    /**
-     * Returns the tokensCreated StatisticsVariable.
-     * 
-     * @return the tokensCreated StatisticsVariable.
-     */
-    public StatisticsVariable getTokensCreated() {
-        return tokensCreated;
-    }
+//
+////    /**
+////     * Returns the Timer for growing.
+////     *
+////     * @return the Timer for growing
+////     */
+////    public Timer getGrowTimer() {
+////        return growTimer;
+////    }
+//
+//    /**
+//     * Returns the tokensCreated StatisticsVariable.
+//     *
+//     * @return the tokensCreated StatisticsVariable.
+//     */
+//    public StatisticsVariable getTokensCreated() {
+//        return tokensCreated;
+//    }
 
 }

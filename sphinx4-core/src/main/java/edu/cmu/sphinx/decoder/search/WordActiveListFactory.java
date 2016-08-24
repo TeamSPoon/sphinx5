@@ -18,10 +18,12 @@ import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
-import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A factory for WordActiveList. The word active list is active list designed to hold word tokens only. In addition to

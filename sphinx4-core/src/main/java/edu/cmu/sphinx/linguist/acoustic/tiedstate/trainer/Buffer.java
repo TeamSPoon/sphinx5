@@ -199,7 +199,7 @@ class Buffer {
      */
     void logNormalizeToSum() {
         assert isLog;
-        float den = LogMath.LOG_ZERO;
+        double den = LogMath.LOG_ZERO;
         for (double val : numerator) {
             if (val != LogMath.LOG_ZERO) {
                 den = LogMath.addAsLinear(den, (float)val);
@@ -220,7 +220,7 @@ class Buffer {
      * @param floor the floor for this buffer
      * @return if true, the buffer was modified
      */
-    protected boolean floor(float floor) {
+    protected boolean floor(double floor) {
         assert !isLog;
         boolean wasModified = false;
         for (int i = 0; i < numerator.length; i++) {
@@ -239,7 +239,7 @@ class Buffer {
      * @param logFloor the floor for this buffer, in log scale
      * @return if true, the buffer was modified
      */
-    protected boolean logFloor(float logFloor) {
+    protected boolean logFloor(double logFloor) {
         assert isLog;
         boolean wasModified = false;
         for (int i = 0; i < numerator.length; i++) {

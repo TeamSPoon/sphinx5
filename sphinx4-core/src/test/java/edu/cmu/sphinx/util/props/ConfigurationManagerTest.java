@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,14 +87,14 @@ public class ConfigurationManagerTest {
         cm.addConfigurable(DummyFrontEnd.class, frontEndName);
         PropertySheet propSheet = cm.getPropertySheet(frontEndName);
         propSheet
-                .setComponentList("dataProcs", Collections.singletonList("fooBar"), Collections.<Configurable>singletonList(new AnotherDummyProcessor()));
+                .setComponentList("dataProcs", Collections.singletonList("fooBar"), Collections.singletonList(new AnotherDummyProcessor()));
 
         String xmlString = ConfigurationManagerUtils.toXML(cm);
 
         assertThat(xmlString, containsString(frontEndName));
         assertThat(xmlString, containsString("fooBar"));
 
-        DummyFrontEnd frontEnd = (DummyFrontEnd) cm.lookup(frontEndName);
+        DummyFrontEnd frontEnd = cm.lookup(frontEndName);
         assertThat(frontEnd.getDataProcs(), hasSize(1));
         assertThat(frontEnd.getDataProcs().get(0),
                    instanceOf(AnotherDummyProcessor.class));
@@ -111,7 +110,7 @@ public class ConfigurationManagerTest {
         assertThat(cm.lookup(instanceName), notNullValue());
         assertThat(cm.lookup(instanceName), instanceOf(DummyComp.class));
 
-        DummyComp docu = (DummyComp) cm.lookup(instanceName);
+        DummyComp docu = cm.lookup(instanceName);
 
         // Test the parameters were successfully overridden.
         assertThat(docu.getFrontEnd().getDataProcs(), Matchers.empty());

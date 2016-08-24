@@ -37,7 +37,7 @@ public class Microphone extends BaseDataProcessor {
     /**
      * The property for the sample rate of the data.
      */
-    @S4Integer(defaultValue = 16000)
+    @S4Integer(defaultValue = 22050)
     public static final String PROP_SAMPLE_RATE = "sampleRate";
 
     /**

@@ -16,8 +16,6 @@ import edu.cmu.sphinx.util.props.S4Boolean;
 import edu.cmu.sphinx.util.props.S4Double;
 import edu.cmu.sphinx.util.props.S4Integer;
 
-import java.util.List;
-
 /**
  * An active list is maintained as a sorted list
  * <p>

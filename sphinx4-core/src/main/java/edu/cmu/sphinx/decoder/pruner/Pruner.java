@@ -12,7 +12,6 @@
 
 package edu.cmu.sphinx.decoder.pruner;
 
-import edu.cmu.sphinx.decoder.search.ActiveList;
 import edu.cmu.sphinx.util.props.Configurable;
 
 

@@ -222,7 +222,7 @@ public class SenoneHMM implements HMM {
             return true;
         } else if (o instanceof SenoneHMM) {
             SenoneHMM other = (SenoneHMM) o;
-            return senoneSequence.equals(other.getSenoneSequence());
+            return senoneSequence.equals(other.senoneSequence);
         }
         return false;
     }

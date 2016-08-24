@@ -1,6 +1,5 @@
 package edu.cmu.sphinx.decoder.scorer;
 
-import edu.cmu.sphinx.decoder.search.SimpleActiveListFactory;
 import edu.cmu.sphinx.decoder.search.SimpleActiveListFactory.SimpleActiveList;
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.frontend.*;
@@ -13,7 +12,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

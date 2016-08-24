@@ -46,7 +46,7 @@ public class BinaryLoader {
     
     private static final float MIN_PROBABILITY = -99.0f;
     private static final int MAX_PROB_TABLE_SIZE = java.lang.Integer.MAX_VALUE;
-    private static final int BUFFER_SIZE = 1024 * 1024;
+    public static final int BUFFER_SIZE = 1024 * 1024;
 
 
     private int maxNGram;
@@ -603,18 +603,18 @@ public class BinaryLoader {
 
     /** Apply the unigram weight to the set of unigrams */
     private void applyUnigramWeight() {
-        float logUnigramWeight = LogMath.linearToLog(unigramWeight);
-        float logNotUnigramWeight = LogMath.linearToLog(1.0f - unigramWeight);
-        float logUniform = LogMath.linearToLog(1.0f / (numberNGrams[0]));
+        double logUnigramWeight = LogMath.linearToLog(unigramWeight);
+        double logNotUnigramWeight = LogMath.linearToLog(1.0f - unigramWeight);
+        double logUniform = LogMath.linearToLog(1.0f / (numberNGrams[0]));
 
-        float logWip = LogMath.linearToLog(wip);
+        double logWip = LogMath.linearToLog(wip);
 
-        float p2 = logUniform + logNotUnigramWeight;
+        double p2 = logUniform + logNotUnigramWeight;
 
         for (int i = 0; i < numberNGrams[0]; i++) {
             UnigramProbability unigram = unigrams[i];
 
-            float p1 = unigram.getLogProbability();
+            double p1 = unigram.getLogProbability();
 
             if (i != startWordID) {
                 p1 += logUnigramWeight;
@@ -626,7 +626,7 @@ public class BinaryLoader {
                 unigram.setLogBackoff(unigram.getLogBackoff() * languageWeight);
             }
 
-            unigram.setLogProbability(p1);
+            unigram.setLogProbability((float) p1);
         }
     }
 
@@ -644,9 +644,9 @@ public class BinaryLoader {
     /** Apply the WIP to the given array of probabilities.
     */
     private static void applyWip(float[] logProbabilities, double wip) {
-        float logWip = LogMath.linearToLog(wip);
+        double logWip = LogMath.linearToLog(wip);
         for (int i = 0; i < logProbabilities.length; i++) {
-            logProbabilities[i] = logProbabilities[i] + logWip;
+            logProbabilities[i] = (float) (logProbabilities[i] + logWip);
         }
     }
 
@@ -827,11 +827,11 @@ public class BinaryLoader {
              bytesRead++;
              if (c == '\0') {
                  // if its the end of a string, add it to the 'words' array
-                 words[s] = new String(bytes, wordStart, i - wordStart);
+                 String ws = words[s] = new String(bytes, wordStart, i - wordStart);
                  wordStart = i + 1;
-                 if (words[s].equals(Dictionary.SENTENCE_START_SPELLING)) {
+                 if (ws.equals(Dictionary.SENTENCE_START_SPELLING)) {
                      startWordID = s;
-                 } else if (words[s].equals(Dictionary.SENTENCE_END_SPELLING)) {
+                 } else if (ws.equals(Dictionary.SENTENCE_END_SPELLING)) {
                      endWordID = s;
                  }
                  s++;

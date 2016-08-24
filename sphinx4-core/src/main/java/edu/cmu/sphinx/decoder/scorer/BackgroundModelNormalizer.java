@@ -6,7 +6,6 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Component;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 /**

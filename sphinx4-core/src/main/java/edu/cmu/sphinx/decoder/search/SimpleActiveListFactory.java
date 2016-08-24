@@ -68,7 +68,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
      */
     public static class SimpleActiveList implements ActiveList {
 
-        private int absoluteBeamWidth;
+        private final int absoluteBeamWidth;
         private final float logRelativeBeamWidth;
         private Token bestToken;
         private final List<Token> tokenList = new ArrayList<>();

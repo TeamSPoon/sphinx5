@@ -11,17 +11,17 @@
  */
 package edu.cmu.sphinx.decoder.search;
 
-import edu.cmu.sphinx.decoder.scorer.Scoreable;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
+import org.eclipse.collections.impl.collector.Collectors2;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author plamere
@@ -32,15 +32,14 @@ public class SortingActiveListFactory extends ActiveListFactory {
      * @param relativeBeamWidth relative pruning beam
      */
     public SortingActiveListFactory(int absoluteBeamWidth,
-            double relativeBeamWidth)
-    {
+                                    double relativeBeamWidth) {
         super(absoluteBeamWidth, relativeBeamWidth);
     }
 
     public SortingActiveListFactory() {
 
     }
-    
+
     /*
     * (non-Javadoc)
     *
@@ -76,20 +75,20 @@ public class SortingActiveListFactory extends ActiveListFactory {
 
         private final int absoluteBeamWidth;
         private final float logRelativeBeamWidth;
-        private Token bestToken;
+        //private Token bestToken;
         // when the list is changed these things should be
         // changed/updated as well
         //private List<Token> tokenList;
 
         private final ConcurrentSkipListSet<Token> tokens = new ConcurrentSkipListSet<>();
-        private final List buffer = new ArrayList(); //copy where the set is buffered for traversal
+        //private final ArrayList buffer = new ArrayList(); //copy where the set is buffered for traversal
         private final AtomicInteger size = new AtomicInteger(0); //concurrent skiplist set is slow tracking its own size so it can be done here
 
 
-        /** 
+        /**
          * Creates an empty active list
-         * 
-         * @param absoluteBeamWidth beam for absolute pruning
+         *
+         * @param absoluteBeamWidth    beam for absolute pruning
          * @param logRelativeBeamWidth beam for relative pruning
          */
         public SortingActiveList(int absoluteBeamWidth, float logRelativeBeamWidth) {
@@ -109,29 +108,26 @@ public class SortingActiveListFactory extends ActiveListFactory {
         public void add(Token token) {
 
 
-
             int nt = size.get();
             int capacity = absoluteBeamWidth;
-            boolean atCapacity = (nt >= capacity);
-            if (atCapacity) {
-                if (token.score() <= tokens.last().score())
-                    return; //reject immediately
-            }
 
-            if (tokens.add(token))  {
-                size.incrementAndGet();
-                if (atCapacity) {
-                    int toRemove = (nt+1) - (capacity);
-                    for (int i = 0; i < toRemove; i++) {
-                        if (tokens.pollLast()!=null)
-                            size.decrementAndGet();
+//            if (atCapacity) {
+//                if (token.score() <= tokens.last().score())
+//                    return; //reject immediately
+//            }
+
+            int delta = 0;
+            if (tokens.add(token)) {
+                delta++;
+                int toRemove = (nt + 1) - (capacity);
+                for (int i = 0; i < toRemove; i++) {
+                    if (tokens.pollLast() != null) {
+                        delta--;
                     }
                 }
             }
+            size.addAndGet(delta);
 
-            if (bestToken == null || token.score() > bestToken.score()) {
-                bestToken = token;
-            }
         }
 
         /**
@@ -139,27 +135,8 @@ public class SortingActiveListFactory extends ActiveListFactory {
          *
          * @return a (possible new) active list
          */
-        public ActiveList commit() {
-            // if the absolute beam is zero, this means there
-            // should be no constraint on the abs beam size at all
-            // so we will only be relative beam pruning, which means
-            // that we don't have to sort the list
-//            int s = tokens.size();
-//            int capacity = this.absoluteBeamWidth;
-//
-//            //System.out.println(tokens.first() + " " + tokens.first().score() + "   -- - - - - - - " + tokens.last() + " " + tokens.last().score());
-//
-//            if (capacity > 0 && s > capacity) {
-////                Collections.sort(tokens, Scoreable.COMPARATOR);
-////                tokens = tokens.subList(0, absoluteBeamWidth);
-//
-//                int toRemove = s - (capacity-1);
-//                for (int i = 0; i < toRemove; i++)
-//                    tokens.pollLast();
-//
-//                //System.out.println("\t" + tokens.first() + " " + tokens.first().score() + " " + tokens.last() + " " + tokens.last().score());
-//
-//            }
+        public final ActiveList commit() {
+            //this self-sorts, no further maintenance required
             return this;
         }
 
@@ -169,7 +146,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
          *
          * @return the beam threshold
          */
-        public float getBeamThreshold() {
+        public final float getBeamThreshold() {
             return bestScore() + logRelativeBeamWidth;
         }
 
@@ -179,26 +156,20 @@ public class SortingActiveListFactory extends ActiveListFactory {
          *
          * @return the best score
          */
-        public float bestScore() {
+        public final float bestScore() {
 //            float bestScore = -Float.MAX_VALUE;
 //            if (bestToken != null) {
 //                bestScore = bestToken.score();
 //            }
 //            return bestScore;
-            if (tokens.isEmpty())
+            if (isEmpty())
                 return -Float.MAX_VALUE;
             else
                 return tokens.first().score();
         }
 
-
-        /**
-         * Sets the best scoring token for this active list
-         *
-         * @param token the best scoring token
-         */
-        @Deprecated public void setBestToken(Token token) {
-            //bestToken = token;
+        private boolean isEmpty() {
+            return size.get() <= 0;
         }
 
 
@@ -209,10 +180,7 @@ public class SortingActiveListFactory extends ActiveListFactory {
          */
         public Token best() {
             //return bestToken;
-            if (!tokens.isEmpty())
-                return tokens.first();
-            return
-                null;
+            return !isEmpty() ? tokens.first() : null;
         }
 
 
@@ -227,10 +195,17 @@ public class SortingActiveListFactory extends ActiveListFactory {
 
         @Override
         public void forEach(Consumer<? super Token> action) {
-            buffer.clear();
-            buffer.addAll(tokens);
+            //buffer.clear();
+            //buffer.addAll(tokens);
 
-            buffer.parallelStream().forEach(action);
+            int threads = 4;
+            int granularity = 4;
+            int chunkSize = Math.max(1, size.get()/(granularity * threads));
+            //this buffers the set into sublists and then parallel processes them in the fork join common pool
+            tokens.stream().sequential().collect(Collectors2.chunk(chunkSize)).parallelStream().forEach(x -> {
+                //System.out.println(Thread.currentThread() + " thread processing " + x.size());
+                x.forEach(action);
+            });
         }
 
 
