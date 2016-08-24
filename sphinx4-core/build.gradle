@@ -8,7 +8,8 @@ dependencies {
 
     compile group:'com.fasterxml', name:'aalto-xml', version:'1.0.0'
 
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
+    compile group: 'org.eclipse.collections', name: 'eclipse-collections', version: '8.0.0-M1'
 
     testCompile group: 'org.testng', name: 'testng', version:'6.9.10'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version:'1.3'

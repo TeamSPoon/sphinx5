@@ -353,6 +353,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         scoreTimer.start();
         Data data = scorer.calculateScores(activeList);
         scoreTimer.stop();
+        //Data data = activeList.best();
         
         Token bestToken = null;
         if (data instanceof Token) {
@@ -364,7 +365,6 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         if (bestToken != null) {
             hasMoreFrames = true;
             currentCollectTime = bestToken.getCollectTime();
-            activeList.setBestToken(bestToken);
         }
 
         // update statistics

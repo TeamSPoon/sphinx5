@@ -22,6 +22,8 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
 import edu.cmu.sphinx.util.props.*;
+import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.io.IOException;
 import java.util.*;
@@ -106,7 +108,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     public final static String PROP_RELATIVE_BEAM_WIDTH = "relativeBeamWidth";
 
 
-    private static final int DEFAULT_BESTTOKENMAP_SIZE = 16384;
+    private static final int DEFAULT_BESTTOKENMAP_SIZE = 4096;
 
     // -----------------------------------
     // Configured Subcomponents
@@ -147,7 +149,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected long currentCollectTime; // the current frame number
     protected ActiveList activeList; // the list of active tokens
     protected List<Token> resultList; // the current set of results
-    protected Map<SearchState, Token> bestTokenMap;
+    protected final Map<SearchState, Token> bestTokenMap = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);;
     protected AlternateHypothesisManager loserManager;
     private int numStateOrder;
     // private TokenTracker tokenTracker;
@@ -324,7 +326,11 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     private void clearCollectors() {
         resultList = Collections.synchronizedList( new LinkedList<>() );
-        bestTokenMap = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
+        bestTokenMap.clear(); //=
+                new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
+                //new ConcurrentHashMapUnsafe<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
+                //new UnifiedMap<>(DEFAULT_BESTTOKENMAP_SIZE);
+
         activeListManager.clearEmittingList();
     }
 
@@ -445,9 +451,11 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     protected boolean scoreTokens() {
         boolean moreTokens;
+
         //scoreTimer.start();
         Data data = scorer.calculateScores(activeList);
         //scoreTimer.stop();
+
 
         Token bestToken = null;
         if (data instanceof Token) {
@@ -461,7 +469,6 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         }
         
         moreTokens = (bestToken != null);
-        activeList.setBestToken(bestToken);
 
         // monitorWords(activeList);
         monitorStates(activeList);
@@ -559,6 +566,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      *            the state
      */
     protected void setBestToken(Token token, SearchState state) {
+
         bestTokenMap.put(state, token);
     }
 

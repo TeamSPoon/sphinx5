@@ -66,9 +66,9 @@ public class SimpleActiveListFactory extends ActiveListFactory {
      * <p>
      * Note that all scores are maintained in the LogMath log domain
      */
-    static class SimpleActiveList implements ActiveList {
+    public static class SimpleActiveList implements ActiveList {
 
-        private int absoluteBeamWidth = 2000;
+        private int absoluteBeamWidth;
         private final float logRelativeBeamWidth;
         private Token bestToken;
         private final List<Token> tokenList = new ArrayList<>();

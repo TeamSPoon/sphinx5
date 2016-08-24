@@ -26,9 +26,10 @@ public class BoundedPriorityQueue<T> implements Iterable<T> {
     }
 
     public void add(T item) {
-        items.add(item);
-        if (items.size() > maxSize)
-            items.pollFirst();
+        if (items.add(item)) {
+            if (items.size() > maxSize)
+                items.pollFirst();
+        }
     }
 
     public int size() {

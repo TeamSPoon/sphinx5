@@ -1,5 +1,6 @@
 package edu.cmu.sphinx.decoder.scorer;
 
+import edu.cmu.sphinx.decoder.search.ActiveList;
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.endpoint.SpeechEndSignal;
@@ -75,7 +76,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
      * @return The best scoring scoreable, or <code>null</code> if there are no
      * more features to score
      */
-    public Data calculateScores(Iterable<? extends Scoreable> scoreableList) {
+    public Data calculateScores(ActiveList scoreableList) {
         Data data;
         if (storedData.isEmpty()) {
             while ((data = getNextData()) instanceof Signal) {
@@ -99,7 +100,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         return calculateScoresForData(scoreableList, data);
     }
 
-    public Data calculateScoresAndStoreData(Iterable<? extends Scoreable> scoreableList) {
+    public Data calculateScoresAndStoreData(ActiveList scoreableList) {
         Data data;
         while ((data = getNextData()) instanceof Signal) {
             if (data instanceof SpeechEndSignal) {
@@ -119,9 +120,10 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
         storedData.add(data);
 
         return calculateScoresForData(scoreableList, data);
+
     }
 
-    protected Data calculateScoresForData(Iterable<? extends Scoreable> scoreableList, Data data) {
+    protected Data calculateScoresForData(ActiveList scoreableList, Data data) {
         if (data instanceof SpeechEndSignal || data instanceof DataEndSignal) {
             return data;
         }
@@ -134,6 +136,7 @@ public class SimpleAcousticScorer extends ConfigurableAdapter implements Acousti
             data = DataUtil.DoubleData2FloatData((DoubleData) data);
 
         Scoreable bestToken = doScoring(scoreableList, data);
+        //Scoreable bestToken = scoreableList.best();
 
         // apply optional score normalization
         if (scoreNormalizer != null && bestToken instanceof Token)

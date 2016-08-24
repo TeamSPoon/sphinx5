@@ -12,6 +12,7 @@
 
 package edu.cmu.sphinx.decoder.scorer;
 
+import edu.cmu.sphinx.decoder.search.ActiveList;
 import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.util.props.Configurable;
 
@@ -41,16 +42,16 @@ public interface AcousticScorer extends Configurable {
      * @param scorableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    Data calculateScores(Iterable<? extends Scoreable> scorableList);
+    Data calculateScores(ActiveList scorableList);
     
     /**
      * Scores the given set of states over previously acoustic data from frontend
      * and stores latter in the queue
      *
-     * @param scorableList a list containing Scoreable objects to be scored
+     * @param scoreableList a list containing Scoreable objects to be scored
      * @return the best scoring scoreable, or null if there are no more frames to score
      */
-    Data calculateScoresAndStoreData(Iterable<? extends Scoreable> scorableList);
+    Data calculateScoresAndStoreData(ActiveList scoreableList);
 
 }
 

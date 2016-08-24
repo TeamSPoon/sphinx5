@@ -18,6 +18,8 @@ import edu.cmu.sphinx.linguist.dictionary.Word;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
+import org.eclipse.collections.api.bag.Bag;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 
 import java.util.*;
 
@@ -131,9 +133,11 @@ public class WordActiveListFactory extends ActiveListFactory {
 
         public ActiveList commit() {
             int fillerCount = 0;
-            Map<Word, Integer> countMap = new HashMap<>();
+
             Collections.sort(tokenList, Scoreable.COMPARATOR);
             // remove word duplicates
+            HashBag<Word> countMap = new HashBag<>();
+
             for (Iterator<Token> i = tokenList.iterator(); i.hasNext();) {
                 Token token = i.next();
                 WordSearchState wordState = (WordSearchState)token.getSearchState();
@@ -153,14 +157,14 @@ public class WordActiveListFactory extends ActiveListFactory {
                 }
 
                 if (maxPathsPerWord > 0) {
-                    Integer count = countMap.get(word);
-                    int c = count == null ? 0 : count;
+                    int c = countMap.occurrencesOf(word);
+
 
                     // Since the tokens are sorted by score we only
                     // keep the n tokens for a particular word
 
                     if (c < maxPathsPerWord - 1) {
-                        countMap.put(word, c + 1);
+                        countMap.add(word);
                     } else {
                         i.remove();
                     }

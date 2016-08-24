@@ -28,6 +28,7 @@ import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeNonEmittingHMMStat
 import edu.cmu.sphinx.linguist.lextree.LexTreeLinguist.LexTreeWordState;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.*;
+import org.eclipse.collections.impl.map.mutable.primitive.IntFloatHashMap;
 
 import java.util.*;
 
@@ -79,7 +80,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     // -----------------------------------
     private int lookaheadWindow;
     private float lookaheadWeight;
-    private HashMap<Integer, Float> penalties;
+    private IntFloatHashMap penalties;
     private Deque<FrameCiScores> ciScores;
 
     // -----------------------------------
@@ -130,7 +131,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             throw new IllegalArgumentException("Unsupported lookahead window size: " + lookaheadWindow
                     + ". Value in range [1..10] is expected");
         this.ciScores = new ArrayDeque<>();
-        this.penalties = new HashMap<>();
+        this.penalties = new IntFloatHashMap();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);
     }
@@ -159,7 +160,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             throw new PropertyException(WordPruningBreadthFirstLookaheadSearchManager.class.getName(), PROP_LOOKAHEAD_WINDOW,
                     "Unsupported lookahead window size: " + lookaheadWindow + ". Value in range [1..10] is expected");
         ciScores = new ArrayDeque<>();
-        penalties = new HashMap<>();
+        penalties = new IntFloatHashMap();
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).setGauScoresQueueLength(lookaheadWindow + 2);
     }
@@ -216,7 +217,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      * creates a new best token map with the best size
      */
     protected void createFastMatchBestTokenMap() {
-        int mapSize = fastmatchActiveList.size() * 10;
+        int mapSize = fastmatchActiveList.size() * 2;
         if (mapSize != 0) {
             fastMatchBestTokenMap = new HashMap<>(mapSize);
         } else {
@@ -264,30 +265,31 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         float[] frameCiScores = new float[FRAME_CI_SIZE];
 
         Arrays.fill(frameCiScores, -Float.MAX_VALUE);
-        float frameMaxCiScore = -Float.MAX_VALUE;
-        for (Token token : oldActiveList) {
+        final float[] frameMaxCiScore = {-Float.MAX_VALUE};
+        oldActiveList.forEach(token -> {
             float tokenScore = token.score();
             if (tokenScore < fastmathThreshold)
-                continue;
+                return;
             // filling max ci scores array that will be used in general search
             // token score composing
             if (token.getSearchState() instanceof PhoneHmmSearchState) {
                 int baseId = ((PhoneHmmSearchState) token.getSearchState()).getBaseId();
                 if (frameCiScores[baseId] < tokenScore)
                     frameCiScores[baseId] = tokenScore;
-                if (frameMaxCiScore < tokenScore)
-                    frameMaxCiScore = tokenScore;
+                if (frameMaxCiScore[0] < tokenScore)
+                    frameMaxCiScore[0] = tokenScore;
             }
             collectFastMatchSuccessorTokens(token);
-        }
-        ciScores.add(new FrameCiScores(frameCiScores, frameMaxCiScore));
+        });
+        ciScores.add(new FrameCiScores(frameCiScores, frameMaxCiScore[0]));
         //growTimer.stop();
     }
 
     protected boolean scoreFastMatchTokens() {
         boolean moreTokens;
         //scoreTimer.start();
-        Data data = scorer.calculateScoresAndStoreData(fastmatchActiveList);
+        //Data data = scorer.calculateScoresAndStoreData(fastmatchActiveList);
+        Data data = fastmatchActiveList.best();
         //scoreTimer.stop();
 
         Token bestToken = null;
@@ -298,15 +300,16 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         }
 
         moreTokens = (bestToken != null);
-        fastmatchActiveList.setBestToken(bestToken);
+
 
         // monitorWords(activeList);
         monitorStates(fastmatchActiveList);
 
         // System.out.println("BEST " + bestToken);
 
-        curTokensScored.value += fastmatchActiveList.size();
-        totalTokensScored.value += fastmatchActiveList.size();
+        int size = fastmatchActiveList.size();
+        curTokensScored.value += size;
+        totalTokensScored.value += size;
 
         return moreTokens;
     }
@@ -428,7 +431,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 if (nextState instanceof LexTreeHMMState) {
                     Float penalty;
                     int baseId = ((LexTreeHMMState) nextState).getHMMState().getHMM().getBaseUnit().getBaseID();
-                    if ((penalty = penalties.get(baseId)) == null)
+                    if ((penalty = penalties.getIfAbsent(baseId, -Float.MAX_VALUE)) == -Float.MAX_VALUE)
                         penalty = updateLookaheadPenalty(baseId);
                     if ((tokenScore + lookaheadWeight * penalty) < beamThreshold)
                         continue;

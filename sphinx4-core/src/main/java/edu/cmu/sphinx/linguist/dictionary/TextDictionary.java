@@ -342,7 +342,8 @@ public class TextDictionary implements Dictionary {
     private Word extractPronunciation(String text) {
         Word wordObject;
         ArrayList<Path> paths = g2pDecoder.phoneticize(text, g2pMaxPron);
-        List<Pronunciation> pronunciations = new LinkedList<>();
+        Pronunciation[] pronunciations = new Pronunciation[paths.size()];
+        int j = 0;
         for (Path p : paths) {
             int unitCount = p.getPath().size();
             ArrayList<Unit> units = new ArrayList<>(unitCount);
@@ -352,11 +353,11 @@ public class TextDictionary implements Dictionary {
             if (units.size() == 0) {
                 units.add(UnitManager.SILENCE);
             }
-            pronunciations.add(new Pronunciation(units));
+            pronunciations[j++] = (new Pronunciation(units));
         }
-        Pronunciation[] pronunciationsArray = pronunciations.toArray(new Pronunciation[pronunciations.size()]);
-        wordObject = createWord(text, pronunciationsArray, false);
-        for (Pronunciation pronunciation : pronunciationsArray) {
+
+        wordObject = createWord(text, pronunciations, false);
+        for (Pronunciation pronunciation : pronunciations) {
             pronunciation.setWord(wordObject);
         }
         return wordObject;

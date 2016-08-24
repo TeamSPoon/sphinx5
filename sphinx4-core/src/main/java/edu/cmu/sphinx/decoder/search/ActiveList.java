@@ -89,13 +89,6 @@ public interface ActiveList extends Iterable<Token> {
     float bestScore();
 
 
-    /**
-     * Sets the best scoring token for this active list
-     *
-     * @param token the best scoring token
-     */
-    void setBestToken(Token token);
-
 
     /**
      * Gets the best scoring token for this active list

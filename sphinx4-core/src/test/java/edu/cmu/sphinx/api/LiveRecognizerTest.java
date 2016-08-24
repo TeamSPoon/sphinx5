@@ -11,6 +11,9 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNotNull;
 
 public class LiveRecognizerTest {
+
+    public static final float confTolerance = 0.25f;
+
     @Test
     public void testLm() throws IOException {
         Configuration configuration = new Configuration();
@@ -29,10 +32,14 @@ public class LiveRecognizerTest {
         SpeechResult result = recognizer.getResult();
 
         //the first word actually does sound like a mix between 'one' and 'what' so ok!
+        String hypothesis = result.getHypothesis();
+
         assertTrue(
-                "one zero zero zero one".equals(result.getHypothesis())
+                "one zero zero zero one".equals(hypothesis)
                 ||
-                "what zero zero zero one".equals(result.getHypothesis())
+                "what zero zero zero one".equals(hypothesis),
+
+                "hypothesis: " + hypothesis
         );
 
 
@@ -41,9 +48,11 @@ public class LiveRecognizerTest {
         //assertEquals("{what, 0.768, [820:1080]}", );
         String next = word.getWord().toString();
         assertTrue("what".equals(next) || "one".equals(next));
-        assertEquals(0.775f, word.confLinear(), 0.25f);
-        assertEquals(820, word.getTimeFrame().getStart());
-        assertEquals(1080, word.getTimeFrame().getEnd());
+        assertEquals(0.775f, word.confLinear(), confTolerance);
+
+        int sampleTolerance = 20;
+        assertEquals(820f, word.getTimeFrame().getStart(), sampleTolerance);
+        assertEquals(1080f, word.getTimeFrame().getEnd(), sampleTolerance);
     }
 
 

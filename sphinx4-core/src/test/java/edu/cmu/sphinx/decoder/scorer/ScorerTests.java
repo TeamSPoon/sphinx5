@@ -1,5 +1,7 @@
 package edu.cmu.sphinx.decoder.scorer;
 
+import edu.cmu.sphinx.decoder.search.SimpleActiveListFactory;
+import edu.cmu.sphinx.decoder.search.SimpleActiveListFactory.SimpleActiveList;
 import edu.cmu.sphinx.decoder.search.Token;
 import edu.cmu.sphinx.frontend.*;
 import edu.cmu.sphinx.frontend.databranch.DataBufferProcessor;
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class ScorerTests {
 
-    Scoreable testToken = new Token(null, 0.f, 0.f, 0.f, 0.f) {
+    Token testToken = new Token(null, 0.f, 0.f, 0.f, 0.f) {
 
         @Override
         public float calculateScore(Data feature) {
@@ -56,7 +58,9 @@ public class ScorerTests {
             scorer.allocate();
             scorer.startRecognition();
 
-            List<Scoreable> dummyTokens = Collections.singletonList(testToken);
+
+            SimpleActiveList dummyTokens = new SimpleActiveList(0,0);
+            dummyTokens.add(testToken);
             for (int i = 0; i < 100; i++)
                 scorer.calculateScores(dummyTokens);
 
@@ -102,7 +106,8 @@ public class ScorerTests {
         scorer.allocate();
         scorer.startRecognition();
 
-        List<Scoreable> dummyTokens = Collections.singletonList(testToken);
+        SimpleActiveList dummyTokens = new SimpleActiveList(0,0);
+        dummyTokens.add(testToken);
 
         // score around a little
         scorer.calculateScores(dummyTokens);
@@ -110,7 +115,7 @@ public class ScorerTests {
         scorer.stopRecognition();
         scorer.deallocate();
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
         
         // ensure that all scoring threads have died
     }
