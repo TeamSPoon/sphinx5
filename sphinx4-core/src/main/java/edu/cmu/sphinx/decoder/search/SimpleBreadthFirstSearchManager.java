@@ -244,30 +244,34 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
      * @return newly created list
      */
     protected ActiveList undoLastGrowStep() {
-        ActiveList fixedList = new SortingActiveList(false, activeList);
+        ActiveList fixedList = new SortingActiveList(true, activeList);
 
-        for (Token token : activeList) {
-            Token curToken = token.predecessor();
-
-            boolean f; //caches curToken.isfinal
-            boolean e; //caches curToken.isEmitting
-            Token p; //caches curToken.getPredecessor
-
-            // remove the final states that are not the real final ones because they're just hide prior final tokens:
-            while (((p = curToken.predecessor()) != null) && (
-                        ((f = curToken.isFinal()) && (!p.isFinal()) )
-                            ||
-                        ((e = curToken.isEmitting()) && (curToken.getData() == null)) // the so long not scored tokens
-                            ||
-                        (!f && !e))
-                       ) {
-                curToken = p;
-            }
-
-            fixedList.add(curToken);
-        }
+        activeList.forEach(token -> {
+            undoLastGrowStep(fixedList, token);
+        });
 
         return fixedList;
+    }
+
+    private void undoLastGrowStep(ActiveList fixedList, Token token) {
+        Token curToken = token.predecessor();
+
+        boolean f; //caches curToken.isfinal
+        boolean e; //caches curToken.isEmitting
+        Token p; //caches curToken.getPredecessor
+
+        // remove the final states that are not the real final ones because they're just hide prior final tokens:
+        while (((p = curToken.predecessor()) != null) && (
+                    ((f = curToken.isFinal()) && (!p.isFinal()) )
+                        ||
+                    ((e = curToken.isEmitting()) && (curToken.getData() == null)) // the so long not scored tokens
+                        ||
+                    (!f && !e))
+                   ) {
+            curToken = p;
+        }
+
+        fixedList.add(curToken);
     }
 
 
@@ -336,9 +340,8 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
         threshold = oldActiveList.getBeamThreshold();
         wordThreshold = oldActiveList.bestScore() + logRelativeWordBeamWidth;
 
-        for (Token token : oldActiveList) {
-            collectSuccessorTokens(token);
-        }
+        oldActiveList.forEach(this::collectSuccessorTokens);
+
         growTimer.stop();
         if (logger.isLoggable(Level.FINE)) {
             int hmms = activeList.size();
@@ -515,7 +518,7 @@ public class SimpleBreadthFirstSearchManager extends TokenSearchManager {
                 activeList.add(newToken);
             } else {
                 if (bestToken.score() <= logEntryScore) {
-                    bestToken.update(predecessor, nextState, logEntryScore,
+                    bestToken.update(predecessor, logEntryScore,
                             arc.getInsertionProbability(),
                             arc.getLanguageProbability(), 
                             currentCollectTime);

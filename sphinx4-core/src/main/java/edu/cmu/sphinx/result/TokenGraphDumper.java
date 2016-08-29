@@ -128,7 +128,7 @@ public class TokenGraphDumper {
             }
 
             if (loserManager != null) {
-                List<Token> list = loserManager.getAlternatePredecessors(token);
+                Collection<Token> list = loserManager.getAlternatePredecessors(token);
                 if (list != null) {
                     for (Token loser : list) {
                         gdl.append("edge: { sourcename: \"").append(getTokenID(token))

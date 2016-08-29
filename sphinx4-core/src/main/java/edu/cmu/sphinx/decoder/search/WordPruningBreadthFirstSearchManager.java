@@ -393,17 +393,29 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      */
     protected void growBranches() {
         //growTimer.start();
-        float relativeBeamThreshold = activeList.getBeamThreshold();
+        //float relativeBeamThreshold = activeList.getBeamThreshold();
 //        if (logger.isLoggable(Level.FINE)) {
 //            logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
 //                    + activeList.getBestScore() + " tok " + activeList.getBestToken());
 //        }
 
-        activeList.forEach( (Token t) -> {
-            if (t.score() >= relativeBeamThreshold && allowExpansion(t)) {
-                collectSuccessorTokens(t);
+        //activeList.
+        int s  = activeList.size();
+        ArrayList<Token> a = new ArrayList<>(s);
+        activeList.forEach(a::add);
+
+        //System.out.println("< activeList: #" + a.size() + " " + activeList.bestScore() + ".." + activeList.worstScore());
+        for (int i = 0, aSize = a.size(); i < aSize; i++) {
+            Token t = a.get(i);
+            if (t.score() >= activeList.getBeamThreshold() /* this value may increase as this loop progresses */ ) {
+                int added = collectSuccessorTokens(t);
+                //System.out.println(t.score() + " " + t.getWord() + " \t added=" + added);
+            } else {
+                //since the list is sorted, everything after this will also be below threshold
+                break;
             }
-        });
+        }
+        //System.out.println("> activeList: #" + a.size() + " " + activeList.bestScore() + ".." + activeList.worstScore());
         //growTimer.stop();
     }
 
@@ -416,6 +428,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             growBranches();
             return;
         }
+
         //growTimer.start();
         final float[] bestScore = {-Float.MAX_VALUE};
 
@@ -578,12 +591,12 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     /**
      * Collects the next set of emitting tokens from a token and accumulates
      * them in the active or result lists
-     * 
+     *
      * @param token
      *            the token to collect successors from be immediately expanded
      *            are placed. Null if we should always expand all nodes.
      */
-    protected void collectSuccessorTokens(Token token) {
+    protected int collectSuccessorTokens(Token token) {
 
         // tokenTracker.add(token);
         // tokenTypeTracker.add(token);
@@ -592,7 +605,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
         if (token.isFinal()) {
             resultList.add(getResultListPredecessor(token));
-            return;
+            return 0;
         }
 
         // if this is a non-emitting token and we've already
@@ -605,13 +618,13 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         // fine to disable this check by setting keepAllTokens to false
 
         if (!token.isEmitting() && (keepAllTokens && isVisited(token))) {
-            return;
+            return 0;
         }
 
-        expandSuccessorTokens(token);
+        return expandSuccessorTokens(token);
     }
 
-    private void expandSuccessorTokens(Token token) {
+    private int expandSuccessorTokens(Token token) {
         Token predecessor = getResultListPredecessor(token);
 
         // For each successor
@@ -625,6 +638,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
         SearchState state = token.getSearchState();
         SearchStateArc[] arcs = state.getSuccessors();
+        int added = 0;
         for (SearchStateArc arc : arcs) {
             SearchState nextState = arc.getState();
 
@@ -641,14 +655,17 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             if (bestToken == null) {
                 Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
-                tokensCreated.value++;
-                bestTokens.put(nextState, newBestToken);
-                activeListManager.add(newBestToken);
+                if (activeListManager.add(newBestToken)) {
+                    tokensCreated.value++;
+                    added++;
+                    bestTokens.put(nextState, newBestToken);
+                }
+
             } else if (bestToken.score() < logEntryScore) {
                 // System.out.println("Updating " + bestToken + " with " +
                 // newBestToken);
                 Token oldPredecessor = bestToken.predecessor();
-                bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentCollectTime);
                 if (buildWordLattice && nextState instanceof WordSearchState) {
                     loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
@@ -659,6 +676,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
                 }
             }
         }
+        return added;
     }
 
     /**
@@ -683,16 +701,16 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         return false;
     }
 
-    /**
-     * Determine if the given token should be expanded
-     * 
-     * @param t
-     *            the token to test
-     * @return <code>true</code> if the token should be expanded
-     */
-    protected static boolean allowExpansion(Token t) {
-        return true; // currently disabled
-    }
+//    /**
+//     * Determine if the given token should be expanded
+//     *
+//     * @param t
+//     *            the token to test
+//     * @return <code>true</code> if the token should be expanded
+//     */
+//    protected static boolean allowExpansion(Token t) {
+//        return true; // currently disabled
+//    }
 
     /**
      * Counts all the tokens in the active list (and displays them). This is an

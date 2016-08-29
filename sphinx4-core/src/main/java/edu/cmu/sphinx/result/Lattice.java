@@ -286,7 +286,7 @@ public class Lattice {
          * forward through the not so interesting states to save stack space.
          */
 
-        List<Token> alternates = null;
+        Collection<Token> alternates = null;
         AlternateHypothesisManager loserManager = this.loserManager;
         while (true) {
             acousticScore += token.getAcousticScore() + token.getInsertionScore();

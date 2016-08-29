@@ -13,10 +13,7 @@
 package edu.cmu.sphinx.decoder.search;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AlternateHypothesisManager {
 
-    private final Map<Token, List<Token>> viterbiLoserMap = new ConcurrentHashMap<>();
+    private final Map<Token, Collection<Token>> viterbiLoserMap = new ConcurrentHashMap<>();
     private final int maxEdges;
 
 
@@ -50,7 +47,7 @@ public class AlternateHypothesisManager {
     public void addAlternatePredecessor(Token token, Token predecessor) {
         assert predecessor != token.predecessor();
 
-        viterbiLoserMap.computeIfAbsent(token, t -> Collections.synchronizedList(new ArrayList<>()) ).add(predecessor);
+        viterbiLoserMap.computeIfAbsent(token, t -> Collections.synchronizedSet(new LinkedHashSet<>()) ).add(predecessor);
     }
 
 
@@ -60,7 +57,7 @@ public class AlternateHypothesisManager {
      * @param token - a token that may have alternate lower scoring predecessor that still might be of interest
      * @return A list of predecessors that scores lower than token.getPredecessor().
      */
-    public List<Token> getAlternatePredecessors(Token token) {
+    public Collection<Token> getAlternatePredecessors(Token token) {
         return viterbiLoserMap.get(token);
     }
 
@@ -70,12 +67,13 @@ public class AlternateHypothesisManager {
 
         int max = maxEdges - 1;
 
-        for (Map.Entry<Token, List<Token>> entry : viterbiLoserMap.entrySet()) {
-            List<Token> list = entry.getValue();
-            Collections.sort(list);
+        for (Map.Entry<Token, Collection<Token>> entry : viterbiLoserMap.entrySet()) {
+            Collection<Token> list = entry.getValue();
+            ArrayList ll = new ArrayList(list);
+            Collections.sort(ll);
             int s = list.size();
             for (int i = 0; i < (s - max); i++) {
-                list.remove(--s);
+                list.remove(ll.remove(--s));
             }
 
              //   List<Token> newList = list.subList(0, max);

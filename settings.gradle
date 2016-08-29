@@ -1,4 +1,4 @@
-rootProject.name = 'sphinx4-parent'
+rootProject.name = 'sphinx5'
 include ':sphinx4-core'
 include ':sphinx4-data'
 include ':sphinx4-samples'

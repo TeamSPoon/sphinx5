@@ -214,15 +214,16 @@ public class Result {
      * @return the best scoring token or null
      */
     public Token getBestActiveToken() {
-        Token bestToken = null;
+        final Token[] bestToken = {null};
         if (activeList != null) {
-            for (Token token : activeList) {
-                if (bestToken == null || token.score() > bestToken.score()) {
-                    bestToken = token;
+            activeList.forEach(token -> {
+                Token bb = bestToken[0];
+                if (bb == null || token.score() > bb.score()) {
+                    bestToken[0] = token;
                 }
-            }
+            });
         }
-        return bestToken;
+        return bestToken[0];
     }
 
     /**

@@ -310,10 +310,6 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         return moreTokens;
     }
 
-    protected Token getFastMatchBestToken(SearchState state) {
-        return fastMatchBestTokenMap.get(state);
-    }
-
     protected void setFastMatchBestToken(Token token, SearchState state) {
         fastMatchBestTokenMap.put(state, token);
     }
@@ -356,7 +352,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 continue;
             }
 
-            Token bestToken = getFastMatchBestToken(nextState);
+            Token bestToken = fastMatchBestTokenMap.get(nextState);
             if (bestToken == null) {
                 Token newToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
                         arc.getLanguageProbability(), currentFastMatchFrameNumber);
@@ -365,7 +361,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 fastmatchActiveList.add(newToken);
             } else {
                 if (bestToken.score() <= logEntryScore) {
-                    bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                    bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
                             arc.getLanguageProbability(), currentFastMatchFrameNumber);
                 }
             }
@@ -375,13 +371,13 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     /**
      * Collects the next set of emitting tokens from a token and accumulates
      * them in the active or result lists
-     * 
+     *
      * @param token
      *            the token to collect successors from be immediately expanded
      *            are placed. Null if we should always expand all nodes.
      */
     @Override
-    protected void collectSuccessorTokens(Token token) {
+    protected int collectSuccessorTokens(Token token) {
 
         // tokenTracker.add(token);
         // tokenTypeTracker.add(token);
@@ -390,7 +386,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
 
         if (token.isFinal()) {
             resultList.add(getResultListPredecessor(token));
-            return;
+            return -1;
         }
 
         // if this is a non-emitting token and we've already
@@ -403,7 +399,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         // fine to disable this check by setting keepAllTokens to false
 
         if (keepAllTokens && !token.isEmitting() && isVisited(token)) {
-            return;
+            return 0;
         }
 
         SearchState state = token.getSearchState();
@@ -420,10 +416,14 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         // otherwise recursively collect the new tokens successors.
 
         float tokenScore = token.score();
-        float beamThreshold = activeList.getBeamThreshold();
         boolean stateProducesPhoneHmms = state instanceof LexTreeNonEmittingHMMState || state instanceof LexTreeWordState
                 || state instanceof LexTreeEndUnitState;
+
+        final int[] added = {0};
         for (SearchStateArc arc : arcs) {
+
+            float beamThreshold = activeList.getBeamThreshold(); /** value may change as loop progresses */
+
             SearchState nextState = arc.getState();
 
             // prune states using lookahead heuristics
@@ -452,6 +452,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                             arc.getLanguageProbability(), currentCollectTime);
                     if (activeListManager.add(newBestToken)) {
                         tokensCreated.value++;
+                        added[0]++;
                         return newBestToken;
                     } else {
                         return null;
@@ -461,7 +462,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                         // System.out.println("Updating " + bestToken + " with " +
                         // newBestToken);
                         Token oldPredecessor = bestToken.predecessor;
-                        bestToken.update(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                        bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
                                 arc.getLanguageProbability(), currentCollectTime);
                         if (buildWordLattice && nextState instanceof WordSearchState) {
                             loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
@@ -476,6 +477,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             });
 
         }
+        return added[0];
     }
 
     private float updateLookaheadPenalty(int baseId) {

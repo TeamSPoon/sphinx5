@@ -55,6 +55,7 @@ public class Token implements Scoreable {
         }
     };
     private final int hash;
+    //private final int hash;
 
     protected Token predecessor;
 
@@ -63,7 +64,7 @@ public class Token implements Scoreable {
     private float logInsertionScore;
     private float logAcousticScore;
     
-    private SearchState searchState;
+    private final SearchState searchState;
 
     private long collectTime;
     private Data data;
@@ -90,7 +91,9 @@ public class Token implements Scoreable {
         this.logInsertionScore = logInsertionScore;
         this.logLanguageScore = logLanguageScore;
         this.collectTime = collectTime;
-        this.hash = serial.getAndIncrement();
+        this.hash =
+                searchState!=null ? searchState.hashCode() : 0;
+                //serial.getAndIncrement();
     }
 
 
@@ -123,6 +126,24 @@ public class Token implements Scoreable {
         this.logAcousticScore = logAcousticScore;
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof Token)) return false;
+//
+//        Token token = (Token) o;
+//
+//        if (predecessor != null ? !predecessor.equals(token.predecessor) : token.predecessor != null) return false;
+//        return searchState != null ? searchState.equals(token.searchState) : token.searchState == null;
+//
+//    }
+
+//    @Override
+//    public int hashCode() {
+//        int result = predecessor != null ? predecessor.hashCode() : 0;
+//        result = 31 * result + (searchState != null ? searchState.hashCode() : 0);
+//        return result;
+//    }
 
     @Override
     public final int hashCode() {
@@ -131,8 +152,24 @@ public class Token implements Scoreable {
 
     @Override
     public final boolean equals(Object obj) {
-        return this == obj;
+        return searchState.equals(((Token) obj).searchState);
     }
+
+    //    @Override
+//    public boolean equals(Object obj) {
+//        return this == obj;
+//    }
+
+    //
+//    @Override
+//    public final int hashCode() {
+//        return hash;
+//    }
+//
+//    @Override
+//    public final boolean equals(Object obj) {
+//        return this == obj;
+//    }
 
 
     /**
@@ -488,11 +525,24 @@ public class Token implements Scoreable {
      * @return the DecimalFormat object for formatting number print outs
      */
 
-    public void update(Token predecessor, SearchState nextState,
-            float logEntryScore, float insertionProbability,
-            float languageProbability, long collectTime) {
+    public void update(Token predecessor,
+                       float logEntryScore, float insertionProbability,
+                       float languageProbability, long collectTime) {
+//        if (!predecessor.equals(this.predecessor)) {
+//            predecessor.equals(this.predecessor);
+//            throw new RuntimeException("predecessor change");
+//        }
+//        if (!nextState.equals(this.searchState))
+//            throw new RuntimeException("searchState change");
+//        if (!searchState.equals(nextState))
+//            System.err.println("diff");
+
+//        if (this.collectTime!=collectTime)
+//            throw new RuntimeException("collectTime change");
+
         this.predecessor = predecessor;
-        this.searchState = nextState;
+        //this.searchState = nextState;
+
         this.logTotalScore = logEntryScore;
         this.logInsertionScore = insertionProbability;
         this.logLanguageScore = languageProbability;

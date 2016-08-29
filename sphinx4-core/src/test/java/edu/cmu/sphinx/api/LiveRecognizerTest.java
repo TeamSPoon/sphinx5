@@ -12,7 +12,7 @@ import static org.testng.AssertJUnit.assertNotNull;
 
 public class LiveRecognizerTest {
 
-    public static final float confTolerance = 0.25f;
+    //public static final float confTolerance = 0.25f;
 
     @Test
     public void testLm() throws IOException {
@@ -53,7 +53,7 @@ public class LiveRecognizerTest {
         //assertTrue("what".equals(next) || "one".equals(next));
         //assertEquals(0.775f, word.confLinear(), confTolerance);
 
-        int sampleTolerance = 20;
+        //int sampleTolerance = 20;
         //assertEquals(820f, word.getTimeFrame().getStart(), sampleTolerance);
         //assertEquals(1080f, word.getTimeFrame().getEnd(), sampleTolerance);
     }
@@ -64,7 +64,10 @@ public class LiveRecognizerTest {
         Configuration configuration = new Configuration();
 
         configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        configuration.setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
+        configuration.setDictionaryPath(
+                //"resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict"
+                "resource:/deepstupid/en-us.simpler.dict"
+        );
         configuration.setGrammarPath("resource:/edu/cmu/sphinx/jsgf/test/");
         configuration.setGrammarName("digits.grxml");
         configuration.setUseGrammar(true);

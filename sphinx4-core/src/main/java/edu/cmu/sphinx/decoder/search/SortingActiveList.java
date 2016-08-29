@@ -1,8 +1,10 @@
 package edu.cmu.sphinx.decoder.search;
 
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.collector.Collectors2;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -182,7 +184,8 @@ public class SortingActiveList implements ActiveList {
      * @return the iterator for this token list
      */
     public Iterator<Token> iterator() {
-        return tokens.iterator();
+        throw new UnsupportedOperationException("use forEach (it parallelizes)");
+        //return tokens.iterator();
     }
 
     @Override
@@ -191,22 +194,24 @@ public class SortingActiveList implements ActiveList {
         //buffer.addAll(tokens);
 
 
-        //this buffers the set into sublists and then parallel processes them in the fork join common pool
-        Stream<Token> stream = tokens.stream();//.sequential();
+//        //this buffers the set into sublists and then parallel processes them in the fork join common pool
+//        Stream<Token> stream = tokens.stream();//.sequential();
+//
+//        int loadsPerThread = 2; //workload granularity
+//
+//        int chunkSize = Math.max(1, size.get() / (loadsPerThread * sortingActiveListFactory.threads));
+//
+//        if (chunkSize > 1) {
+//            stream.collect(Collectors2.chunk(chunkSize)).parallelStream().forEach(x -> {
+//                //System.out.println(Thread.currentThread() + " thread processing " + x.size());
+//                x.forEach(action);
+//            });
+//        } else {
+//            //dont chunk just parallelize them all
+//            stream.collect(Collectors.toList()).parallelStream().forEach(action);
+//        }
 
-        int loadsPerThread = 2; //workload granularity
-
-        int chunkSize = Math.max(1, size.get() / (loadsPerThread * sortingActiveListFactory.threads));
-
-        if (chunkSize > 1) {
-            stream.collect(Collectors2.chunk(chunkSize)).parallelStream().forEach(x -> {
-                //System.out.println(Thread.currentThread() + " thread processing " + x.size());
-                x.forEach(action);
-            });
-        } else {
-            //dont chunk just parallelize them all
-            stream.collect(Collectors.toList()).parallelStream().forEach(action);
-        }
+        tokens.forEach(action);
 
     }
 

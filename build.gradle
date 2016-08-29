@@ -1,53 +1,112 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7" //https://github.com/bintray/gradle-bintray-plugin#readme
+}
+
 apply plugin: 'idea'
 
-def getRepositoryUsername() {
-    return hasProperty('mavenUsername') ? mavenUsername : ""
+group = 'deepstupid'
+version = '5prealpha'
+
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    apply plugin: 'java'
 }
-        
-def getRepositoryPassword() {
-    return hasProperty('mavenPassword') ? mavenPassword : ""
+
+bintray {
+    user = property('user')
+    key = property('key')
+    configurations = ['archives']
+    filesSpec {
+        from 'build/libs', 'sphinx4-core/build/libs', 'sphinx4-data/build/libs'
+        into '.'
+    }
+    pkg {
+        repo = 'sphinx5'
+        name = 'sphinx5'
+        userOrg = 'deepstupid'
+
+        //dryRun = true
+        publish = true
+        //override = true
+
+        websiteUrl = 'https://github.com/deepstupid/sphinx5'
+        issueTrackerUrl = 'https://github.com/deepstupid/sphinx5/issues'
+        vcsUrl = 'https://github.com/deepstupid/sphinx5.git'
+        licenses = ['AGPL-V3']
+
+        publicDownloadNumbers = true
+        githubRepo = 'deepstupid/sphinx5' //Optional Github repository
+        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+
+        version {
+            name = '5prealpha'
+            desc = 'Sphinx5 Speech Recognition (Fork)'
+            released  = new Date()
+            //vcsTag = '5prealpha-SNAPSHOT'
+            attributes = ['gradle-plugin': 'deepstupid:deepstupid:sphinx5']
+        }
+
+    }
+
 }
+
+
+//def getRepositoryUsername() {
+//    return hasProperty('mavenUsername') ? mavenUsername : ""
+//}
+//
+//def getRepositoryPassword() {
+//    return hasProperty('mavenPassword') ? mavenPassword : ""
+//}
+
+
 
 allprojects() {
-    group = 'edu.cmu.sphinx'
-    version = '5prealpha-SNAPSHOT'
-}
-
-subprojects() {
     apply plugin: 'java'
     apply plugin: 'maven'
     
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
-            }
-        }
-    }
+//    uploadArchives {
+//        repositories {
+//            mavenDeployer {
+//                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+//                }
+//                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+//                }
+//            }
+//        }
+//    }
     
     repositories() {
-         mavenCentral()
+        mavenCentral()
+        jcenter()
     }
 
     compileJava.options.encoding = 'UTF-8'
     javadoc.options.encoding = 'UTF-8'
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    task javadocJar(type: Jar) {
-        classifier = 'javadoc'
-        from javadoc
-    }
+//    task javadocs(type: Javadoc) {
+//        source = sourceSets.main.allJava
+//        failOnError = false
+//    }
+//
+//    task javadocJar(type: Jar) {
+//        classifier = 'javadoc'
+//        from javadoc
+//    }
+    test.ignoreFailures = true
     
     task packageSources(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
 
-    artifacts.archives packageSources, javadocJar
+    artifacts.archives packageSources//, javadocJar
 }
