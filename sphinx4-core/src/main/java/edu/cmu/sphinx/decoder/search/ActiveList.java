@@ -16,6 +16,8 @@ import edu.cmu.sphinx.util.props.S4Boolean;
 import edu.cmu.sphinx.util.props.S4Double;
 import edu.cmu.sphinx.util.props.S4Integer;
 
+import java.util.function.Predicate;
+
 /**
  * An active list is maintained as a sorted list
  * <p>
@@ -71,6 +73,12 @@ public interface ActiveList extends Iterable<Token> {
 
 
 
+    default void forWhile(Predicate<Token> x) {
+        for (Token y : this) {
+            if (!x.test(y))
+                return;
+        }
+    }
 
     /**
      * gets the beam threshold best upon the best scoring token

@@ -14,6 +14,7 @@ import edu.cmu.sphinx.frontend.Data;
 import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.linguist.acoustic.tiedstate.MixtureComponent;
+import org.eclipse.collections.impl.set.mutable.primitive.LongHashSet;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class MixtureComponentSet {
     public final int gauNum;
     private long gauCalcSampleNumber;
 
-    private final ConcurrentSkipListSet<Long> sampleTimes = new ConcurrentSkipListSet<>();
+    private final LongHashSet sampleTimes = new LongHashSet();
     private final AtomicLong lastSample = new AtomicLong(Long.MIN_VALUE);
     
     public MixtureComponentSet(PrunableMixtureComponent[][] components, int topGauNum) {
@@ -62,20 +63,27 @@ public class MixtureComponentSet {
     
     private void add(MixtureComponentSetScores scores) {
         long start = scores.getFrameStartSample();
-        storedScores.put(start, scores);
-        sampleTimes.add(start);
-        if (start > lastSample.get())
-            lastSample.set(start);
+        synchronized(sampleTimes) {
+            if (sampleTimes.add(start)) {
+                storedScores.put(start, scores);
+                if (start > lastSample.get())
+                    lastSample.set(start);
+            }
+        }
     }
 
     private MixtureComponentSetScores removeFirst() {
-        if (!sampleTimes.isEmpty()) {
-            long when = sampleTimes.pollFirst();
-            //if (when != null) {
+        synchronized (sampleTimes) {
+            if (!sampleTimes.isEmpty()) {
+                long when = sampleTimes.min();
+                sampleTimes.remove(when);
+                //if (when != null) {
                 MixtureComponentSetScores s = storedScores.remove(when);
                 return s;
-            //}
+                //}
+            }
         }
+
         return null;
     }
     

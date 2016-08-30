@@ -2,6 +2,7 @@ package edu.cmu.sphinx.decoder.search;
 
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.collector.Collectors2;
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -189,6 +191,33 @@ public class SortingActiveList implements ActiveList {
     }
 
     @Override
+    public void forWhile(Predicate<Token> p) {
+        final List<Token>[] a = partition();
+        Stream.of(a).parallel().forEach(aa -> {
+            for (int i1 = 0, aaSize = aa.size(); i1 < aaSize; i1++) {
+                if (!p.test(aa.get(i1)))
+                    break;
+            }
+        });
+    }
+
+    private List<Token>[] partition() {
+        int s  = size.get();
+        int parallelism = Math.max(1, Runtime.getRuntime().availableProcessors()-1);
+        final List<Token>[] a = new List[parallelism];
+        for (int i = 0; i < parallelism; i++) {
+            a[i] = new FastList<>(s/parallelism);
+        }
+        final int[] i = {0};
+        //striped/collated division so each sublist is also ordered
+        tokens.forEach(x -> {
+            a[i[0]].add(x);
+            i[0] = (i[0] +1)%parallelism;
+        });
+        return a;
+    }
+
+    @Override
     public void forEach(Consumer<? super Token> action) {
         //buffer.clear();
         //buffer.addAll(tokens);
@@ -211,7 +240,14 @@ public class SortingActiveList implements ActiveList {
 //            stream.collect(Collectors.toList()).parallelStream().forEach(action);
 //        }
 
-        tokens.forEach(action);
+        //tokens.forEach(action);
+
+        final List<Token>[] a = partition();
+        Stream.of(a).parallel().forEach(aa -> {
+            for (int i1 = 0, aaSize = aa.size(); i1 < aaSize; i1++) {
+                action.accept(aa.get(i1));
+            }
+        });
 
     }
 

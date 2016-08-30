@@ -22,11 +22,13 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
 import edu.cmu.sphinx.util.props.*;
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * Provides the breadth first search. To perform recognition an application
@@ -400,22 +402,17 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 //        }
 
         //activeList.
-        int s  = activeList.size();
-        ArrayList<Token> a = new ArrayList<>(s);
-        activeList.forEach(a::add);
+        activeList.forWhile(t -> {
+                    if (t.score() >= activeList.getBeamThreshold() /* this value may increase as this loop progresses */) {
+                        int added = collectSuccessorTokens(t);
+                        //System.out.println(t.score() + " " + t.getWord() + " \t added=" + added);
+                        return true;
+                    } else {
+                        //since the list is sorted, everything after this will also be below threshold
+                        return false;
+                    }
 
-        //System.out.println("< activeList: #" + a.size() + " " + activeList.bestScore() + ".." + activeList.worstScore());
-        for (int i = 0, aSize = a.size(); i < aSize; i++) {
-            Token t = a.get(i);
-            if (t.score() >= activeList.getBeamThreshold() /* this value may increase as this loop progresses */ ) {
-                int added = collectSuccessorTokens(t);
-                //System.out.println(t.score() + " " + t.getWord() + " \t added=" + added);
-            } else {
-                //since the list is sorted, everything after this will also be below threshold
-                break;
-            }
-        }
-        //System.out.println("> activeList: #" + a.size() + " " + activeList.bestScore() + ".." + activeList.worstScore());
+                });
         //growTimer.stop();
     }
 
