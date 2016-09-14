@@ -1038,7 +1038,7 @@ public class Lattice {
     public List<Node> getViterbiPath() {
         LinkedList<Node> path = new LinkedList<>();
         Node n = terminalNode;
-        while (n != initialNode) {
+        while (n!=null && n != initialNode) {
             path.addFirst(n);
             n = n.getBestPredecessor();
         }
