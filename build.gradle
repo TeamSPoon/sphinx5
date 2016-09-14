@@ -1,6 +1,6 @@
-plugins {
-    id "com.jfrog.bintray" version "1.7" //https://github.com/bintray/gradle-bintray-plugin#readme
-}
+//plugins {
+//    id "com.jfrog.bintray" version "1.7" //https://github.com/bintray/gradle-bintray-plugin#readme
+//}
 
 apply plugin: 'idea'
 
@@ -15,43 +15,43 @@ allprojects {
     apply plugin: 'java'
 }
 
-bintray {
-    user = property('user')
-    key = property('key')
-    configurations = ['archives']
-    filesSpec {
-        from 'build/libs', 'sphinx4-core/build/libs', 'sphinx4-data/build/libs'
-        into '.'
-    }
-    pkg {
-        repo = 'sphinx5'
-        name = 'sphinx5'
-        userOrg = 'deepstupid'
-
-        //dryRun = true
-        publish = true
-        //override = true
-
-        websiteUrl = 'https://github.com/deepstupid/sphinx5'
-        issueTrackerUrl = 'https://github.com/deepstupid/sphinx5/issues'
-        vcsUrl = 'https://github.com/deepstupid/sphinx5.git'
-        licenses = ['AGPL-V3']
-
-        publicDownloadNumbers = true
-        githubRepo = 'deepstupid/sphinx5' //Optional Github repository
-        githubReleaseNotesFile = 'README.md' //Optional Github readme file
-
-        version {
-            name = '5prealpha'
-            desc = 'Sphinx5 Speech Recognition (Fork)'
-            released  = new Date()
-            //vcsTag = '5prealpha-SNAPSHOT'
-            attributes = ['gradle-plugin': 'deepstupid:deepstupid:sphinx5']
-        }
-
-    }
-
-}
+//bintray {
+//    user = property('user')
+//    key = property('key')
+//    configurations = ['archives']
+//    filesSpec {
+//        from 'build/libs', 'sphinx4-core/build/libs', 'sphinx4-data/build/libs'
+//        into '.'
+//    }
+//    pkg {
+//        repo = 'sphinx5'
+//        name = 'sphinx5'
+//        userOrg = 'deepstupid'
+//
+//        //dryRun = true
+//        publish = true
+//        //override = true
+//
+//        websiteUrl = 'https://github.com/deepstupid/sphinx5'
+//        issueTrackerUrl = 'https://github.com/deepstupid/sphinx5/issues'
+//        vcsUrl = 'https://github.com/deepstupid/sphinx5.git'
+//        licenses = ['AGPL-V3']
+//
+//        publicDownloadNumbers = true
+//        githubRepo = 'deepstupid/sphinx5' //Optional Github repository
+//        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+//
+//        version {
+//            name = '5prealpha'
+//            desc = 'Sphinx5 Speech Recognition (Fork)'
+//            released  = new Date()
+//            //vcsTag = '5prealpha-SNAPSHOT'
+//            attributes = ['gradle-plugin': 'deepstupid:deepstupid:sphinx5']
+//        }
+//
+//    }
+//
+//}
 
 
 //def getRepositoryUsername() {
@@ -102,11 +102,11 @@ allprojects() {
 //        from javadoc
 //    }
     test.ignoreFailures = true
-    
-    task packageSources(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    artifacts.archives packageSources//, javadocJar
+//
+//    task packageSources(type: Jar) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//
+//    artifacts.archives packageSources//, javadocJar
 }

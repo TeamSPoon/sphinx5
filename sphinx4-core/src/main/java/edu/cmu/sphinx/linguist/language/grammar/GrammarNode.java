@@ -377,9 +377,9 @@ public class GrammarNode {
             out.close();
         } catch (FileNotFoundException fnfe) {
             System.out.println("Can't write to " + path + ' ' + fnfe);
-        } catch (IOException ioe) {
+        } /*catch (IOException ioe) {
             System.out.println("Trouble writing to " + path + ' ' + ioe);
-        }
+        }*/
     }
 
 

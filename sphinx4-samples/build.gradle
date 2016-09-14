@@ -4,6 +4,11 @@ description = 'Sphinx4 demo applications'
 dependencies {
     compile project(':sphinx4-core')
     compile project(':sphinx4-data')
+
+    // https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '3.6.0'
+
+
 }
 
 jar {
