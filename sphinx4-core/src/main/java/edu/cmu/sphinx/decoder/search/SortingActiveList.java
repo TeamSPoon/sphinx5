@@ -1,18 +1,13 @@
 package edu.cmu.sphinx.decoder.search;
 
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.collector.Collectors2;
 import org.eclipse.collections.impl.list.mutable.FastList;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SortingActiveList implements ActiveList {
@@ -35,9 +30,9 @@ public class SortingActiveList implements ActiveList {
 
     public SortingActiveList(boolean concurrent, int absoluteBeamWidth, float logRelativeBeamWidth) {
         if (concurrent) {
-            tokens =
+        tokens =
                     new ConcurrentSkipListSet<>();
-                    //Collections.synchronizedNavigableSet(new TreeSet());
+        //Collections.synchronizedNavigableSet(new TreeSet());
         } else {
             tokens = new TreeSet();
         }
@@ -46,6 +41,7 @@ public class SortingActiveList implements ActiveList {
         this.logRelativeBeamWidth = logRelativeBeamWidth;
 
     }
+
     /**
      * Creates an empty active list
      *
@@ -61,7 +57,7 @@ public class SortingActiveList implements ActiveList {
     }
 
     public SortingActiveList(boolean concurrent, ActiveList copyParamFrom) {
-        this(concurrent, ((SortingActiveList)copyParamFrom).absoluteBeamWidth, ((SortingActiveList)copyParamFrom).logRelativeBeamWidth);
+        this(concurrent, ((SortingActiveList) copyParamFrom).absoluteBeamWidth, ((SortingActiveList) copyParamFrom).logRelativeBeamWidth);
     }
 
 
@@ -101,7 +97,7 @@ public class SortingActiveList implements ActiveList {
             if (removed > 0)
                 worstCached = tokens.last();
 
-            delta-=removed;
+            delta -= removed;
 
             size.addAndGet(delta);
         }
@@ -157,7 +153,7 @@ public class SortingActiveList implements ActiveList {
         if (size.get() < absoluteBeamWidth)
             return -Float.MAX_VALUE;
         else {
-            if (worstCached!=null)
+            if (worstCached != null)
                 return worstCached.score();
             else
                 return tokens.last().score(); //compute manually
@@ -201,19 +197,20 @@ public class SortingActiveList implements ActiveList {
         });
     }
 
+    final static int parallelism = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+
     private List<Token>[] partition() {
-        int s  = size.get();
-        int parallelism = Math.max(1, Runtime.getRuntime().availableProcessors()-1);
+        int s = size.get();
         final List<Token>[] a = new List[parallelism];
         for (int i = 0; i < parallelism; i++) {
-            a[i] = new FastList<>(s/parallelism);
+            a[i] = new FastList<>(s / parallelism);
         }
         final int[] i = {0};
         //striped/collated division so each sublist is also ordered
         tokens.forEach(x -> {
             int i0 = i[0];
             a[i0].add(x);
-            i[0] = (i0 +1)%parallelism;
+            i[0] = (i0 + 1) % parallelism;
         });
         return a;
     }
@@ -264,9 +261,10 @@ public class SortingActiveList implements ActiveList {
 
 
     /* (non-Javadoc)
-    * @see edu.cmu.sphinx.decoder.search.ActiveList#newInstance()
-    */
+     * @see edu.cmu.sphinx.decoder.search.ActiveList#newInstance()
+     */
     public ActiveList newInstance() {
         return sortingActiveListFactory.newInstance();
     }
+
 }

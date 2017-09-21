@@ -28,30 +28,19 @@ public interface Scoreable extends Data, Comparable<Scoreable> {
      * actually return the Scoreable with the <b>highest</b> score,
      * in contrast to the natural meaning of the word "min".   
      */
-    @Deprecated Comparator<Scoreable> COMPARATOR = (t1, t2) -> {
-        float s1 = t1.score();
-        float s2 = t2.score();
-        if (s1 > s2) {
-            return -1;
-        } else if (s1 == s2) {
-            return 0;
-        } else {
-            return 1;
-        }
-    };
-
     @Override
     default int compareTo(Scoreable o) {
         if (this == o) return 0;
-
         float s1 = score();
         float s2 = o.score();
-        if (s1 > s2) {
-            return -1;
-        } else if (s1 == s2) {
-            return Integer.compare(hashCode(), o.hashCode()); //same score but ensure that different instances are not destructively merged
-        } else {
-            return 1;
+        if (s1 > s2) return -1;
+        else if (s1 < s2) return 1;
+        else {
+            //same score but ensure that different instances are not destructively merged
+            return Integer.compare(
+                    hashCode(), o.hashCode()
+                    //System.identityHashCode(this), System.identityHashCode(o)
+            );
         }
     }
 

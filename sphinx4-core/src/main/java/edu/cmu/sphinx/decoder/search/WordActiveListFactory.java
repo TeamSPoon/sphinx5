@@ -137,7 +137,7 @@ public class WordActiveListFactory extends ActiveListFactory {
         public ActiveList commit() {
             int fillerCount = 0;
 
-            Collections.sort(tokenList, Scoreable.COMPARATOR);
+            Collections.sort(tokenList, Scoreable::compareTo);
             // remove word duplicates
             HashBag<Word> countMap = new HashBag<>();
 

@@ -82,7 +82,8 @@ class Node {
 
     @Override
     public final boolean equals(Object obj) {
-        return this == obj;
+        throw new UnsupportedOperationException("shouldnt be tested for equality");
+        //return this == obj;
     }
 
     /**
@@ -226,7 +227,7 @@ class Node {
      * @return the node that holds the endNode (new or old)
      */
     EndNode addSuccessor(EndNode child, float probability) {
-        Unit baseUnit = child.getBaseUnit();
+        Unit baseUnit = child.baseUnit();
         EndNode matchingChild = (EndNode) getSuccessor(baseUnit);
         if (matchingChild == null) {
             putSuccessor(baseUnit, child);
@@ -249,9 +250,9 @@ class Node {
      *         child)
      */
     UnitNode addSuccessor(UnitNode child) {
-        UnitNode matchingChild = (UnitNode) getSuccessor(child.getKey());
+        UnitNode matchingChild = (UnitNode) getSuccessor(child.key());
         if (matchingChild == null) {
-            putSuccessor(child.getKey(), child);
+            putSuccessor(child.key(), child);
         } else {
             child = matchingChild;
         }
@@ -409,13 +410,12 @@ abstract class UnitNode extends Node {
      *
      * @return the base unit
      */
-    abstract Unit getBaseUnit();
+    abstract Unit baseUnit();
 
 
-    abstract Object getKey();
+    abstract Object key();
 
-
-    abstract HMMPosition getPosition();
+    abstract HMMPosition position();
 
 
     /**
@@ -423,7 +423,7 @@ abstract class UnitNode extends Node {
      *
      * @return the unit type
      */
-    abstract int getType();
+    abstract int type();
 
 //
 //    /**
@@ -465,7 +465,7 @@ class HMMNode extends UnitNode {
         super(probablilty);
         this.hmm = hmm;
 
-        Unit base = getBaseUnit();
+        Unit base = baseUnit();
 
         int type = SIMPLE_UNIT;
         if (base.isSilence()) {
@@ -479,7 +479,7 @@ class HMMNode extends UnitNode {
     }
 
     @Override
-    public final int getType() {
+    public final int type() {
         return type;
     }
 
@@ -489,7 +489,7 @@ class HMMNode extends UnitNode {
      * @return the base unit
      */
     @Override
-    Unit getBaseUnit() {
+    Unit baseUnit() {
         // return hmm.getUnit().getBaseUnit();
         return hmm.getBaseUnit();
     }
@@ -506,13 +506,13 @@ class HMMNode extends UnitNode {
 
 
     @Override
-    HMMPosition getPosition() {
+    HMMPosition position() {
         return hmm.getPosition();
     }
 
 
     @Override
-    HMM getKey() {
+    HMM key() {
         return hmm;
     }
 
@@ -609,13 +609,13 @@ class EndNode extends UnitNode {
      * @return the base unit
      */
     @Override
-    Unit getBaseUnit() {
+    Unit baseUnit() {
         return baseUnit;
     }
 
 
     @Override
-    final int getType() {
+    final int type() {
         return 0;
     }
 
@@ -630,13 +630,13 @@ class EndNode extends UnitNode {
 
 
     @Override
-    Integer getKey() {
+    Integer key() {
         return key;
     }
 
 
     @Override
-    HMMPosition getPosition() {
+    HMMPosition position() {
         return HMMPosition.END;
     }
 
@@ -731,12 +731,12 @@ class HMMTree {
      * @return an array of associated hmm nodes
      */
     public HMMNode[] getHMMNodes(EndNode endNode) {
-        HMMNode[] results = endNodeMap.get(endNode.getKey());
+        HMMNode[] results = endNodeMap.get(endNode.key());
         if (results == null) {
             // System.out.println("Filling cache for " + endNode.getKey()
             //        + " size " + endNodeMap.size());
             Map<HMM, HMMNode> resultMap = new HashMap<>(entryPoints.size());
-            Unit baseUnit = endNode.getBaseUnit();
+            Unit baseUnit = endNode.baseUnit();
             Unit lc = endNode.getLeftContext();
             for (Unit rc : entryPoints) {
                 HMM hmm = hmmPool.getHMM(baseUnit, lc, rc, HMMPosition.END);
@@ -754,7 +754,7 @@ class HMMTree {
 
             // cache it
             results = resultMap.values().toArray(new HMMNode[resultMap.size()]);
-            endNodeMap.put(endNode.getKey(), results);
+            endNodeMap.put(endNode.key(), results);
         }
 
         // System.out.println("GHN: " + endNode + " " + results.length);
@@ -1124,7 +1124,7 @@ class HMMTree {
         private Collection<Unit> getEntryPointRC() {
             if (rcSet == null) {
                 rcSet = baseNode.getSuccessorMap().values().stream().map(
-                        node -> ((UnitNode) node).getBaseUnit()
+                        node -> ((UnitNode) node).baseUnit()
                 ).collect(Collectors.toSet());
             }
             return rcSet;
@@ -1215,7 +1215,7 @@ class HMMTree {
         private void connectEntryPointNode(Node epNode, Unit rc) {
             for (Node node : baseNode.getSuccessors()) {
                 UnitNode successor = (UnitNode) node;
-                if (successor.getBaseUnit() == rc) {
+                if (successor.baseUnit() == rc) {
                     epNode.addSuccessor(successor);
                 }
             }

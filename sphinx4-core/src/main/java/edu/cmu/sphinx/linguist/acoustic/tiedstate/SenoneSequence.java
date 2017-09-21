@@ -13,6 +13,7 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /** Contains an ordered list of senones. */
@@ -79,17 +80,7 @@ public class SenoneSequence implements Serializable {
             return true;
         } else {
             if (o instanceof SenoneSequence) {
-                SenoneSequence other = (SenoneSequence) o;
-                if (senones.length != other.senones.length) {
-                    return false;
-                } else {
-                    for (int i = 0; i < senones.length; i++) {
-                        if (!senones[i].equals(other.senones[i])) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
+                return Arrays.equals(senones, ((SenoneSequence) o).senones);
             }
             return false;
         }

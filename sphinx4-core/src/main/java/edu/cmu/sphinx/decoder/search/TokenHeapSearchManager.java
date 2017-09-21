@@ -147,7 +147,7 @@ public class TokenHeapSearchManager extends WordPruningBreadthFirstSearchManager
 
         /** Orders the heap after an insert */
         private void fixupInsert() {
-            Arrays.sort(tokens, 0, curSize - 1, Scoreable.COMPARATOR);
+            Arrays.sort(tokens, 0, curSize - 1, Scoreable::compareTo);
         }
 
         /**

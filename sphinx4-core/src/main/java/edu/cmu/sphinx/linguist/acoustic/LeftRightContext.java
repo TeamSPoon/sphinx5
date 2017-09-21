@@ -12,6 +12,8 @@
 
 package edu.cmu.sphinx.linguist.acoustic;
 
+import java.util.Arrays;
+
 /** Represents  the context for a unit */
 @SuppressWarnings("serial")
 public class LeftRightContext extends Context {
@@ -30,7 +32,11 @@ public class LeftRightContext extends Context {
     private LeftRightContext(Unit[] left, Unit[] right) {
         this.left = left;
         this.right = right;
-        this.id = getContextName(left) + ',' + getContextName(right);
+        if (Arrays.equals(left,right)) {
+            this.id = getContextName(left) + ':'; //the ':' indicates a double repeat
+        } else {
+            this.id = getContextName(left) + ',' + getContextName(right);
+        }
     }
 
     /** Provides a string representation of a context */
@@ -90,13 +96,13 @@ public class LeftRightContext extends Context {
         if (context == null)
             return "*";
         if (context.length == 0)
-            return "(empty)";
+            return "_";
+            //return "(empty)";
         StringBuilder sb = new StringBuilder();
         for (Unit unit : context) {
             sb.append(unit == null ? null : unit.getName()).append('.');
         }
-        sb.setLength(sb.length() - 1); // remove last period
-        return sb.toString();
+        return sb.substring(0, sb.length()-1); // remove last period
     }
 
     /**

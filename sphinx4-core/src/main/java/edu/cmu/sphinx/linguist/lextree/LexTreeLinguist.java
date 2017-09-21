@@ -844,7 +844,7 @@ public class LexTreeLinguist implements Linguist {
          * @return the base unit
          */
         public Unit getUnit() {
-            return getEndNode().getBaseUnit();
+            return getEndNode().baseUnit();
         }
 
 
@@ -993,7 +993,7 @@ public class LexTreeLinguist implements Linguist {
          * @return the base unit
          */
         public Unit getUnit() {
-            return getHMMNode().getBaseUnit();
+            return getHMMNode().baseUnit();
         }
 
 
@@ -1518,7 +1518,7 @@ public class LexTreeLinguist implements Linguist {
      * @return the insertion probability
      */
     private float calculateInsertionProbability(UnitNode unitNode) {
-        int type = unitNode.getType();
+        int type = unitNode.type();
 
         if (type == UnitNode.SIMPLE_UNIT) {
             return logUnitInsertionProbability;

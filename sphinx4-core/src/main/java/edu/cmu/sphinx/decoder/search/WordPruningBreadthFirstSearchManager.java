@@ -134,7 +134,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     private int growSkipInterval;
     protected float relativeBeamWidth;
     protected float acousticLookaheadFrames;
-    private int maxLatticeEdges = 100;
+    private int maxLatticeEdges;
 
     // -----------------------------------
     // Instrumentation
@@ -199,7 +199,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         this.relativeBeamWidth = LogMath.linearToLog(relativeWordBeamWidth);
     }
 
-    public WordPruningBreadthFirstSearchManager() {
+    WordPruningBreadthFirstSearchManager() {
 
     }
 

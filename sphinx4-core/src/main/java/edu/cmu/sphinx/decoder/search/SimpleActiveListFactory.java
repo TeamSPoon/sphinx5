@@ -136,7 +136,7 @@ public class SimpleActiveListFactory extends ActiveListFactory {
         public ActiveList commit() {
             int s = size();
             if (absoluteBeamWidth > 0 && s > absoluteBeamWidth) {
-                Collections.sort(tokenList, Scoreable.COMPARATOR);
+                Collections.sort(tokenList, Scoreable::compareTo);
                 int overflow = s - absoluteBeamWidth;
                 int last = s - 1;
                 for (int i = 0; i < overflow; i++) {

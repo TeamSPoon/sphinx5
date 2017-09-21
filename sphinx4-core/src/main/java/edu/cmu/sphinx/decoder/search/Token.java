@@ -152,6 +152,7 @@ public class Token implements Scoreable {
 
     @Override
     public final boolean equals(Object obj) {
+
         return searchState.equals(((Token) obj).searchState);
     }
 
@@ -258,14 +259,14 @@ public class Token implements Scoreable {
         return logTotalScore;
     }
 
-    /**
-     * Sets the score for this token
-     *
-     * @param logScore the new score for the token (in logMath log base)
-     */
-    public void setScore(float logScore) {
-        this.logTotalScore = logScore;
-    }
+//    /**
+//     * Sets the score for this token
+//     *
+//     * @param logScore the new score for the token (in logMath log base)
+//     */
+//    public void setScore(float logScore) {
+//        this.logTotalScore = logScore;
+//    }
 
 
     /**

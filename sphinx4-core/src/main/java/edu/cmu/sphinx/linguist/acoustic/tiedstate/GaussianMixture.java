@@ -31,7 +31,7 @@ public class GaussianMixture extends ScoreCachingSenone {
     // and therefore should not be written to.
     protected GaussianWeights mixtureWeights;
     private final MixtureComponent[] mixtureComponents;
-    protected final int id;
+    public final int id;
 
 
 
@@ -68,11 +68,13 @@ public class GaussianMixture extends ScoreCachingSenone {
      */
     @Override
     public boolean equals(Object o) {
+        if (this == o)
+            return true;
         if (!(o instanceof Senone)) {
             return false;
         }
         Senone other = (Senone) o;
-        return this.getID() == other.getID();
+        return id == other.getID();
     }
 
 

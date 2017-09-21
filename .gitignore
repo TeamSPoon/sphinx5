@@ -7,8 +7,11 @@ gradlew*
 *.ipr
 *.iws
 sphinx4-core/build/
+sphinx4-core/out/
 sphinx4-data/build/
+sphinx4-data/out/
 sphinx4-samples/build/
+sphinx4-samples/out/
 .gradle/
 .idea/
 *.iml

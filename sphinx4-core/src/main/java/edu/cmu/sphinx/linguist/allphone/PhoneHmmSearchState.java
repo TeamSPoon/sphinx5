@@ -106,6 +106,8 @@ public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScorePr
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
         if (!(obj instanceof PhoneHmmSearchState))
             return false;
         SenoneSequence otherSenoneSeq = ((SenoneHMM)((PhoneHmmSearchState)obj).state.getHMM()).getSenoneSequence();

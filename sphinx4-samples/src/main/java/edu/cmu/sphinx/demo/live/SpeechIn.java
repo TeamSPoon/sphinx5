@@ -8,6 +8,7 @@ import edu.stanford.nlp.simple.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * http://cmusphinx.sourceforge.net/wiki/tutorialsphinx4
@@ -32,7 +33,7 @@ public class SpeechIn {
         LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
 
 
-        ExecutorService exe = Executors.newSingleThreadExecutor();
+        ExecutorService exe = ForkJoinPool.commonPool(); //Executors.newSingleThreadExecutor();
 
         recognizer.startRecognition((d, result) -> {
 
