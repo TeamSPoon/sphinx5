@@ -106,7 +106,7 @@ public class ClassBasedLanguageModel implements LanguageModel {
         Word[] classes = new Word[wordSequence.size()];
         float wordToClassProb = 0;
         for (int i = 0; i < classes.length; i++) {
-            Word sourceWord = wordSequence.getWord(i);
+            Word sourceWord = wordSequence.word(i);
             ClassProbability classProbability =
                 classMap.getClassProbability(sourceWord.getSpelling());
             classes[i] =

@@ -16,6 +16,7 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
      * @param maxSize the maximum size of the cache
      */
     public LRUCache(int maxSize) {
+        super(maxSize, 1.0f);
         this.maxSize = maxSize;
     }
 

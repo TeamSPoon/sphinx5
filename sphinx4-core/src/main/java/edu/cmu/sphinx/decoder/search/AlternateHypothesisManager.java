@@ -82,8 +82,5 @@ public class AlternateHypothesisManager {
         }
     }
 
-	public boolean hasAlternatePredecessors(Token token) {
-		return viterbiLoserMap.containsKey(token);
-	}
 }
 

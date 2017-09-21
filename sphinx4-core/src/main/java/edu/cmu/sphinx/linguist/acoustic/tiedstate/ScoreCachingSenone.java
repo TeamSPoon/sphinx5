@@ -1,6 +1,8 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
 import edu.cmu.sphinx.frontend.Data;
+import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,8 +24,9 @@ public abstract class ScoreCachingSenone implements Senone {
 
 
     final Map<Data,Float> scoreCache =
-            new ConcurrentHashMap<>();
-            //new ConcurrentHashMap<>();
+
+            //new ConcurrentHashMapUnsafe<>(1024*8);
+            new ConcurrentHashMap<>(1024*8);
 
 
     //long tries, miss;

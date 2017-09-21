@@ -16,16 +16,31 @@ import java.io.Serializable;
 
 /** Represents  the context for a unit */
 @SuppressWarnings("serial")
-public class Context implements Serializable {
+abstract public class Context implements Serializable {
 
     /** Represents an empty context */
-    public final static Context EMPTY_CONTEXT = new Context();
+    public final static Context EMPTY_CONTEXT = new Context() {
 
+        @Override
+        boolean isPartialMatch(Context context) {
+            return true;
+        }
 
-    /** No instantiations allowed */
-    protected Context() {
-    }
+        @Override
+        public String toString() {
+            return "";
+        }
 
+        @Override
+        public boolean equals(Object o) {
+            return this == o; //super.equals(o);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+    };
 
     /**
      * Checks to see if there is a partial match with the given context. For a simple context such as this we always
@@ -34,45 +49,6 @@ public class Context implements Serializable {
      * @param context the context to check
      * @return true if there is a partial match
      */
-    public boolean isPartialMatch(Context context) {
-        return true;
-    }
+    abstract boolean isPartialMatch(Context context);
 
-
-    /** Provides a string representation of a context */
-    @Override
-    public String toString() {
-        return "";
-    }
-
-
-    /**
-     * Determines if an object is equal to this context
-     *
-     * @param o the object to check
-     * @return true if the objects are equal
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o instanceof Context) {
-            Context otherContext = (Context) o;
-            return toString().equals(otherContext.toString());
-        } else {
-            return false;
-        }
-    }
-
-
-    /**
-     * calculates a hashCode for this context. Since we defined an equals for context, we must define a hashCode as
-     * well
-     *
-     * @return the hashcode for this object
-     */
-    @Override
-    public int hashCode() {
-        return toString().hashCode();
-    }
 }

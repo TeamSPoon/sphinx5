@@ -356,7 +356,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         for (int i = 0; i < alternatives.length; i++) {
             alternatives[i] = new Word[alts[i].length];
             for (int j = 0; j < alts[i].length; j++) {
-                Word word = dictionary.getWord(alts[i][j]);
+                Word word = dictionary.word(alts[i][j]);
                 // Pronunciation[] pronunciation =
                 // word.getPronunciations(null);
                 if (word == null) {
@@ -410,7 +410,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     protected GrammarNode createGrammarNode(int identity, String word) {
         GrammarNode node;
         Word[][] alternatives = EMPTY_ALTERNATIVE;
-        Word wordObject = dictionary.getWord(word);
+        Word wordObject = dictionary.word(word);
         // Pronunciation[] pronunciation = wordObject.getPronunciations(null);
         if (wordObject != null) {
             alternatives = new Word[1][];

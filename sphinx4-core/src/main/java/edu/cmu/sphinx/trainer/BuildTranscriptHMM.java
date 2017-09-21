@@ -111,7 +111,7 @@ public class BuildTranscriptHMM {
                  transcript.hasMoreWords();) {
                 String word = transcript.nextWord();
                 Pronunciation[] pronunciations =
-                        dictionary.getWord(word).getPronunciations();
+                        dictionary.word(word).getPronunciations();
                 int numberOfPronunciations = pronunciations.length;
 
                 Node[] pronNode = new Node[numberOfPronunciations];

@@ -62,9 +62,9 @@ public class ClassPresentingDictionary implements Dictionary {
     /**
      * This method disguises all classes as words.
      */
-    public Word getWord(String text) {
+    public Word word(String text) {
         Word word = classMap.getClassAsWord(text);
-        return (word != null) ? word : wordDictionary.getWord(text);
+        return (word != null) ? word : wordDictionary.word(text);
     }
 
     /* (non-Javadoc)

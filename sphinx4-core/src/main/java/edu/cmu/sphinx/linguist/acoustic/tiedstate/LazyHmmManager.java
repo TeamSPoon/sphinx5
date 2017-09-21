@@ -95,8 +95,8 @@ public class LazyHmmManager extends HMMManager {
 
         if (unit.isContextDependent()) {
             LeftRightContext context = (LeftRightContext) unit.getContext();
-            Unit left = context.getLeftContext()[0];
-            Unit right = context.getRightContext()[0];
+            Unit left = context.left[0];
+            Unit right = context.right[0];
             ids[0] = symbolTable.get(left.getName());
             ids[2] = symbolTable.get(right.getName());
         } else {

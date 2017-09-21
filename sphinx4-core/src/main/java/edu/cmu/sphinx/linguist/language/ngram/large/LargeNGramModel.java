@@ -287,7 +287,7 @@ public class LargeNGramModel implements LanguageModel {
         int missingWords = 0;
         String[] words = loader.getWords();
         for (int i = 0; i < words.length; i++) {
-            Word word = dictionary.getWord(words[i]);
+            Word word = dictionary.word(words[i]);
 
             if (word == null) {
                 if (logger.isLoggable(Level.FINE))
@@ -392,7 +392,7 @@ public class LargeNGramModel implements LanguageModel {
     private Float getNGramProbability(WordSequence wordSequence) {
         while (true) {
             int numberWords = wordSequence.size();
-            Word firstWord = wordSequence.getWord(0);
+            Word firstWord = wordSequence.word(0);
 
             if (loader.getNumberNGrams(numberWords) == 0 || !hasUnigram(firstWord)) {
                 wordSequence = wordSequence.getNewest();
@@ -413,7 +413,7 @@ public class LargeNGramModel implements LanguageModel {
             if (numberWords == 2) {
                 UnigramProbability unigramProb = getUnigram(firstWord);
                 UnigramProbability unigramProb1 = getUnigram(wordSequence
-                        .getWord(1));
+                        .word(1));
                 return unigramProb.getLogBackoff()
                         + unigramProb1.getLogProbability();
             }
@@ -450,7 +450,7 @@ public class LargeNGramModel implements LanguageModel {
         }
 
         if (nGramBuffer != null) {
-            int nthWordID = getWordID(wordSequence.getWord(numberWords - 1));
+            int nthWordID = getWordID(wordSequence.word(numberWords - 1));
             nGram = nGramBuffer.findNGram(nthWordID);
         }
 
@@ -475,7 +475,7 @@ public class LargeNGramModel implements LanguageModel {
      * @return a NGramBuffer of all the NGram followers of the given sequence
      */
     private NGramBuffer loadNGramBuffer(WordSequence ws) {
-        int firstWordID = getWordID(ws.getWord(0));
+        int firstWordID = getWordID(ws.word(0));
         int firstCurrentNGramEntry = 0;
         int numberNGrams = 0;
         int size = 0;
@@ -499,7 +499,7 @@ public class LargeNGramModel implements LanguageModel {
                     * ((loader.getMaxDepth() == orderBuffer) ? BYTES_PER_NMAXGRAM
                             : BYTES_PER_NGRAM) * loader.getBytesPerField()));
         } else { // only for ws.size() >= 2
-            int lastWordId = getWordID(ws.getWord(ws.size() - 1));
+            int lastWordId = getWordID(ws.word(ws.size() - 1));
             nMinus1Buffer = getNGramBuffer(ws.getOldest());
             int index = nMinus1Buffer.findNGramIndex(lastWordId);
 
@@ -611,7 +611,7 @@ public class LargeNGramModel implements LanguageModel {
      * @return the unigram probability
      */
     private float getUnigramProbability(WordSequence wordSequence) {
-        Word unigram = wordSequence.getWord(0);
+        Word unigram = wordSequence.word(0);
         UnigramProbability unigramProb = getUnigram(unigram);
 
         if (unigramProb == null)
@@ -684,7 +684,7 @@ public class LargeNGramModel implements LanguageModel {
             int length = wordSequence.size();
 
             if (length > 0) {
-                int wordID = getWordID(wordSequence.getWord(length - 1));
+                int wordID = getWordID(wordSequence.word(length - 1));
                 smearTerm = unigramSmearTerm[wordID];
             }
         }
@@ -706,12 +706,12 @@ public class LargeNGramModel implements LanguageModel {
             int length = wordSequence.size();
 
             if (length == 1) {
-                int wordID = getWordID(wordSequence.getWord(0));
+                int wordID = getWordID(wordSequence.word(0));
                 smearTerm = unigramSmearTerm[wordID];
             } else if (length >= 2) {
                 int size = wordSequence.size();
-                int wordID1 = getWordID(wordSequence.getWord(size - 2));
-                int wordID2 = getWordID(wordSequence.getWord(size - 1));
+                int wordID1 = getWordID(wordSequence.word(size - 2));
+                int wordID2 = getWordID(wordSequence.word(size - 1));
                 Float st = getSmearTerm(wordID1, wordID2);
 
                 if (st == null)
@@ -797,7 +797,7 @@ public class LargeNGramModel implements LanguageModel {
      */
     private NGramBuffer getBigramBuffer(int firstWordID) {
         Word[] wd = new Word[1];
-        wd[0] = dictionary.getWord(loader.getWords()[firstWordID]);
+        wd[0] = dictionary.word(loader.getWords()[firstWordID]);
         WordSequence ws = new WordSequence(wd);
 
         return loadNGramBuffer(ws);
@@ -816,8 +816,8 @@ public class LargeNGramModel implements LanguageModel {
      */
     private NGramBuffer loadTrigramBuffer(int firstWordID, int secondWordID) {
         Word[] wd = new Word[2];
-        wd[0] = dictionary.getWord(loader.getWords()[firstWordID]);
-        wd[1] = dictionary.getWord(loader.getWords()[secondWordID]);
+        wd[0] = dictionary.word(loader.getWords()[firstWordID]);
+        wd[1] = dictionary.word(loader.getWords()[secondWordID]);
         WordSequence ws = new WordSequence(wd);
 
         return loadNGramBuffer(ws);

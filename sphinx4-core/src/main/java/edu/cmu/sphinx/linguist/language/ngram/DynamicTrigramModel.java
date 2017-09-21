@@ -65,7 +65,7 @@ public class DynamicTrigramModel implements LanguageModel {
         	    continue;
         	}
                 vocabulary.add(wordString);
-                Word word = dictionary.getWord(wordString);
+                Word word = dictionary.word(wordString);
                 if (word == null) {
                     words.add(Word.UNKNOWN);
                 } else {

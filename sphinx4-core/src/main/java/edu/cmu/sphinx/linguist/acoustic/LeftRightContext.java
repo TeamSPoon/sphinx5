@@ -16,25 +16,57 @@ package edu.cmu.sphinx.linguist.acoustic;
 @SuppressWarnings("serial")
 public class LeftRightContext extends Context {
 
-    String stringRepresentation;
-    final Unit[] leftContext;
-    final Unit[] rightContext;
+    //String stringRepresentation;
+    public final Unit[] left;
+    public final Unit[] right;
+    private final String id;
 
     /**
      * Creates a LeftRightContext
      *
-     * @param leftContext  the left context or null if no left context
-     * @param rightContext the right context or null if no right context
+     * @param left  the left context or null if no left context
+     * @param right the right context or null if no right context
      */
-    private LeftRightContext(Unit[] leftContext, Unit[] rightContext) {
-        this.leftContext = leftContext;
-        this.rightContext = rightContext;
+    private LeftRightContext(Unit[] left, Unit[] right) {
+        this.left = left;
+        this.right = right;
+        this.id = getContextName(left) + ',' + getContextName(right);
     }
 
     /** Provides a string representation of a context */
     @Override
     public String toString() {
-        return getContextName(leftContext) + ',' + getContextName(rightContext);
+        return id;
+    }
+
+    /**
+     * Determines if an object is equal to this context
+     *
+     * @param o the object to check
+     * @return true if the objects are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o instanceof LeftRightContext) {
+            LeftRightContext otherContext = (LeftRightContext) o;
+            return id.equals(otherContext.id);
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * calculates a hashCode for this context. Since we defined an equals for context, we must define a hashCode as
+     * well
+     *
+     * @return the hashcode for this object
+     */
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 
     /**
@@ -46,24 +78,6 @@ public class LeftRightContext extends Context {
      */
     public static LeftRightContext get(Unit[] leftContext, Unit[] rightContext) { 
         return new LeftRightContext(leftContext, rightContext);
-    }
-
-    /**
-     * Retrieves the left context for this unit
-     *
-     * @return the left context
-     */
-    public Unit[] getLeftContext() {
-        return leftContext;
-    }
-
-    /**
-     * Retrieves the right context for this unit
-     *
-     * @return the right context
-     */
-    public Unit[] getRightContext() {
-        return rightContext;
     }
 
     /**
@@ -97,13 +111,13 @@ public class LeftRightContext extends Context {
     public boolean isPartialMatch(Context context) {
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext)context;
-            Unit[] lc = lrContext.leftContext;
-            Unit[] rc = lrContext.rightContext;
+            Unit[] lc = lrContext.left;
+            Unit[] rc = lrContext.right;
 
-            return (lc == null || leftContext == null || Unit.isContextMatch(lc, leftContext))
-                && (rc == null || rightContext == null || Unit.isContextMatch(rc, rightContext));
+            return (lc == null || left == null || Unit.isContextMatch(lc, left))
+                && (rc == null || right == null || Unit.isContextMatch(rc, right));
         }
-        return context == Context.EMPTY_CONTEXT && leftContext == null && rightContext == null;
+        return context == Context.EMPTY_CONTEXT && left == null && right == null;
     }
 
 }

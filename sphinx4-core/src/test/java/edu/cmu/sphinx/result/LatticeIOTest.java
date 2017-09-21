@@ -48,7 +48,7 @@ public class LatticeIOTest {
      * @throws UnsupportedAudioFileException
      */
     @Test
-    public void testLatticeIO() throws UnsupportedAudioFileException, IOException {
+    public void testLatticeIO() throws IOException {
         Configuration configuration = new Configuration();
 
         // Load model from the jar
@@ -82,7 +82,7 @@ public class LatticeIOTest {
             WordResult slfLatWord = slfLatIt.next();
             Assert.assertEquals(latWord.getWord().toString(), latLatWord.getWord().toString());
             Assert.assertEquals(latWord.getWord().toString(), slfLatWord.getWord().toString());
-            Assert.assertEquals(latWord.getTimeFrame().getStart(), latLatWord.getTimeFrame().getStart());
+            Assert.assertEquals(latWord.getTimeFrame().start, latLatWord.getTimeFrame().start);
         }
         Assert.assertEquals(lattice.getTerminalNode().getViterbiScore(), latLattice.getTerminalNode().getViterbiScore(), 0.001);
         Assert.assertEquals(lattice.getTerminalNode().getViterbiScore(), slfLattice.getTerminalNode().getViterbiScore(), 0.001);

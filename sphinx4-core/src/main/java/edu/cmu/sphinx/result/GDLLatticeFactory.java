@@ -66,13 +66,15 @@ public class GDLLatticeFactory {
         String contents = text[5].substring(1);
         String posterior = text[6].substring(2, text[6].length() - 2);
 
-        String word = contents.substring(0, contents.indexOf('['));
-        contents = contents.substring(contents.indexOf('[') + 1);
+        int bracket = contents.indexOf('[');
+        String word = contents.substring(0, bracket);
+        contents = contents.substring(bracket + 1);
 
-        String start = contents.substring(0, contents.indexOf(','));
-        String end = contents.substring(contents.indexOf(',') + 1);
+        int comma = contents.indexOf(',');
+        String start = contents.substring(0, comma);
+        String end = contents.substring(comma + 1);
 
-        Node node = lattice.addNode(id, dictionary.getWord(word),
+        Node node = lattice.addNode(id, dictionary.word(word),
                 Integer.parseInt(start),
                 Integer.parseInt(end));
         node.setPosterior(Double.parseDouble(posterior));

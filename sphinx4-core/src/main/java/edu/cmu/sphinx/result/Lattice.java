@@ -130,8 +130,8 @@ public class Lattice {
 
     /** Create an empty Lattice. */
     public Lattice(AlternateHypothesisManager loserManager) {
-        edges = new HashSet<>();
-        nodes = new HashMap<>();
+        edges = new LinkedHashSet<>();
+        nodes = new LinkedHashMap<>();
         //logMath = LogMath.getLogMath();
         this.loserManager = loserManager;
     }
@@ -150,8 +150,8 @@ public class Lattice {
         assert result != null;
         Token token = result.getBestFinalToken();
         if (token != null) {
-            assert token.getWord().isSentenceEndWord();
-            terminalNode = new Node(getNodeID(token), token.getWord(), -1, -1);
+            assert token.word().isSentenceEndWord();
+            terminalNode = new Node(nodeID(token), token.word(), -1, -1);
             initialNode = terminalNode;
             addNode(terminalNode);
 
@@ -164,42 +164,32 @@ public class Lattice {
         }
     }
 
-    private static TimeFrame getTimeFrameWordTokenFirst(Token token) {
-        // TODO: Not implemented yet
-        return new TimeFrame(0, 0);
-   }
 
     private static TimeFrame getTimeFrameWordTokenLast(Token token) {
-        TimeFrame capTimeFrame = new TimeFrame(0, 0);
+        TimeFrame capTimeFrame = TimeFrame.ZERO;
 
         Word word = null;
         long lastStartTime = -1;
         long lastEndTime = -1;
         Token dataToken = token;
         while (dataToken != null) {
-            if (dataToken.isWord()) {
-                if (word != null && lastStartTime >= 0) {
-                    return new TimeFrame(lastStartTime,
-                            lastEndTime);
+            long collectTime = dataToken.getCollectTime();
+            word = dataToken.word();
+            if (word!=null) {
+                if (lastStartTime >= 0) {
+                    return TimeFrame.time(lastStartTime, lastEndTime);
                 }
-                word = dataToken.getWord();
-                lastEndTime = dataToken.getCollectTime();
+                lastEndTime = collectTime;
             }
-            lastStartTime = dataToken.getCollectTime();
+            lastStartTime = collectTime;
             dataToken = dataToken.predecessor();
         }
         if (lastEndTime >= 0 && lastStartTime >= 0)
-            return new TimeFrame(lastStartTime, lastEndTime);
+            return TimeFrame.time(lastStartTime, lastEndTime);
         
         return capTimeFrame;
     }
 
-    private TimeFrame getTimeFrame(Token token) {
-        if (wordTokenFirst)
-            return getTimeFrameWordTokenFirst(token);
-        else
-            return getTimeFrameWordTokenLast(token);
-    }
 
     /**
      * Returns the node corresponding to the given word token.
@@ -208,17 +198,22 @@ public class Lattice {
      *            the token which we want a node of
      * @return the node of the given token
      */
-    private Node getNode(Token token) {
-        if (token.getWord().isSentenceEndWord()) {
+    private Node node(Token token) {
+        Word word = token.word();
+        if (word.isSentenceEndWord()) {
             return terminalNode;
         }
-        Node node = nodes.get(getNodeID(token));
-        if (node == null) {
-            TimeFrame timeFrame = getTimeFrame(token);
-            node = new Node(getNodeID(token), token.getWord(), timeFrame.getStart(), timeFrame.getEnd());
-            addNode(node);
-        }
-        return node;
+        String tokenID = nodeID(token);
+        return nodes.computeIfAbsent(tokenID, (tid)->{
+            long start, end;
+            if (wordTokenFirst) {
+                start = end = 0; // TODO: Not implemented yet
+            } else {
+                TimeFrame t = getTimeFrameWordTokenLast(token);
+                start = t.start; end = t.end;
+            }
+            return new Node(tid, word, start, end);
+        });
     }
 
     /**
@@ -229,19 +224,25 @@ public class Lattice {
      * @param token
      *            the word-ending token to collapse
      */
-    private void collapseWordToken(Token token) {
+    private void collapseWordToken(final Token token) {
         assert token != null;
-        if (visitedWordTokens.contains(token)) {
+        if (!visitedWordTokens.add(token)) {
             return;
         }
-        visitedWordTokens.add(token);
 
-        collapseWordPath(getNode(token), token.predecessor(), token.getAcousticScore() + token.getInsertionScore(),
-                token.getLanguageScore());
+        float tas = token.getAcousticScore();
+        float tls = token.getLanguageScore();
+        Node tokenNode = node(token);
+        collapseWordPath(tokenNode, token.predecessor(), tas + token.getInsertionScore(),
+                tls);
 
-        if (loserManager != null && loserManager.hasAlternatePredecessors(token)) {
-            for (Token loser : loserManager.getAlternatePredecessors(token)) {
-                collapseWordPath(getNode(token), loser, token.getAcousticScore(), token.getLanguageScore());
+        if (loserManager != null) {
+            Collection<Token> tokens;
+            tokens = loserManager.getAlternatePredecessors(token);
+            if (tokens != null) {
+                for (Token loser : tokens) {
+                    collapseWordPath(tokenNode, loser, tas, tls);
+                }
             }
         }
     }
@@ -267,14 +268,14 @@ public class Lattice {
              * If this is a word, create a Node for it, and then create an edge
              * from the Node to the parentWordNode
              */
-            Node fromNode = getNode(token);
+            Node fromNode = node(token);
             addEdge(fromNode, parentWordNode, acousticScore, languageScore);
             if (token.predecessor() != null) {
                 /* Collapse the token sequence ending in this token. */
                 collapseWordToken(token);
             } else {
                 /* we've reached the sentence start token */
-                assert token.getWord().isSentenceStartWord();
+                assert token.word().isSentenceStartWord();
                 initialNode = fromNode;
             }
             return;
@@ -318,7 +319,7 @@ public class Lattice {
      *            the token associated with the Node
      * @return an ID for the Node
      */
-    private static String getNodeID(Token token) {
+    private static String nodeID(Token token) {
         return Integer.toString(token.hashCode());
     }
 
@@ -553,7 +554,7 @@ public class Lattice {
      * @param n node to remove
      */
     protected void addNode(Node n) {
-        assert !hasNode(n.getId());
+        //assert !hasNode(n.getId());
         nodes.put(n.getId(), n);
     }
 

@@ -36,8 +36,8 @@ public class LiveRecognizerTest {
 
         assertTrue(
                 "one zero zero zero one".equals(hypothesis)
-                ||
-                "what zero zero zero one".equals(hypothesis),
+                        ||
+                        "what zero zero zero one".equals(hypothesis),
 
                 "hypothesis: " + hypothesis
         );
@@ -86,6 +86,9 @@ public class LiveRecognizerTest {
         assertEquals("one zero zero zero one", result.getHypothesis());
 
         WordResult word = result.getWords().get(0);
-        assertEquals("{one, 1.000, [840:1060]}", word.toString());
+        assertTrue(
+    word.toString().equals("{one, 1.000, [840:1060]}") ||
+            word.toString().equals("{one, 1.000, [840:1050]}")
+        );
     }
 }

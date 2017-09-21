@@ -113,8 +113,7 @@ public class Word implements Comparable<Word> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Word && spelling.equals(((Word) obj).spelling);
-
+        return this == obj || obj instanceof Word && spelling.equals(((Word) obj).spelling);
     }
 
     /**

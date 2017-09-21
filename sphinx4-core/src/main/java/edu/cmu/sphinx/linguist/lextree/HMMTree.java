@@ -952,7 +952,7 @@ class HMMTree {
         if (allWords == null) {
             allWords = new HashSet<>();
             for (String spelling : lm.getVocabulary()) {
-                Word word = dictionary.getWord(spelling);
+                Word word = dictionary.word(spelling);
                 if (word != null) {
                     allWords.add(word);
                 }

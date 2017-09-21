@@ -62,7 +62,7 @@ public class WordSequenceTest {
         assertThat(asWordSequence(dictionary, "zero", "six"),
                 equalTo(ws.getOldest()));
         assertThat(ws.getOldest().getOldest(),
-                equalTo(new WordSequence(ws.getWord(0))));
+                equalTo(new WordSequence(ws.word(0))));
     }
 
     @Test

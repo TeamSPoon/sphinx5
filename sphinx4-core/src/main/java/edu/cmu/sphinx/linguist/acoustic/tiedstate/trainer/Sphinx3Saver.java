@@ -513,8 +513,8 @@ public class Sphinx3Saver implements Saver {
 
             Unit unit = hmm.getUnit();
             LeftRightContext context = (LeftRightContext)unit.getContext();
-            Unit[] leftContext = context.getLeftContext();
-            Unit[] rightContext = context.getRightContext();
+            Unit[] leftContext = context.left;
+            Unit[] rightContext = context.right;
             assert leftContext.length == 1 && rightContext.length == 1;
 
             String name = unit.getName();

@@ -139,7 +139,7 @@ public class HMMPool {
         rc[0] = rightUnit;
         LeftRightContext context = LeftRightContext.get(lc, rc);
 
-        Unit unit = unitManager.getUnit(
+        Unit unit = unitManager.unit(
                 centralUnit.getName(), centralUnit.isFiller(),
                 context);
 
@@ -194,11 +194,11 @@ public class HMMPool {
     public int getID(Unit unit) {
         if (unit.isContextDependent()) {
             LeftRightContext context = (LeftRightContext) unit.getContext();
-            assert context.getLeftContext().length == 1;
-            assert context.getRightContext().length == 1;
+            assert context.left.length == 1;
+            assert context.right.length == 1;
             return buildID(getSimpleUnitID(unit),
-                           getSimpleUnitID(context.getLeftContext()[0]),
-                           getSimpleUnitID(context.getRightContext()[0]));
+                           getSimpleUnitID(context.left[0]),
+                           getSimpleUnitID(context.right[0]));
         } else {
             return getSimpleUnitID(unit);
         }

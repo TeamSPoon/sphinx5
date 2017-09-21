@@ -142,7 +142,7 @@ public class AllphoneLinguist implements Linguist {
             }
             if (hmm.getUnit().isContextDependent()) {
                 LeftRightContext context = (LeftRightContext)hmm.getUnit().getContext();
-                Unit lc = context.getLeftContext()[0];
+                Unit lc = context.left[0];
                 if (lc == UnitManager.SILENCE) {
                     leftContextSilHMMs.add(hmm);
                     continue;

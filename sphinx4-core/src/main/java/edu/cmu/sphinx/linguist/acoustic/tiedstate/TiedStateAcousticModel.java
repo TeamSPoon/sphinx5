@@ -147,7 +147,7 @@ public class TiedStateAcousticModel implements AcousticModel {
      */
     private HMM getCompositeHMM(Unit unit, HMMPosition position) {
 
-        Unit ciUnit = unitManager.getUnit(unit.getName(), unit.isFiller(),
+        Unit ciUnit = unitManager.unit(unit.getName(), unit.isFiller(),
                 Context.EMPTY_CONTEXT);
 
         SenoneSequence compositeSequence = getCompositeSenoneSequence(unit,
@@ -240,10 +240,10 @@ public class TiedStateAcousticModel implements AcousticModel {
         Context context = unit.getContext();
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext) context;
-            if (lrContext.getRightContext() == null) {
+            if (lrContext.right == null) {
                 return true;
             }
-            if (lrContext.getLeftContext() == null) {
+            if (lrContext.left == null) {
                 return true;
             }
         }
@@ -464,8 +464,8 @@ public class TiedStateAcousticModel implements AcousticModel {
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext) context;
 
-            Unit[] lc = lrContext.getLeftContext();
-            Unit[] rc = lrContext.getRightContext();
+            Unit[] lc = lrContext.left;
+            Unit[] rc = lrContext.right;
 
             Unit[] nlc;
             Unit[] nrc;
@@ -484,7 +484,7 @@ public class TiedStateAcousticModel implements AcousticModel {
 
             if (nlc != lc || nrc != rc) {
                 Context newContext = LeftRightContext.get(nlc, nrc);
-                Unit newUnit = unitManager.getUnit(unit.getName(),
+                Unit newUnit = unitManager.unit(unit.getName(),
                         unit.isFiller(), newContext);
                 hmm = (SenoneHMM) mgr.get(position, newUnit);
                 if (hmm == null) {

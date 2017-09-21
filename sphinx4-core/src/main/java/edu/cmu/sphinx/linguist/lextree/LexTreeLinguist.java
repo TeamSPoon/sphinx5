@@ -488,9 +488,7 @@ public class LexTreeLinguist implements Linguist {
             currentSmearTerm = smearTerm;
             currentSmearProb = smearProb;
 
-            int hashCode = wordSequence.hashCode() * 37;
-            hashCode += node.hashCode();
-            this.hash = hashCode;
+            this.hash = wordSequence.hashCode() * 37 + node.hashCode();
         }
 
 

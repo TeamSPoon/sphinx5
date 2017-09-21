@@ -80,7 +80,7 @@ public class SpeechAligner {
         texts.offer(transcript);
         TimeFrame totalTimeFrame = TimeFrame.INFINITE;
         timeFrames.offer(totalTimeFrame);
-        long lastFrame = TimeFrame.INFINITE.getEnd();
+        long lastFrame = TimeFrame.INFINITE.end;
 
         languageModel.setText(sentenceTranscript);
         
@@ -117,7 +117,7 @@ public class SpeechAligner {
 
                 if (i == 0) {
                     if (hypothesis.size() > 0) {
-                        lastFrame = hypothesis.get(hypothesis.size() - 1).getTimeFrame().getEnd();
+                        lastFrame = hypothesis.get(hypothesis.size() - 1).getTimeFrame().end;
                     }
                 }
 
@@ -193,10 +193,10 @@ public class SpeechAligner {
         for (Map.Entry<Integer, WordResult> e : alignedWords.entrySet()) {
             if (e.getKey() - prevKey > 1) {
                 checkedOffer(transcript, texts, timeFrames, ranges, prevKey, e.getKey() + 1, prevStart, e.getValue()
-                        .getTimeFrame().getEnd());
+                        .getTimeFrame().end);
             }
             prevKey = e.getKey();
-            prevStart = e.getValue().getTimeFrame().getStart();
+            prevStart = e.getValue().getTimeFrame().start;
         }
         if (transcript.size() - prevKey > 1) {
             checkedOffer(transcript, texts, timeFrames, ranges, prevKey, transcript.size(), prevStart, lastFrame);
@@ -242,7 +242,7 @@ public class SpeechAligner {
         }
 
         texts.offer(transcript.subList(start, end));
-        timeFrames.offer(new TimeFrame(timeStart, timeEnd));
+        timeFrames.offer(TimeFrame.time(timeStart, timeEnd));
         ranges.offer(new Range(start, end - 1));
     }
 

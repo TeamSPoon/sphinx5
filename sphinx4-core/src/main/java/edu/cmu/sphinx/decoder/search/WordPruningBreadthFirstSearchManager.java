@@ -108,7 +108,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     public final static String PROP_RELATIVE_BEAM_WIDTH = "relativeBeamWidth";
 
 
-    private static final int DEFAULT_BESTTOKENMAP_SIZE = 4096;
+    private static final int DEFAULT_BESTTOKENMAP_SIZE = 2048;
 
     // -----------------------------------
     // Configured Subcomponents

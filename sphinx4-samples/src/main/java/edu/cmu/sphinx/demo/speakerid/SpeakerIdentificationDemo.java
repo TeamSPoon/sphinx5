@@ -82,7 +82,7 @@ public class SpeakerIdentificationDemo {
             for (Segment s : segments) {
                 long startTime = s.getStartTime();
                 long endTime = s.getStartTime() + s.getLength();
-                t = new TimeFrame(startTime, endTime);
+                t = TimeFrame.time(startTime, endTime);
 
                 recognizer.startRecognition(url.openStream(), t);
                 while ((result = recognizer.getResult()) != null) {
@@ -99,7 +99,7 @@ public class SpeakerIdentificationDemo {
             for (Segment seg : segments) {
                 long startTime = seg.getStartTime();
                 long endTime = seg.getStartTime() + seg.getLength();
-                t = new TimeFrame(startTime, endTime);
+                t = TimeFrame.time(startTime, endTime);
 
                 // Decode again with updated SpeakerProfile
                 recognizer.startRecognition(url.openStream(), t);

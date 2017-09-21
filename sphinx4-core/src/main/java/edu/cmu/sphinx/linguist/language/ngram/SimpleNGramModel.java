@@ -319,7 +319,7 @@ public class SimpleNGramModel implements LanguageModel {
                 for (int j = 0; j < ngram; j++) {
                     String word = tok.nextToken();
                     vocabulary.add(word);
-                    Word wordObject = dictionary.getWord(word);
+                    Word wordObject = dictionary.word(word);
                     if (wordObject == null) {
                         wordObject = Word.UNKNOWN;
                     }

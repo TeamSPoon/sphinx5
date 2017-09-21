@@ -77,8 +77,8 @@ public class Aligner {
 
             for (WordResult result : utt) {
                 TimeFrame frame = result.getTimeFrame();
-                startFrame = Math.min(startFrame, frame.getStart());
-                endFrame = Math.max(endFrame, frame.getEnd());
+                startFrame = Math.min(startFrame, frame.start);
+                endFrame = Math.max(endFrame, frame.end);
                 System.out.print(result.getPronunciation().getWord());
                 System.out.print(' ');
             }

@@ -55,7 +55,7 @@ public class WordResult {
      */
     public WordResult(Node node) {
         this(node.getWord(),
-             new TimeFrame(node.getBeginTime(), node.getEndTime()), 
+                TimeFrame.time(node.getBeginTime(), node.getEndTime()),
              node.getViterbiScore(), node.getPosterior());
     }
 

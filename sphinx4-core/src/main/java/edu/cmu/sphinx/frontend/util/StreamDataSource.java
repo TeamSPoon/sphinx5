@@ -179,9 +179,9 @@ public class StreamDataSource extends BaseDataProcessor {
                 if (dataStream != null) {
                     do {
                         output = readNextFrame();
-                    } while (output != null && getDuration() < timeFrame.getStart());
+                    } while (output != null && getDuration() < timeFrame.start);
 
-                    if ((output == null || getDuration() > timeFrame.getEnd())
+                    if ((output == null || getDuration() > timeFrame.end)
                             && !utteranceEndSent) {
                         output = new DataEndSignal(getDuration());
                         utteranceEndSent = true;

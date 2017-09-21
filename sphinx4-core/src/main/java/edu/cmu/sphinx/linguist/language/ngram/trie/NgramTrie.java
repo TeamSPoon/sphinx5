@@ -97,7 +97,7 @@ public class NgramTrie {
      */
     public float readNgramBackoff(int wordId, int orderMinusTwo, TrieRange range, NgramTrieQuant quant) {
         int ptr;
-        NgramSet ngram = getNgram(orderMinusTwo);
+        NgramSet ngram = ngram(orderMinusTwo);
         if ((ptr = findNgram(ngram, wordId, range)) < 0)
             return 0.0f;
         return quant.readBackoff(bitArr, ngram.memPtr, ngram.getNgramWeightsOffset(ptr), orderMinusTwo);
@@ -115,7 +115,7 @@ public class NgramTrie {
      */
     public float readNgramProb(int wordId, int orderMinusTwo, TrieRange range, NgramTrieQuant quant) {
         int ptr;
-        NgramSet ngram = getNgram(orderMinusTwo);
+        NgramSet ngram = ngram(orderMinusTwo);
         if ((ptr = findNgram(ngram, wordId, range)) < 0)
             return 0.0f;
         return quant.readProb(bitArr, ngram.memPtr, ngram.getNgramWeightsOffset(ptr), orderMinusTwo);
@@ -152,10 +152,11 @@ public class NgramTrie {
     /**
      * Getter for ngram set by ngram order
      */
-    private NgramSet getNgram(int orderMinusTwo) {
+    private NgramSet ngram(int orderMinusTwo) {
         if (orderMinusTwo == ordersNum - 1)
             return longest;
-        return middles[orderMinusTwo];
+        else
+            return middles[orderMinusTwo];
     }
 
     /**
@@ -198,8 +199,6 @@ public class NgramTrie {
             return ngramIdx * totalBits + wordBits;
         }
 
-        abstract int getQuantBits();
-
     }
 
     /**
@@ -207,7 +206,7 @@ public class NgramTrie {
      */
     class MiddleNgramSet extends NgramSet {
         int nextMask;
-        int nextOrderMemPtr;
+        //int nextOrderMemPtr;
         MiddleNgramSet(int memPtr, int quantBits, int entries, int maxVocab, int maxNext) {
             super(memPtr, maxVocab, quantBits + requiredBits(maxNext));
             nextMask = (1 << requiredBits(maxNext)) - 1;
@@ -218,16 +217,13 @@ public class NgramTrie {
         void readNextRange(int ngramIdx, TrieRange range) {
             int offset = ngramIdx * totalBits;
             offset += wordBits;
-            offset += getQuantBits();
+            offset += quantProbBoLen;
             range.begin = bitArr.readInt(memPtr, offset, nextMask);
             offset += totalBits;
             range.end = bitArr.readInt(memPtr, offset, nextMask);
         }
 
-        @Override
-        int getQuantBits() {
-            return quantProbBoLen;
-        }
+
     }
 
     /**
@@ -238,10 +234,6 @@ public class NgramTrie {
             super(memPtr, maxVocab, quantBits);
         }
 
-        @Override
-        int getQuantBits() {
-            return quantProbLen;
-        }
     }
 
 }

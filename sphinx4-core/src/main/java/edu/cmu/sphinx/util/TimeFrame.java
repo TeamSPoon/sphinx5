@@ -14,27 +14,22 @@ package edu.cmu.sphinx.util;
 
 public class TimeFrame {
 
-    public static final TimeFrame NULL = new TimeFrame(0);
-    public static final TimeFrame INFINITE = new TimeFrame(Long.MAX_VALUE);
+    public static final TimeFrame ZERO = new TimeFrame(0, 0);
+    public static final TimeFrame INFINITE = new TimeFrame(0, Long.MAX_VALUE);
 
-    private final long start;
-    private final long end;
+    public final long start;
+    public final long end;
 
-    public TimeFrame(long duration) {
-        this(0, duration);
-    }
-
-    public TimeFrame(long start, long end) {
+    private TimeFrame(long start, long end) {
         this.start = start;
         this.end = end;
     }
 
-    public long getStart() {
-        return start;
-    }
-
-    public long getEnd() {
-        return end;
+    public static TimeFrame time(long start, long end) {
+        if (start == 0 && end == 0)
+            return ZERO;
+        else
+            return new TimeFrame(start, end);
     }
 
     public long length() {

@@ -351,7 +351,7 @@ public class Node {
      * @return TimeFrame
      */
     public TimeFrame getTimeFrame() {
-        return new TimeFrame(getBeginTime(), endTime);
+        return TimeFrame.time(getBeginTime(), endTime);
     }
 
 

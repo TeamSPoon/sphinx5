@@ -40,7 +40,7 @@ public class Token implements Scoreable {
 //    private static int curCount;
 //    private static int lastCount;
 
-    private static final AtomicInteger serial = new AtomicInteger(0);
+    //private static final AtomicInteger serial = new AtomicInteger(0);
 
     private static final ThreadLocal<DecimalFormat> scoreFmt = new ThreadLocal<DecimalFormat>() {
         @Override
@@ -92,7 +92,7 @@ public class Token implements Scoreable {
         this.logLanguageScore = logLanguageScore;
         this.collectTime = collectTime;
         this.hash =
-                searchState!=null ? searchState.hashCode() : 0;
+                state!=null ? state.hashCode() : 0;
                 //serial.getAndIncrement();
     }
 
@@ -481,7 +481,7 @@ public class Token implements Scoreable {
      *
      * @return the word of this Token, or null if this is not a word token
      */
-    public Word getWord() {
+    public Word word() {
         if (isWord()) {
             WordSearchState wordState = (WordSearchState) searchState;
             return wordState.getPronunciation().getWord();

@@ -66,7 +66,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
     @S4Integer(defaultValue = 5)
     public final static String PROP_LOOKAHEAD_WINDOW = "lookaheadWindow";
 
-    public static final int FRAME_CI_SIZE = 100; // TODO more precise range of baseIds, remove magic number
+    /** see: https://github.com/cmusphinx/sphinx4/commit/c59a4b0be373c172b0950c8223f899968244fe6d */
+    public static final int FRAME_CI_SIZE = 1024; // TODO more precise range of baseIds, remove magic number
 
     // -----------------------------------
     // Configured Subcomponents

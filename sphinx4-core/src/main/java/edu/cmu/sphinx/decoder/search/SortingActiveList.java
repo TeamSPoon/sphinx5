@@ -211,8 +211,9 @@ public class SortingActiveList implements ActiveList {
         final int[] i = {0};
         //striped/collated division so each sublist is also ordered
         tokens.forEach(x -> {
-            a[i[0]].add(x);
-            i[0] = (i[0] +1)%parallelism;
+            int i0 = i[0];
+            a[i0].add(x);
+            i[0] = (i0 +1)%parallelism;
         });
         return a;
     }

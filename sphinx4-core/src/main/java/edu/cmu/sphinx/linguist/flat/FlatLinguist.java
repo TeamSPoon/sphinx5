@@ -957,7 +957,7 @@ public class FlatLinguist implements Linguist, Configurable {
             Unit[] rc = getRC(units, which, rightContext);
             UnitContext actualRightContext = UnitContext.get(rc);
             LeftRightContext context = LeftRightContext.get(lc, rc);
-            Unit cdUnit = unitManager.getUnit(units[which].getName(), units[which] .isFiller(), context);
+            Unit cdUnit = unitManager.unit(units[which].getName(), units[which] .isFiller(), context);
             UnitState unitState = new ExtendedUnitState(parent, which, cdUnit);
             float logInsertionProbability;
             if (unitState.getUnit().isSilence()) {
@@ -1530,7 +1530,7 @@ class UnitContext {
      */
     @Override
     public String toString() {
-        return LeftRightContext.getContextName(context);
+        return context.toString();
     }
 }
 

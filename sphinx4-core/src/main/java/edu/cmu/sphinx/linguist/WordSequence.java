@@ -43,7 +43,7 @@ public final class WordSequence implements Comparable<WordSequence> {
             String... words) {
         Word[] dictWords = new Word[words.length];
         for (int i = 0; i < words.length; i++) {
-            dictWords[i] = dictionary.getWord(words[i]);
+            dictWords[i] = dictionary.word(words[i]);
         }
         return new WordSequence(dictWords);
     }
@@ -189,8 +189,8 @@ public final class WordSequence implements Comparable<WordSequence> {
      * @param n which word to return
      * @return the n-th word in this sequence
      */
-    public Word getWord(int n) {
-        assert n < words.length;
+    public Word word(int n) {
+        //assert n < words.length;
         return words[n];
     }
 
@@ -253,7 +253,7 @@ public final class WordSequence implements Comparable<WordSequence> {
         List<Word> subseqWords = new ArrayList<>();
 
         for (int i = startIndex; i < stopIndex; i++) {
-            subseqWords.add(getWord(i));
+            subseqWords.add(word(i));
         }
 
         return new WordSequence(subseqWords);

@@ -34,7 +34,7 @@ public class DictionaryTest {
                                                    null,
                                                    new UnitManager());
         dictionary.allocate();
-        Word word = dictionary.getWord("one");
+        Word word = dictionary.word("one");
 
         assertThat(word.getPronunciations(), arrayWithSize(2));
         assertThat(word.getPronunciations()[0].toString(),
@@ -42,7 +42,7 @@ public class DictionaryTest {
         assertThat(word.getPronunciations()[1].toString(),
                    equalTo("one(HH W AH N )"));
 
-        word = dictionary.getWord("something_missing");
+        word = dictionary.word("something_missing");
         assertThat(word, nullValue());
 
         assertThat(dictionary.getSentenceStartWord().getSpelling(),

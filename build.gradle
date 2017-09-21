@@ -89,8 +89,8 @@ allprojects() {
     compileJava.options.encoding = 'UTF-8'
     javadoc.options.encoding = 'UTF-8'
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 1.9
+    targetCompatibility = 1.9
 
 //    task javadocs(type: Javadoc) {
 //        source = sourceSets.main.allJava

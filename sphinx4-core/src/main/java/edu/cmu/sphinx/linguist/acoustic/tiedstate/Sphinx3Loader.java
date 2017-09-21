@@ -916,7 +916,7 @@ public class Sphinx3Loader implements Loader {
 
                     Context context = LeftRightContext.get(leftContext,
                             rightContext);
-                    unit = unitManager.getUnit(name, false, context);
+                    unit = unitManager.unit(name, false, context);
                 }
                 lastUnitName = unitName;
                 lastUnit = unit;

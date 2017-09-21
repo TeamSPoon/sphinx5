@@ -276,7 +276,7 @@ public class TextDictionary implements Dictionary {
      * @return the unit
      */
     protected Unit getCIUnit(String name, boolean isFiller) {
-        return unitManager.getUnit(name, isFiller, Context.EMPTY_CONTEXT);
+        return unitManager.unit(name, isFiller, Context.EMPTY_CONTEXT);
     }
 
     /**
@@ -285,7 +285,7 @@ public class TextDictionary implements Dictionary {
      * @return the sentence start word
      */
     public Word getSentenceStartWord() {
-        return getWord(SENTENCE_START_SPELLING);
+        return word(SENTENCE_START_SPELLING);
     }
 
     /**
@@ -294,7 +294,7 @@ public class TextDictionary implements Dictionary {
      * @return the sentence end word
      */
     public Word getSentenceEndWord() {
-        return getWord(SENTENCE_END_SPELLING);
+        return word(SENTENCE_END_SPELLING);
     }
 
     /**
@@ -303,7 +303,7 @@ public class TextDictionary implements Dictionary {
      * @return the silence word
      */
     public Word getSilenceWord() {
-        return getWord(SILENCE_SPELLING);
+        return word(SILENCE_SPELLING);
     }
 
     /**
@@ -316,7 +316,7 @@ public class TextDictionary implements Dictionary {
      * @return a Word object
      * @see edu.cmu.sphinx.linguist.dictionary.Word
      */
-    public Word getWord(String text) {
+    public Word word(String text) {
         Word wordObject = wordDictionary.get(text);
 
         if (wordObject != null) {
@@ -328,7 +328,7 @@ public class TextDictionary implements Dictionary {
             if (logger.isLoggable(Level.FINE))
                 logger.fine("The dictionary is missing a phonetic transcription for the word '" + text + '\'');
             if (wordReplacement != null) {
-                wordObject = getWord(wordReplacement);
+                wordObject = word(wordReplacement);
             } else if (g2pModelFile != null && !g2pModelFile.getPath().isEmpty()) {
                 logger.info("Generating phonetic transcription(s) for the word '" + text + "' using g2p model");
                 wordObject = extractPronunciation(text);
@@ -457,7 +457,7 @@ public class TextDictionary implements Dictionary {
         Word[] fillerWordArray = new Word[fillerWords.size()];
         int index = 0;
         for (String spelling : fillerWords) {
-            fillerWordArray[index++] = getWord(spelling);
+            fillerWordArray[index++] = word(spelling);
         }
         return fillerWordArray;
     }

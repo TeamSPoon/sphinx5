@@ -167,7 +167,7 @@ public class NgramTrieModel implements LanguageModel {
             unigramIDMap = new ObjectIntHashMap<>(nw);
 
         for (int i = 0; i < nw; i++) {
-            Word word = dictionary.getWord(words[i]);
+            Word word = dictionary.word(words[i]);
             if (word == null) {
                 missing.add(words[i]);
             } else {
@@ -242,7 +242,7 @@ public class NgramTrieModel implements LanguageModel {
      * @see edu.cmu.sphinx.linguist.language.ngram.LanguageModel#deallocate()
      */
     @Override
-    public void deallocate() throws IOException {
+    public void deallocate() {
         if (logFile != null) {
             logFile.flush();
         }
@@ -256,12 +256,14 @@ public class NgramTrieModel implements LanguageModel {
      * @param prob - probability of unigram
      * @return probability of of highest order ngram available
      */
-    private float getAvailableProb(WordSequence wordSequence, TrieRange range, float prob) {
+    private float getAvailableProb(final WordSequence wordSequence, TrieRange range, float prob) {
         if (!range.isSearchable()) return prob;
-        for (int reverseOrderMinusTwo = wordSequence.size() - 2; reverseOrderMinusTwo >= 0; reverseOrderMinusTwo--) {
-            int orderMinusTwo = wordSequence.size() - 2 - reverseOrderMinusTwo;
+
+        int wordSeqSize = wordSequence.size();
+        for (int reverseOrderMinusTwo = wordSeqSize - 2; reverseOrderMinusTwo >= 0; reverseOrderMinusTwo--) {
+            int orderMinusTwo = wordSeqSize - 2 - reverseOrderMinusTwo;
             if (orderMinusTwo + 1 == maxDepth) break;
-            int wordId = unigramIDMap.get(wordSequence.getWord(reverseOrderMinusTwo));
+            int wordId = unigramIDMap.get(wordSequence.word(reverseOrderMinusTwo));
             float updatedProb = trie.readNgramProb(wordId, orderMinusTwo, range, quant);
             if (!range.getFound()) break;
             prob = updatedProb;
@@ -281,14 +283,14 @@ public class NgramTrieModel implements LanguageModel {
     private float getAvailableBackoff(WordSequence wordSequence) {
         float backoff = 0.0f;
         int wordsNum = wordSequence.size();
-        int wordId = unigramIDMap.get(wordSequence.getWord(wordsNum - 2));
+        int wordId = unigramIDMap.get(wordSequence.word(wordsNum - 2));
         TrieRange range = new TrieRange(unigrams[wordId].next, unigrams[wordId + 1].next);
         if (curDepth == 1) {
             backoff += unigrams[wordId].backoff;
         }
         int sequenceIdx, orderMinusTwo;
         for (sequenceIdx = wordsNum - 3, orderMinusTwo = 0; sequenceIdx >= 0; sequenceIdx--, orderMinusTwo++) {
-            int tmpWordId = unigramIDMap.get(wordSequence.getWord(sequenceIdx));
+            int tmpWordId = unigramIDMap.get(wordSequence.word(sequenceIdx));
             float tmpBackoff = trie.readNgramBackoff(tmpWordId, orderMinusTwo, range, quant);
             if (!range.getFound()) break;
             backoff += tmpBackoff;
@@ -305,7 +307,7 @@ public class NgramTrieModel implements LanguageModel {
      */
     private float getProbabilityRaw(WordSequence wordSequence) {
         int wordsNum = wordSequence.size();
-        int wordId = unigramIDMap.get(wordSequence.getWord(wordsNum - 1));
+        int wordId = unigramIDMap.get(wordSequence.word(wordsNum - 1));
 
         TrieUnigram uw = unigrams[wordId];
 

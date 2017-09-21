@@ -85,7 +85,7 @@ public interface Dictionary extends Configurable {
      * @return a Word object
      * @see edu.cmu.sphinx.linguist.dictionary.Pronunciation
      */
-    Word getWord(String text);
+    Word word(String text);
 
 
     /**

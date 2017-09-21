@@ -23,7 +23,7 @@ public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements
         Unit rc = UnitManager.SILENCE;
         Unit base = unit.getBaseUnit();
         if (unit.isContextDependent())
-            rc = ((LeftRightContext)unit.getContext()).getRightContext()[0];
+            rc = ((LeftRightContext) unit.getContext()).right[0];
         ArrayList<HMM> successors = linguist.useContextDependentPhones() ? linguist.getCDSuccessors(base, rc) : linguist.getCISuccessors();
         for (HMM successor : successors)
             result.add(new PhoneHmmSearchState(successor.getInitialState(), linguist, linguist.getPhoneInsertionProb(), LogMath.LOG_ONE));

@@ -92,7 +92,7 @@ public class MappingDictionary extends TextDictionary implements Dictionary {
         if (mapping.containsKey(name)) {
             name = mapping.get(name);
         }
-        return unitManager.getUnit(name, isFiller, Context.EMPTY_CONTEXT);
+        return unitManager.unit(name, isFiller, Context.EMPTY_CONTEXT);
     }
 
     protected void loadMapping(InputStream inputStream) throws IOException {

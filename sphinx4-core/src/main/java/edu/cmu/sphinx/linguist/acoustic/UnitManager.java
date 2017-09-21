@@ -17,7 +17,6 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Manages the set of units for a recognizer */
@@ -54,15 +53,16 @@ public class UnitManager implements Configurable {
      * @param context the context for this unit
      * @return the unit
      */
-    public Unit getUnit(String name, boolean filler, Context context) {
+    public Unit unit(String name, boolean filler, Context context) {
         Unit unit = ciMap.get(name);
+
         if (context == Context.EMPTY_CONTEXT) {
             if (unit == null) {
                 unit = new Unit(name, filler, nextID++);
                 ciMap.put(name, unit);
-                if (logger != null && logger.isLoggable(Level.INFO)) {
-                    logger.info("CI Unit: " + unit);
-                }
+//                if (logger != null && logger.isLoggable(Level.INFO)) {
+//                    logger.info("CI Unit: " + unit);
+//                }
             }
         } else {
             unit = new Unit(unit, filler, context);
@@ -78,7 +78,7 @@ public class UnitManager implements Configurable {
      * @return the unit
      */
     public Unit getUnit(String name, boolean filler) {
-        return getUnit(name, filler, Context.EMPTY_CONTEXT);
+        return unit(name, filler, Context.EMPTY_CONTEXT);
     }
 
     /**
@@ -88,7 +88,7 @@ public class UnitManager implements Configurable {
      * @return the unit
      */
     public Unit getUnit(String name) {
-        return getUnit(name, false, Context.EMPTY_CONTEXT);
+        return unit(name, false, Context.EMPTY_CONTEXT);
     }
 
 }
