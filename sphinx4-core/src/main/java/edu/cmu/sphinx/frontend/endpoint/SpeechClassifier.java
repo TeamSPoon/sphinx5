@@ -58,7 +58,7 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
      * endpointer more sensitive, that is, mark more audio as speech. A higher threshold will make the endpointer less
      * sensitive, that is, mark less audio as speech.
      */
-    @S4Double(defaultValue = 10)
+    @S4Double(defaultValue = 9)
     public static final String PROP_THRESHOLD = "threshold";
 
     /** The property specifying the adjustment. */
@@ -157,6 +157,8 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
      */
     protected SpeechClassifiedData classify(DoubleData audio) {
         double current = logRootMeanSquare(audio.getValues());
+
+
         isSpeech = false;
         if (current >= minSignal) {
             level = ((level * averageNumber) + current) / (averageNumber + 1);
@@ -170,6 +172,8 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
             }
             isSpeech = (level - background > threshold);
         }
+
+        //System.out.println(isSpeech + " "+ audio + " " + current);
 
         SpeechClassifiedData labeledAudio = new SpeechClassifiedData(audio, isSpeech);
 

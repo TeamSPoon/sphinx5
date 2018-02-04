@@ -537,7 +537,9 @@ public class Microphone extends BaseDataProcessor {
                     }
                     audioList.add(data);
                 }
-                audioLine.flush();
+
+                //audioLine.flush();
+
                 if (closeBetweenUtterances) {
                     /* Closing the audio stream *should* (we think)
                      * also close the audio line, but it doesn't
@@ -559,7 +561,7 @@ public class Microphone extends BaseDataProcessor {
                 ioe.printStackTrace();
             }
             long duration = (long)
-                    (((double) totalSamplesRead /
+                    ((((double) totalSamplesRead) /
                             (double) audioStream.getFormat().getSampleRate()) * 1000.0);
 
             audioList.add(new DataEndSignal(duration));

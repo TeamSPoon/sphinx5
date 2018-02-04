@@ -20,7 +20,7 @@ import edu.cmu.sphinx.frontend.DoubleData;
 /** A container for DoubleData class that indicates whether the contained DoubleData is speech or not. */
 public class SpeechClassifiedData implements Data {
 
-    private boolean isSpeech;
+    private final boolean isSpeech;
     private final DoubleData data;
 
 
@@ -36,14 +36,14 @@ public class SpeechClassifiedData implements Data {
     }
 
 
-    /**
-     * Sets whether this SpeechClassifiedData is speech or not.
-     *
-     * @param isSpeech true if this is speech, false otherwise
-     */
-    public void setSpeech(boolean isSpeech) {
-        this.isSpeech = isSpeech;
-    }
+//    /**
+//     * Sets whether this SpeechClassifiedData is speech or not.
+//     *
+//     * @param isSpeech true if this is speech, false otherwise
+//     */
+//    public void setSpeech(boolean isSpeech) {
+//        this.isSpeech = isSpeech;
+//    }
 
 
     /**

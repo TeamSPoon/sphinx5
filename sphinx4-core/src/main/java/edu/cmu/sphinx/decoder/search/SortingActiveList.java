@@ -240,11 +240,7 @@ public class SortingActiveList implements ActiveList {
         //tokens.forEach(action);
 
         final List<Token>[] a = partition();
-        Stream.of(a).parallel().forEach(aa -> {
-            for (int i1 = 0, aaSize = aa.size(); i1 < aaSize; i1++) {
-                action.accept(aa.get(i1));
-            }
-        });
+        Stream.of(a).parallel().forEach(aa -> aa.forEach(action));
 
     }
 
