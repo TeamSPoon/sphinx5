@@ -22,13 +22,11 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
 import edu.cmu.sphinx.util.props.*;
-import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  * Provides the breadth first search. To perform recognition an application
@@ -655,7 +653,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
                 if (activeListManager.add(newBestToken)) {
                     tokensCreated.value++;
                     added++;
-                    bestTokens.put(nextState, newBestToken);
+                    bestTokens.putIfAbsent(nextState, newBestToken);
                 }
 
             } else if (bestToken.score() < logEntryScore) {

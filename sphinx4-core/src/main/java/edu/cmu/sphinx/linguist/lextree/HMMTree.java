@@ -823,8 +823,8 @@ class HMMTree {
     private void collectEntryAndExitUnits() {
         Collection<Word> words = getAllWords();
         for (Word word : words) {
-            for (int j = 0; j < word.getPronunciations().length; j++) {
-                Pronunciation p = word.getPronunciations()[j];
+            for (int j = 0; j < word.pronunciations.length; j++) {
+                Pronunciation p = word.pronunciations[j];
                 Unit first = p.units[0];
                 Unit last = p.units[p.units.length - 1];
                 entryPoints.add(first);
@@ -868,7 +868,7 @@ class HMMTree {
      */
     private void addWord(Word word) {
         float prob = getWordUnigramProbability(word);
-        Pronunciation[] pronunciations = word.getPronunciations();
+        Pronunciation[] pronunciations = word.pronunciations;
         for (Pronunciation pronunciation : pronunciations) {
             addPronunciation(pronunciation, prob);
         }
@@ -932,7 +932,7 @@ class HMMTree {
      */
     private float getWordUnigramProbability(Word word) {
         float prob = LogMath.LOG_ONE;
-        if (!word.isFiller()) {
+        if (!word.filler) {
             Word[] wordArray = new Word[1];
             wordArray[0] = word;
             prob = lm.getProbability((new WordSequence(wordArray)));

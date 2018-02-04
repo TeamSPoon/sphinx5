@@ -13,9 +13,12 @@
 
 package edu.cmu.sphinx.fst;
 
+import org.eclipse.collections.impl.list.mutable.FastList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * The fst's mutable state implementation.
@@ -34,7 +37,7 @@ public class State {
     private float fnlWeight;
 
     // Outgoing arcs
-    private ArrayList<Arc> arcs = null;
+    private FastList<Arc> arcs = null;
 
     // initial number of arcs
     protected int initialNumArcs = -1;
@@ -43,7 +46,7 @@ public class State {
      * Default Constructor
      */
     protected State() {
-        arcs = new ArrayList<>();
+        arcs = new FastList<>(0);
     }
 
     /**
@@ -65,7 +68,7 @@ public class State {
     public State(int initialNumArcs) {
         this.initialNumArcs = initialNumArcs;
         if (initialNumArcs > 0) {
-            arcs = new ArrayList<>(initialNumArcs);
+            arcs = new FastList<>(initialNumArcs);
         }
     }
 
@@ -74,7 +77,8 @@ public class State {
      * @param cmp comparator
      */
     public void arcSort(Comparator<Arc> cmp) {
-        Collections.sort(arcs, cmp);
+        arcs.sortThis(cmp);
+        //Collections.sort(arcs, cmp);
     }
 
     /**
@@ -90,8 +94,8 @@ public class State {
      * 
      * @param arcs the arcs ArrayList to set
      */
-    public void setArcs(ArrayList<Arc> arcs) {
-        this.arcs = arcs;
+    public void setArcs(FastList<Arc> arcs) {
+        this.arcs = arcs; arcs.trimToSize();
     }
 
     /**
@@ -163,6 +167,7 @@ public class State {
     }
 
     protected boolean equalsWeightAndID(State other) {
+        if (this == other) return true;
         if (id != other.id)
             return false;
         if (!(fnlWeight == other.fnlWeight)) {
@@ -179,7 +184,7 @@ public class State {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(32);
         sb.append("(").append(id).append(", ").append(fnlWeight).append(')');
         return sb.toString();
     }

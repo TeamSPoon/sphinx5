@@ -289,7 +289,7 @@ class HMMPoolManager {
         }
         int indexState = state.getState();
         SenoneHMM hmm = (SenoneHMM) state.getHMM();
-        float[][] matrix = hmm.getTransitionMatrix();
+        float[][] matrix = hmm.transitionMatrix;
 
         // Find the index for current matrix in the transition matrix pool
         // int indexMatrix = matrixPool.indexOf(matrix);
@@ -348,7 +348,7 @@ class HMMPoolManager {
      */
     private void accumulateStateTransition(int indexState, SenoneHMM hmm, float value) {
         // Find the transition matrix in this hmm
-        float[][] matrix = hmm.getTransitionMatrix();
+        float[][] matrix = hmm.transitionMatrix;
 
         // Find the vector with transitions from the current state to
         // other states.

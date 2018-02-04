@@ -224,8 +224,8 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         while (!node.isFinalNode()) {
             if (!node.isEmpty()) {
                 Word word = node.getWord();
-                if (!word.isFiller())
-                    sb.append(word.getSpelling()).append(' ');
+                if (!word.filler)
+                    sb.append(word.spelling).append(' ');
             }
             node = selectRandomSuccessor(node);
         }
@@ -482,9 +482,9 @@ public abstract class Grammar implements Configurable, GrammarInterface {
     private void addSilenceWords() {
         HashSet<GrammarNode> nodes = new HashSet<>(grammarNodes);
         for (GrammarNode g : nodes) {
-            if (!g.isEmpty() && !g.getWord().isFiller()) {
+            if (!g.isEmpty() && !g.getWord().filler) {
                 GrammarNode silNode = createGrammarNode(maxIdentity + 1,
-                        dictionary.getSilenceWord().getSpelling());
+                        dictionary.getSilenceWord().spelling);
 
                 GrammarNode branchNode = g.splitNode(maxIdentity + 1);
                 add(branchNode);
@@ -508,7 +508,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
         }
 
         for (GrammarNode wordNode : nodes) {
-            if (!wordNode.isEmpty() && !wordNode.getWord().isFiller()) {
+            if (!wordNode.isEmpty() && !wordNode.getWord().filler) {
                 GrammarNode wordExitNode = wordNode.splitNode(maxIdentity + 1);
                 add(wordExitNode);
                 GrammarNode fillerStart = createGrammarNode(false);
@@ -518,7 +518,7 @@ public abstract class Grammar implements Configurable, GrammarInterface {
                 wordNode.add(fillerStart, 0.0f);
 
                 for (Word filler : fillers) {
-                    GrammarNode fnode = createGrammarNode(maxIdentity + 1, filler.getSpelling());
+                    GrammarNode fnode = createGrammarNode(maxIdentity + 1, filler.spelling);
                     fillerStart.add(fnode, 0.0f);
                     fnode.add(fillerEnd, 0.0f);
                 }

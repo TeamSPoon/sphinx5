@@ -74,6 +74,7 @@ public class StreamDataSource extends BaseDataProcessor {
     private boolean utteranceEndSent;
     private boolean utteranceStarted;
     protected int bitsPerSample;
+    byte[] samplesBuffer;
 
     private TimeFrame timeFrame = TimeFrame.INFINITE;
 
@@ -111,6 +112,7 @@ public class StreamDataSource extends BaseDataProcessor {
                       boolean signedData) {
         this.sampleRate = sampleRate;
         this.bytesPerRead = bytesPerRead;
+        this.samplesBuffer = new byte[bytesPerRead];
         this.bitsPerSample = bitsPerSample;
 
         if (this.bitsPerSample % 8 != 0)
@@ -211,10 +213,11 @@ public class StreamDataSource extends BaseDataProcessor {
         int read;
         int totalRead = 0;
         final int bytesToRead = bytesPerRead;
-        byte[] samplesBuffer = new byte[bytesPerRead];
         long firstSample = totalValuesRead;
         try {
             do {
+//                int avail = Math.max(1,dataStream.available());
+
                 read = dataStream.read(samplesBuffer, totalRead, bytesToRead
                         - totalRead);
                 if (read > 0) {
@@ -269,6 +272,6 @@ public class StreamDataSource extends BaseDataProcessor {
      * @return the duration of the current data stream in milliseconds
      */
     private long getDuration() {
-        return (long) (((double) totalValuesRead / (double) sampleRate) * 1000.0);
+        return Math.round((((double) totalValuesRead )/  sampleRate) * 1000.0);
     }
 }

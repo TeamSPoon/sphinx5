@@ -51,7 +51,7 @@ public class Aligner {
         int MIN_FILLER_LENGTH = 200;
         for (WordResult result : results) {
             if (result.isFiller()) {
-                fillerLength += result.getTimeFrame().length(); 
+                fillerLength += result.timeFrame.length();
                 if (fillerLength > MIN_FILLER_LENGTH) {
                     if (currentUtt != null)
                         utts.add(currentUtt);
@@ -76,7 +76,7 @@ public class Aligner {
             long endFrame = Long.MIN_VALUE;
 
             for (WordResult result : utt) {
-                TimeFrame frame = result.getTimeFrame();
+                TimeFrame frame = result.timeFrame;
                 startFrame = Math.min(startFrame, frame.start);
                 endFrame = Math.max(endFrame, frame.end);
                 System.out.print(result.getPronunciation().getWord());

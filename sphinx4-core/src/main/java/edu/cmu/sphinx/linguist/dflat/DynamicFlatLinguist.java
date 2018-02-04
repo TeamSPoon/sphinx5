@@ -325,7 +325,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             unitSet.add(UnitManager.SILENCE);
         } else if (!thisNode.isEmpty()) {
             Word word = thisNode.getWord();
-            Pronunciation[] pronunciations = word.getPronunciations();
+            Pronunciation[] pronunciations = word.pronunciations;
             for (Pronunciation pronunciation : pronunciations) {
                 unitSet.add(pronunciation.units[0]);
             }
@@ -616,7 +616,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             } else if (node.isEmpty()) {
                 arcs = getNextGrammarStates(lc, nextBaseID);
             } else {
-                Pronunciation[] pronunciations = node.getWord().getPronunciations();
+                Pronunciation[] pronunciations = node.getWord().pronunciations;
 
                 // This can potentially speedup computation
                 // pronunciations = filter(pronunciations, nextBaseID);
@@ -878,7 +878,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          */
         @Override
         public float getInsertionProbability() {
-            if (pronunciation.getWord().isFiller()) {
+            if (pronunciation.getWord().filler) {
                 return LogMath.LOG_ONE;
             } else {
                 return logWordInsertionProbability;
@@ -1003,7 +1003,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          */
         @Override
         public String toString() {
-            return pronunciation.getWord().getSpelling();
+            return pronunciation.getWord().spelling;
         }
 
 

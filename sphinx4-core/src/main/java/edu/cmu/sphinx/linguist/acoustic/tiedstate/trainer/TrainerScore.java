@@ -87,7 +87,7 @@ public class TrainerScore {
             SenoneSequence ss = hmm.getSenoneSequence();
             // Get the senone associated with this HMMState, located
             // in the stateIndex-th position in the senone sequence
-            senone = ss.getSenones()[stateIndex];
+            senone = ss.senones[stateIndex];
             // After this, we need to go to the senone pool to find
             // out the senone id... Or maybe we can operate directly
             // on the senone

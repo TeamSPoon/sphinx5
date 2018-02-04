@@ -149,7 +149,7 @@ public class WordActiveListFactory extends ActiveListFactory {
 
                 // only allow  maxFiller words
                 if (maxFiller > 0) {
-                    if (word.isFiller()) {
+                    if (word.filler) {
                         if (fillerCount < maxFiller) {
                             fillerCount++;
                         } else {

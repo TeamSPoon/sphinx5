@@ -118,7 +118,7 @@ public class GrammarPoint {
             Word[] words = alternatives[alternativeIndex];
             if (wordIndex < words.length) {
                 Pronunciation[] pronunciations =
-                        words[wordIndex].getPronunciations();
+                        words[wordIndex].pronunciations;
                 if (pronunciationIndex < pronunciations.length) {
                     Unit[] units =
                             pronunciations[pronunciationIndex].units;
@@ -248,8 +248,7 @@ public class GrammarPoint {
                         pronunciationIndex, unitIndex + 1);
             }
             Pronunciation[] pronunciations = node.
-                    getAlternatives()[alternativeIndex][wordIndex].
-                    getPronunciations();
+                    getAlternatives()[alternativeIndex][wordIndex].pronunciations;
 
             unitsLength = pronunciations[pronunciationIndex].units.length;
 
@@ -261,7 +260,7 @@ public class GrammarPoint {
                         next.node.getAlternatives()[alternativeIndex];
                 if (++next.wordIndex < alternative.length) {
                     Word word = alternative[next.wordIndex];
-                    for (int i = 0; i < word.getPronunciations().length;
+                    for (int i = 0; i < word.pronunciations.length;
                          i++) {
                         GrammarPoint newGP = new GrammarPoint(next.node,
                                 next.alternativeIndex, next.wordIndex, i, 0);

@@ -87,7 +87,7 @@ public class OutOfGrammarGraph {
          * @return the pronunciation
          */
         public Pronunciation getPronunciation() {
-            return Word.UNKNOWN.getPronunciations()[0];
+            return Word.UNKNOWN.pronunciations[0];
         }
 
 

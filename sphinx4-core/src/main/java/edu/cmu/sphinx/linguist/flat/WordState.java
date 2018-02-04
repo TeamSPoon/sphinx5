@@ -45,7 +45,7 @@ public class WordState extends SentenceHMMState {
      */
     @Override
     public String getPrettyName() {
-        return getName() + '(' + getWord().getSpelling() + ')';
+        return getName() + '(' + getWord().spelling + ')';
     }
 
 

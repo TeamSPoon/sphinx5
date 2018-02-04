@@ -100,8 +100,8 @@ public class LMGrammar extends Grammar {
                 continue;
             }
             for (GrammarNode nextNode : nodes) {
-                String prevWord = prevNode.getWord().getSpelling();
-                String nextWord = nextNode.getWord().getSpelling();
+                String prevWord = prevNode.getWord().spelling;
+                String nextWord = nextNode.getWord().spelling;
                 Word[] wordArray = {getDictionary().word(prevWord),
                         getDictionary().word(nextWord)};
                 float logProbability = languageModel

@@ -24,10 +24,10 @@ import java.util.Locale;
  */
 public class WordResult {
 
-    private final Word word;
-    private final TimeFrame timeFrame;
-    private final double score;
-    private final double confidence;
+    public final Word word;
+    public final TimeFrame timeFrame;
+    public final double score;
+    public final double confidence;
 
     /**
      * Construct a word result with full information.
@@ -60,13 +60,6 @@ public class WordResult {
     }
 
     /**
-     * @return total score for this WirdResult in log domain
-     */
-    public double getScore() {
-        return score;
-    }
-
-    /**
      * Returns a log confidence score for this WordResult.
      *
      * Use the getLogMath().logToLinear() method to convert the log confidence
@@ -90,28 +83,12 @@ public class WordResult {
     }
 
     /**
-     * Gets the word object associated with the given result.
-     *
-     * @return the word object
-     */
-    public Word getWord() {
-        return word;
-    }
-
-    /**
-     * @return time frame for the word
-     */
-    public TimeFrame getTimeFrame() {
-        return timeFrame;
-    }
-
-    /**
      * Does this word result represent a filler token?
      *
      * @return true if this is a filler
      */
     public boolean isFiller() {
-        return word.isFiller() || word.toString().equals("<skip>");
+        return word.filler || word.toString().equals("<skip>");
     }
 
     @Override

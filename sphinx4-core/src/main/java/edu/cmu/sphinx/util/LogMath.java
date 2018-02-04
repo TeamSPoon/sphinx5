@@ -335,8 +335,8 @@ public enum LogMath { ;
      */
     // [ EBG: Shouldn't we be using something like logToLog(value, base, 10)
     // for this? ]
-    public static float log10(float value) {
-        return (float) (0.4342944819 * java.lang.Math.log(value));
+    public static double log10(double value) {
+        return (0.4342944819 * java.lang.Math.log(value));
         // If you want to get rid of the constant:
         // return ((1.0f / Math.log(10.0f)) * Math.log(value));
     }

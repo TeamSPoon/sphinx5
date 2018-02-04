@@ -36,20 +36,20 @@ public class DictionaryTest {
         dictionary.allocate();
         Word word = dictionary.word("one");
 
-        assertThat(word.getPronunciations(), arrayWithSize(2));
-        assertThat(word.getPronunciations()[0].toString(),
+        assertThat(word.pronunciations, arrayWithSize(2));
+        assertThat(word.pronunciations[0].toString(),
                    equalTo("one(W AH N )"));
-        assertThat(word.getPronunciations()[1].toString(),
+        assertThat(word.pronunciations[1].toString(),
                    equalTo("one(HH W AH N )"));
 
         word = dictionary.word("something_missing");
         assertThat(word, nullValue());
 
-        assertThat(dictionary.getSentenceStartWord().getSpelling(),
+        assertThat(dictionary.getSentenceStartWord().spelling,
                    equalTo("<s>"));
-        assertThat(dictionary.getSentenceEndWord().getSpelling(),
+        assertThat(dictionary.getSentenceEndWord().spelling,
                    equalTo("</s>"));
-        assertThat(dictionary.getSilenceWord().getSpelling(), equalTo("<sil>"));
+        assertThat(dictionary.getSilenceWord().spelling, equalTo("<sil>"));
 
         assertThat(dictionary.getFillerWords(), arrayWithSize(5));
     }

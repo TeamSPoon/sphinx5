@@ -199,7 +199,7 @@ public class CIPhoneLoop {
 class UnknownWordState extends SentenceHMMState implements WordSearchState {
 
     public Pronunciation getPronunciation() {
-        return Word.UNKNOWN.getPronunciations()[0];
+        return Word.UNKNOWN.pronunciations[0];
     }
 
 

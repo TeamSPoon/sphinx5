@@ -715,7 +715,7 @@ public class Lattice {
                 count++;
             }
             w.write("    t=" + (node.getBeginTime() * 1.0 / 1000));
-            String spelling = node.getWord().getSpelling();
+            String spelling = node.getWord().spelling;
             if (spelling.startsWith("<"))
                 spelling = "!NULL";
             w.write("    W=" + spelling);
@@ -1009,7 +1009,7 @@ public class Lattice {
 
         // backward
         terminalNode.setBackwardScore(LogMath.LOG_ONE);
-        assert sortedNodes.get(sortedNodes.size() - 1) == terminalNode;
+        //assert sortedNodes.get(sortedNodes.size() - 1) == terminalNode;
         ListIterator<Node> n = sortedNodes.listIterator(sortedNodes.size() - 1);
         while (n.hasPrevious()) {
             Node currentNode = n.previous();
@@ -1152,7 +1152,7 @@ public class Lattice {
         Word word = node.getWord();
         if (word.isSentenceStartWord() || word.isSentenceEndWord())
             return false;
-        return word.isFiller();
+        return word.filler;
     }
 
 }

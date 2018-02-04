@@ -28,7 +28,17 @@ public class SenoneHMM implements HMM {
     private final Unit unit;
     private final Unit baseUnit;
     private final SenoneSequence senoneSequence;
-    private final float[][] transitionMatrix;
+
+
+    /**
+     * Returns the transition matrix that determines the state transition probabilities for the matrix. Each entry in
+     * the transition matrix defines the probability of transitioning from one state to the next. For example, the
+     * probability of transitioning from state 1 to state 2 can be determined by accessing transition matrix
+     * element[1][2].
+     *
+     * @return the transition matrix (in log domain) of size NxN where N is the order of the HMM
+     */
+    public final float[][] transitionMatrix;
     private final HMMPosition position;
     private static int objectCount;
     private final HMMState[] hmmStates;
@@ -99,7 +109,7 @@ public class SenoneHMM implements HMM {
     // value, but this is certainly more convenient and easier to
     // understand
     public int getOrder() {
-        return senoneSequence.getSenones().length;
+        return senoneSequence.senones.length;
     }
 
 
@@ -122,26 +132,13 @@ public class SenoneHMM implements HMM {
      * @return true if this is a composite hmm
      */
     public boolean isComposite() {
-        Senone[] senones = senoneSequence.getSenones();
+        Senone[] senones = senoneSequence.senones;
         for (Senone senone : senones) {
             if (senone instanceof CompositeSenone) {
                 return true;
             }
         }
         return false;
-    }
-
-
-    /**
-     * Returns the transition matrix that determines the state transition probabilities for the matrix. Each entry in
-     * the transition matrix defines the probability of transitioning from one state to the next. For example, the
-     * probability of transitioning from state 1 to state 2 can be determined by accessing transition matrix
-     * element[1][2].
-     *
-     * @return the transition matrix (in log domain) of size NxN where N is the order of the HMM
-     */
-    public float[][] getTransitionMatrix() {
-        return transitionMatrix;
     }
 
 

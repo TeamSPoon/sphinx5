@@ -89,7 +89,7 @@ public class Nbest {
         String newPathString;
         if (newNode.getWord().isSentenceEndWord())
             newPathString = path.path + " </s>";
-        else if (newNode.getWord().isFiller())
+        else if (newNode.getWord().filler)
             newPathString = path.path;
         else
             newPathString = path.path + ' ' + newNode.getWord();

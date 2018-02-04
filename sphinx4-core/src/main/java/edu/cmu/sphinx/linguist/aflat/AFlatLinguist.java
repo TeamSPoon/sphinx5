@@ -368,7 +368,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 			unitSet.add(UnitManager.SILENCE);
 		} else if (!thisNode.isEmpty()) {
 			Word word = thisNode.getWord();
-			Pronunciation[] pronunciations = word.getPronunciations();
+			Pronunciation[] pronunciations = word.pronunciations;
 			for (Pronunciation pronunciation : pronunciations) {
 				unitSet.add(pronunciation.units[0]);
 			}
@@ -653,7 +653,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 					arcs = getNextGrammarStates(lc, nextBaseID);
 				} else {
 					Word word = node.getWord();
-					Pronunciation[] pronunciations = word.getPronunciations();
+					Pronunciation[] pronunciations = word.pronunciations;
 					pronunciations = filter(pronunciations, nextBaseID);
 					SearchStateArc[] nextArcs;
 					if(addOutOfGrammarBranch)
@@ -924,7 +924,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 */
 		@Override
 		public float getInsertionProbability() {
-			if (pronunciation.getWord().isFiller()) {
+            if (pronunciation.getWord().filler) {
 				return LogMath.LOG_ONE;
 			} else {
 				return logWordInsertionProbability;
@@ -1045,7 +1045,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 */
 		@Override
 		public String toString() {
-			return pronunciation.getWord().getSpelling();
+			return pronunciation.getWord().spelling;
 		}
 
 		/**

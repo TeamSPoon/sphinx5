@@ -34,8 +34,11 @@ public class CMUTests {
 
     @Test
     public void setComponentPropertyTest() throws IOException {
-        File configFile = new File("sphinx4-core/src/test/resources/edu/cmu/sphinx/util/props/ConfigurationManagerTest.testconfig.sxl");
-        ConfigurationManager cm = new ConfigurationManager(configFile.toURI().toURL());
+        //File configFile = new File("sphinx4-core/src/test/resources/edu/cmu/sphinx/util/props/ConfigurationManagerTest.testconfig.sxl");
+        ConfigurationManager cm = new ConfigurationManager(
+                getClass().getResource("ConfigurationManagerTest.testconfig.sxl")
+                //configFile.toURI().toURL()
+        );
 
         int newBeamWidth = 4711;
         ConfigurationManagerUtils.setProperty(cm, "beamWidth", String.valueOf(newBeamWidth));

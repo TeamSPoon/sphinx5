@@ -37,6 +37,7 @@ public class GrXMLGrammar extends JSGFGrammar {
         try {
             SAXParserFactoryImpl spf = new SAXParserFactoryImpl();
             spf.setValidating(false);
+
             SAXParser parser = spf.newSAXParser();
 
 

@@ -68,7 +68,7 @@ public class AlignerDemo {
         List<WordResult> results = aligner.align(audioUrl, transcript);
         List<String> stringResults = new ArrayList<String>();
         for (WordResult wr : results) {
-            stringResults.add(wr.getWord().getSpelling());
+            stringResults.add(wr.word.spelling);
         }
         
         LongTextAligner textAligner =
@@ -86,13 +86,10 @@ public class AlignerDemo {
                 if (aid[i] - lastId > 1) {
                     for (WordResult result : results.subList(lastId + 1,
                             aid[i])) {
-                        System.out.format("+ %-25s [%s]\n", result.getWord()
-                                .getSpelling(), result.getTimeFrame());
+                        System.out.format("+ %-25s [%s]\n", result.word.spelling, result.timeFrame);
                     }
                 }
-                System.out.format("  %-25s [%s]\n", results.get(aid[i])
-                        .getWord().getSpelling(), results.get(aid[i])
-                        .getTimeFrame());
+                System.out.format("  %-25s [%s]\n", results.get(aid[i]).word.spelling, results.get(aid[i]).timeFrame);
                 lastId = aid[i];
             }
         }
@@ -100,8 +97,7 @@ public class AlignerDemo {
         if (lastId >= 0 && results.size() - lastId > 1) {
             for (WordResult result : results.subList(lastId + 1,
                     results.size())) {
-                System.out.format("+ %-25s [%s]\n", result.getWord()
-                        .getSpelling(), result.getTimeFrame());
+                System.out.format("+ %-25s [%s]\n", result.word.spelling, result.timeFrame);
             }
         }
     }

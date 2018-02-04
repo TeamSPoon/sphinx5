@@ -101,8 +101,10 @@ public class FeatureTransform extends BaseDataProcessor {
         float[] result = new float[transform.length];
 
         for (int i = 0; i < transform.length; ++i) {
-            for (int j = 0; j < features.length; ++j)
-                result[i] += transform[i][j] * features[j];
+            float[] ti = transform[i];
+            for (int j = 0; j < features.length; ++j) {
+                result[i] += ti[j] * features[j];
+            }
         }
 
         if (features.length > transform[0].length) {

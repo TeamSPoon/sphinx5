@@ -362,7 +362,7 @@ public class Node {
      */
     @Override
     public String toString() {
-        return ("Node(" + word.getSpelling() + ',' + getBeginTime() + '|' +
+        return ("Node(" + word.spelling + ',' + getBeginTime() + '|' +
                 endTime + ')');
     }
 
@@ -405,7 +405,7 @@ public class Node {
      * @throws IOException if error occurred
      */
     void dump(PrintWriter f) {
-        f.println("node: " + id + ' ' + word.getSpelling() +
+        f.println("node: " + id + ' ' + word.spelling +
                 //" a:" + getForwardProb() + " b:" + getBackwardProb()
                 //" p:" + getPosterior());
                 ' ' + getBeginTime() + ' ' + endTime);
@@ -613,7 +613,7 @@ public class Node {
      */
     public boolean isEquivalent(Node other) {
         return
-                ((word.getSpelling().equals(other.word.getSpelling()) &&
+                ((word.spelling.equals(other.word.spelling) &&
                         (getEnteringEdges().size() == other.getEnteringEdges().size() &&
                                 getLeavingEdges().size() == other.getLeavingEdges().size())) &&
                         (getBeginTime() == other.getBeginTime() &&

@@ -3,7 +3,6 @@ package edu.cmu.sphinx.decoder.search;
 import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;

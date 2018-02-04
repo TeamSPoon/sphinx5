@@ -1,8 +1,6 @@
 package edu.cmu.sphinx.linguist.acoustic.tiedstate;
 
 import edu.cmu.sphinx.frontend.Data;
-import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
-import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

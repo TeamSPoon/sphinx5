@@ -155,7 +155,7 @@ public class TiedStateAcousticModel implements AcousticModel {
 
         SenoneHMM contextIndependentHMM = (SenoneHMM) lookupNearestHMM(ciUnit,
                 HMMPosition.UNDEFINED, true);
-        float[][] tmat = contextIndependentHMM.getTransitionMatrix();
+        float[][] tmat = contextIndependentHMM.transitionMatrix;
         return new SenoneHMM(unit, compositeSequence, tmat, position);
     }
 
@@ -348,8 +348,8 @@ public class TiedStateAcousticModel implements AcousticModel {
 
         int longestSequence = 0;
         for (SenoneSequence ss : senoneSequenceList) {
-            if (ss.getSenones().length > longestSequence) {
-                longestSequence = ss.getSenones().length;
+            if (ss.senones.length > longestSequence) {
+                longestSequence = ss.senones.length;
             }
         }
 
@@ -363,8 +363,8 @@ public class TiedStateAcousticModel implements AcousticModel {
         for (int i = 0; i < longestSequence; i++) {
             Set<Senone> compositeSenoneSet = new HashSet<>();
             for (SenoneSequence senoneSequence : senoneSequenceList) {
-                if (i < senoneSequence.getSenones().length) {
-                    Senone senone = senoneSequence.getSenones()[i];
+                if (i < senoneSequence.senones.length) {
+                    Senone senone = senoneSequence.senones[i];
                     compositeSenoneSet.add(senone);
                 }
             }

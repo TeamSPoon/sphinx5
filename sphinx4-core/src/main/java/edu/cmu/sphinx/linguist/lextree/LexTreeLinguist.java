@@ -676,7 +676,7 @@ public class LexTreeLinguist implements Linguist {
             Word nextWord = wordNode.getWord();
             float smearTerm = previous.currentSmearTerm;
 
-            if (nextWord.isFiller() && nextWord != sentenceEndWord) {
+            if (nextWord.filler && nextWord != sentenceEndWord) {
                 return new LexTreeWordState(wordNode, lastUnit,
                         wordSequence,
                         smearTerm, logOne, languageProbability);

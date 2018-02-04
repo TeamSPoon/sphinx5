@@ -249,7 +249,7 @@ public class GrammarNode {
         Word[][] alternatives = this.alternatives;
         for (int i = 0; i < alternatives.length; i++) {
             for (int j = 0; j < alternatives[i].length; j++) {
-                dump.append(' ').append(alternatives[i][j].getSpelling());
+                dump.append(' ').append(alternatives[i][j].spelling);
             }
             if (i < alternatives.length - 1) {
                 dump.append('|');
@@ -328,7 +328,7 @@ public class GrammarNode {
      * @return a gdl label for the node
      */
     static String getGDLLabel(GrammarNode node) {
-        String label = node.isEmpty() ? "" : node.getWord().getSpelling();
+        String label = node.isEmpty() ? "" : node.getWord().spelling;
         return '\"' + label + '\"';
     }
 

@@ -27,7 +27,6 @@ import edu.cmu.sphinx.linguist.dictionary.Word;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a single state in the recognition trellis. Subclasses of a token are used to represent the various
@@ -232,12 +231,12 @@ public class Token implements Scoreable {
      * @return the score for the feature
      */
     public float calculateScore(Data feature) {
-        
+
+        setData(feature);
+
         logAcousticScore = ((ScoreProvider) searchState).getScore(feature);
 
         logTotalScore += logAcousticScore;
-
-        setData(feature);
 
         return logTotalScore;
     }
@@ -410,7 +409,7 @@ public class Token implements Scoreable {
 
 //                System.out.println(token.getFrameNumber() + " " + word + " " + token.logLanguageScore + " " + token.logAcousticScore);
 
-                if (wantFiller || !word.isFiller()) {
+                if (wantFiller || !word.filler) {
                     if (wantPronunciations) {
                         sb.insert(0, ']');
                         Unit[] u = pron.units;
@@ -420,7 +419,7 @@ public class Token implements Scoreable {
                         }
                         sb.insert(0, '[');
                     }
-                    sb.insert(0, word.getSpelling());
+                    sb.insert(0, word.spelling);
                     sb.insert(0, ' ');
                 }
             }
@@ -464,7 +463,7 @@ public class Token implements Scoreable {
             if (searchState instanceof WordSearchState) {
                 WordSearchState wordState = (WordSearchState) searchState;
                 Word word = wordState.getPronunciation().getWord();
-                sb.insert(0, ' ' + word.getSpelling());
+                sb.insert(0, ' ' + word.spelling);
             } else if (searchState instanceof UnitSearchState) {
                 UnitSearchState unitState = (UnitSearchState) searchState;
                 Unit unit = unitState.getUnit();

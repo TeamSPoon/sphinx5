@@ -111,7 +111,7 @@ public class BuildTranscriptHMM {
                  transcript.hasMoreWords();) {
                 String word = transcript.nextWord();
                 Pronunciation[] pronunciations =
-                        dictionary.word(word).getPronunciations();
+                        dictionary.word(word).pronunciations;
                 int numberOfPronunciations = pronunciations.length;
 
                 Node[] pronNode = new Node[numberOfPronunciations];
@@ -127,7 +127,7 @@ public class BuildTranscriptHMM {
                 Node dummyWordEndNode = new Node(NodeType.DUMMY);
                 for (int i = 0; i < numberOfPronunciations; i++) {
                     String wordAlternate
-                            = pronunciations[i].getWord().getSpelling();
+                            = pronunciations[i].getWord().spelling;
                     if (i > 0) {
                         wordAlternate += "(" + i + ')';
                     }
@@ -230,7 +230,7 @@ public class BuildTranscriptHMM {
         Graph graph = new Graph();
         Node prevNode;
         Node stateNode = null;
-        float[][] tmat = hmm.getTransitionMatrix();
+        float[][] tmat = hmm.transitionMatrix;
 
         prevNode = new Node(NodeType.DUMMY);
         graph.addNode(prevNode);

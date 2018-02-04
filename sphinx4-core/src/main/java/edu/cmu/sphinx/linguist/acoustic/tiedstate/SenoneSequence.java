@@ -20,7 +20,13 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class SenoneSequence implements Serializable {
 
-    private final Senone[] senones;
+    /**
+     * Returns the ordered set of senones for this sequence
+     *
+     * @return the ordered set of senones for this sequence
+     */
+    public final Senone[] senones;
+    private final int hash;
 
 
     /**
@@ -41,16 +47,11 @@ public class SenoneSequence implements Serializable {
      */
     public SenoneSequence(Senone[] sequence) {
         this.senones = sequence;
-    }
-
-
-    /**
-     * Returns the ordered set of senones for this sequence
-     *
-     * @return the ordered set of senones for this sequence
-     */
-    public Senone[] getSenones() {
-        return senones;
+        int hashCode = 31;
+        for (Senone senone : sequence) {
+            hashCode = hashCode * 91 + senone.hashCode();
+        }
+        this.hash = hashCode;
     }
 
 
@@ -61,11 +62,7 @@ public class SenoneSequence implements Serializable {
      */
     @Override
     public int hashCode() {
-        int hashCode = 31;
-        for (Senone senone : senones) {
-            hashCode = hashCode * 91 + senone.hashCode();
-        }
-        return hashCode;
+        return hash;
     }
 
 
@@ -80,7 +77,8 @@ public class SenoneSequence implements Serializable {
             return true;
         } else {
             if (o instanceof SenoneSequence) {
-                return Arrays.equals(senones, ((SenoneSequence) o).senones);
+                SenoneSequence ss = (SenoneSequence) o;
+                return hash == ss.hash && Arrays.equals(senones, ss.senones);
             }
             return false;
         }

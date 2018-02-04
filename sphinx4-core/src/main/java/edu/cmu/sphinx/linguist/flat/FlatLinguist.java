@@ -579,7 +579,7 @@ public class FlatLinguist implements Linguist, Configurable {
                 } else {
 //                    int maxSize = getRightContextSize();
                     Word word = node.getWord();
-                    Pronunciation[] prons = word.getPronunciations();
+                    Pronunciation[] prons = word.pronunciations;
                     for (Pronunciation pron : prons) {
                         UnitContext startingContext = getStartingContext(pron);
                         startingContexts.add(startingContext);
@@ -614,7 +614,7 @@ public class FlatLinguist implements Linguist, Configurable {
             if (!node.isEmpty()) {
                 int maxSize = getLeftContextSize();
                 Word word = node.getWord();
-                Pronunciation[] prons = word.getPronunciations();
+                Pronunciation[] prons = word.pronunciations;
                 for (Pronunciation pron : prons) {
                     Unit[] units = pron.units;
                     int size = units.length;
@@ -850,7 +850,7 @@ public class FlatLinguist implements Linguist, Configurable {
         private void expandWord(UnitContext leftContext) {
             Word word = node.getWord();
             T("  Expanding word " + word + " for lc " + leftContext);
-            Pronunciation[] pronunciations = word.getPronunciations();
+            Pronunciation[] pronunciations = word.pronunciations;
             for (int i = 0; i < pronunciations.length; i++) {
                 expandPronunciation(leftContext, pronunciations[i], i);
             }
@@ -1210,7 +1210,7 @@ public class FlatLinguist implements Linguist, Configurable {
             for (GrammarArc arc : getSuccessors()) {
                 GState gstate = getGState(arc.getGrammarNode());
                 if (!gstate.node.isEmpty()
-                        && gstate.node.getWord().getSpelling().equals(
+                        && gstate.node.getWord().spelling.equals(
                         Dictionary.SENTENCE_START_SPELLING)) {
                     continue;
                 }
@@ -1220,7 +1220,7 @@ public class FlatLinguist implements Linguist, Configurable {
                 // word, then each pronunciation gets 1/3 of the total
                 // probability.
                 if (spreadWordProbabilitiesAcrossPronunciations && !gstate.node.isEmpty()) {
-                    int numPronunciations = gstate.node.getWord().getPronunciations().length;
+                    int numPronunciations = gstate.node.getWord().pronunciations.length;
                     probability -= LogMath.linearToLog(numPronunciations);
                 }
                 float fprob = probability;

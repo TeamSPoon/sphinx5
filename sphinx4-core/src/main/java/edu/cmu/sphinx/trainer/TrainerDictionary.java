@@ -52,7 +52,7 @@ public class TrainerDictionary extends TextDictionary {
             }
         }
         pronunciations
-                = word(wordWithoutParentheses).getPronunciations();
+                = word(wordWithoutParentheses).pronunciations;
         if (pronunciations == null) {
             System.out.println("Pronunciation not found for word " +
                     wordWithoutParentheses);

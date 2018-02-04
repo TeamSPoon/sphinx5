@@ -57,7 +57,7 @@ public class DataBlocker extends BaseDataProcessor {
 
             if (data instanceof DataStartSignal) {
                 sampleRate = ((DataStartSignal) data).getSampleRate();
-                blockSizeSamples = (int) Math.round(sampleRate * blockSizeMs / 1000);
+                blockSizeSamples = (int) Math.round(sampleRate * blockSizeMs / 1000.0);
 
                 curInBufferSize = 0;
                 curFirstSamplePos = 0;

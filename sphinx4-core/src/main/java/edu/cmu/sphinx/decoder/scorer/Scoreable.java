@@ -14,8 +14,6 @@ package edu.cmu.sphinx.decoder.scorer;
 
 import edu.cmu.sphinx.frontend.Data;
 
-import java.util.Comparator;
-
 /** Represents an entity that can be scored against a data */
 public interface Scoreable extends Data, Comparable<Scoreable> {
 

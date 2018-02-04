@@ -71,8 +71,11 @@ public class SpeechMarker extends BaseDataProcessor {
     public static final String PROP_SPEECH_LEADER = "speechLeader";
     private int speechLeader;
 
+    //TODO use ArrayDeque
     private LinkedList<Data> inputQueue; // Audio objects are added to the end
+    //TODO use ArrayDeque
     private LinkedList<Data> outputQueue; // Audio objects are added to the end
+
     private boolean inSpeech;
     private int speechCount;
     private int silenceCount;

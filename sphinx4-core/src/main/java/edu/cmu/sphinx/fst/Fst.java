@@ -14,6 +14,7 @@
 package edu.cmu.sphinx.fst;
 
 import edu.cmu.sphinx.fst.semiring.Semiring;
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.io.*;
 import java.util.*;
@@ -29,7 +30,7 @@ import java.util.*;
 public class Fst {
 
     // fst states
-    private ArrayList<State> states = null;
+    private List<State> states = null;
 
     // initial state
     protected State start;
@@ -434,7 +435,7 @@ public class Fst {
         states.remove(state);
 
         for (State s1 : states) {
-            ArrayList<Arc> newArcs = new ArrayList<>();
+            FastList<Arc> newArcs = new FastList<>();
             for (int j = 0; j < s1.getNumArcs(); j++) {
                 Arc a = s1.getArc(j);
                 if (!a.getNextState().equals(state)) {
@@ -466,12 +467,12 @@ public class Fst {
             return;
         }
 
-        ArrayList<State> newStates = new ArrayList<>();
+        FastList<State> newStates = new FastList<>();
 
         for (State s1 : states) {
             if (!toDelete.contains(s1)) {
                 newStates.add(s1);
-                ArrayList<Arc> newArcs = new ArrayList<>();
+                FastList<Arc> newArcs = new FastList<>();
                 for (int j = 0; j < s1.getNumArcs(); j++) {
                     Arc a = s1.getArc(j);
                     if (!toDelete.contains(a.getNextState())) {
@@ -481,7 +482,9 @@ public class Fst {
                 s1.setArcs(newArcs);
             }
         }
+        newStates.trimToSize();
         states = newStates;
+
 
         remapStateIds();
     }

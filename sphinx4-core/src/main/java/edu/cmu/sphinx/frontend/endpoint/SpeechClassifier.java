@@ -145,7 +145,7 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
         double rootMeanSquare = Math.sqrt
                 (sumOfSquares / samples.length);
         rootMeanSquare = Math.max(rootMeanSquare, 1);
-        return (LogMath.log10((float) rootMeanSquare) * 20);
+        return LogMath.log10(rootMeanSquare) * 20;
     }
 
 

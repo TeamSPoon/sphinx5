@@ -17,9 +17,14 @@ import edu.cmu.sphinx.linguist.SearchState;
 import edu.cmu.sphinx.linguist.SearchStateArc;
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Word;
+import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
+import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples.pair;
 
 
 /** Represents a single state in an SentenceHMM */
@@ -38,7 +43,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     /** A Color is used to tag SentenceHMM nodes */
     public enum Color { RED, GREEN }
 
-    private static int globalStateNumber = -1000;
+    private final static AtomicInteger globalStateNumber = new AtomicInteger( -1000 );
 
     private final int stateNumber;
 
@@ -48,7 +53,7 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     private int fields;
     private String name;
 
-    private final Map<String, SentenceHMMStateArc> arcs;
+    private Map<ObjectIntPair<String>, SentenceHMMStateArc> arcs = null;
     private SentenceHMMState parent;
     private String cachedName;
     private String fullName;
@@ -74,8 +79,12 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
 
     /** Empty contructor */
     protected SentenceHMMState() {
-        stateNumber = globalStateNumber--;
-        this.arcs = new LinkedHashMap<>();
+        this.stateNumber = globalStateNumber.decrementAndGet();
+    }
+
+    static final int HASH_BASE = SentenceHMMState.class.hashCode();
+    @Override public int hashCode() {
+        return HASH_BASE + (31 * stateNumber);
     }
 
 
@@ -229,14 +238,14 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     }
 
 
-    /**
-     * Gets the number of successors
-     *
-     * @return the number of successors
-     */
-    public int getNumSuccessors() {
-        return arcs.size();
-    }
+//    /**
+//     * Gets the number of successors
+//     *
+//     * @return the number of successors
+//     */
+//    public int getNumSuccessors() {
+//        return arcs.size();
+//    }
 
 
     /**
@@ -246,10 +255,17 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
      */
     public SearchStateArc[] getSuccessors() {
         if (successorArray == null) {
-            successorArray = arcs.values().toArray(new SentenceHMMStateArc[arcs.size()]);
+            if (arcs!=null) {
+                successorArray = arcs.values().toArray(new SentenceHMMStateArc[arcs.size()]);
+                arcs = null; //now in array-only form
+            } else {
+                return EMPTY_SUCCESSORS;
+            }
         }
         return successorArray;
     }
+
+    final static SearchStateArc[] EMPTY_SUCCESSORS = new SearchStateArc[0];
 
 
     /**
@@ -262,15 +278,15 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     }
 
 
-    /**
-     * remove the given arc from the set of succors
-     *
-     * @param arc the arc to remove
-     */
-    void deleteSuccessor(SentenceHMMStateArc arc) {
-        // FIXME: iterates over entire collection, can be a performance hit.
-        arcs.values().remove(arc);
-    }
+//    /**
+//     * remove the given arc from the set of succors
+//     *
+//     * @param arc the arc to remove
+//     */
+//    void deleteSuccessor(SentenceHMMStateArc arc) {
+//        // FIXME: iterates over entire collection, can be a performance hit.
+//        arcs.values().remove(arc);
+//    }
 
 
     /**
@@ -293,10 +309,23 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
      * @param arc the arc to the next state
      */
     private void rawConnect(SentenceHMMStateArc arc) {
-        SentenceHMMState state = (SentenceHMMState) arc.getState();
 
+        if (arcs == null) {
+            arcs = new HashMap(successorArray!=null ? successorArray.length+1 : 1);
+            if (successorArray!=null) {
+                for (SentenceHMMStateArc x : successorArray)
+                    attach(x);
+                successorArray = null;
+            }
+        }
+
+        attach(arc);
+    }
+
+    private void attach(SentenceHMMStateArc arc) {
         // attach the state-number because the state-signature is not necessarily unique
-        arcs.put(state.getValueSignature() + state.stateNumber, arc);
+        SentenceHMMState state = (SentenceHMMState) arc.getState();
+        arcs.put(pair(state.getValueSignature(), state.stateNumber), arc);
     }
 
 
@@ -505,15 +534,15 @@ public abstract class SentenceHMMState implements Serializable, SearchState {
     }
     
 
-    /**
-     * Searches the set of arcs for an arc that points to a state with an identical value
-     *
-     * @param state the state to search for
-     * @return the arc or null if none could be found.
-     */
-    public SentenceHMMStateArc findArc(SentenceHMMState state) {
-        return arcs.get(state.getValueSignature());
-    }
+//    /**
+//     * Searches the set of arcs for an arc that points to a state with an identical value
+//     *
+//     * @param state the state to search for
+//     * @return the arc or null if none could be found.
+//     */
+//    public SentenceHMMStateArc findArc(SentenceHMMState state) {
+//        return arcs.get(state.getValueSignature());
+//    }
 
 
     /**

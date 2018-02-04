@@ -21,18 +21,19 @@ import edu.cmu.sphinx.util.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** Represents a single state in an HMM */
 public class SenoneHMMState implements HMMState {
 
-    private final SenoneHMM hmm;
-    private final int state;
+    @Deprecated public final SenoneHMM hmm;
+    public final int state;
     HMMStateArc[] arcs;
-    private final boolean isEmitting;
+    public final boolean isEmitting;
     private Senone senone;
-    private final int hashCode;
+    public final int hashCode;
 
-    private static int objectCount;
+    public static final AtomicInteger objectCount = new AtomicInteger();
 
 
     /**
@@ -44,12 +45,12 @@ public class SenoneHMMState implements HMMState {
     SenoneHMMState(SenoneHMM hmm, int which) {
         this.hmm = hmm;
         this.state = which;
-        this.isEmitting = ((hmm.getTransitionMatrix().length - 1) != state);
+        this.isEmitting = ((hmm.transitionMatrix.length - 1) != state);
         if (isEmitting) {
             SenoneSequence ss = hmm.getSenoneSequence();
-            senone = ss.getSenones()[state];
+            senone = ss.senones[state];
         }
-        Utilities.objectTracker("HMMState", objectCount++);
+        Utilities.objectTracker("HMMState", objectCount.getAndIncrement());
         hashCode = hmm.hashCode() + 37 * state;
     }
 
@@ -157,7 +158,7 @@ public class SenoneHMMState implements HMMState {
     public HMMStateArc[] getSuccessors() {
         if (arcs == null) {
             List<HMMStateArc> list = new ArrayList<>();
-            float[][] transitionMatrix = hmm.getTransitionMatrix();
+            float[][] transitionMatrix = hmm.transitionMatrix;
 
             for (int i = 0; i < transitionMatrix.length; i++) {
                 if (transitionMatrix[state][i] > LogMath.LOG_ZERO) {

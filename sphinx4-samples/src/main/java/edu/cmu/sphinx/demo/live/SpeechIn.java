@@ -4,7 +4,7 @@ import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 
 import edu.cmu.sphinx.result.WordResult;
-import edu.stanford.nlp.simple.*;
+//import edu.stanford.nlp.simple.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,12 +53,12 @@ public class SpeechIn {
                 //System.out.println("\t" + result);
 
 
-                Document doc = new Document(result.getHypothesis());
-                for (Sentence sent : doc.sentences()) {  // Will iterate over two sentences
-                    System.out.println("\t" + sent);
-                    System.out.println("\t" + sent.parse());
-                    System.out.println("\t" + sent.dependencyGraph());
-                }
+//                Document doc = new Document(result.getHypothesis());
+//                for (Sentence sent : doc.sentences()) {  // Will iterate over two sentences
+//                    System.out.println("\t" + sent);
+//                    System.out.println("\t" + sent.parse());
+//                    System.out.println("\t" + sent.dependencyGraph());
+//                }
             });
 
             return true;

@@ -364,7 +364,7 @@ public class BatchNISTRecognizer extends BatchModeRecognizer {
 
             WordSearchState wordState = (WordSearchState) token.getSearchState();
             Word word = wordState.getPronunciation().getWord();
-            String spelling = word.getSpelling();
+            String spelling = word.spelling;
             if (!spelling.startsWith("<")) {
                 String[] names = utt.name.split("_");
                 out.write((names[0] + '_' + names[1] + '_' + names[2]

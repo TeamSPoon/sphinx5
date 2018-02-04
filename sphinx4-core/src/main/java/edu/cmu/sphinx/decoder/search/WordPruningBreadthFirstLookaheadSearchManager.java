@@ -432,7 +432,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                 if (nextState instanceof LexTreeHMMState) {
                     float penalty;
                     int baseId = ((LexTreeHMMState) nextState).getHMMState().getHMM().getBaseUnit().getBaseID();
-                    if ((penalty = penalties.getIfAbsent(baseId, -Float.MAX_VALUE)) == -Float.MAX_VALUE)
+                    if ((penalty = penalties.getIfAbsent(baseId, Float.NEGATIVE_INFINITY)) == Float.NEGATIVE_INFINITY)
                         penalty = updateLookaheadPenalty(baseId);
                     if ((tokenScore + lookaheadWeight * penalty) < beamThreshold)
                         continue;
@@ -446,36 +446,66 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             // We're actually multiplying the variables, but since
             // these come in log(), multiply gets converted to add
             float logEntryScore = tokenScore + arc.getProbability();
-            bestTokens.compute(nextState, (ns, bestToken) -> {
-                if (bestToken == null) {
-                    //create
-                    Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
-                            arc.getLanguageProbability(), currentCollectTime);
-                    if (activeListManager.add(newBestToken)) {
-                        tokensCreated.value++;
-                        added[0]++;
-                        return newBestToken;
-                    } else {
-                        return null;
-                    }
-                } else {
-                    if (bestToken.score() < logEntryScore) {
-                        // System.out.println("Updating " + bestToken + " with " +
-                        // newBestToken);
-                        Token oldPredecessor = bestToken.predecessor;
-                        bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
-                                arc.getLanguageProbability(), currentCollectTime);
-                        if (buildWordLattice && nextState instanceof WordSearchState) {
-                            loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
-                        }
-                    } else if (buildWordLattice && nextState instanceof WordSearchState) {
-                        if (predecessor != null) {
-                            loserManager.addAlternatePredecessor(bestToken, predecessor);
-                        }
-                    }
-                    return bestToken;
+
+            Token bestToken = bestTokens.get(nextState);
+
+            if (bestToken == null) {
+                //create
+                Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+                        arc.getLanguageProbability(), currentCollectTime);
+                if (activeListManager.add(newBestToken)) {
+                    tokensCreated.value++;
+                    added[0]++;
+
+                    bestTokens.putIfAbsent(nextState, newBestToken);
                 }
-            });
+            } else {
+                if (bestToken.score() < logEntryScore) {
+                    // System.out.println("Updating " + bestToken + " with " +
+                    // newBestToken);
+                    Token oldPredecessor = bestToken.predecessor;
+                    bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
+                            arc.getLanguageProbability(), currentCollectTime);
+                    if (buildWordLattice && nextState instanceof WordSearchState) {
+                        loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
+                    }
+                } else if (buildWordLattice && nextState instanceof WordSearchState) {
+                    if (predecessor != null) {
+                        loserManager.addAlternatePredecessor(bestToken, predecessor);
+                    }
+                }
+            }
+
+//            bestTokens.compute(nextState, (ns, bestToken) -> {
+//                if (bestToken == null) {
+//                    //create
+//                    Token newBestToken = new Token(predecessor, nextState, logEntryScore, arc.getInsertionProbability(),
+//                            arc.getLanguageProbability(), currentCollectTime);
+//                    if (activeListManager.add(newBestToken)) {
+//                        tokensCreated.value++;
+//                        added[0]++;
+//                        return newBestToken;
+//                    } else {
+//                        return null;
+//                    }
+//                } else {
+//                    if (bestToken.score() < logEntryScore) {
+//                        // System.out.println("Updating " + bestToken + " with " +
+//                        // newBestToken);
+//                        Token oldPredecessor = bestToken.predecessor;
+//                        bestToken.update(predecessor, logEntryScore, arc.getInsertionProbability(),
+//                                arc.getLanguageProbability(), currentCollectTime);
+//                        if (buildWordLattice && nextState instanceof WordSearchState) {
+//                            loserManager.addAlternatePredecessor(bestToken, oldPredecessor);
+//                        }
+//                    } else if (buildWordLattice && nextState instanceof WordSearchState) {
+//                        if (predecessor != null) {
+//                            loserManager.addAlternatePredecessor(bestToken, predecessor);
+//                        }
+//                    }
+//                    return bestToken;
+//                }
+//            });
 
         }
         return added[0];

@@ -46,8 +46,8 @@ public final class SpeechResult {
     public long[] time() {
         List<WordResult> w = result.getTimedBestResult(false);
         if (!w.isEmpty()) {
-            long start = w.get(0).getTimeFrame().start;
-            long end = w.get(w.size() - 1).getTimeFrame().end;
+            long start = w.get(0).timeFrame.start;
+            long end = w.get(w.size() - 1).timeFrame.end;
             return new long[] { start, end };
         }
         return null;

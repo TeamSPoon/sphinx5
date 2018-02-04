@@ -101,7 +101,7 @@ public class TokenGraphDumper {
             String label = ("[" + token.getAcousticScore() + token.getInsertionScore() + ',' +
                     token.getLanguageScore() + ']');
             if (token.isWord()) {
-                label = token.word().getSpelling() + label;
+                label = token.word().spelling + label;
             }
 
             String color = null;

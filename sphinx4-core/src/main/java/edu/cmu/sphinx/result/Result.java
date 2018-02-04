@@ -431,7 +431,7 @@ public class Result {
 
             if (token.isWord()) {
                 Word word = token.word();
-                if (withFillers || !word.isFiller()) {
+                if (withFillers || !word.filler) {
                     TimeFrame timeFrame = TimeFrame.time(token.getCollectTime(), prevWordEnd);
                     result.add(new WordResult(word, timeFrame, token.score(), 1.));
                 }
@@ -460,7 +460,7 @@ public class Result {
         while (token != null) {
             if (token.isWord()) {
                 if (word != null && lastWordEnd >= 0) {
-                    if (withFillers || !word.isFiller()) {
+                    if (withFillers || !word.filler) {
                         TimeFrame timeFrame = TimeFrame.time(lastWordStart, lastWordEnd);
                         result.add(new WordResult(word, timeFrame, token.score(), 1.));
                     }

@@ -24,10 +24,10 @@ public class Word implements Comparable<Word> {
         Pronunciation.UNKNOWN.setWord(UNKNOWN);
     }
 
-    private final String spelling; // the spelling of the word
-    private final Pronunciation[] pronunciations; // pronunciations of this
+    public final String spelling; // the spelling of the word
+    public final Pronunciation[] pronunciations; // pronunciations of this
                                                   // word
-    private final boolean isFiller;
+    public final boolean filler;
 
     /**
      * Creates a Word
@@ -40,26 +40,7 @@ public class Word implements Comparable<Word> {
             boolean isFiller) {
         this.spelling = spelling;
         this.pronunciations = pronunciations;
-        this.isFiller = isFiller;
-    }
-
-    /**
-     * Returns the spelling of the word.
-     *
-     * @return the spelling of the word
-     */
-    public String getSpelling() {
-        return spelling;
-    }
-
-    /**
-     * Determines if this is a filler word
-     *
-     * @return <code>true</code> if this word is a filler word, otherwise it
-     *         returns <code>false</code>
-     */
-    public boolean isFiller() {
-        return isFiller;
+        this.filler = isFiller;
     }
 
     /**
@@ -78,15 +59,6 @@ public class Word implements Comparable<Word> {
      */
     public boolean isSentenceStartWord() {
         return Dictionary.SENTENCE_START_SPELLING.equals(this.spelling);
-    }
-
-    /**
-     * Retrieves the pronunciations of this word
-     *
-     * @return the pronunciations of this word
-     */
-    public Pronunciation[] getPronunciations() {
-        return pronunciations;
     }
 
     /**

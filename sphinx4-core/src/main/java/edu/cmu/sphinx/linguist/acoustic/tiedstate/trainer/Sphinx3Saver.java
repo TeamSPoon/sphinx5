@@ -484,12 +484,12 @@ public class Sphinx3Saver implements Saver {
             pw.print(position + '\t');
             String attribute = unit.isFiller() ? FILLER : "n/a";
             pw.print(attribute + '\t');
-            int tmat = matrixPool.indexOf(hmm.getTransitionMatrix());
+            int tmat = matrixPool.indexOf(hmm.transitionMatrix);
             assert tmat < numTiedTransitionMatrices;
             pw.print(tmat + "\t");
 
             SenoneSequence ss = hmm.getSenoneSequence();
-            Senone[] senones = ss.getSenones();
+            Senone[] senones = ss.senones;
             for (Senone senone : senones) {
                 int index = senonePool.indexOf(senone);
                 assert index >= 0 && index < numContextIndependentTiedState;
@@ -528,12 +528,12 @@ public class Sphinx3Saver implements Saver {
             String attribute = unit.isFiller() ? FILLER : "n/a";
             assert attribute.equals("n/a");
             pw.print(attribute + '\t');
-            int tmat = matrixPool.indexOf(hmm.getTransitionMatrix());
+            int tmat = matrixPool.indexOf(hmm.transitionMatrix);
             assert tmat < numTiedTransitionMatrices;
             pw.print(tmat + "\t");
 
             SenoneSequence ss = hmm.getSenoneSequence();
-            Senone[] senones = ss.getSenones();
+            Senone[] senones = ss.senones;
             for (Senone senone : senones) {
                 int index = senonePool.indexOf(senone);
                 assert index >= 0 && index < numTiedState;

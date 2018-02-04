@@ -21,6 +21,7 @@ import edu.cmu.sphinx.util.Range;
 import edu.cmu.sphinx.util.TimeFrame;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
@@ -106,41 +107,43 @@ public class SpeechAligner {
                     grammar.setWords(text);
                 }
 
-                context.setSpeechSource(audioUrl.openStream(), frame);
+                InputStream stream = audioUrl.openStream();
+                try {
+                    context.setSpeechSource(stream, frame);
 
-                List<WordResult> hypothesis = new ArrayList<>();
-                Result result;
-                while (null != (result = recognizer.recognize())) {
-                    logger.info("Utterance result " + result.getTimedBestResult(true));
-                    hypothesis.addAll(result.getTimedBestResult(false));
-                }
-
-                if (i == 0) {
-                    if (hypothesis.size() > 0) {
-                        lastFrame = hypothesis.get(hypothesis.size() - 1).getTimeFrame().end;
+                    List<WordResult> hypothesis = new ArrayList<>();
+                    Result result;
+                    while (null != (result = recognizer.recognize())) {
+                        logger.info("Utterance result " + result.getTimedBestResult(true));
+                        hypothesis.addAll(result.getTimedBestResult(false));
                     }
-                }
 
-                List<String> words = new ArrayList<>();
-                for (WordResult wr : hypothesis) {
-                    words.add(wr.getWord().getSpelling());
-                }
-                int[] alignment = aligner.align(words, range);
-
-                List<WordResult> results = hypothesis;
-
-                logger.info("Decoding result is " + results);
-
-                // dumpAlignment(transcript, alignment, results);
-                dumpAlignmentStats(transcript, alignment, results);
-
-                for (int j = 0; j < alignment.length; j++) {
-                    if (alignment[j] != -1) {
-                        alignedWords.put(alignment[j], hypothesis.get(j));
+                    if (i == 0) {
+                        if (hypothesis.size() > 0) {
+                            lastFrame = hypothesis.get(hypothesis.size() - 1).timeFrame.end;
+                        }
                     }
-                }
 
-                recognizer.deallocate();
+                    List<String> words = new ArrayList<>(hypothesis.size());
+                    for (WordResult wr : hypothesis) {
+                        words.add(wr.word.spelling);
+                    }
+                    int[] alignment = aligner.align(words, range);
+
+                    logger.info("Decoding result is " + hypothesis);
+
+                    // dumpAlignment(transcript, alignment, results);
+                    dumpAlignmentStats(transcript, alignment, hypothesis);
+
+                    for (int j = 0; j < alignment.length; j++) {
+                        if (alignment[j] != -1) {
+                            alignedWords.put(alignment[j], hypothesis.get(j));
+                        }
+                    }
+                } finally {
+                    stream.close();
+                    recognizer.deallocate();
+                }
             }
 
             scheduleNextAlignment(transcript, alignedWords, ranges, texts, timeFrames, lastFrame);
@@ -154,7 +157,7 @@ public class SpeechAligner {
         for (String sentence : sentenceTranscript) {
             String[] words = sentence.split("\\s+");
             for (String word : words) {
-        	if (word.length() > 0)
+        	    if (!word.isEmpty())
     	            transcript.add(word);
             }
         }
@@ -192,11 +195,10 @@ public class SpeechAligner {
         long prevStart = 0;
         for (Map.Entry<Integer, WordResult> e : alignedWords.entrySet()) {
             if (e.getKey() - prevKey > 1) {
-                checkedOffer(transcript, texts, timeFrames, ranges, prevKey, e.getKey() + 1, prevStart, e.getValue()
-                        .getTimeFrame().end);
+                checkedOffer(transcript, texts, timeFrames, ranges, prevKey, e.getKey() + 1, prevStart, e.getValue().timeFrame.end);
             }
             prevKey = e.getKey();
-            prevStart = e.getValue().getTimeFrame().start;
+            prevStart = e.getValue().timeFrame.start;
         }
         if (transcript.size() - prevKey > 1) {
             checkedOffer(transcript, texts, timeFrames, ranges, prevKey, transcript.size(), prevStart, lastFrame);

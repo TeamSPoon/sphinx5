@@ -408,7 +408,7 @@ public class FSTGrammar extends Grammar {
         String word = null;
         if (node.getNumAlternatives() > 0) {
             Word[][] alternatives = node.getAlternatives();
-            word = alternatives[0][0].getSpelling();
+            word = alternatives[0][0].spelling;
         }
         return word;
     }

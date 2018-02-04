@@ -80,9 +80,9 @@ public class LatticeIOTest {
             WordResult latWord = latIt.next();
             WordResult latLatWord = latLatIt.next();
             WordResult slfLatWord = slfLatIt.next();
-            Assert.assertEquals(latWord.getWord().toString(), latLatWord.getWord().toString());
-            Assert.assertEquals(latWord.getWord().toString(), slfLatWord.getWord().toString());
-            Assert.assertEquals(latWord.getTimeFrame().start, latLatWord.getTimeFrame().start);
+            Assert.assertEquals(latWord.word.toString(), latLatWord.word.toString());
+            Assert.assertEquals(latWord.word.toString(), slfLatWord.word.toString());
+            Assert.assertEquals(latWord.timeFrame.start, latLatWord.timeFrame.start);
         }
         Assert.assertEquals(lattice.getTerminalNode().getViterbiScore(), latLattice.getTerminalNode().getViterbiScore(), 0.001);
         Assert.assertEquals(lattice.getTerminalNode().getViterbiScore(), slfLattice.getTerminalNode().getViterbiScore(), 0.001);

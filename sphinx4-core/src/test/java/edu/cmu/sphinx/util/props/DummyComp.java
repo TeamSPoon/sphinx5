@@ -3,7 +3,6 @@ package edu.cmu.sphinx.util.props;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,11 +126,12 @@ public class DummyComp implements Configurable {
     @Test
     public void testUseXmlConfig() throws IOException, PropertyException, InstantiationException {
         // probably you need to adpat this path. testconfig is located in the same folder as test
-        File configFile = new File("sphinx4-core/src/test/resources/edu/cmu/sphinx/util/props/ConfigurationManagerTest.testconfig.sxl");
-        if (!configFile.exists())
-            Assert.fail("can not find configuration file to be used for test");
+//        File configFile = new File("sphinx4-core/src/test/resources/edu/cmu/sphinx/util/props/ConfigurationManagerTest.testconfig.sxl");
+//        if (!configFile.exists())
+//            Assert.fail("can not find configuration file to be used for test");
 
-        ConfigurationManager cm = new ConfigurationManager(configFile.toURI().toURL());
+        ConfigurationManager cm = new ConfigurationManager(
+                getClass().getResource("ConfigurationManagerTest.testconfig.sxl"));
 
         DummyComp dc = cm.lookup("duco");
 
