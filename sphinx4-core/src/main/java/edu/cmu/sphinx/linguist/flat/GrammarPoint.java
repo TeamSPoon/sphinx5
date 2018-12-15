@@ -146,47 +146,47 @@ public class GrammarPoint {
     }
 
 
-    /**
-     * Gets all of the right contexts for this grammar point. The contexts returned are guaranteed to be 'size' units
-     * in length, The number of contexts returned depends upon the perplexity of the grammar downstream from this
-     * GrammarPoint
-     *
-     * @param size             the size of each context returned
-     * @param startWithCurrent include the current state in the context
-     * @param maxContexts      the maxium number of right contexts to return
-     * @return a list of containing Unit[] contexts.
-     */
-    public List<Unit[]> getRightContexts(int size, boolean startWithCurrent,
-                                 int maxContexts) {
-        List<Unit[]> contexts = new ArrayList<>();
-        List<GrammarPoint> nextPoints = getNextGrammarPoints(startWithCurrent);
-
-        if (nextPoints.isEmpty()) {
-            Unit[] units = Unit.getEmptyContext(size);
-            addContext(contexts, units);
-        } else {
-            for (GrammarPoint gp : nextPoints) {
-                if (size == 1) {
-                    Unit[] units = new Unit[size];
-                    units[0] = gp.getUnitOrFill();
-                    addContext(contexts, units);
-                } else {
-                    List<Unit[]> rc = gp.getRightContexts(size - 1, false,
-                        maxContexts - contexts.size());
-                    for (Unit[] rcUnits : rc) {
-                        Unit[] units = Unit.getEmptyContext(rcUnits.length + 1);
-                        units[0] = gp.getUnitOrFill();
-                        System.arraycopy(rcUnits, 0, units, 1, rcUnits.length);
-                        addContext(contexts, units);
-                    }
-                }
-                if (contexts.size() >= maxContexts) {
-                    break;
-                }
-            }
-        }
-        return contexts;
-    }
+//    /**
+//     * Gets all of the right contexts for this grammar point. The contexts returned are guaranteed to be 'size' units
+//     * in length, The number of contexts returned depends upon the perplexity of the grammar downstream from this
+//     * GrammarPoint
+//     *
+//     * @param size             the size of each context returned
+//     * @param startWithCurrent include the current state in the context
+//     * @param maxContexts      the maxium number of right contexts to return
+//     * @return a list of containing Unit[] contexts.
+//     */
+//    public List<Unit[]> getRightContexts(int size, boolean startWithCurrent,
+//                                 int maxContexts) {
+//        List<Unit[]> contexts = new ArrayList<>();
+//        List<GrammarPoint> nextPoints = getNextGrammarPoints(startWithCurrent);
+//
+//        if (nextPoints.isEmpty()) {
+//            Unit[] units = Unit.getEmptyContext(size);
+//            addContext(contexts, units);
+//        } else {
+//            for (GrammarPoint gp : nextPoints) {
+//                if (size == 1) {
+//                    Unit[] units = new Unit[size];
+//                    units[0] = gp.getUnitOrFill();
+//                    addContext(contexts, units);
+//                } else {
+//                    List<Unit[]> rc = gp.getRightContexts(size - 1, false,
+//                        maxContexts - contexts.size());
+//                    for (Unit[] rcUnits : rc) {
+//                        Unit[] units = Unit.getEmptyContext(rcUnits.length + 1);
+//                        units[0] = gp.getUnitOrFill();
+//                        System.arraycopy(rcUnits, 0, units, 1, rcUnits.length);
+//                        addContext(contexts, units);
+//                    }
+//                }
+//                if (contexts.size() >= maxContexts) {
+//                    break;
+//                }
+//            }
+//        }
+//        return contexts;
+//    }
 
 
     /**

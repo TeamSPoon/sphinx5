@@ -112,6 +112,6 @@ public class SpeechClassifiedData implements Data {
      */
     @Override
     public String toString() {
-        return "SpeechClassifiedData containing " + data.toString() + " classified as " + (isSpeech ? "speech" : "non-speech");
+        return "SpeechClassifiedData containing " + data + " classified as " + (isSpeech ? "speech" : "non-speech");
     }
 }

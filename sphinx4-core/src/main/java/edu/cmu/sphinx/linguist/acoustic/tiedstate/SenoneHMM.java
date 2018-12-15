@@ -18,6 +18,8 @@ import edu.cmu.sphinx.linguist.acoustic.HMMState;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
 import edu.cmu.sphinx.util.Utilities;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Represents a hidden-markov-model. An HMM consists of a unit (context dependent or independent), a transition matrix
  * from state to state, and a sequence of senones associated with each state. This representation of an HMM is a
@@ -25,9 +27,9 @@ import edu.cmu.sphinx.util.Utilities;
  */
 public class SenoneHMM implements HMM {
 
-    private final Unit unit;
-    private final Unit baseUnit;
-    private final SenoneSequence senoneSequence;
+    public final Unit unit;
+    public final Unit baseUnit;
+    public final SenoneSequence senoneSequence;
 
 
     /**
@@ -39,10 +41,11 @@ public class SenoneHMM implements HMM {
      * @return the transition matrix (in log domain) of size NxN where N is the order of the HMM
      */
     public final float[][] transitionMatrix;
-    private final HMMPosition position;
-    private static int objectCount;
+    public final HMMPosition position;
+
     private final HMMState[] hmmStates;
 
+    private static final AtomicInteger objectCount = new AtomicInteger();
 
     /**
      * Constructs an HMM
@@ -58,14 +61,14 @@ public class SenoneHMM implements HMM {
         this.senoneSequence = senoneSequence;
         this.transitionMatrix = transitionMatrix;
         this.position = position;
-        Utilities.objectTracker("HMM", objectCount++);
+        Utilities.objectTracker("HMM", objectCount.getAndIncrement());
 
         hmmStates = new HMMState[transitionMatrix.length];
         for (int i = 0; i < hmmStates.length; i++) {
             hmmStates[i] = new SenoneHMMState(this, i);
         }
         // baseUnit = Unit.getUnit(unit.getName());
-        baseUnit = unit.getBaseUnit();
+        baseUnit = unit.baseUnit;
     }
 
 
@@ -74,7 +77,7 @@ public class SenoneHMM implements HMM {
      *
      * @return the unit associated with this HMM
      */
-    public Unit getUnit() {
+    @Deprecated public Unit getUnit() {
         return unit;
     }
 
@@ -94,7 +97,7 @@ public class SenoneHMM implements HMM {
      *
      * @param which the state of interest
      */
-    public HMMState getState(int which) {
+    public final HMMState state(int which) {
         return hmmStates[which];
     }
 
@@ -112,17 +115,9 @@ public class SenoneHMM implements HMM {
         return senoneSequence.senones.length;
     }
 
-
-    /**
-     * Returns the SenoneSequence associated with this HMM
-     *
-     * @return the sequence of senones associated with this HMM. The length of the sequence is N, where N is the order
-     *         of the HMM. Note that senone sequences may be shared among HMMs.
-     */
-    // [[ NOTE: the senone sequence may in fact be a sequence of
-    // composite senones
-    public SenoneSequence getSenoneSequence() {
-        return senoneSequence;
+    @Override
+    public final HMMPosition getPosition() {
+        return position;
     }
 
 
@@ -134,9 +129,8 @@ public class SenoneHMM implements HMM {
     public boolean isComposite() {
         Senone[] senones = senoneSequence.senones;
         for (Senone senone : senones) {
-            if (senone instanceof CompositeSenone) {
+            if (senone instanceof CompositeSenone)
                 return true;
-            }
         }
         return false;
     }
@@ -149,18 +143,8 @@ public class SenoneHMM implements HMM {
      * @param stateTo   the index of the state this transition goes to
      * @return the transition probability (in log domain)
      */
-    public float getTransitionProbability(int stateFrom, int stateTo) {
+    public float transitionProb(int stateFrom, int stateTo) {
         return transitionMatrix[stateFrom][stateTo];
-    }
-
-
-    /**
-     * Retrieves the position of this HMM. Possible
-     *
-     * @return the position for this HMM
-     */
-    public HMMPosition getPosition() {
-        return position;
     }
 
 
@@ -171,7 +155,7 @@ public class SenoneHMM implements HMM {
      * @return true if the HMM  represents a filler unit
      */
     public boolean isFiller() {
-        return unit.isFiller();
+        return unit.filler;
     }
 
 
@@ -191,7 +175,7 @@ public class SenoneHMM implements HMM {
      * @return the set of arcs that transition to the initial states for this HMM
      */
     public HMMState getInitialState() {
-        return getState(0);
+        return state(0);
     }
 
 
@@ -202,13 +186,12 @@ public class SenoneHMM implements HMM {
      */
     @Override
     public String toString() {
-        String name = isComposite() ? "HMM@" : "HMM";
-        return name + '(' + unit + "):" + position;
+        return (isComposite() ? "HMM@" : "HMM") + '(' + unit + "):" + position;
     }
 
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return senoneSequence.hashCode();
     }
 
@@ -218,8 +201,7 @@ public class SenoneHMM implements HMM {
         if (this == o) {
             return true;
         } else if (o instanceof SenoneHMM) {
-            SenoneHMM other = (SenoneHMM) o;
-            return senoneSequence.equals(other.senoneSequence);
+            return senoneSequence.equals(((SenoneHMM) o).senoneSequence);
         }
         return false;
     }

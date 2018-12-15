@@ -45,8 +45,7 @@ public class ForcedAlignerGrammar extends Grammar {
 
     /** Creates the grammar */
     @Override
-    protected GrammarNode createGrammar(String referenceText)
-            throws NoSuchMethodException {
+    protected GrammarNode createGrammar(String referenceText) {
 
         initialNode = createGrammarNode(false);
         finalNode = createGrammarNode(true);

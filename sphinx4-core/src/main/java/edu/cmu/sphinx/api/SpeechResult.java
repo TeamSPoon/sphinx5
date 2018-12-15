@@ -15,8 +15,8 @@ import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.*;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -77,9 +77,7 @@ public final class SpeechResult {
      * @return   {@link Collection} of several best hypothesis
      */
     public Collection<String> getNbest(int n) {
-        if (lattice == null)
-            return Collections.emptySet();
-        return new Nbest(lattice).getNbest(n);
+        return lattice == null ? Set.of() : new Nbest(lattice).getNbest(n);
     }
 
     /**

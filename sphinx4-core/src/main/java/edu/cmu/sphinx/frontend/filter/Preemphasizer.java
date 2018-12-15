@@ -106,11 +106,10 @@ public class Preemphasizer extends BaseDataProcessor {
         }
         if (in.length > 1 && preemphasisFactor != 0.0) {
             // do preemphasis
-            double current;
             double previous = in[0];
             in[0] = previous - preemphasisFactor * prior;
             for (int i = 1; i < in.length; i++) {
-                current = in[i];
+                double current = in[i];
                 in[i] = current - preemphasisFactor * previous;
                 previous = current;
             }

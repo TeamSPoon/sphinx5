@@ -370,7 +370,7 @@ public class BaumWelchLearner implements Learner {
                         logTransitionProbability = 0.0f;
                     } else {
                         logTransitionProbability =
-                                hmm.getTransitionProbability(
+                                hmm.transitionProb(
                                         previousState.getState(),
                                         state.getState());
                     }
@@ -435,7 +435,7 @@ public class BaumWelchLearner implements Learner {
                     } else {
                         // previousState == state
                         logTransitionProbability =
-                                hmm.getTransitionProbability(
+                                hmm.transitionProb(
                                         previousState.getState(),
                                         state.getState());
                     }
@@ -510,7 +510,7 @@ public class BaumWelchLearner implements Learner {
                         logTransitionProbability = 0.0f;
                     } else {
                         logTransitionProbability =
-                                hmm.getTransitionProbability(state.getState(),
+                                hmm.transitionProb(state.getState(),
                                         nextState.getState());
                     }
                 } else {

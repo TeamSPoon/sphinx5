@@ -47,7 +47,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from InputStream
     //
     @Override
-    public int read() throws IOException {
+    public int read() {
         if (currentIndex >= bytes.length) {
             return -1;
         } else {
@@ -59,7 +59,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from InputStream
     //
     @Override
-    public int read(byte[] buf) throws IOException {
+    public int read(byte[] buf) {
         int count = 0;
         for (int i = 0; i < buf.length; i++) {
             if (currentIndex >= bytes.length) {
@@ -76,7 +76,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from InputStream
     //
     @Override
-    public int read(byte[] buf, int off, int len) throws IOException {
+    public int read(byte[] buf, int off, int len) {
         int count = 0;
         for (int i = 0; (i < len) && ((i + off) < buf.length); i++) {
             if (currentIndex >= bytes.length) {
@@ -105,7 +105,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from InputStream
     //
     @Override
-    public int available() throws IOException {
+    public int available() {
         return bytes.length - currentIndex;
     }
 
@@ -137,7 +137,7 @@ public class AudioDataInputStream extends InputStream {
     // inherited from AudioInputStream
     //
     @Override
-    public synchronized void reset() throws IOException {
+    public synchronized void reset() {
         currentIndex = markIndex;
     }
 }

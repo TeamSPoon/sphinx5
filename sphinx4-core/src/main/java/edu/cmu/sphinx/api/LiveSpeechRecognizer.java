@@ -39,23 +39,24 @@ public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
      * @param configuration common configuration
      * @throws IOException if model IO went wrong
      */
-    public LiveSpeechRecognizer(Configuration configuration) throws IOException
-    {
+    public LiveSpeechRecognizer(Configuration configuration) throws IOException {
         this(configuration, 16000);
     }
 
     /**
      * Starts recognition process.
      *
-     * @see         LiveSpeechRecognizer#stopRecognition()
+     * @see LiveSpeechRecognizer#stopRecognition()
      */
     public void startRecognition() {
         recognizer.allocate();
         microphone.startRecording();
     }
 
-    /** starts an async recognizer process, providing access to the recognizer and each result that it streams */
-    public void startRecognition(BiPredicate<Decoder<WordPruningBreadthFirstSearchManager>,SpeechResult> eachResult) {
+    /**
+     * starts an async recognizer process, providing access to the recognizer and each result that it streams
+     */
+    public void startRecognition(BiPredicate<Decoder<WordPruningBreadthFirstSearchManager>, SpeechResult> eachResult) {
         startRecognition();
 
         recognizer.recognize(eachResult);
@@ -65,12 +66,12 @@ public class LiveSpeechRecognizer extends AbstractSpeechRecognizer {
 
     /**
      * Stops recognition process.
-     *
+     * <p>
      * Recognition process is paused until the next call to startRecognition.
      *
      * @see #startRecognition()
      */
-    public synchronized void stopRecognition() {
+    public void stopRecognition() {
         microphone.stopRecording();
         recognizer.deallocate();
     }

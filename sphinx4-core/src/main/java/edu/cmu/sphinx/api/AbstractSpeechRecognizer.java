@@ -14,7 +14,6 @@ package edu.cmu.sphinx.api;
 import edu.cmu.sphinx.decoder.adaptation.ClusteredDensityFileData;
 import edu.cmu.sphinx.decoder.adaptation.Stats;
 import edu.cmu.sphinx.decoder.adaptation.Transform;
-import edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 
@@ -72,10 +71,10 @@ public class AbstractSpeechRecognizer {
         }
     }
 
-    public void loadTransform(String path, int numClass) throws Exception {
-    	clusters = new ClusteredDensityFileData(context.getLoader(), numClass);
-    	Transform transform = new Transform((Sphinx3Loader)context.getLoader(), numClass);
-    	transform.load(path);
-    	context.getLoader().update(transform, clusters);
-    }
+//    public void loadTransform(String path, int numClass) throws Exception {
+//    	clusters = new ClusteredDensityFileData(context.getLoader(), numClass);
+//    	Transform transform = new Transform((Sphinx3Loader)context.getLoader(), numClass);
+//    	transform.load(path);
+//    	context.getLoader().update(transform, clusters);
+//    }
 }

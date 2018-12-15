@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
 
 
 /**
@@ -487,7 +486,7 @@ public class Microphone extends BaseDataProcessor {
         public synchronized void start() {
             started = false;
             super.start();
-            waitForStart();
+//            waitForStart();
         }
 
 
@@ -553,7 +552,7 @@ public class Microphone extends BaseDataProcessor {
                      */
                     audioStream.close();
                     audioLine.close();
-                    System.err.println("set to null");
+//                    System.err.println("set to null");
                     audioLine = null;
                 }
             } catch (IOException ioe) {
@@ -562,36 +561,36 @@ public class Microphone extends BaseDataProcessor {
             }
             long duration = (long)
                     ((((double) totalSamplesRead) /
-                            (double) audioStream.getFormat().getSampleRate()) * 1000.0);
+                           audioStream.getFormat().getSampleRate()) * 1000.0);
 
             audioList.add(new DataEndSignal(duration));
             logger.info("DataEndSignal ended");
             logger.info("stopped recording");
 
             synchronized (lock) {
-                lock.notify();
+                lock.notifyAll();
             }
         }
 
 
-        /**
-         * Waits for the recorder to start
-         */
-        private synchronized void waitForStart() {
-            // note that in theory we could use a LineEvent START
-            // to tell us when the microphone is ready, but we have
-            // found that some javasound implementations do not always
-            // issue this event when a line  is opened, so this is a
-            // WORKAROUND.
-
-            try {
-                while (!started) {
-                    wait();
-                }
-            } catch (InterruptedException ie) {
-                logger.warning("wait was interrupted");
-            }
-        }
+//        /**
+//         * Waits for the recorder to start
+//         */
+//        private synchronized void waitForStart() {
+//            // note that in theory we could use a LineEvent START
+//            // to tell us when the microphone is ready, but we have
+//            // found that some javasound implementations do not always
+//            // issue this event when a line  is opened, so this is a
+//            // WORKAROUND.
+//
+//            try {
+//                while (!started) {
+//                    wait();
+//                }
+//            } catch (InterruptedException ie) {
+//                logger.warning("wait was interrupted");
+//            }
+//        }
 
 
         /**
@@ -619,10 +618,11 @@ public class Microphone extends BaseDataProcessor {
                 }
             }
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.info("Read " + numBytesRead
-                        + " bytes from audio stream.");
-            }
+//            if (logger.isLoggable(Level.FINE)) {
+//                logger.fine("Read " + numBytesRead
+//                        + " bytes from audio stream.");
+//            }
+
             if (numBytesRead <= 0) {
                 return null;
             }

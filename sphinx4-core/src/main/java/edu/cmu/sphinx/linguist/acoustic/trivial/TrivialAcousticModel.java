@@ -20,7 +20,6 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Integer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -112,7 +111,7 @@ public class TrivialAcousticModel implements AcousticModel {
                                 boolean exactMatch) {
         HMM hmm = null;
         if (!exactMatch || position == HMMPosition.UNDEFINED) {
-            unit = unit.getBaseUnit();
+            unit = unit.baseUnit;
             hmm = hmmMap.get(unit);
         }
         return hmm;
@@ -177,7 +176,7 @@ public class TrivialAcousticModel implements AcousticModel {
     /* (non-Javadoc)
     * @see edu.cmu.sphinx.linguist.acoustic.AcousticModel#allocate()
     */
-    public void allocate() throws IOException {
+    public void allocate() {
 
     }
 
@@ -212,7 +211,7 @@ class TrivialHMM implements HMM {
         this.position = position;
         hmmStates = new HMMState[NUM_STATES];
         // baseUnit = Unit.getUnit(unit.getName());
-        baseUnit = unit.getBaseUnit();
+        baseUnit = unit.baseUnit;
 
         for (int i = 0; i < hmmStates.length; i++) {
             boolean finalState = i == hmmStates.length - 1;
@@ -246,7 +245,7 @@ class TrivialHMM implements HMM {
      *
      * @param which the state of interest
      */
-    public HMMState getState(int which) {
+    public HMMState state(int which) {
         return hmmStates[which];
     }
 
@@ -354,7 +353,7 @@ class TrivialHMMState implements HMMState {
         } else {
             HMMStateArc[] arcs = new HMMStateArc[2];
             arcs[0] = new HMMStateArc(this, 0f);
-            arcs[1] = new HMMStateArc(hmm.getState(which + 1), 0f);
+            arcs[1] = new HMMStateArc(hmm.state(which + 1), 0f);
             return arcs;
         }
     }

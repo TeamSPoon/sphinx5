@@ -108,7 +108,7 @@ public class ConfigHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char ch[], int start, int length) throws SAXParseException {
+    public void characters(char ch[], int start, int length) {
         if (curItem != null) {
             curItem.append(ch, start, length);
         }

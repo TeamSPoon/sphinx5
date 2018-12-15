@@ -25,12 +25,10 @@ import edu.cmu.sphinx.util.props.*;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -229,7 +227,15 @@ public class Sphinx3Loader implements Loader {
     // for compatibility reasons. By default it looks for the resources, not
     // for the files.
     protected InputStream getDataStream(String path) throws IOException {
-        return new URL(Utilities.pathJoin(location.toString(), path)).openStream();
+        try {
+            return
+                new BufferedInputStream(
+                    new FileInputStream(new File(new URI(Utilities.pathJoin(location.toString(), path)))),
+                        128*1024
+                );
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
     }
 
     public void load() throws IOException {
@@ -520,10 +526,9 @@ public class Sphinx3Loader implements Loader {
      *             if a file cannot be found
      * @throws IOException
      *             if an error occurs while loading the data
-     * @throws URISyntaxException uri was incorrectly specified
      */
     public Pool<float[]> loadDensityFile(String path, float floor)
-            throws IOException, URISyntaxException {
+            throws IOException {
         Properties props = new Properties();
         int blockSize = 0;
 
@@ -603,18 +608,17 @@ public class Sphinx3Loader implements Loader {
      * @return the input stream positioned after the header
      * @throws IOException
      *             on error
-     * @throws URISyntaxException uri was incorrectly specified
      */
     public DataInputStream readS3BinaryHeader(String path, Properties props)
-            throws IOException, URISyntaxException {
+            throws IOException {
 
         InputStream inputStream = getDataStream(path);
+
 
         if (inputStream == null) {
             throw new IOException("Can't open " + path);
         }
-        DataInputStream dis = new DataInputStream(new BufferedInputStream(
-                inputStream));
+        DataInputStream dis = new DataInputStream(inputStream);
         String id = readWord(dis);
         if (!id.equals("s3")) {
             throw new IOException("Not proper s3 binary file " + path);
@@ -622,8 +626,7 @@ public class Sphinx3Loader implements Loader {
         String name;
         while ((name = readWord(dis)) != null) {
             if (!name.equals("endhdr")) {
-                String value = readWord(dis);
-                props.setProperty(name, value);
+                props.setProperty(name, readWord(dis));
             } else {
                 break;
             }
@@ -767,12 +770,10 @@ public class Sphinx3Loader implements Loader {
      * @throws IOException
      *             if an exception occurs
      */
-    public float[] readFloatArray(DataInputStream dis, int size)
-            throws IOException {
+    public float[] readFloatArray(DataInputStream dis, int size) throws IOException {
         float[] data = new float[size];
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
             data[i] = readFloat(dis);
-        }
         return data;
     }
 
@@ -846,14 +847,14 @@ public class Sphinx3Loader implements Loader {
             assert tmat < numTiedTransitionMatrices;
 
             Unit unit = unitManager.getUnit(name, attribute.equals(FILLER));
-            contextIndependentUnits.put(unit.getName(), unit);
+            contextIndependentUnits.put(unit.name, unit);
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Loaded " + unit);
-            }
+//            if (logger.isLoggable(Level.FINE)) {
+//                logger.fine("Loaded " + unit);
+//            }
 
             // The first filler
-            if (unit.isFiller() && unit.getName().equals(SILENCE_CIPHONE)) {
+            if (unit.filler && unit.name.equals(SILENCE_CIPHONE)) {
                 unit = UnitManager.SILENCE;
             }
 
@@ -908,27 +909,23 @@ public class Sphinx3Loader implements Loader {
                 if (unitName.equals(lastUnitName)) {
                     unit = lastUnit;
                 } else {
-                    Unit[] leftContext = new Unit[1];
-                    leftContext[0] = contextIndependentUnits.get(left);
+                    Unit[] leftContext = new Unit[] { contextIndependentUnits.get(left) };
+                    Unit[] rightContext = new Unit[] {contextIndependentUnits.get(right) };
 
-                    Unit[] rightContext = new Unit[1];
-                    rightContext[0] = contextIndependentUnits.get(right);
-
-                    Context context = LeftRightContext.get(leftContext,
-                            rightContext);
+                    Context context = LeftRightContext.get(leftContext, rightContext);
                     unit = unitManager.unit(name, false, context);
                 }
                 lastUnitName = unitName;
                 lastUnit = unit;
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Loaded " + unit);
-                }
+//                if (logger.isLoggable(Level.FINE)) {
+//                    logger.fine("Loaded " + unit);
+//                }
 
                 float[][] transitionMatrix = transitionsPool.get(tmat);
 
                 SenoneSequence ss = lastSenoneSequence;
-                if (ss == null || !sameSenoneSequence(stid, lastStid)) {
+                if (ss == null || !Arrays.equals(stid, lastStid)) {
                     ss = getSenoneSequence(stid);
                 }
                 lastSenoneSequence = ss;
@@ -943,26 +940,27 @@ public class Sphinx3Loader implements Loader {
         est.close();
     }
 
-    /**
-     * Returns true if the given senone sequence IDs are the same.
-     * 
-     * @param ssid1 ids of first senone sequence
-     * @param ssid2 ids of second senone sequence
-     * @return true if the given senone sequence IDs are the same, false
-     *         otherwise
-     */
-    protected static boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
-        if (ssid1.length == ssid2.length) {
-            for (int i = 0; i < ssid1.length; i++) {
-                if (ssid1[i] != ssid2[i]) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    /**
+//     * Returns true if the given senone sequence IDs are the same.
+//     *
+//     * @param ssid1 ids of first senone sequence
+//     * @param ssid2 ids of second senone sequence
+//     * @return true if the given senone sequence IDs are the same, false
+//     *         otherwise
+//     */
+//    protected static boolean sameSenoneSequence(int[] ssid1, int[] ssid2) {
+//        return Arrays.equals(ssid1, ssid2);
+////        if (ssid1.length == ssid2.length) {
+////            for (int i = 0; i < ssid1.length; i++) {
+////                if (ssid1[i] != ssid2[i]) {
+////                    return false;
+////                }
+////            }
+////            return true;
+////        } else {
+////            return false;
+////        }
+//    }
 
     /**
      * Gets the senone sequence representing the given senones.
@@ -989,10 +987,9 @@ public class Sphinx3Loader implements Loader {
      * @return a pool of mixture weights
      * @throws IOException
      *             if an error occurs while loading the data
-     * @throws URISyntaxException uri was incorrectly specified
      */
     protected GaussianWeights loadMixtureWeights(String path, float floor)
-            throws IOException, URISyntaxException {
+            throws IOException {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Loading mixture weights from: " + path);
         }
@@ -1050,10 +1047,9 @@ public class Sphinx3Loader implements Loader {
      * @return a pool of transition matrices
      * @throws IOException
      *             if an error occurs while loading the data
-     * @throws URISyntaxException uri was incorrectly specified
      */
     protected Pool<float[][]> loadTransitionMatrices(String path)
-            throws IOException, URISyntaxException {
+            throws IOException {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Loading transition matrices from: " + path);
         }
@@ -1122,8 +1118,6 @@ public class Sphinx3Loader implements Loader {
         DataInputStream dis;
         try {
             dis = readS3BinaryHeader(path, props);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             return null;
         }
@@ -1250,7 +1244,7 @@ public class Sphinx3Loader implements Loader {
     }
 
     protected Properties loadModelProps(String path)
-            throws IOException, URISyntaxException {
+            throws IOException {
         Properties props = new Properties();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 getDataStream(path)));
@@ -1267,15 +1261,16 @@ public class Sphinx3Loader implements Loader {
             int transformClass = clusters.getClassIndex(index);
             float[] tmean = new float[vectorLength[0]];
             float[] mean = meansPool.get(index);
-            
+            float[][][] aa = transform.getAs()[transformClass];
+            float[][] bb = transform.getBs()[transformClass];
             for (int i = 0; i < numStreams; i++) {
                 for (int l = 0; l < vectorLength[i]; l++) {
-                    tmean[l] = 0;
+                    float tl = 0;
                     for (int m = 0; m < vectorLength[i]; m++) {
-                        tmean[l] += transform.getAs()[transformClass][i][l][m]
-                                * mean[m];
+                        tl += aa[i][l][m] * mean[m];
                     }
-                    tmean[l] += transform.getBs()[transformClass][i][l];
+                    tl += bb[i][l];
+                    tmean[l] = tl;
                 }
                 System.arraycopy(tmean, 0, mean, 0, tmean.length);
             }

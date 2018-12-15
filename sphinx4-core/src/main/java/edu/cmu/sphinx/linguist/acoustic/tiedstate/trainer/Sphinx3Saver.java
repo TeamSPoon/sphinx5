@@ -474,21 +474,21 @@ public class Sphinx3Saver implements Saver {
 
             Unit unit = hmm.getUnit();
 
-            String name = unit.getName();
+            String name = unit.name;
             pw.print(name + '\t');
             String left = "-";
             pw.print(left + "   ");
             String right = "-";
             pw.print(right + ' ');
-            String position = hmm.getPosition().toString();
+            String position = hmm.position.toString();
             pw.print(position + '\t');
-            String attribute = unit.isFiller() ? FILLER : "n/a";
+            String attribute = unit.filler ? FILLER : "n/a";
             pw.print(attribute + '\t');
             int tmat = matrixPool.indexOf(hmm.transitionMatrix);
             assert tmat < numTiedTransitionMatrices;
             pw.print(tmat + "\t");
 
-            SenoneSequence ss = hmm.getSenoneSequence();
+            SenoneSequence ss = hmm.senoneSequence;
             Senone[] senones = ss.senones;
             for (Senone senone : senones) {
                 int index = senonePool.indexOf(senone);
@@ -512,27 +512,27 @@ public class Sphinx3Saver implements Saver {
             }
 
             Unit unit = hmm.getUnit();
-            LeftRightContext context = (LeftRightContext)unit.getContext();
+            LeftRightContext context = (LeftRightContext) unit.context;
             Unit[] leftContext = context.left;
             Unit[] rightContext = context.right;
             assert leftContext.length == 1 && rightContext.length == 1;
 
-            String name = unit.getName();
+            String name = unit.name;
             pw.print(name + '\t');
-            String left = leftContext[0].getName();
+            String left = leftContext[0].name;
             pw.print(left + "   ");
-            String right = rightContext[0].getName();
+            String right = rightContext[0].name;
             pw.print(right + ' ');
-            String position = hmm.getPosition().toString();
+            String position = hmm.position.toString();
             pw.print(position + '\t');
-            String attribute = unit.isFiller() ? FILLER : "n/a";
+            String attribute = unit.filler ? FILLER : "n/a";
             assert attribute.equals("n/a");
             pw.print(attribute + '\t');
             int tmat = matrixPool.indexOf(hmm.transitionMatrix);
             assert tmat < numTiedTransitionMatrices;
             pw.print(tmat + "\t");
 
-            SenoneSequence ss = hmm.getSenoneSequence();
+            SenoneSequence ss = hmm.senoneSequence;
             Senone[] senones = ss.senones;
             for (Senone senone : senones) {
                 int index = senonePool.indexOf(senone);

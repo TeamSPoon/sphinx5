@@ -19,9 +19,10 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4ComponentList;
 
-import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * FrontEnd is a wrapper class for the chain of front end processors. It provides methods for manipulating and
@@ -139,7 +140,7 @@ public class FrontEnd extends BaseDataProcessor {
 
     private DataProcessor first;
     private DataProcessor last;
-    private final List<SignalListener> signalListeners = new ArrayList<>();
+    private final List<SignalListener> signalListeners = new CopyOnWriteArrayList<>();
 
     public FrontEnd(List<DataProcessor> frontEndList) {
         initLogger();
@@ -267,7 +268,7 @@ public class FrontEnd extends BaseDataProcessor {
      * @param signal the signal that occurred
      */
     protected void fireSignalListeners(Signal signal) {
-        for (SignalListener listener : new ArrayList<>(signalListeners))
+        for (SignalListener listener : signalListeners)
             listener.signalOccurred(signal);
     }
 
@@ -290,7 +291,7 @@ public class FrontEnd extends BaseDataProcessor {
     public String toString() {
         if (last == null)
             return super.toString() + " {}";
-        LinkedList<DataProcessor> list = new LinkedList<>();
+        Deque<DataProcessor> list = new LinkedList<>();
         for (DataProcessor current = last; current != null; current = current.getPredecessor())
             list.addFirst(current); // add processors in their correct order
         StringBuilder description = new StringBuilder(super.toString()).append(" {");

@@ -46,7 +46,7 @@ public class BatchForcedAlignerRecognizer extends BatchNISTRecognizer {
 
 
     @Override
-    protected void handleResult(DataOutputStream out, CTLUtterance utt, Result result) throws IOException {
+    protected void handleResult(DataOutputStream out, CTLUtterance utt, Result result) {
         System.out.println(utt + " --> " + result);
         Token token = result.getBestToken();
         dumpTokenTimes(token);

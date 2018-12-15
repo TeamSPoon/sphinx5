@@ -375,7 +375,7 @@ public class ModelInitializerLoader implements Loader {
 
             Unit unit = unitManager.getUnit(phone,  phone.equals(SILENCE_CIPHONE));
 
-            contextIndependentUnits.put(unit.getName(), unit);
+            contextIndependentUnits.put(unit.name, unit);
 
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Loaded " + unit + " with " + size + " states");
@@ -551,7 +551,7 @@ public class ModelInitializerLoader implements Loader {
         return pool;
     }
 
-    public void load() throws IOException {
+    public void load() {
     }
 
     public Pool<float[]> getMeansPool() {

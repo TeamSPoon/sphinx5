@@ -213,7 +213,7 @@ public class HTKLoader implements Loader {
         }
     }
 
-    public void load() throws IOException {
+    public void load() {
         if (!loaded) {
             hmmManager = new HMMManager();
             contextIndependentUnits = new LinkedHashMap<>();
@@ -506,14 +506,14 @@ public class HTKLoader implements Loader {
                 // assert tmat < numTiedTransitionMatrices;
 
                 Unit unit = unitManager.getUnit(name, attribute.equals(FILLER));
-                contextIndependentUnits.put(unit.getName(), unit);
+                contextIndependentUnits.put(unit.name, unit);
 
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Loaded " + unit);
                 }
 
                 // The first filler
-                if (unit.isFiller() && unit.getName().equals(SILENCE_CIPHONE)) {
+                if (unit.filler && unit.name.equals(SILENCE_CIPHONE)) {
                     unit = UnitManager.SILENCE;
                 }
 
@@ -564,15 +564,15 @@ public class HTKLoader implements Loader {
 
                     Unit unit = unitManager.getUnit(name, attribute
                             .equals(FILLER));
-                    contextIndependentUnits.put(unit.getName(), unit);
+                    contextIndependentUnits.put(unit.name, unit);
 
                     if (logger.isLoggable(Level.FINE)) {
                         logger.fine("Loaded " + unit);
                     }
 
                     // The first filler
-                    if (unit.isFiller()
-                            && unit.getName().equals(SILENCE_CIPHONE)) {
+                    if (unit.filler
+                            && unit.name.equals(SILENCE_CIPHONE)) {
                         unit = UnitManager.SILENCE;
                     }
 

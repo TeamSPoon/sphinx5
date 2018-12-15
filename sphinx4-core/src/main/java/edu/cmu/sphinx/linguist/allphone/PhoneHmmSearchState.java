@@ -33,7 +33,7 @@ public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScorePr
     }
     
     public int getBaseId() {
-        return state.getHMM().getBaseUnit().getBaseID();
+        return state.getHMM().getBaseUnit().baseID;
     }
 
     public float getProbability() {
@@ -53,7 +53,7 @@ public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScorePr
      * */
     public SearchStateArc[] getSuccessors() {
         if (state.isExitState()) {
-            ArrayList<Unit> units = linguist.getUnits(((SenoneHMM)state.getHMM()).getSenoneSequence());
+            ArrayList<Unit> units = linguist.getUnits(((SenoneHMM) state.getHMM()).senoneSequence);
             SearchStateArc[] result = new SearchStateArc[units.size()];
             for (int i = 0; i < result.length; i++)
                 result[i] = new PhoneNonEmittingSearchState(units.get(i), linguist, insertionProb, languageProb);
@@ -110,13 +110,13 @@ public class PhoneHmmSearchState implements SearchState, SearchStateArc, ScorePr
             return true;
         if (!(obj instanceof PhoneHmmSearchState))
             return false;
-        SenoneSequence otherSenoneSeq = ((SenoneHMM)((PhoneHmmSearchState)obj).state.getHMM()).getSenoneSequence();
-        SenoneSequence thisSenoneSeq = ((SenoneHMM)state.getHMM()).getSenoneSequence();
+        SenoneSequence otherSenoneSeq = ((SenoneHMM) ((PhoneHmmSearchState) obj).state.getHMM()).senoneSequence;
+        SenoneSequence thisSenoneSeq = ((SenoneHMM) state.getHMM()).senoneSequence;
         return thisSenoneSeq.equals(otherSenoneSeq);
     }
 
     @Override
     public int hashCode() {
-        return ((SenoneHMM)state.getHMM()).getSenoneSequence().hashCode() + state.getState() * 37;
+        return ((SenoneHMM) state.getHMM()).senoneSequence.hashCode() + state.getState() * 37;
     }
 }

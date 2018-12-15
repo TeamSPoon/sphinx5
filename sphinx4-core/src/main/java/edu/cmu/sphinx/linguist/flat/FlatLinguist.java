@@ -957,12 +957,12 @@ public class FlatLinguist implements Linguist, Configurable {
             Unit[] rc = getRC(units, which, rightContext);
             UnitContext actualRightContext = UnitContext.get(rc);
             LeftRightContext context = LeftRightContext.get(lc, rc);
-            Unit cdUnit = unitManager.unit(units[which].getName(), units[which] .isFiller(), context);
+            Unit cdUnit = unitManager.unit(units[which].name, units[which].filler, context);
             UnitState unitState = new ExtendedUnitState(parent, which, cdUnit);
             float logInsertionProbability;
-            if (unitState.getUnit().isSilence()) {
+            if (unitState.getUnit().silence) {
                 logInsertionProbability = logSilenceInsertionProbability;
-            } else if (unitState.getUnit().isFiller()) {
+            } else if (unitState.getUnit().filler) {
                 logInsertionProbability = logFillerInsertionProbability;
             } else if (unitState.getWhich() == 0) {
                 logInsertionProbability = logWordInsertionProbability;
@@ -1073,7 +1073,7 @@ public class FlatLinguist implements Linguist, Configurable {
          * @return the maximum left context size for the unit
          */
         private int getLeftContextSize(Unit unit) {
-            return unit.isFiller() ? 0 : getLeftContextSize();
+            return unit.filler ? 0 : getLeftContextSize();
         }
 
 
@@ -1084,7 +1084,7 @@ public class FlatLinguist implements Linguist, Configurable {
          * @return the maximum right context size for the unit
          */
         private int getRightContextSize(Unit unit) {
-            return unit.isFiller() ? 0 : getRightContextSize();
+            return unit.filler ? 0 : getRightContextSize();
         }
 
 
@@ -1136,7 +1136,7 @@ public class FlatLinguist implements Linguist, Configurable {
             SentenceHMMState tail = getHMMStates(unit);
             // if the unit is a silence unit add a loop back from the
             // tail silence unit
-            if (unit.getUnit().isSilence()) {
+            if (unit.getUnit().silence) {
                 // add the loopback, but don't expand it // anymore
                 attachState(tail, unit, logOne, logSilenceInsertionProbability);
             }
@@ -1447,7 +1447,7 @@ class UnitContext {
         this.context = context;
         hashCode = 12;
         for (int i = 0; i < context.length; i++) {
-            hashCode += context[i].getName().hashCode() * ((i + 1) * 34);
+            hashCode += context[i].name.hashCode() * ((i + 1) * 34);
         }
     }
 

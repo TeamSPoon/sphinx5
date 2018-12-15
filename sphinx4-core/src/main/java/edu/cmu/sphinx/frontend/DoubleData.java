@@ -105,7 +105,7 @@ public class DoubleData extends OVector implements Data {
     }
 
     @Override
-    public DoubleData clone() throws CloneNotSupportedException {
+    public DoubleData clone() {
         try {
             DoubleData data = (DoubleData)super.clone();
             data.sampleRate = sampleRate;

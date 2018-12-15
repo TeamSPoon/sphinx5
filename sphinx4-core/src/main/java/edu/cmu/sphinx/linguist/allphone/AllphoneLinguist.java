@@ -8,7 +8,6 @@ import edu.cmu.sphinx.linguist.acoustic.tiedstate.SenoneSequence;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.props.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,10 +67,10 @@ public class AllphoneLinguist implements Linguist {
     public void stopRecognition() {
     }
 
-    public void allocate() throws IOException {
+    public void allocate() {
     }
 
-    public void deallocate() throws IOException {
+    public void deallocate() {
     }
     
     public AcousticModel getAcousticModel() {
@@ -91,7 +90,7 @@ public class AllphoneLinguist implements Linguist {
     }
     
     public ArrayList<HMM> getCDSuccessors(Unit lc, Unit base) {
-        if (lc.isFiller())
+        if (lc.filler)
             return leftContextSilHMMs;
         if (base == UnitManager.SILENCE)
             return fillerHMMs;
@@ -110,7 +109,7 @@ public class AllphoneLinguist implements Linguist {
             HMM hmm = hmmIter.next();
             if (!hmm.getUnit().isContextDependent()) {
                 ArrayList<Unit> sameSenonesUnits;
-                SenoneSequence senoneSeq = ((SenoneHMM)hmm).getSenoneSequence();
+                SenoneSequence senoneSeq = ((SenoneHMM) hmm).senoneSequence;
                 if ((sameSenonesUnits = senonesToUnits.get(senoneSeq)) == null) {
                     sameSenonesUnits = new ArrayList<>();
                     senonesToUnits.put(senoneSeq, sameSenonesUnits);
@@ -130,24 +129,24 @@ public class AllphoneLinguist implements Linguist {
         while (hmmIter.hasNext()) {
             HMM hmm = hmmIter.next();
             ArrayList<Unit> sameSenonesUnits;
-            SenoneSequence senoneSeq = ((SenoneHMM)hmm).getSenoneSequence();
+            SenoneSequence senoneSeq = ((SenoneHMM) hmm).senoneSequence;
             if ((sameSenonesUnits = senonesToUnits.get(senoneSeq)) == null) {
                 sameSenonesUnits = new ArrayList<>();
                 senonesToUnits.put(senoneSeq, sameSenonesUnits);
             }
             sameSenonesUnits.add(hmm.getUnit());
-            if (hmm.getUnit().isFiller()) {
+            if (hmm.getUnit().filler) {
                 fillerHMMs.add(hmm);
                 continue;
             }
             if (hmm.getUnit().isContextDependent()) {
-                LeftRightContext context = (LeftRightContext)hmm.getUnit().getContext();
+                LeftRightContext context = (LeftRightContext) hmm.getUnit().context;
                 Unit lc = context.left[0];
                 if (lc == UnitManager.SILENCE) {
                     leftContextSilHMMs.add(hmm);
                     continue;
                 }
-                Unit base = hmm.getUnit().getBaseUnit();
+                Unit base = hmm.getUnit().baseUnit;
                 HashMap<Unit, ArrayList<HMM>> lcSuccessors; 
                 if ((lcSuccessors = cdHMMs.get(lc)) == null) {
                     lcSuccessors = new HashMap<>();

@@ -55,9 +55,8 @@ public class SimpleBatchManager implements BatchManager {
      * Gets the next available batch item or null if no more are available
      *
      * @return the next available batch item
-     * @throws IOException if an I/O error occurs while getting the next item from the batch file.
      */
-    public BatchItem getNextItem() throws IOException {
+    public BatchItem getNextItem() {
         if (curItem >= items.size()) {
             return null;
         } else {
@@ -69,7 +68,7 @@ public class SimpleBatchManager implements BatchManager {
 
 
     /** Stops processing the batch */
-    public void stop() throws IOException {
+    public void stop() {
     }
 
 

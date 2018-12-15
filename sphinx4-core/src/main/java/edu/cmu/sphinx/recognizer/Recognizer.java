@@ -22,8 +22,8 @@ import edu.cmu.sphinx.instrumentation.Resetable;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiPredicate;
 
 /**
@@ -70,15 +70,15 @@ public class Recognizer implements Configurable, ResultProducer {
     private Decoder decoder;
     private State currentState = State.DEALLOCATED;
 
-    private final List<StateListener> stateListeners = /*Collections.synchronizedList*/(new ArrayList<>());
+    private final List<StateListener> stateListeners = /*Collections.synchronizedList*/new CopyOnWriteArrayList<>();
     private List<Monitor> monitors;
 
 
-    public Recognizer(Decoder decoder, List<Monitor> monitors) {
-        this.decoder = decoder;
-        this.monitors = monitors;
-        name = null;
-    }
+//    public Recognizer(Decoder decoder, List<Monitor> monitors) {
+//        this.decoder = decoder;
+//        this.monitors = monitors;
+//        name = null;
+//    }
 
     public Recognizer() {
     }

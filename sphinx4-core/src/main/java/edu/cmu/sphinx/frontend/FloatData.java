@@ -13,6 +13,7 @@ package edu.cmu.sphinx.frontend;
 
 import edu.cmu.sphinx.util.MatrixUtils;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -75,13 +76,17 @@ public class FloatData implements Data, Cloneable {
     }
 
     @Override
-    public FloatData clone() throws CloneNotSupportedException {
+    public FloatData clone() {
         try {
             FloatData data = (FloatData)super.clone();
             return data;
         } catch (CloneNotSupportedException e) {
             throw new InternalError(e.toString());
         }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof FloatData && Arrays.equals(values, ((FloatData) obj).values));
     }
 
 

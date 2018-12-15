@@ -91,14 +91,14 @@ public class LazyHmmManager extends HMMManager {
         if (null != hmm) return hmm;
 
         int[] ids = new int[3];
-        ids[1] = symbolTable.get(unit.getName());
+        ids[1] = symbolTable.get(unit.name);
 
         if (unit.isContextDependent()) {
-            LeftRightContext context = (LeftRightContext) unit.getContext();
+            LeftRightContext context = (LeftRightContext) unit.context;
             Unit left = context.left[0];
             Unit right = context.right[0];
-            ids[0] = symbolTable.get(left.getName());
-            ids[2] = symbolTable.get(right.getName());
+            ids[0] = symbolTable.get(left.name);
+            ids[2] = symbolTable.get(right.name);
         } else {
             ids[0] = symbolTable.get("SIL");
             ids[2] = symbolTable.get("SIL");

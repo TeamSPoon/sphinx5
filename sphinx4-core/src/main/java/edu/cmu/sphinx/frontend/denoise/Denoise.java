@@ -17,6 +17,10 @@ import edu.cmu.sphinx.util.props.S4Integer;
 
 import java.util.Arrays;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.System.arraycopy;
+
 /**
  * The noise filter, same as implemented in sphinxbase/sphinxtrain/pocketsphinx.
  * 
@@ -33,10 +37,12 @@ import java.util.Arrays;
  */
 public class Denoise extends BaseDataProcessor {
 
-    double[] power;
-    double[] noise;
-    double[] floor;
-    double[] peak;
+    private transient double[] power = new double[0];
+    private transient double[] noise = new double[0];
+    private transient double[] floor = new double[0];
+    private transient double[] peak = new double[0];
+    private transient double[] signal = new double[0];
+    private transient double[] gain = new double[0];
 
     @S4Double(defaultValue = 0.7)
     public final static String LAMBDA_POWER = "lambdaPower";
@@ -66,7 +72,7 @@ public class Denoise extends BaseDataProcessor {
     public final static String SMOOTH_WINDOW = "smoothWindow";
     int smoothWindow;
 
-    final static double EPS = 1e-10;
+    private final static double EPS = 1.0e-10;
 
     public Denoise(double lambdaPower, double lambdaA, double lambdaB,
             double lambdaT, double muT,
@@ -108,10 +114,10 @@ public class Denoise extends BaseDataProcessor {
         int i;
 
         if (inputData instanceof DataStartSignal) {
-            power = null;
-            noise = null;
-            floor = null;
-            peak = null;
+            Arrays.fill(power, 0);
+            Arrays.fill(noise, 0);
+            Arrays.fill(floor, 0);
+            Arrays.fill(peak, 0);
             return inputData;
         }
         if (!(inputData instanceof DoubleData)) {
@@ -119,20 +125,18 @@ public class Denoise extends BaseDataProcessor {
         }
 
         DoubleData inputDoubleData = (DoubleData) inputData;
+
         double[] input = inputDoubleData.getValues();
         int length = input.length;
 
-        if (power == null)
-            initStatistics(input, length);
+        alloc(input);
 
         updatePower(input);
 
         estimateEnvelope(power, noise);
 
-        double[] signal = new double[length];
-        for (i = 0; i < length; i++) {
-            signal[i] = Math.max(power[i] - noise[i], 0.0);
-        }
+        for (i = 0; i < length; i++)
+            signal[i] = max(power[i] - noise[i], 0.0);
 
         estimateEnvelope(signal, floor);
 
@@ -140,32 +144,45 @@ public class Denoise extends BaseDataProcessor {
 
         powerBoosting(signal);
 
-        double[] gain = new double[length];
-        for (i = 0; i < length; i++) {
-            gain[i] = signal[i] / (power[i] + EPS);
-            gain[i] = Math.min(Math.max(gain[i], 1.0 / maxGain), maxGain);
-        }
-        double[] smoothGain = smooth(gain);
+        for (i = 0; i < length; i++)
+            gain[i] = min(max(
+                        signal[i] / (power[i] + EPS),
+                            1.0 / maxGain),
+                            maxGain);
 
-        for (i = 0; i < length; i++) {
-            input[i] *= smoothGain[i];
-        }
+        smooth(gain, input);
 
         return inputData;
     }
 
-    private double[] smooth(double[] gain) {
-        double[] result = new double[gain.length];
+
+    private void alloc(double[] input) {
+        int length = input.length;
+        if (signal.length != /* < */ length) {
+            signal = new double[length];
+            gain = new double[length];
+            floor = new double[length];
+            peak = new double[length];
+            power = new double[length];
+            noise = new double[length];
+        }
+        arraycopy(input, 0, power, 0, length);
+        arraycopy(input, 0, noise, 0, length);
+        for (int i = 0; i < length; i++)
+            floor[i] = input[i] / maxGain;
+    }
+
+    private void smooth(double[] gain, double[] target) {
         for (int i = 0; i < gain.length; i++) {
-            int start = Math.max(i - smoothWindow, 0);
-            int end = Math.min(i + smoothWindow + 1, gain.length);
+            int start = max(i - smoothWindow, 0);
+            int end = min(i + smoothWindow + 1, gain.length);
             double sum = 0.0;
             for (int j = start; j < end; j++) {
                 sum += gain[j];
             }
-            result[i] = sum / (end - start);
+            double g = sum / (end - start); //sample gain
+            target[i] *= g;
         }
-        return result;
     }
 
     private void powerBoosting(double[] signal) {
@@ -196,21 +213,12 @@ public class Denoise extends BaseDataProcessor {
 
     private void estimateEnvelope(double[] signal, double[] envelope) {
         for (int i = 0; i < signal.length; i++) {
-            if (signal[i] > envelope[i])
-                envelope[i] = lambdaA * envelope[i] + (1 - lambdaA) * signal[i];
-            else
-                envelope[i] = lambdaB * envelope[i] + (1 - lambdaB) * signal[i];
+            double si = signal[i];
+            double ei = envelope[i];
+            envelope[i] = (si > ei) ?
+                    ((lambdaA * ei) + ((1 - lambdaA) * si)) :
+                    ((lambdaB * ei) + ((1 - lambdaB) * si));
         }
     }
 
-    private void initStatistics(double[] input, int length) {
-        /* no previous data, initialize the statistics */
-        power = Arrays.copyOf(input, length);
-        noise = Arrays.copyOf(input, length);
-        floor = new double[length];
-        peak = new double[length];
-        for (int i = 0; i < length; i++) {
-            floor[i] = input[i] / maxGain;
-        }
-    }
 }

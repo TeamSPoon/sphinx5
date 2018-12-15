@@ -29,7 +29,6 @@ public class SpeechIn {
 
         configuration.setUseGrammar(false);
 
-
         LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
 
 

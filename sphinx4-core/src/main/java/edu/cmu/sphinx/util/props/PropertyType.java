@@ -19,25 +19,25 @@ import java.util.List;
 public enum PropertyType {
 
     INT("int") {
-        @Override protected boolean validateString(String obj) throws Exception {
+        @Override protected boolean validateString(String obj) {
             Integer.parseInt(obj);
             return true;
         }
     },
     BOOLEAN("boolean") {
-        @Override protected boolean validateString(String obj) throws Exception {
+        @Override protected boolean validateString(String obj) {
             obj = obj.toLowerCase();
             return "true".equals(obj) || "false".equals(obj);
         }
     },
     FLOAT("float") {
-        @Override protected boolean validateString(String obj) throws Exception {
+        @Override protected boolean validateString(String obj) {
             Float.parseFloat(obj);
             return true;
         }
     },
     DOUBLE("double") {
-        @Override protected boolean validateString(String obj) throws Exception {
+        @Override protected boolean validateString(String obj) {
             Double.parseDouble(obj);
             return true;
         }

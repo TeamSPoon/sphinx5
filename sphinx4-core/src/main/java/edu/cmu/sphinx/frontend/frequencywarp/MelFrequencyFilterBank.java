@@ -205,7 +205,7 @@ public class MelFrequencyFilterBank extends BaseDataProcessor {
         if (numberFftPoints == 0) {
             throw new IllegalArgumentException("Number of FFT points is zero");
         }
-        deltaFreq = (double) sampleRate / numberFftPoints;
+        deltaFreq = ((double) sampleRate) / numberFftPoints;
         /**
          * Initialize edges and center freq. These variables will be updated so
          * that the center frequency of a filter is the right edge of the

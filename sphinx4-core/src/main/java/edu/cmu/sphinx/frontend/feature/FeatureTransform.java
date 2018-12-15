@@ -89,7 +89,7 @@ public class FeatureTransform extends BaseDataProcessor {
     public Data getData() throws DataProcessingException {
         Data data = getPredecessor().getData();
 
-        if (null == transform || null == data || !(data instanceof FloatData))
+        if (null == transform || !(data instanceof FloatData))
             return data;
 
         FloatData floatData = (FloatData) data;

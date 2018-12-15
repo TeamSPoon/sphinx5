@@ -38,10 +38,10 @@
             <item>cfft</item>
             <item>melFilterBank</item>
             
-            <!--item>dct</item-->            
+            <item>dct</item>
             <!--item>dataDumper</item-->
-            <!--item>liveCMN</item>
-            <item>featureExtraction</item-->
+            <item>liveCMN</item>
+            <item>featureExtraction</item>
         </propertylist>
     </component>
 

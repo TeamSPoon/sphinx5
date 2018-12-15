@@ -161,8 +161,8 @@ public class StreamCepstrumSource extends BaseDataProcessor {
             // send a DataEndSignal
             int numberFrames = curPoint / cepstrumLength;
             int totalSamples = (numberFrames - 1) * frameShift + frameSize;
-            long duration = (long)
-                    (((double) totalSamples / (double) sampleRate) * 1000.0);
+            long duration = Math.round
+                    ((((double) totalSamples) / sampleRate) * 1000.0);
 
             data = new DataEndSignal(duration);
 

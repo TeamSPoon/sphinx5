@@ -106,7 +106,7 @@ public class PLPFrequencyFilterBank extends BaseDataProcessor {
         double[] DFTFrequencies;
 
         /* This is the same class of warper called by PLPFilter.java */
-        FrequencyWarper bark = new FrequencyWarper();
+//        FrequencyWarper bark = new FrequencyWarper();
 
         this.criticalBandFilter = new PLPFilter[numberFilters];
 

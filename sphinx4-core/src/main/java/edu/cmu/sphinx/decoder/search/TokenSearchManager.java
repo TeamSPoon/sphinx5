@@ -56,7 +56,7 @@ abstract public class TokenSearchManager implements SearchManager {
      *            the token of interest
      * @return the immediate successor word token
      */
-    protected Token getResultListPredecessor(Token token) {
+    Token getResultListPredecessor(Token token) {
 
         if (keepAllTokens) {
             return token;

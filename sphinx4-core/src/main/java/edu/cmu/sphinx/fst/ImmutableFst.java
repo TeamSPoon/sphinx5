@@ -87,7 +87,7 @@ public class ImmutableFst extends Fst {
      * @see edu.cmu.sphinx.fst.Fst#saveModel(java.lang.String)
      */
     @Override
-    public void saveModel(String filename) throws IOException {
+    public void saveModel(String filename) {
         throw new IllegalArgumentException(
                 "You cannot serialize an ImmutableFst.");
     }

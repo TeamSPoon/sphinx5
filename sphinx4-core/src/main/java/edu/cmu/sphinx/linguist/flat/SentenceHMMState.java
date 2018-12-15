@@ -17,7 +17,6 @@ import edu.cmu.sphinx.linguist.SearchState;
 import edu.cmu.sphinx.linguist.SearchStateArc;
 import edu.cmu.sphinx.linguist.WordSequence;
 import edu.cmu.sphinx.linguist.dictionary.Word;
-import org.eclipse.collections.api.tuple.primitive.IntObjectPair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 
 import java.io.Serializable;

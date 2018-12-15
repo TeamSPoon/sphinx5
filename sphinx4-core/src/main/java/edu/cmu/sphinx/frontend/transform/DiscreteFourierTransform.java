@@ -271,16 +271,17 @@ public class DiscreteFourierTransform extends BaseDataProcessor {
 
         Data input = getPredecessor().getData();
 
-        if ((input != null) && (input instanceof DoubleData)) {
+        if ((input instanceof DoubleData)) {
             DoubleData data = (DoubleData) input;
+            double[] values = data.getValues();
             if (!isNumberFftPointsSet) {
                 /*
                  * If numberFftPoints is not set by the user,
                  * figure out the numberFftPoints and initialize the
                  * data structures appropriately.
                  */
-                if (numberDataPoints != data.getValues().length) {
-                    numberDataPoints = data.getValues().length;
+                if (numberDataPoints != values.length) {
+                    numberDataPoints = values.length;
                     numberFftPoints = getNumberFftPoints(numberDataPoints);
                     initializeFFT();
                 }
@@ -288,8 +289,8 @@ public class DiscreteFourierTransform extends BaseDataProcessor {
                 /*
                  * Warn if the user-set numberFftPoints is not ideal.
                  */
-                if (numberDataPoints != data.getValues().length) {
-                    numberDataPoints = data.getValues().length;
+                if (numberDataPoints != values.length) {
+                    numberDataPoints = values.length;
                     int idealFftPoints = getNumberFftPoints(numberDataPoints);
                     if (idealFftPoints != numberFftPoints) {
                         logger.warning("User set numberFftPoints (" +

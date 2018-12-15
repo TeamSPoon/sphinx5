@@ -66,11 +66,10 @@ public class GrXMLGrammar extends JSGFGrammar {
      * Commit changes to all loaded grammars and all changes of grammar since
      * the last commitChange
      *
-     * @throws JSGFGrammarParseException parse exception occured
      * @throws JSGFGrammarException other exception occured
      */
     @Override
-    public void commitChanges() throws IOException, JSGFGrammarParseException,
+    public void commitChanges() throws IOException,
             JSGFGrammarException {
         try {
             if (loadGrammar) {

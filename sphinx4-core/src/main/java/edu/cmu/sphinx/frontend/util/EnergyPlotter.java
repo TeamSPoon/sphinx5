@@ -13,8 +13,6 @@
 
 package edu.cmu.sphinx.frontend.util;
 
-import edu.cmu.sphinx.frontend.Data;
-import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.util.props.Configurable;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
@@ -94,21 +92,21 @@ public class EnergyPlotter implements Configurable {
     }
 
 
-    /**
-     * Plots the energy values of the given Data to System.out. If the Data contains a signal, it prints the signal.
-     *
-     * @param cepstrum the Data to plot
-     */
-    public void plot(Data cepstrum) {
-        if (cepstrum != null) {
-            if (cepstrum instanceof DoubleData) {
-                int energy = (int) ((DoubleData) cepstrum).getValues()[0];
-                System.out.println(getPlot(energy));
-            } else {
-                System.out.println(cepstrum);
-            }
-        }
-    }
+//    /**
+//     * Plots the energy values of the given Data to System.out. If the Data contains a signal, it prints the signal.
+//     *
+//     * @param cepstrum the Data to plot
+//     */
+//    public void plot(Data cepstrum) {
+//        if (cepstrum != null) {
+//            if (cepstrum instanceof DoubleData) {
+//                int energy = (int) ((DoubleData) cepstrum).getValues()[0];
+//                System.out.println(getPlot(energy));
+//            } else {
+//                System.out.println(cepstrum);
+//            }
+//        }
+//    }
 
 
     /**

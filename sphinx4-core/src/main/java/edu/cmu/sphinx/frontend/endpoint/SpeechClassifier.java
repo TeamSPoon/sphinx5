@@ -173,8 +173,6 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
             isSpeech = (level - background > threshold);
         }
 
-        //System.out.println(isSpeech + " "+ audio + " " + current);
-
         SpeechClassifiedData labeledAudio = new SpeechClassifiedData(audio, isSpeech);
 
         if (logger.isLoggable(Level.FINEST)) {
@@ -186,7 +184,7 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
                     ", current: " + current + ' ' + speech);
         }
 
-        collectStats (isSpeech);
+        collectStats(isSpeech);
         
         return labeledAudio;
     }
@@ -208,11 +206,11 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
      */
     private void collectStats(boolean isSpeech) {
         if (isSpeech) {
-            totalSpeechLevel = totalSpeechLevel + level;
-            speechFrames = speechFrames + 1;
+            totalSpeechLevel += level;
+            speechFrames += 1;
         } else {
-            totalBackgroundLevel = totalBackgroundLevel + background;
-            backgroundFrames = backgroundFrames + 1;
+            totalBackgroundLevel += background;
+            backgroundFrames += 1;
         }        
     }
 
@@ -230,8 +228,7 @@ public class SpeechClassifier extends AbstractVoiceActivityDetector {
             reset();
 
         if (audio instanceof DoubleData) {
-            DoubleData data = (DoubleData) audio;
-            audio = classify(data);
+            audio = classify((DoubleData) audio);
         }
         return audio;
     }

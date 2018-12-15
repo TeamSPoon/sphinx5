@@ -2,7 +2,10 @@ package edu.cmu.sphinx.decoder.search;
 
 import org.eclipse.collections.impl.list.mutable.FastList;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -188,7 +191,7 @@ public class SortingActiveList implements ActiveList {
     @Override
     public void forWhile(Predicate<Token> p) {
         final List<Token>[] a = partition();
-        Stream.of(a).parallel().forEach(aa -> {
+        Stream.of(a)./*parallel().*/forEach(aa -> {
             for (int i1 = 0, aaSize = aa.size(); i1 < aaSize; i1++) {
                 if (!p.test(aa.get(i1)))
                     break;

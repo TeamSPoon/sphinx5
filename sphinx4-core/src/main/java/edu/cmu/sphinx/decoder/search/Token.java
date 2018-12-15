@@ -415,7 +415,7 @@ public class Token implements Scoreable {
                         Unit[] u = pron.units;
                         for (int i = u.length - 1; i >= 0; i--) {
                             if (i < u.length - 1) sb.insert(0, ',');
-                            sb.insert(0, u[i].getName());
+                            sb.insert(0, u[i].name);
                         }
                         sb.insert(0, '[');
                     }
@@ -467,7 +467,7 @@ public class Token implements Scoreable {
             } else if (searchState instanceof UnitSearchState) {
                 UnitSearchState unitState = (UnitSearchState) searchState;
                 Unit unit = unitState.getUnit();
-                sb.insert(0, ' ' + unit.getName());
+                sb.insert(0, ' ' + unit.name);
             }
             token = token.predecessor;
         }

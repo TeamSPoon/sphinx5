@@ -18,13 +18,11 @@ import edu.cmu.sphinx.frontend.FloatData;
 import edu.cmu.sphinx.util.Utilities;
 
 import javax.sound.sampled.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 
 /** Defines utility methods for manipulating data values. */
-public class DataUtil {
+public final class DataUtil {
 
     private static final int HEXADECIMAL = 1;
     private static final int SCIENTIFIC = 2;
@@ -34,12 +32,7 @@ public class DataUtil {
     /**
      * DecimalFormat object to be used by all the methods.
      */
-    public static final ThreadLocal<DecimalFormat> format = new ThreadLocal<DecimalFormat>() {
-        @Override
-        protected DecimalFormat initialValue() {
-            return new DecimalFormat();
-        }
-    };
+    public static final ThreadLocal<DecimalFormat> format = ThreadLocal.withInitial(() -> new DecimalFormat());
 
 
     private static final int decimalIntegerDigits = 10;
@@ -75,39 +68,39 @@ public class DataUtil {
     }
 
 
-    /**
-     * Converts a byte array into a short array. Since a byte is 8-bits, and a short is 16-bits, the returned short
-     * array will be half in length than the byte array. If the length of the byte array is odd, the length of the short
-     * array will be <code>(byteArray.length - 1)/2</code>, i.e., the last byte is discarded.
-     *
-     * @param byteArray a byte array
-     * @param offset    which byte to start from
-     * @param length    how many bytes to convert
-     * @return a short array, or <code>null</code> if byteArray is of zero length
-     * @throws java.lang.ArrayIndexOutOfBoundsException if index goes out of bounds
-     *
-     */
-    public static short[] byteToShortArray
-            (byte[] byteArray, int offset, int length)
-            throws ArrayIndexOutOfBoundsException {
-
-        if (0 < length && (offset + length) <= byteArray.length) {
-            int shortLength = length / 2;
-            short[] shortArray = new short[shortLength];
-            int temp;
-            for (int i = offset, j = 0; j < shortLength;
-                 j++, temp = 0x00000000) {
-                temp = byteArray[i++] << 8;
-                temp |= 0x000000FF & byteArray[i++];
-                shortArray[j] = (short) temp;
-            }
-            return shortArray;
-        } else {
-            throw new ArrayIndexOutOfBoundsException
-                    ("offset: " + offset + ", length: " + length
-                            + ", array length: " + byteArray.length);
-        }
-    }
+//    /**
+//     * Converts a byte array into a short array. Since a byte is 8-bits, and a short is 16-bits, the returned short
+//     * array will be half in length than the byte array. If the length of the byte array is odd, the length of the short
+//     * array will be <code>(byteArray.length - 1)/2</code>, i.e., the last byte is discarded.
+//     *
+//     * @param byteArray a byte array
+//     * @param offset    which byte to start from
+//     * @param length    how many bytes to convert
+//     * @return a short array, or <code>null</code> if byteArray is of zero length
+//     * @throws java.lang.ArrayIndexOutOfBoundsException if index goes out of bounds
+//     *
+//     */
+//    public static short[] byteToShortArray
+//            (byte[] byteArray, int offset, int length)
+//            throws ArrayIndexOutOfBoundsException {
+//
+//        if (0 < length && (offset + length) <= byteArray.length) {
+//            int shortLength = length / 2;
+//            short[] shortArray = new short[shortLength];
+//            int temp;
+//            for (int i = offset, j = 0; j < shortLength;
+//                 j++, temp = 0x00000000) {
+//                temp = byteArray[i++] << 8;
+//                temp |= 0x000000FF & byteArray[i++];
+//                shortArray[j] = (short) temp;
+//            }
+//            return shortArray;
+//        } else {
+//            throw new ArrayIndexOutOfBoundsException
+//                    ("offset: " + offset + ", length: " + length
+//                            + ", array length: " + byteArray.length);
+//        }
+//    }
 
 
     /**
@@ -212,57 +205,57 @@ public class DataUtil {
     }
 
 
-    /**
-     * Convert the two bytes starting at the given offset to a short.
-     *
-     * @param byteArray the byte array
-     * @param offset    where to start
-     * @return a short
-     * @throws java.lang.ArrayIndexOutOfBoundsException if index goes out of bounds
-     *
-     */
-    public static short bytesToShort(byte[] byteArray, int offset)
-            throws ArrayIndexOutOfBoundsException {
-        short result = (short)
-                ((byteArray[offset++] << 8) |
-                        (0x000000FF & byteArray[offset]));
-        return result;
-    }
-
-
-    /**
-     * Returns the string representation of the given short array. The string will be in the form:
-     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>
-     *
-     * @param data the short array to convert
-     * @return a string representation of the short array
-     */
-    public static String shortArrayToString(short[] data) {
-        StringBuilder dump = new StringBuilder().append(data.length);
-        for (short val : data) {
-            dump.append(' ').append(val);
-        }
-        return dump.toString();
-    }
-
-
-    /**
-     * Returns the given double array as a string. The string will be in the form:
-     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>where
-     * <code>data[i]</code>.
-     * <p>
-     * The doubles can be written as decimal, hexadecimal, or scientific notation. In decimal notation, it is formatted
-     * by the method <code>Util.formatDouble(data[i], 10, 5)</code>. Use the System property
-     * <code>"frontend.util.dumpformat"</code> to control the dump format (permitted values are "decimal",
-     * "hexadecimal", and "scientific".
-     *
-     * @param data the double array to dump
-     * @return a string representation of the double array
-     */
-    public static String doubleArrayToString(double[] data) {
-        return doubleArrayToString(data, dumpFormat);
-    }
-
+//    /**
+//     * Convert the two bytes starting at the given offset to a short.
+//     *
+//     * @param byteArray the byte array
+//     * @param offset    where to start
+//     * @return a short
+//     * @throws java.lang.ArrayIndexOutOfBoundsException if index goes out of bounds
+//     *
+//     */
+//    public static short bytesToShort(byte[] byteArray, int offset)
+//            throws ArrayIndexOutOfBoundsException {
+//        short result = (short)
+//                ((byteArray[offset++] << 8) |
+//                        (0x000000FF & byteArray[offset]));
+//        return result;
+//    }
+//
+//
+//    /**
+//     * Returns the string representation of the given short array. The string will be in the form:
+//     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>
+//     *
+//     * @param data the short array to convert
+//     * @return a string representation of the short array
+//     */
+//    public static String shortArrayToString(short[] data) {
+//        StringBuilder dump = new StringBuilder().append(data.length);
+//        for (short val : data) {
+//            dump.append(' ').append(val);
+//        }
+//        return dump.toString();
+//    }
+//
+//
+//    /**
+//     * Returns the given double array as a string. The string will be in the form:
+//     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>where
+//     * <code>data[i]</code>.
+//     * <p>
+//     * The doubles can be written as decimal, hexadecimal, or scientific notation. In decimal notation, it is formatted
+//     * by the method <code>Util.formatDouble(data[i], 10, 5)</code>. Use the System property
+//     * <code>"frontend.util.dumpformat"</code> to control the dump format (permitted values are "decimal",
+//     * "hexadecimal", and "scientific".
+//     *
+//     * @param data the double array to dump
+//     * @return a string representation of the double array
+//     */
+//    public static String doubleArrayToString(double[] data) {
+//        return doubleArrayToString(data, dumpFormat);
+//    }
+//
 
     /**
      * Returns the given double array as a string. The dump will be in the form:
@@ -292,22 +285,22 @@ public class DataUtil {
         return dump.toString();
     }
 
-
-    /**
-     * Returns the given float array as a string. The string is of the form:
-     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>
-     * <p>
-     * The floats can be written as decimal, hexadecimal, or scientific notation. In decimal notation, it is formatted
-     * by the method <code>Util.formatDouble(data[i], 10, 5)</code>. Use the System property
-     * <code>"frontend.util.dumpformat"</code> to control the dump format (permitted values are "decimal",
-     * "hexadecimal", and "scientific".
-     *
-     * @param data the float array to dump
-     * @return a string of the given float array
-     */
-    public static String floatArrayToString(float[] data) {
-        return floatArrayToString(data, dumpFormat);
-    }
+//
+//    /**
+//     * Returns the given float array as a string. The string is of the form:
+//     * <pre>data.length data[0] data[1] ... data[data.length-1]</pre>
+//     * <p>
+//     * The floats can be written as decimal, hexadecimal, or scientific notation. In decimal notation, it is formatted
+//     * by the method <code>Util.formatDouble(data[i], 10, 5)</code>. Use the System property
+//     * <code>"frontend.util.dumpformat"</code> to control the dump format (permitted values are "decimal",
+//     * "hexadecimal", and "scientific".
+//     *
+//     * @param data the float array to dump
+//     * @return a string of the given float array
+//     */
+//    public static String floatArrayToString(float[] data) {
+//        return floatArrayToString(data, dumpFormat);
+//    }
 
 
     /**
@@ -385,7 +378,7 @@ public class DataUtil {
      */
     public static int getSamplesPerWindow(int sampleRate,
                                           float windowSizeInMs) {
-        return (int) (sampleRate * windowSizeInMs / 1000);
+        return Math.round(sampleRate * windowSizeInMs / 1000);
     }
 
 
@@ -399,23 +392,23 @@ public class DataUtil {
      */
     public static int getSamplesPerShift(int sampleRate,
                                          float windowShiftInMs) {
-        return (int) (sampleRate * windowShiftInMs / 1000);
+        return Math.round(sampleRate * windowShiftInMs / 1000);
     }
 
-
-    /**
-     * Saves the given bytes to the given binary file.
-     *
-     * @param data     the bytes to save
-     * @param filename the binary file name
-     * @throws IOException if an I/O error occurs
-     */
-    public static void bytesToFile(byte[] data, String filename)
-            throws IOException {
-        FileOutputStream file = new FileOutputStream(filename);
-        file.write(data);
-        file.close();
-    }
+//
+//    /**
+//     * Saves the given bytes to the given binary file.
+//     *
+//     * @param data     the bytes to save
+//     * @param filename the binary file name
+//     * @throws IOException if an I/O error occurs
+//     */
+//    public static void bytesToFile(byte[] data, String filename)
+//            throws IOException {
+//        FileOutputStream file = new FileOutputStream(filename);
+//        file.write(data);
+//        file.close();
+//    }
 
 
     /**

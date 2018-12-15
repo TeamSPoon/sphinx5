@@ -84,7 +84,7 @@ public class TrainerScore {
             int stateIndex = state.getState();
             SenoneHMM hmm = (SenoneHMM) state.getHMM();
             // Get the senone sequence associated with this HMM
-            SenoneSequence ss = hmm.getSenoneSequence();
+            SenoneSequence ss = hmm.senoneSequence;
             // Get the senone associated with this HMMState, located
             // in the stateIndex-th position in the senone sequence
             senone = ss.senones[stateIndex];

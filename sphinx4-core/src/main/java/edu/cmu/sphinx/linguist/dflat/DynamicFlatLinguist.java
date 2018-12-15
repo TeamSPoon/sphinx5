@@ -290,7 +290,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             int[] nextUnits = new int[unitSet.size()];
             int index = 0;
             for (Unit unit : unitSet) {
-                nextUnits[index++] = unit.getBaseID();
+                nextUnits[index++] = unit.baseID;
             }
             nodeToNextUnitArrayMap.put(node, nextUnits);
         }
@@ -511,7 +511,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          * @param node the grammar node
          */
         GrammarState(GrammarNode node) {
-            this(node, LogMath.LOG_ONE, UnitManager.SILENCE.getBaseID());
+            this(node, LogMath.LOG_ONE, UnitManager.SILENCE.baseID);
         }
 
 
@@ -735,7 +735,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             ArrayList<Pronunciation> filteredPronunciation = new ArrayList<>(
                     pronunciations.length);
             for (Pronunciation pronunciation : pronunciations) {
-                if (pronunciation.units[0].getBaseID() == nextBase) {
+                if (pronunciation.units[0].baseID == nextBase) {
                     filteredPronunciation.add(pronunciation);
                 }
             }
@@ -980,7 +980,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          * @return true if the unit is a context independent unit
          */
         private boolean isContextIndependentUnit(Unit unit) {
-            return unit.isFiller();
+            return unit.filler;
         }
 
 
@@ -1062,7 +1062,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
          */
         FullHMMSearchState(PronunciationState p, int which, int lc) {
             this(p, which, lc,
-                    p.getPronunciation().units[which + 1].getBaseID());
+                    p.getPronunciation().units[which + 1].baseID);
         }
 
 
@@ -1080,7 +1080,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             this.lc = lc;
             this.rc = rc;
             int base =
-                    p.getPronunciation().units[which].getBaseID();
+                    p.getPronunciation().units[which].baseID;
             int id = hmmPool.buildID(base, lc, rc);
             hmm = hmmPool.getHMM(id, getPosition());
             isLastUnitOfWord =
@@ -1097,9 +1097,9 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
         public float getInsertionProbability() {
             Unit unit = hmm.getBaseUnit();
 
-            if (unit.isSilence()) {
+            if (unit.silence) {
                 return logSilenceInsertionProbability;
-            } else if (unit.isFiller()) {
+            } else if (unit.filler) {
                 return logFillerInsertionProbability;
             } else {
                 return logUnitInsertionProbability;
@@ -1270,7 +1270,7 @@ public class DynamicFlatLinguist implements Linguist, Configurable {
             // otherwise generate arcs to the next set of words
 
 //            Pronunciation pronunciation = pState.getPronunciation();
-            int nextLC = hmm.getBaseUnit().getBaseID();
+            int nextLC = hmm.getBaseUnit().baseID;
 
             if (!isLastUnitOfWord) {
                 arcs = pState.getSuccessors(nextLC, index + 1);

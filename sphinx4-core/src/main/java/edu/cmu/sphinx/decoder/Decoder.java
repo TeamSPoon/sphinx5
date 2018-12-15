@@ -83,17 +83,22 @@ public class Decoder<S extends SearchManager> extends AbstractDecoder<S> {
         while (running) {
             searchManager.startRecognition();
 
-            result = searchManager.recognize(featureBlockSize);
+            int f = featureBlockSize;
+//            for (int f = 1; f < 4; f++) {
+                System.out.println("recognize(f=" + f + ')');
+                result = searchManager.recognize(f /*featureBlockSize*/);
+                if (result != null) {
+                    //result.setReferenceText(referenceText);
+                    fireResultListeners(result);
 
-            if (result != null) {
-                //result.setReferenceText(referenceText);
-                fireResultListeners(result);
+                    if (!eachResult.test(this, new SpeechResult(result))) {
+                        running = false;
+                    }
 
-                if (!eachResult.test(this, new SpeechResult(result))) {
-                    running = false;
                 }
+//            }
 
-            }
+
             searchManager.stopRecognition();
 
         }

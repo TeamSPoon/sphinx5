@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 /**
@@ -27,18 +29,30 @@ import java.util.Iterator;
  */
 public class LatticeIOTest {
 
-    private final File latFile = new File("tmp.lat");
-    private final File slfFile = new File("tmp.slf");
+    final static Path tmp;
+
+    static {
+        try {
+            tmp = Files.createTempDirectory(LatticeIOTest.class.getSimpleName());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private final File latFile = tmp.resolve("tmp.lat").toFile();
+    private final File slfFile = tmp.resolve("tmp.slf").toFile();
 
     /**
      * Method for cleaning tmp files if any was created
      */
     @AfterTest
     public void removeTmpFiles() {
-        if (latFile.exists())
-            latFile.delete();
-        if (slfFile.exists())
-            slfFile.delete();
+//        if (latFile.exists())
+//            latFile.delete();
+//        if (slfFile.exists())
+//            slfFile.delete();
+        if (tmp.toFile().exists())
+            tmp.toFile().delete();
     }
 
     /**
@@ -56,26 +70,29 @@ public class LatticeIOTest {
         configuration.setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
         configuration.setLanguageModelPath("resource:/edu/cmu/sphinx/result/hellongram.trigram.lm");
 
+        // Simple recognition with generic model
         StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
+
         InputStream stream = getClass().getResourceAsStream("green.wav");
         stream.skip(44);
-
-        // Simple recognition with generic model
         recognizer.startRecognition(stream);
-        SpeechResult result = recognizer.getResult();
-        Lattice lattice = result.getLattice();
 
+        SpeechResult result = recognizer.getResult();
+
+        Lattice lattice = result.getLattice();
         lattice.dump(latFile.getAbsolutePath());
         lattice.dumpSlf(new FileWriter(slfFile));
+        Iterator<WordResult> latIt = lattice.getWordResultPath().iterator();
 
         Lattice latLattice = new Lattice(latFile.getAbsolutePath());
         latLattice.computeNodePosteriors(1.0f);
-        Lattice slfLattice = Lattice.readSlf(slfFile.getAbsolutePath());
-
-        slfLattice.computeNodePosteriors(1.0f);
-        Iterator<WordResult> latIt = lattice.getWordResultPath().iterator();
         Iterator<WordResult> latLatIt = latLattice.getWordResultPath().iterator();
+
+        Lattice slfLattice = Lattice.readSlf(slfFile.getAbsolutePath());
+        slfLattice.computeNodePosteriors(1.0f);
         Iterator<WordResult> slfLatIt = slfLattice.getWordResultPath().iterator();
+
+
         while (latIt.hasNext()) {
             WordResult latWord = latIt.next();
             WordResult latLatWord = latLatIt.next();

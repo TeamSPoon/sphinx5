@@ -47,7 +47,7 @@ public class SenoneHMMState implements HMMState {
         this.state = which;
         this.isEmitting = ((hmm.transitionMatrix.length - 1) != state);
         if (isEmitting) {
-            SenoneSequence ss = hmm.getSenoneSequence();
+            SenoneSequence ss = hmm.senoneSequence;
             senone = ss.senones[state];
         }
         Utilities.objectTracker("HMMState", objectCount.getAndIncrement());
@@ -93,7 +93,6 @@ public class SenoneHMMState implements HMMState {
      * @return the acoustic scores for the components of this state.
      */
     public float[] calculateComponentScore(Data feature) {
-        hmm.getSenoneSequence();
         return senone.calculateComponentScore(feature);
     }
 
@@ -162,7 +161,7 @@ public class SenoneHMMState implements HMMState {
 
             for (int i = 0; i < transitionMatrix.length; i++) {
                 if (transitionMatrix[state][i] > LogMath.LOG_ZERO) {
-                    HMMStateArc arc = new HMMStateArc(hmm.getState(i),
+                    HMMStateArc arc = new HMMStateArc(hmm.state(i),
                             transitionMatrix[state][i]);
                     list.add(arc);
                 }

@@ -21,9 +21,9 @@ public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements
     public SearchStateArc[] getSuccessors() {
         ArrayList<SearchStateArc> result = new ArrayList<>();
         Unit rc = UnitManager.SILENCE;
-        Unit base = unit.getBaseUnit();
+        Unit base = unit.baseUnit;
         if (unit.isContextDependent())
-            rc = ((LeftRightContext) unit.getContext()).right[0];
+            rc = ((LeftRightContext) unit.context).right[0];
         ArrayList<HMM> successors = linguist.useContextDependentPhones() ? linguist.getCDSuccessors(base, rc) : linguist.getCISuccessors();
         for (HMM successor : successors)
             result.add(new PhoneHmmSearchState(successor.getInitialState(), linguist, linguist.getPhoneInsertionProb(), LogMath.LOG_ONE));
@@ -38,7 +38,7 @@ public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements
         Unit[] pronUnits = new Unit[1];
         pronUnits[0] = unit;
         Pronunciation p = new Pronunciation(pronUnits, "", 1.0f);
-        p.setWord(new Word(unit.getName(), null, false));
+        p.setWord(new Word(unit.name, null, false));
         return p;
     }
     
@@ -54,13 +54,13 @@ public class PhoneWordSearchState extends PhoneNonEmittingSearchState implements
     public boolean equals(Object obj) {
         if (!(obj instanceof PhoneWordSearchState))
             return false;
-        boolean haveSameBaseId = ((PhoneWordSearchState)obj).unit.getBaseID() == unit.getBaseID();
-        boolean haveSameContex = ((PhoneWordSearchState)obj).unit.getContext().equals(unit.getContext());
+        boolean haveSameBaseId = ((PhoneWordSearchState) obj).unit.baseID == unit.baseID;
+        boolean haveSameContex = ((PhoneWordSearchState) obj).unit.context.equals(unit.context);
         return haveSameBaseId && haveSameContex;
     }
     
     @Override
     public int hashCode() {
-    	return unit.getContext().hashCode() * 91 + unit.getBaseID();
+        return unit.context.hashCode() * 91 + unit.baseID;
     }
 }

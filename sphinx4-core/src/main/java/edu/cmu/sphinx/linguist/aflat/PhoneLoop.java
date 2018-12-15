@@ -160,7 +160,7 @@ public class PhoneLoop {
             List<OogHMM> successorList = new ArrayList<>();
             for (Iterator<Unit> i = acousticModel.getContextIndependentUnitIterator(); i.hasNext();) {
                 Unit unit = i.next();
-            	if(!unit.isFiller()) {
+                if(!unit.filler) {
             		OogHMM hmm = new OogHMM(unit);
                     successorList.add(hmm);
             	}

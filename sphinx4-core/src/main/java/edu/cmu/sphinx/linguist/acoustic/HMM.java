@@ -41,7 +41,7 @@ public interface HMM {
      * @param which the state of interest
      * @return hmm state
      */
-    HMMState getState(int which);
+    HMMState state(int which);
 
 
     /**

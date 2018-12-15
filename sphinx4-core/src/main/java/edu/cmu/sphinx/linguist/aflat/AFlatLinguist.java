@@ -330,7 +330,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 			int[] nextUnits = new int[unitSet.size()];
 			int index = 0;
 			for (Unit unit : unitSet) {
-				nextUnits[index++] = unit.getBaseID();
+				nextUnits[index++] = unit.baseID;
 			}
 			nodeToNextUnitArrayMap.put(node, nextUnits);
 		}
@@ -542,7 +542,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 *            the grammar node
 		 */
 		GrammarState(GrammarNode node) {
-			this(node, LogMath.LOG_ONE, UnitManager.SILENCE.getBaseID());
+			this(node, LogMath.LOG_ONE, UnitManager.SILENCE.baseID);
 		}
 
 		/**
@@ -1024,8 +1024,8 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 * @return true if the unit is a context independent unit
 		 */
 		private boolean isContextIndependentUnit(Unit unit) {
-			return unit.isFiller();
-		}
+            return unit.filler;
+        }
 
 		/**
 		 * Returns a unique string representation of the state. This string is
@@ -1100,8 +1100,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 		 *            the ID of the left context
 		 */
 		FullHMMSearchState(PronunciationState p, int which, int lc) {
-			this(p, which, lc, p.getPronunciation().units[which + 1]
-					.getBaseID());
+			this(p, which, lc, p.getPronunciation().units[which + 1].baseID);
 		}
 
 		/**
@@ -1121,7 +1120,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 			this.index = which;
 			this.lc = lc;
 			this.rc = rc;
-			int base = p.getPronunciation().units[which].getBaseID();
+			int base = p.getPronunciation().units[which].baseID;
 			int id = hmmPool.buildID(base, lc, rc);
 			hmm = hmmPool.getHMM(id, getPosition());
 			isLastUnitOfWord = which == p.getPronunciation().units.length - 1;
@@ -1136,9 +1135,9 @@ public class AFlatLinguist implements Linguist, Configurable {
 		public float getInsertionProbability() {
 			Unit unit = hmm.getBaseUnit();
 
-			if (unit.isSilence()) {
+			if (unit.silence) {
 				return logSilenceInsertionProbability;
-			} else if (unit.isFiller()) {
+			} else if (unit.filler) {
 				return logFillerInsertionProbability;
 			} else {
 				return logUnitInsertionProbability;
@@ -1303,7 +1302,7 @@ public class AFlatLinguist implements Linguist, Configurable {
 			// otherwise generate arcs to the next set of words
 
 			// Pronunciation pronunciation = pState.getPronunciation();
-			int nextLC = hmm.getBaseUnit().getBaseID();
+			int nextLC = hmm.getBaseUnit().baseID;
 
 			if (!isLastUnitOfWord) {
 				arcs = pState.getSuccessors(nextLC, index + 1);

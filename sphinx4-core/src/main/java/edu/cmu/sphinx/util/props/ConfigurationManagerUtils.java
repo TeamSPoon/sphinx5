@@ -711,7 +711,7 @@ public final class ConfigurationManagerUtils {
         Collection<String> nonInstComponents = new ArrayList<>();
 
         for (String compName : cm.getComponentNames()) {
-            if (!cm.getPropertySheet(compName).isInstanciated())
+            if (!cm.getPropertySheet(compName).instanced())
                 nonInstComponents.add(compName);
         }
         return nonInstComponents;
@@ -719,7 +719,7 @@ public final class ConfigurationManagerUtils {
 
 
     public static void setClass(PropertySheet ps, Class<? extends Configurable> confClass) {
-        if (ps.isInstanciated())
+        if (ps.instanced())
             throw new RuntimeException("configurable " + ps.getInstanceName() + "has already been instantiated");
 
         ps.setConfigurableClass(confClass);

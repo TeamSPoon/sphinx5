@@ -8,7 +8,6 @@ import edu.cmu.sphinx.instrumentation.BestPathAccuracyTracker;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 /** Some unit-tests for the ConfigurationManagerUtils. */

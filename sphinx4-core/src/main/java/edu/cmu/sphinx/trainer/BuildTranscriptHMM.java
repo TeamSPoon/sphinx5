@@ -239,8 +239,8 @@ public class BuildTranscriptHMM {
         // 'hmm.getOrder() + 1' to account for final, non-emitting state.
         for (int i = 0; i < hmm.getOrder() + 1; i++) {
             /* create a new node for the next hmmState */
-            stateNode = new Node(NodeType.STATE, hmm.getUnit().getName());
-            stateNode.setObject(hmm.getState(i));
+            stateNode = new Node(NodeType.STATE, hmm.getUnit().name);
+            stateNode.setObject(hmm.state(i));
             graph.addNode(stateNode);
             /* Link the new node into the graph */
             if (i == 0) {

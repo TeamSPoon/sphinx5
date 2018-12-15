@@ -77,7 +77,7 @@ public class DiscreteCosineTransform extends BaseDataProcessor {
     @Override
     public Data getData() throws DataProcessingException {
         Data input = getPredecessor().getData(); // get the spectrum
-        if (input != null && input instanceof DoubleData) {
+        if (input instanceof DoubleData) {
             input = process((DoubleData) input);
         }
         return input;

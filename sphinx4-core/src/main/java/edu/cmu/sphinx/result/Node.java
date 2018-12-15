@@ -38,7 +38,7 @@ import java.util.*;
  */
 public class Node {
 
-    public static final Pronunciation[] ZERO = new Pronunciation[0];
+    private static final Pronunciation[] ZERO = new Pronunciation[0];
     // used to generate unique IDs for new Nodes.
     private static int nodeCount;
 
@@ -102,7 +102,7 @@ public class Node {
      *
      * @return the unique ID for a new node
      */
-    protected static String getNextNodeId() {
+    private static String getNextNodeId() {
         return Integer.toString(nodeCount);
     }
 
@@ -113,7 +113,7 @@ public class Node {
      * @param n node to check
      * @return unique Node ID
      */
-    protected boolean hasEdgeToNode(Node n) {
+    boolean hasEdgeToNode(Node n) {
         return getEdgeToNode(n) != null;
     }
 
@@ -124,7 +124,7 @@ public class Node {
      * @param n the node of interest
      * @return the edge to that node or <code> null</code>  if no edge could be found.
      */
-    public Edge getEdgeToNode(Node n) {
+    Edge getEdgeToNode(Node n) {
         for (Edge e : leavingEdges) {
             if (e.getToNode() == n) {
                 return e;
@@ -140,7 +140,7 @@ public class Node {
      * @param n node to check
      * @return true if this node has an Edge from n
      */
-    protected boolean hasEdgeFromNode(Node n) {
+    boolean hasEdgeFromNode(Node n) {
         return getEdgeFromNode(n) != null;
     }
 
@@ -151,7 +151,7 @@ public class Node {
      * @param n the node of interest
      * @return the edge from that node or <code> null</code>  if no edge could be found.
      */
-    public Edge getEdgeFromNode(Node n) {
+    Edge getEdgeFromNode(Node n) {
         for (Edge e : enteringEdges) {
             if (e.getFromNode() == n) {
                 return e;
@@ -167,7 +167,7 @@ public class Node {
      * @param n node to check
      * @return true if this Node has Edges from the same Nodes as n
      */
-    protected boolean hasEquivalentEnteringEdges(Node n) {
+    boolean hasEquivalentEnteringEdges(Node n) {
         if (enteringEdges.size() != n.getEnteringEdges().size()) {
             return false;
         }
@@ -187,7 +187,7 @@ public class Node {
      * @param n the node of interest
      * @return true if this Node has all Edges to the sames Nodes as n
      */
-    public boolean hasEquivalentLeavingEdges(Node n) {
+    boolean hasEquivalentLeavingEdges(Node n) {
         if (leavingEdges.size() != n.getLeavingEdges().size()) {
             return false;
         }
@@ -206,7 +206,7 @@ public class Node {
      *
      * @return Edges to this Node
      */
-    public Collection<Edge> getEnteringEdges() {
+    Collection<Edge> getEnteringEdges() {
         return enteringEdges;
     }
 
@@ -216,7 +216,7 @@ public class Node {
      *
      * @return Edges from this Node
      */
-    public Collection<Edge> getLeavingEdges() {
+    Collection<Edge> getLeavingEdges() {
         return leavingEdges;
     }
 
@@ -234,7 +234,7 @@ public class Node {
      *
      * @return a copy of the edges from this node
      */
-    public Collection<Edge> getCopyOfLeavingEdges() {
+    Collection<Edge> getCopyOfLeavingEdges() {
         return new ArrayList<>(leavingEdges);
     }
 
@@ -243,7 +243,7 @@ public class Node {
      *
      * @param e edge to add
      */
-    protected void addEnteringEdge(Edge e) {
+    void addEnteringEdge(Edge e) {
         enteringEdges.add(e);
     }
 
@@ -253,7 +253,7 @@ public class Node {
      *
      * @param e edge to add
      */
-    protected void addLeavingEdge(Edge e) {
+    void addLeavingEdge(Edge e) {
         leavingEdges.add(e);
     }
 
@@ -263,7 +263,7 @@ public class Node {
      *
      * @param e edge to remove
      */
-    protected void removeEnteringEdge(Edge e) {
+    void removeEnteringEdge(Edge e) {
         enteringEdges.remove(e);
     }
 
@@ -273,7 +273,7 @@ public class Node {
      *
      * @param e the edge to remove
      */
-    public void removeLeavingEdge(Edge e) {
+    void removeLeavingEdge(Edge e) {
         leavingEdges.remove(e);
     }
 
@@ -303,7 +303,7 @@ public class Node {
      *
      * @return the begin frame number, or -1 if the frame number is unknown
      */
-    public long getBeginTime() {
+    long getBeginTime() {
         if (beginTime == -1) {
             calculateBeginTime();
         }
@@ -328,7 +328,7 @@ public class Node {
      *
      * @return the end time, or -1 if the frame number if is unknown
      */
-    public long getEndTime() {
+    long getEndTime() {
         return endTime;
     }
 
@@ -339,7 +339,7 @@ public class Node {
      *
      * @param endTime the frame number when the word ended
      */
-    public void setEndTime(long endTime) {
+    void setEndTime(long endTime) {
         assert beginTime <= endTime;
         this.endTime = endTime;
     }
@@ -389,7 +389,7 @@ public class Node {
      * @param f file writer to store
      * @throws IOException if error occurred
      */
-    public void dumpDot(FileWriter f) throws IOException {
+    void dumpDot(FileWriter f) throws IOException {
         String posterior = String.valueOf(this.posterior);
         if (this.posterior == LogMath.LOG_ZERO) {
             posterior = "log zero";
@@ -435,7 +435,7 @@ public class Node {
      *
      * @return Returns the backwardScore.
      */
-    public double getBackwardScore() {
+    double getBackwardScore() {
         return backwardScore;
     }
 
@@ -445,7 +445,7 @@ public class Node {
      *
      * @param backwardScore The backwardScore to set.
      */
-    public void setBackwardScore(double backwardScore) {
+    void setBackwardScore(double backwardScore) {
         this.backwardScore = backwardScore;
     }
 
@@ -455,7 +455,7 @@ public class Node {
      *
      * @return Returns the forwardScore.
      */
-    public double getForwardScore() {
+    double getForwardScore() {
         return forwardScore;
     }
 
@@ -465,7 +465,7 @@ public class Node {
      *
      * @param forwardScore The forwardScore to set.
      */
-    public void setForwardScore(double forwardScore) {
+    void setForwardScore(double forwardScore) {
         this.forwardScore = forwardScore;
     }
 
@@ -476,7 +476,7 @@ public class Node {
      *
      * @return Returns the posterior probability of this node.
      */
-    public double getPosterior() {
+    double getPosterior() {
         return posterior;
     }
 
@@ -487,7 +487,7 @@ public class Node {
      *
      * @param posterior The node posterior probability to set.
      */
-    public void setPosterior(double posterior) {
+    void setPosterior(double posterior) {
         this.posterior = posterior;
     }
 
@@ -530,7 +530,7 @@ public class Node {
      *
      * @return a list of child nodes
      */
-    public List<Node> getChildNodes() {
+    private List<Node> getChildNodes() {
         LinkedList<Node> childNodes = new LinkedList<>();
         for (Edge edge : leavingEdges) {
             childNodes.add(edge.getToNode());
@@ -545,7 +545,7 @@ public class Node {
     }
 
 
-    protected void cacheDescendantsHelper(Node n) {
+    private void cacheDescendantsHelper(Node n) {
         for (Node child : n.getChildNodes()) {
             if (descendants.contains(child)) {
                 continue;
@@ -556,7 +556,7 @@ public class Node {
     }
 
 
-    protected static boolean isAncestorHelper(List<Node> children, Node node, Set<Node> seenNodes) {
+    private static boolean isAncestorHelper(List<Node> children, Node node, Set<Node> seenNodes) {
         for (Node n : children) {
             if (seenNodes.contains(n)) {
                 continue;
@@ -579,7 +579,7 @@ public class Node {
      * @param node the Node to check
      * @return whether this node is an ancestor of the passed in node.
      */
-    public boolean isAncestorOf(Node node) {
+    private boolean isAncestorOf(Node node) {
         if (descendants != null) {
             return descendants.contains(node);
         }
@@ -611,7 +611,7 @@ public class Node {
      * @param other the Node we're comparing to
      * @return true if the Node is equivalent; false otherwise
      */
-    public boolean isEquivalent(Node other) {
+    boolean isEquivalent(Node other) {
         return
                 ((word.spelling.equals(other.word.spelling) &&
                         (getEnteringEdges().size() == other.getEnteringEdges().size() &&
@@ -628,7 +628,7 @@ public class Node {
      * @param edge the Edge to compare the leaving edges of this node against
      * @return an equivalent edge, if any; or null if no equivalent edge
      */
-    public Edge findEquivalentLeavingEdge(Edge edge) {
+    Edge findEquivalentLeavingEdge(Edge edge) {
         for (Edge e : leavingEdges) {
             if (e.isEquivalent(edge)) {
                 return e;
@@ -643,7 +643,7 @@ public class Node {
      *
      * @return Returns the bestPredecessor.
      */
-    public Node getBestPredecessor() {
+    Node getBestPredecessor() {
         return bestPredecessor;
     }
 
@@ -653,7 +653,7 @@ public class Node {
      *
      * @param bestPredecessor The bestPredecessor to set.
      */
-    public void setBestPredecessor(Node bestPredecessor) {
+    void setBestPredecessor(Node bestPredecessor) {
         this.bestPredecessor = bestPredecessor;
     }
 
@@ -664,7 +664,7 @@ public class Node {
      *
      * @return Returns the viterbiScore.
      */
-    public double getViterbiScore() {
+    double getViterbiScore() {
         return viterbiScore;
     }
 
@@ -675,7 +675,7 @@ public class Node {
      *
      * @param viterbiScore The viterbiScore to set.
      */
-    public void setViterbiScore(double viterbiScore) {
+    void setViterbiScore(double viterbiScore) {
         this.viterbiScore = viterbiScore;
     }
 

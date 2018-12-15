@@ -26,12 +26,16 @@ import java.util.logging.Logger;
  */
 public class HMMManager implements Iterable<HMM> {
 
+
+
+    //private final Map<HMMPosition, Map<Unit, HMM>> hmmsPerPosition = new EnumMap<>(HMMPosition.class);
+    final static int posTypes = HMMPosition.values().length;
+    private final Map<Unit, HMM>[] hmmsPerPosition = new Map[posTypes];
     private final List<HMM> allHMMs = new ArrayList<>();
-    private final Map<HMMPosition, Map<Unit, HMM>> hmmsPerPosition = new EnumMap<>(HMMPosition.class);
 
     public HMMManager () {
-        for (HMMPosition pos : HMMPosition.values())
-            hmmsPerPosition.put(pos, new HashMap<>());
+        for (int i = 0; i < posTypes; i++)
+            hmmsPerPosition[i] = new HashMap();
     }
 
     /**
@@ -40,7 +44,7 @@ public class HMMManager implements Iterable<HMM> {
      * @param hmm the hmm to manage
      */
     public void put(HMM hmm) {
-        hmmsPerPosition.get(hmm.getPosition()).put(hmm.getUnit(), hmm);
+        hmmsPerPosition[hmm.getPosition().ordinal()].put(hmm.getUnit(), hmm);
         allHMMs.add(hmm);
     }
 
@@ -53,7 +57,7 @@ public class HMMManager implements Iterable<HMM> {
      * @return the HMM for the unit at the given position or null if no HMM at the position could be found
      */
     public HMM get(HMMPosition position, Unit unit) {
-        return hmmsPerPosition.get(position).get(unit);
+        return hmmsPerPosition[position.ordinal()].get(unit);
     }
 
 
@@ -63,6 +67,7 @@ public class HMMManager implements Iterable<HMM> {
      * @return an iterator that iterates through all HMMs
      */
     public Iterator<HMM> iterator() {
+        //return Stream.of(hmmsPerPosition).flatMap(x -> x.values().stream()).iterator();
         return allHMMs.iterator();
     }
 
@@ -74,12 +79,8 @@ public class HMMManager implements Iterable<HMM> {
      */
     private int getNumHMMs() {
         int count = 0;
-
-        for (Map<Unit, HMM> map : hmmsPerPosition.values()) {
-            if (map != null) {
-                count += map.size();
-            }
-        }
+        for (Map<Unit, HMM> map : hmmsPerPosition)
+            count += map.size();
         return count;
     }
 

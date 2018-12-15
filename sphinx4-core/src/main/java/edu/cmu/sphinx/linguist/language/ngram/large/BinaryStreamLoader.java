@@ -62,7 +62,7 @@ public class BinaryStreamLoader extends BinaryLoader {
     }
 
     @Override
-    public byte[] loadBuffer(long position, int size) throws IOException {
+    public byte[] loadBuffer(long position, int size) {
         byte[] result = new byte[size];
         System.arraycopy(modelData, (int)position, result, 0, size);
         return result;

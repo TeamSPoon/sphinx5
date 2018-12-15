@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static java.util.stream.Collectors.toList;
+
 
 /**
  * Manages a set of <code>Configurable</code>s, their parameterization and the relationships between them. Configurations
@@ -116,7 +118,7 @@ public class ConfigurationManager implements Cloneable {
         Collection<String> instanceNames = new ArrayList<>();
 
         for (PropertySheet ps : symbolTable.values()) {
-            if (!ps.isInstanciated())
+            if (!ps.instanced())
                 continue;
 
             if (ConfigurationManagerUtils.isDerivedClass(ps.getConfigurableClass(), type))
@@ -133,7 +135,7 @@ public class ConfigurationManager implements Cloneable {
      *
      * @return all component named registered to this instance of <code>ConfigurationManager</code>
      */
-    public Set<String> getComponentNames() {
+    Set<String> getComponentNames() {
         return rawPropertyMap.keySet();
     }
 
@@ -193,15 +195,10 @@ public class ConfigurationManager implements Cloneable {
      * @param confClass class to lookup
      * @return a list of property sheets
      */
-    public List<PropertySheet> getPropSheets(Class<? extends Configurable> confClass) {
-        List<PropertySheet> psCol = new ArrayList<>();
-
-        for (PropertySheet ps : symbolTable.values()) {
-            if (ConfigurationManagerUtils.isDerivedClass(ps.getConfigurableClass(), confClass))
-                psCol.add(ps);
-        }
-
-        return psCol;
+    private List<PropertySheet> getPropSheets(Class<? extends Configurable> confClass) {
+        return symbolTable.values().stream().filter(ps ->
+                ConfigurationManagerUtils.isDerivedClass(ps.getConfigurableClass(), confClass))
+                .collect(toList());
     }
 
 
@@ -214,7 +211,7 @@ public class ConfigurationManager implements Cloneable {
      * @throws IllegalArgumentException if the there's already a component with the same <code>name</code> registered to
      *                                  this configuration manager instance.
      */
-    public void addConfigurable(Class<? extends Configurable> confClass, String name) {
+    void addConfigurable(Class<? extends Configurable> confClass, String name) {
         addConfigurable(confClass, name, new HashMap<>());
     }
 
@@ -229,7 +226,7 @@ public class ConfigurationManager implements Cloneable {
      * @throws IllegalArgumentException if the there's already a component with the same <code>name</code> registered to
      *                                  this configuration manager instance.
      */
-    public void addConfigurable(Class<? extends Configurable> confClass, String name, Map<String, Object> props) {
+    void addConfigurable(Class<? extends Configurable> confClass, String name, Map<String, Object> props) {
         if (name == null) // use the class name as default if no name is given
             name = confClass.getName();
 
@@ -245,28 +242,28 @@ public class ConfigurationManager implements Cloneable {
     }
 
 
-    /**
-     * Adds an already instantiated <code>Configurable</code> to this configuration manager.
-     *
-     * @param configurable A configurable to add
-     * @param name The desired lookup-instanceName of the configurable
-     */
-    public void addConfigurable(Configurable configurable, String name) {
-        if (symbolTable.containsKey(name))
-            throw new IllegalArgumentException("tried to override existing component name");
+//    /**
+//     * Adds an already instantiated <code>Configurable</code> to this configuration manager.
+//     *
+//     * @param configurable A configurable to add
+//     * @param name The desired lookup-instanceName of the configurable
+//     */
+//    public void addConfigurable(Configurable configurable, String name) {
+//        if (symbolTable.containsKey(name))
+//            throw new IllegalArgumentException("tried to override existing component name");
+//
+//        RawPropertyData dummyRPD = new RawPropertyData(name, configurable.getClass().getName());
+//
+//        PropertySheet ps = new PropertySheet(configurable, name, dummyRPD, this);
+//        symbolTable.put(name, ps);
+//        rawPropertyMap.put(name, dummyRPD);
+//
+//        for (ConfigurationChangeListener changeListener : changeListeners)
+//            changeListener.componentAdded(this, ps);
+//    }
 
-        RawPropertyData dummyRPD = new RawPropertyData(name, configurable.getClass().getName());
 
-        PropertySheet ps = new PropertySheet(configurable, name, dummyRPD, this);
-        symbolTable.put(name, ps);
-        rawPropertyMap.put(name, dummyRPD);
-
-        for (ConfigurationChangeListener changeListener : changeListeners)
-            changeListener.componentAdded(this, ps);
-    }
-
-
-    public void renameConfigurable(String oldName, String newName) {
+    void renameConfigurable(String oldName, String newName) {
         PropertySheet ps = getPropertySheet(oldName);
 
         if (ps == null) {
@@ -285,73 +282,73 @@ public class ConfigurationManager implements Cloneable {
     }
 
 
-    /** Removes a configurable from this configuration manager. 
-     * @param name a name to remove 
-     */
-    public void removeConfigurable(String name) {
-        assert getComponentNames().contains(name);
-
-        PropertySheet ps = symbolTable.remove(name);
-        rawPropertyMap.remove(name);
-
-        for (ConfigurationChangeListener changeListener : changeListeners)
-            changeListener.componentRemoved(this, ps);
-    }
-
-
-    /** @param subCM The subconfiguration that should be  to this instance */
-    public void addSubConfiguration(ConfigurationManager subCM) {
-        addSubConfiguration(subCM, false);
-    }
-
-
-    /**
-     * Adds a subconfiguration to this instance by registering all subCM-components and all its global properties.
-     *
-     * @param subCM                The subconfiguration that should be  to this instance
-     * @param doOverrideComponents If <code>true</code> non-instantiated components will be overridden by elements of
-     *                             subCM even if already being registered to this CM-instance. The same holds for global
-     *                             properties.
-     * @throws RuntimeException if an already instantiated component in this instance is redefined in subCM.
-     */
-    public void addSubConfiguration(ConfigurationManager subCM, boolean doOverrideComponents) {
-        Collection<String> compNames = getComponentNames();
-
-        for (String componentName : subCM.getComponentNames()) {
-            if (compNames.contains(componentName)) {
-                if (doOverrideComponents && !getPropertySheet(componentName).isInstanciated()) {
-                    PropertySheet ps = subCM.getPropertySheet(componentName);
-                    symbolTable.put(componentName, ps);
-                    rawPropertyMap.put(componentName, new RawPropertyData(componentName, ps.getConfigurableClass().getSimpleName()));
-
-                } else {
-                    throw new RuntimeException(componentName + " is already registered to system configuration");
-                }
-            }
-        }
-
-        for (String globProp : subCM.globalProperties.keySet()) {
-            // the second test is necessary because system-props will be global-props in both CMs
-            if (globalProperties.containsKey(globProp) && !System.getProperties().containsKey(globProp)) {
-                if (!doOverrideComponents)
-                    throw new RuntimeException(globProp + " is already registered as global property");
-            }
-        }
-
-        globalProperties.putAll(subCM.globalProperties);
-
-        // correct the reference to the configuration manager
-        for (PropertySheet ps : subCM.symbolTable.values()) {
-            ps.setCM(this);
-        }
-
-        symbolTable.putAll(subCM.symbolTable);
-        rawPropertyMap.putAll(subCM.rawPropertyMap);
-    }
+//    /** Removes a configurable from this configuration manager.
+//     * @param name a name to remove
+//     */
+//    public void removeConfigurable(String name) {
+//        assert getComponentNames().contains(name);
+//
+//        PropertySheet ps = symbolTable.remove(name);
+//        rawPropertyMap.remove(name);
+//
+//        for (ConfigurationChangeListener changeListener : changeListeners)
+//            changeListener.componentRemoved(this, ps);
+//    }
+//
+//
+//    /** @param subCM The subconfiguration that should be  to this instance */
+//    public void addSubConfiguration(ConfigurationManager subCM) {
+//        addSubConfiguration(subCM, false);
+//    }
+//
+//
+//    /**
+//     * Adds a subconfiguration to this instance by registering all subCM-components and all its global properties.
+//     *
+//     * @param subCM                The subconfiguration that should be  to this instance
+//     * @param doOverrideComponents If <code>true</code> non-instantiated components will be overridden by elements of
+//     *                             subCM even if already being registered to this CM-instance. The same holds for global
+//     *                             properties.
+//     * @throws RuntimeException if an already instantiated component in this instance is redefined in subCM.
+//     */
+//    private void addSubConfiguration(ConfigurationManager subCM, boolean doOverrideComponents) {
+//        Collection<String> compNames = getComponentNames();
+//
+//        for (String componentName : subCM.getComponentNames()) {
+//            if (compNames.contains(componentName)) {
+//                if (doOverrideComponents && !getPropertySheet(componentName).isInstanciated()) {
+//                    PropertySheet ps = subCM.getPropertySheet(componentName);
+//                    symbolTable.put(componentName, ps);
+//                    rawPropertyMap.put(componentName, new RawPropertyData(componentName, ps.getConfigurableClass().getSimpleName()));
+//
+//                } else {
+//                    throw new RuntimeException(componentName + " is already registered to system configuration");
+//                }
+//            }
+//        }
+//
+//        for (String globProp : subCM.globalProperties.keySet()) {
+//            // the second test is necessary because system-props will be global-props in both CMs
+//            if (globalProperties.containsKey(globProp) && !System.getProperties().containsKey(globProp)) {
+//                if (!doOverrideComponents)
+//                    throw new RuntimeException(globProp + " is already registered as global property");
+//            }
+//        }
+//
+//        globalProperties.putAll(subCM.globalProperties);
+//
+//        // correct the reference to the configuration manager
+//        for (PropertySheet ps : subCM.symbolTable.values()) {
+//            ps.setCM(this);
+//        }
+//
+//        symbolTable.putAll(subCM.symbolTable);
+//        rawPropertyMap.putAll(subCM.rawPropertyMap);
+//    }
 
 
     /** @return a copy of the map of global properties set for this configuration manager. */
-    public Map<String, String> getGlobalProperties() {
+    Map<String, String> getGlobalProperties() {
         return new HashMap<>(globalProperties);
     }
 
@@ -362,14 +359,13 @@ public class ConfigurationManager implements Cloneable {
      * @param propertyName The name of the global property or <code>null</code> if no such property exists
      * @return a global property
      */
-    public String getGlobalProperty(String propertyName) {
+    String getGlobalProperty(String propertyName) {
         // propertyName = propertyName.startsWith("$") ? propertyName : "${" + propertyName + "}";
-        String globProp = globalProperties.get(propertyName);
-        return globProp != null ? globProp : null;
+        return globalProperties.get(propertyName);
     }
 
 
-    public String getGloPropReference(String propertyName) {
+    String getGloPropReference(String propertyName) {
         return globalProperties.get(propertyName);
     }
 
@@ -378,7 +374,7 @@ public class ConfigurationManager implements Cloneable {
      * @return the URL of the XML configuration which defined this configuration or <code>null</code>  if it was created
      * dynamically.
      */
-    public URL getConfigURL() {
+    URL getConfigURL() {
         return configURL;
     }
 
@@ -399,7 +395,7 @@ public class ConfigurationManager implements Cloneable {
         // update all component configurations because they might be affected by the change
         for (String instanceName : getInstanceNames(Configurable.class)) {
             PropertySheet ps = getPropertySheet(instanceName);
-            if (ps.isInstanciated())
+            if (ps.instanced())
                 try {
                     ps.getOwner().newProperties(ps);
                 } catch (PropertyException e) {
@@ -409,7 +405,7 @@ public class ConfigurationManager implements Cloneable {
     }
 
 
-    public String getStrippedComponentName(String propertyName) {
+    private String getStrippedComponentName(String propertyName) {
         assert propertyName != null;
 
         while (propertyName.startsWith("$"))
@@ -457,7 +453,7 @@ public class ConfigurationManager implements Cloneable {
      * Informs all registered <code>ConfigurationChangeListener</code>s about the component previously namesd
      * <code>oldName</code>
      */
-    void fireRenamedConfigurable(String oldName, String newName) {
+    private void fireRenamedConfigurable(String oldName, String newName) {
         assert getComponentNames().contains(newName);
 
         for (ConfigurationChangeListener changeListener : changeListeners) {
@@ -594,7 +590,7 @@ public class ConfigurationManager implements Cloneable {
      *
      * @return the root logger of this CM-instance
      */
-    public Logger getRootLogger() {
+    private Logger getRootLogger() {
         return Logger.getLogger(ConfigurationManagerUtils.getLogPrefix(this));
     }
 }

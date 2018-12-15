@@ -62,7 +62,7 @@ public class EnergyFilter extends BaseDataProcessor {
         Data input = null;
         do {
             input = getPredecessor().getData();
-            if (input == null || !(input instanceof DoubleData))
+            if (!(input instanceof DoubleData))
                 return input;
             energy = 0.0f;
             for (double d : ((DoubleData) input).getValues()) {

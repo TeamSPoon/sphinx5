@@ -11,20 +11,18 @@
  */
 package edu.cmu.sphinx.linguist.acoustic;
 
-import java.util.Arrays;
-
 /** Represents a unit of speech. Units may represent phones, words or any other suitable unit */
 
 public class Unit {
 
     public final static Unit[] EMPTY_ARRAY = new Unit[0];
 
-    private final String name;
-    private final boolean filler;
-    private final boolean silence;
-    private final int baseID;
-    private final Unit baseUnit;
-    private final Context context;
+    public final String name;
+    public final boolean filler;
+    public final boolean silence;
+    public final int baseID;
+    public final Unit baseUnit;
+    public final Context context;
 
     public final String key;
 
@@ -67,73 +65,12 @@ public class Unit {
     }
 
     /**
-     * Gets the name for this unit
-     *
-     * @return the name for this unit
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Determines if this unit is a filler unit
-     *
-     * @return <code>true</code> if the unit is a filler unit
-     */
-    public boolean isFiller() {
-        return filler;
-    }
-
-    /**
-     * Determines if this unit is the silence unit
-     *
-     * @return true if the unit is the silence unit
-     */
-    public boolean isSilence() {
-        return silence;
-    }
-
-    /**
-     * Gets the base ID for this unit
-     *
-     * @return the id
-     */
-    public int getBaseID() {
-        return baseID;
-    }
-
-    /**
-     * Gets the  base unit associated with this HMM
-     *
-     * @return the unit associated with this HMM
-     */
-    public Unit getBaseUnit() {
-        return baseUnit;
-    }
-
-    /**
-     * Returns the context for this unit
-     *
-     * @return the context for this unit (or null if context independent)
-     */
-    public Context getContext() {
-        return context;
-    }
-
-    /**
      * Determines if this unit is context dependent
      *
      * @return true if the unit is context dependent
      */
     public boolean isContextDependent() {
         return context != Context.EMPTY_CONTEXT;
-    }
-
-    /** gets the key for this unit
-     * @return the key
-     */
-    private String getKey() {
-        return key;
     }
 
     /**
@@ -147,8 +84,7 @@ public class Unit {
         if (this == o) {
             return true;
         } else if (o instanceof Unit) {
-            Unit otherUnit = (Unit) o;
-            return key.equals(otherUnit.key);
+            return key.equals(((Unit) o).key);
         } else {
             return false;
         }
@@ -186,18 +122,17 @@ public class Unit {
         return this.name.equals(name) && context.isPartialMatch(this.context);
     }
 
-    /**
-     * Creates and returns an empty context with the given size. The context is padded with SIL filler
-     *
-     * @param size the size of the context
-     * @return the context
-     */
-
-    public static Unit[] getEmptyContext(int size) {
-        Unit[] context = new Unit[size];
-        Arrays.fill(context, UnitManager.SILENCE);
-        return context;
-    }
+//    /**
+//     * Creates and returns an empty context with the given size. The context is padded with SIL filler
+//     *
+//     * @param size the size of the context
+//     * @return the context
+//     */
+//    public static Unit[] getEmptyContext(int size) {
+//        Unit[] context = new Unit[size];
+//        Arrays.fill(context, UnitManager.SILENCE);
+//        return context;
+//    }
 
     /**
      * Checks to see that there is 100% overlap in the given contexts
@@ -207,8 +142,10 @@ public class Unit {
      * @return <code>true</code> if the contexts match
      */
     public static boolean isContextMatch(Unit[] a, Unit[] b) {
+        if (a == b)
+            return true;
         if (a == null || b == null) {
-            return a == b;
+            return false;
         } else if (a.length != b.length) {
             return false;
         } else {

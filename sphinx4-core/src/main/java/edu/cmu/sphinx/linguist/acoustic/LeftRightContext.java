@@ -100,7 +100,7 @@ public class LeftRightContext extends Context {
             //return "(empty)";
         StringBuilder sb = new StringBuilder();
         for (Unit unit : context) {
-            sb.append(unit == null ? null : unit.getName()).append('.');
+            sb.append(unit == null ? null : unit.name).append('.');
         }
         return sb.substring(0, sb.length()-1); // remove last period
     }

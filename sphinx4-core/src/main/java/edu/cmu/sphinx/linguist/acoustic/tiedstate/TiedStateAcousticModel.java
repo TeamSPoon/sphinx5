@@ -19,10 +19,10 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import edu.cmu.sphinx.util.props.S4Boolean;
 import edu.cmu.sphinx.util.props.S4Component;
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -86,7 +86,7 @@ public class TiedStateAcousticModel implements AcousticModel {
     // ----------------------------
     // internal variables
     // -----------------------------
-    final transient private Map<String, SenoneSequence> compositeSenoneSequenceCache = new HashMap<>();
+    final transient private Map<Unit, SenoneSequence> compositeSenoneSequenceCache = new HashMap<>();
     private boolean allocated;
 
     public TiedStateAcousticModel( Loader loader, UnitManager unitManager, boolean useComposites) {
@@ -113,10 +113,12 @@ public class TiedStateAcousticModel implements AcousticModel {
      * @throws IOException if the model could not be loaded
      */
     public void allocate() throws IOException {
-        if (!allocated) {
-            loader.load();
-            logInfo();
-            allocated = true;
+        synchronized (this) {
+            if (!allocated) {
+                loader.load();
+                logInfo();
+                allocated = true;
+            }
         }
     }
 
@@ -147,7 +149,7 @@ public class TiedStateAcousticModel implements AcousticModel {
      */
     private HMM getCompositeHMM(Unit unit, HMMPosition position) {
 
-        Unit ciUnit = unitManager.unit(unit.getName(), unit.isFiller(),
+        Unit ciUnit = unitManager.unit(unit.name, unit.filler,
                 Context.EMPTY_CONTEXT);
 
         SenoneSequence compositeSequence = getCompositeSenoneSequence(unit,
@@ -184,13 +186,11 @@ public class TiedStateAcousticModel implements AcousticModel {
         }
         // no match, try a composite
 
-        if (useComposites && hmm == null) {
+        if (useComposites) {
             if (isComposite(unit)) {
 
                 hmm = getCompositeHMM(unit, position);
-                if (hmm != null) {
-                    mgr.put(hmm);
-                }
+                mgr.put(hmm);
             }
         }
         // no match, try at other positions
@@ -204,11 +204,11 @@ public class TiedStateAcousticModel implements AcousticModel {
 
         // still no match, backoff to base phone
         if (hmm == null) {
-            Unit ciUnit = lookupUnit(unit.getName());
+            Unit ciUnit = lookupUnit(unit.name);
 
             assert unit.isContextDependent();
             if (ciUnit == null) {
-                logger.severe("Can't find HMM for " + unit.getName());
+                logger.severe("Can't find HMM for " + unit.name);
             }
             assert ciUnit != null;
             assert !ciUnit.isContextDependent();
@@ -233,11 +233,11 @@ public class TiedStateAcousticModel implements AcousticModel {
      */
     private static boolean isComposite(Unit unit) {
 
-        if (unit.isFiller()) {
+        if (unit.filler) {
             return false;
         }
 
-        Context context = unit.getContext();
+        Context context = unit.context;
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext) context;
             if (lrContext.right == null) {
@@ -295,94 +295,77 @@ public class TiedStateAcousticModel implements AcousticModel {
      * @param position position in HMM
      * @return senone sequence
      */
-    public SenoneSequence getCompositeSenoneSequence(Unit unit,
+    public SenoneSequence getCompositeSenoneSequence(Unit _unit,
                                                      HMMPosition position)
     {
-        String unitStr = unit.toString();
-        SenoneSequence compositeSenoneSequence;
-        compositeSenoneSequence = compositeSenoneSequenceCache.get(unitStr);
+        return compositeSenoneSequenceCache.computeIfAbsent(_unit, (unit)->{
+            // Iterate through all HMMs looking for
+            // a) An hmm with a unit that has the proper base
+            // b) matches the non-null context
 
-        if (logger.isLoggable(Level.FINE))
-            logger.fine("getCompositeSenoneSequence: "
-                        + unit +
-                        compositeSenoneSequence == null ? "" : "Cached");
+            Context context = unit.context;
+            List<SenoneSequence> senoneSequenceList = new FastList<>();
 
-        if (compositeSenoneSequence != null)
-            return compositeSenoneSequence;
+            // collect all senone sequences that match the pattern
+            for (Iterator<HMM> i = getHMMIterator(); i.hasNext();) {
+                SenoneHMM hmm = (SenoneHMM) i.next();
+                if (hmm.position == position && hmm.unit.isPartialMatch(unit.name, context)) {
+//                        if (logger.isLoggable(Level.FINE)) {
+//                            logger.fine("collected: " + hmm.getUnit());
+//                        }
+                    senoneSequenceList.add(hmm.senoneSequence);
+                }
+            }
 
-        // Iterate through all HMMs looking for
-        // a) An hmm with a unit that has the proper base
-        // b) matches the non-null context
+            // couldn't find any matches, so at least include the CI unit
+            if (senoneSequenceList.isEmpty()) {
+                senoneSequenceList.add(lookupHMM(
+                        unitManager.getUnit(unit.name, unit.filler),
+                        HMMPosition.UNDEFINED
+                        ).senoneSequence
+                );
+            }
 
-        Context context = unit.getContext();
-        List<SenoneSequence> senoneSequenceList;
-        senoneSequenceList = new ArrayList<>();
+            // Add this point we have all of the senone sequences that
+            // match the base/context pattern collected into the list.
+            // Next we build a CompositeSenone consisting of all of the
+            // senones in each position of the list.
 
-        // collect all senone sequences that match the pattern
-        for (Iterator<HMM> i = getHMMIterator(); i.hasNext();) {
-            SenoneHMM hmm = (SenoneHMM) i.next();
-            if (hmm.getPosition() == position) {
-                Unit hmmUnit = hmm.getUnit();
-                if (hmmUnit.isPartialMatch(unit.getName(), context)) {
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.fine("collected: " + hmm.getUnit());
+            // First find the longest senone sequence
+
+            int longestSequence = 0;
+            for (SenoneSequence ss : senoneSequenceList)
+                longestSequence = Math.max(longestSequence, ss.senones.length);
+
+            // now collect all of the senones at each position into
+            // arrays so we can create CompositeSenones from them
+            // QUESTION: is is possible to have different size senone
+            // sequences. For now lets assume the worst case.
+
+            List<CompositeSenone> compositeSenones = new ArrayList<>();
+            float logWeight = 0.0f;
+            for (int i = 0; i < longestSequence; i++) {
+                Set<Senone> compositeSenoneSet = null;
+                for (SenoneSequence senoneSequence : senoneSequenceList) {
+                    if (i < senoneSequence.senones.length) {
+                        if (compositeSenoneSet==null)
+                            compositeSenoneSet = new HashSet<>();
+                        compositeSenoneSet.add(senoneSequence.senones[i]);
                     }
-                    senoneSequenceList.add(hmm.getSenoneSequence());
                 }
+                compositeSenones.add(CompositeSenone.create(compositeSenoneSet!=null? compositeSenoneSet : Set.of(), logWeight));
             }
-        }
 
-        // couldn't find any matches, so at least include the CI unit
-        if (senoneSequenceList.isEmpty()) {
-            Unit ciUnit = unitManager.getUnit(unit.getName(), unit.isFiller());
-            SenoneHMM baseHMM = lookupHMM(ciUnit, HMMPosition.UNDEFINED);
-            senoneSequenceList.add(baseHMM.getSenoneSequence());
-        }
+            return SenoneSequence.create(compositeSenones);
+        });
 
-        // Add this point we have all of the senone sequences that
-        // match the base/context pattern collected into the list.
-        // Next we build a CompositeSenone consisting of all of the
-        // senones in each position of the list.
-
-        // First find the longest senone sequence
-
-        int longestSequence = 0;
-        for (SenoneSequence ss : senoneSequenceList) {
-            if (ss.senones.length > longestSequence) {
-                longestSequence = ss.senones.length;
-            }
-        }
-
-        // now collect all of the senones at each position into
-        // arrays so we can create CompositeSenones from them
-        // QUESTION: is is possible to have different size senone
-        // sequences. For now lets assume the worst case.
-
-        List<CompositeSenone> compositeSenones = new ArrayList<>();
-        float logWeight = 0.0f;
-        for (int i = 0; i < longestSequence; i++) {
-            Set<Senone> compositeSenoneSet = new HashSet<>();
-            for (SenoneSequence senoneSequence : senoneSequenceList) {
-                if (i < senoneSequence.senones.length) {
-                    Senone senone = senoneSequence.senones[i];
-                    compositeSenoneSet.add(senone);
-                }
-            }
-            compositeSenones.add(CompositeSenone.create(
-                    compositeSenoneSet, logWeight));
-        }
-
-        compositeSenoneSequence = SenoneSequence.create(compositeSenones);
-        compositeSenoneSequenceCache.put(unit.toString(),
-                compositeSenoneSequence);
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(unit + " consists of " + compositeSenones.size() + " composite senones");
-            if (logger.isLoggable(Level.FINEST)) {
-                compositeSenoneSequence.dump("am");
-            }
-        }
-        return compositeSenoneSequence;
+//        if (logger.isLoggable(Level.FINE)) {
+//            logger.fine(unit + " consists of " + compositeSenones.size() + " composite senones");
+//            if (logger.isLoggable(Level.FINEST)) {
+//                compositeSenoneSequence.dump("am");
+//            }
+//        }
+//        return compositeSenoneSequence;
     }
 
 
@@ -459,7 +442,7 @@ public class TiedStateAcousticModel implements AcousticModel {
     private SenoneHMM getHMMInSilenceContext(Unit unit, HMMPosition position) {
         SenoneHMM hmm = null;
         HMMManager mgr = loader.getHMMManager();
-        Context context = unit.getContext();
+        Context context = unit.context;
 
         if (context instanceof LeftRightContext) {
             LeftRightContext lrContext = (LeftRightContext) context;
@@ -484,8 +467,8 @@ public class TiedStateAcousticModel implements AcousticModel {
 
             if (nlc != lc || nrc != rc) {
                 Context newContext = LeftRightContext.get(nlc, nrc);
-                Unit newUnit = unitManager.unit(unit.getName(),
-                        unit.isFiller(), newContext);
+                Unit newUnit = unitManager.unit(unit.name,
+                        unit.filler, newContext);
                 hmm = (SenoneHMM) mgr.get(position, newUnit);
                 if (hmm == null) {
                     hmm = getHMMAtAnyPosition(newUnit);
@@ -508,7 +491,7 @@ public class TiedStateAcousticModel implements AcousticModel {
         }
 
         for (Unit unit : units) {
-            if (unit.isFiller() &&
+            if (unit.filler &&
                 !unit.equals(UnitManager.SILENCE)) {
                 return true;
             }
@@ -526,7 +509,7 @@ public class TiedStateAcousticModel implements AcousticModel {
     private static Unit[] replaceNonSilenceFillerWithSilence(Unit[] context) {
         Unit[] replacementContext = new Unit[context.length];
         for (int i = 0; i < context.length; i++) {
-            if (context[i].isFiller() &&
+            if (context[i].filler &&
                     !context[i].equals(UnitManager.SILENCE)) {
                 replacementContext[i] = UnitManager.SILENCE;
             } else {

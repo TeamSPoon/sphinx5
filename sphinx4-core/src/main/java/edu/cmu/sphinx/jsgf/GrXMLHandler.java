@@ -2,8 +2,6 @@ package edu.cmu.sphinx.jsgf;
 
 import edu.cmu.sphinx.jsgf.rule.*;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.net.URL;
@@ -26,7 +24,7 @@ public class GrXMLHandler extends DefaultHandler {
     }
     
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         JSGFRule newRule = null;
         JSGFRule topRule = null;
 
@@ -64,7 +62,7 @@ public class GrXMLHandler extends DefaultHandler {
     }
 
     @Override
-    public void characters(char buf[], int offset, int len)throws SAXException {
+    public void characters(char buf[], int offset, int len) {
         String item = new String(buf, offset, len).trim();
 
         if (item.isEmpty())
@@ -105,7 +103,7 @@ public class GrXMLHandler extends DefaultHandler {
 
     
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXParseException {
+    public void endElement(String uri, String localName, String qName) {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine ("Ending element " + qName);
         }

@@ -20,6 +20,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class SenoneSequence implements Serializable {
 
+    public static final Senone[] EmptySenoneArray = new Senone[0];
     /**
      * Returns the ordered set of senones for this sequence
      *
@@ -36,7 +37,7 @@ public class SenoneSequence implements Serializable {
      * @return a composite senone
      */
     public static SenoneSequence create(List<CompositeSenone> senoneList) {
-        return new SenoneSequence(senoneList.toArray(new Senone[senoneList.size()]));
+        return new SenoneSequence(senoneList.toArray(EmptySenoneArray));
     }
 
 

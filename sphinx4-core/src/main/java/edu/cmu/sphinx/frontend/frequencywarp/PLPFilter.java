@@ -62,7 +62,7 @@ public class PLPFilter {
     public PLPFilter(double[] DFTFrequenciesInHz,
                      double centerFreqInHz) throws IllegalArgumentException {
 
-        FrequencyWarper bark = new FrequencyWarper();
+//        FrequencyWarper bark = new FrequencyWarper();
 
         numDFTPoints = DFTFrequenciesInHz.length;
         this.centerFreqInHz = centerFreqInHz;

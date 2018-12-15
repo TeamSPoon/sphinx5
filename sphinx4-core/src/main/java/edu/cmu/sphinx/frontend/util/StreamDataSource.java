@@ -210,21 +210,26 @@ public class StreamDataSource extends BaseDataProcessor {
      */
     private DoubleData readNextFrame() throws DataProcessingException {
         // read one frame's worth of bytes
-        int read;
+        int read = 0;
         int totalRead = 0;
         final int bytesToRead = bytesPerRead;
         long firstSample = totalValuesRead;
+
         try {
             do {
-//                int avail = Math.max(1,dataStream.available());
-
-                read = dataStream.read(samplesBuffer, totalRead, bytesToRead
-                        - totalRead);
-                if (read > 0) {
-                    totalRead += read;
+                int a = dataStream.available();
+                if (a > 0) {
+                    int avail = Math.max(1, Math.min(a, bytesToRead - totalRead));
+                    read = dataStream.read(samplesBuffer, totalRead, avail);
+                    if (read > 0) {
+                        totalRead += read;
+                    }
+                } else {
+                    read = 0;
                 }
             } while (read != -1 && totalRead < bytesToRead);
-            if (totalRead <= 0) {
+
+            if (totalRead < 0) {
                 closeDataStream();
                 return null;
             }
@@ -235,8 +240,7 @@ public class StreamDataSource extends BaseDataProcessor {
                         ? totalRead + 2
                         : totalRead + 3;
                 byte[] shrinkedBuffer = new byte[totalRead];
-                System
-                        .arraycopy(samplesBuffer, 0, shrinkedBuffer, 0,
+                System.arraycopy(samplesBuffer, 0, shrinkedBuffer, 0,
                                    totalRead);
                 samplesBuffer = shrinkedBuffer;
                 closeDataStream();

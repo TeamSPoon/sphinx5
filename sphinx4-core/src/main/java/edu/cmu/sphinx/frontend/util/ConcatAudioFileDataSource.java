@@ -23,7 +23,7 @@ import java.util.logging.Level;
  * placed before the start of the first file, and a
  * {@link edu.cmu.sphinx.frontend.DataEndSignal DataEndSignal} after the last
  * file. No DataStartSignal or DataEndSignal will be placed between them.
- * 
+ *
  * @author Holger Brandl
  */
 public class ConcatAudioFileDataSource extends AudioFileDataSource implements
@@ -36,7 +36,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
     List<URL> batchFiles;
 
     public ConcatAudioFileDataSource(int bytesPerRead,
-            List<AudioFileProcessListener> listeners) {
+                                     List<AudioFileProcessListener> listeners) {
         super(bytesPerRead, listeners);
     }
 
@@ -44,7 +44,9 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
 
     }
 
-    /** Initializes a ConcatFileDataSource. */
+    /**
+     * Initializes a ConcatFileDataSource.
+     */
     @Override
     public void initialize() {
         super.initialize();
@@ -53,8 +55,8 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
             return;
 
 
-            referenceList = new ArrayList<>();
-            dataStream = new SequenceInputStream(new InputStreamEnumeration(batchFiles));
+        referenceList = new ArrayList<>();
+        dataStream = new SequenceInputStream(new InputStreamEnumeration(batchFiles));
 
 
     }
@@ -83,7 +85,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
 
     /**
      * Reads and verifies a driver file.
-     * 
+     *
      * @param fileName
      */
     private static List<URL> readDriver(String fileName) {
@@ -95,7 +97,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
             driverFiles = new ArrayList<>();
 
             String line;
-            while ((line = bf.readLine()) != null && line.trim().length() != 0) {
+            while ((line = bf.readLine()) != null && !line.trim().isEmpty()) {
                 File file = new File(line);
                 driverFiles.add(file.toURI().toURL());
             }
@@ -117,7 +119,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
     /**
      * Returns a list of all reference text. Implements the getReferences()
      * method of ReferenceSource.
-     * 
+     *
      * @return a list of all reference text
      */
     public List<String> getReferences() {
@@ -141,9 +143,9 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
 
         /**
          * Tests if this enumeration contains more elements.
-         * 
+         *
          * @return true if and only if this enumeration object contains at
-         *         least one more element to provide; false otherwise.
+         * least one more element to provide; false otherwise.
          */
         public boolean hasMoreElements() {
             if (nextFile == null) {
@@ -155,7 +157,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
         /**
          * Returns the next element of this enumeration if this enumeration
          * object has at least one more element to provide.
-         * 
+         *
          * @return the next element of this enumeration.
          */
         public AudioInputStream nextElement() {
@@ -212,7 +214,7 @@ public class ConcatAudioFileDataSource extends AudioFileDataSource implements
 
         /**
          * Returns the name of next audio file
-         * 
+         *
          * @return the name of the appropriate audio file
          */
         public URL readNext() {

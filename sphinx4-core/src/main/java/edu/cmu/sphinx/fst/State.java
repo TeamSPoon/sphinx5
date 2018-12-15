@@ -15,10 +15,7 @@ package edu.cmu.sphinx.fst;
 
 import org.eclipse.collections.impl.list.mutable.FastList;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * The fst's mutable state implementation.

@@ -113,12 +113,12 @@ import java.util.*;
  */
 public class Lattice {
 
-    public static final Pronunciation[] ZERO = new Pronunciation[0];
+    private static final Pronunciation[] ZERO = new Pronunciation[0];
     protected Node initialNode;
-    protected Node terminalNode;
+    Node terminalNode;
     protected Set<Edge> edges;
     protected Map<String, Node> nodes;
-    protected double logBase;
+    private double logBase;
     //protected LogMath logMath;
     private boolean wordTokenFirst;
     private Set<Token> visitedWordTokens;
@@ -370,7 +370,7 @@ public class Lattice {
         }
     }
 
-    public static Lattice readSlf(InputStream stream) throws NumberFormatException, IOException {
+    static Lattice readSlf(InputStream stream) throws NumberFormatException, IOException {
         Lattice lattice = new Lattice();
         LineNumberReader in = new LineNumberReader(new InputStreamReader(stream));
         String line;
@@ -458,7 +458,7 @@ public class Lattice {
         return lattice;
     }
 
-    public static Lattice readSlf(String fileName) throws IOException {
+    static Lattice readSlf(String fileName) throws IOException {
         FileInputStream stream = new FileInputStream(fileName);
         Lattice result = readSlf(stream);
         stream.close();
@@ -475,7 +475,7 @@ public class Lattice {
      * @param lmScore langauge model score
      * @return the new Edge
      */
-    public Edge addEdge(Node fromNode, Node toNode, double acousticScore, double lmScore) {
+    Edge addEdge(Node fromNode, Node toNode, double acousticScore, double lmScore) {
         Edge e = new Edge(fromNode, toNode, acousticScore, lmScore);
         fromNode.addLeavingEdge(e);
         toNode.addEnteringEdge(e);
@@ -494,7 +494,7 @@ public class Lattice {
      * @param endTime end time
      * @return the new Node
      */
-    protected Node addNode(String id, Word word, long beginTime, long endTime) {
+    Node addNode(String id, Word word, long beginTime, long endTime) {
         Node n = new Node(id, word, beginTime, endTime);
         addNode(n);
         return n;
@@ -511,7 +511,7 @@ public class Lattice {
      * @param endTime end time
      * @return the new Node
      */
-    public Node addNode(String id, String word, long beginTime, long endTime) {
+    Node addNode(String id, String word, long beginTime, long endTime) {
         Word w = new Word(word, new Pronunciation[0], false);
         return addNode(id, w, beginTime, endTime);
     }
@@ -533,19 +533,7 @@ public class Lattice {
      * @return true if yes
      */
     boolean hasNode(Node node) {
-        return hasNode(node.getId());
-    }
-
-    /**
-     * Test to see if the Lattice already contains a Node corresponding to a
-     * given Token.
-     * 
-     * @param ID
-     *            the ID of the Node to find
-     * @return true if yes
-     */
-    protected boolean hasNode(String ID) {
-        return nodes.containsKey(ID);
+        return nodes.containsKey(node.getId());
     }
 
     /**
@@ -553,20 +541,20 @@ public class Lattice {
      * 
      * @param n node to remove
      */
-    protected void addNode(Node n) {
+    private void addNode(Node n) {
         //assert !hasNode(n.getId());
         nodes.put(n.getId(), n);
     }
 
-    /**
-     * Remove a Node from the set of all Nodes
-     * 
-     * @param n node to remove
-     */
-    protected void removeNode(Node n) {
-        assert hasNode(n.getId());
-        nodes.remove(n.getId());
-    }
+//    /**
+//     * Remove a Node from the set of all Nodes
+//     *
+//     * @param n node to remove
+//     */
+//    protected void removeNode(Node n) {
+//        assert hasNode(n.getId());
+//        nodes.remove(n.getId());
+//    }
 
     /**
      * Get the Node associated with an ID
@@ -574,7 +562,7 @@ public class Lattice {
      * @param id id to look for
      * @return the Node
      */
-    protected Node getNode(String id) {
+    Node getNode(String id) {
         return (nodes.get(id));
     }
 
@@ -584,9 +572,11 @@ public class Lattice {
      * 
      * @return a copy of the collection of Nodes
      */
-    protected Collection<Node> getCopyOfNodes() {
-        return new ArrayList<>(nodes.values());
+    Node[] getCopyOfNodes() {
+        return nodes.values().toArray(EmptyNodeArray);
     }
+
+    private final static Node[] EmptyNodeArray = new Node[0];
 
     /**
      * Get the Collection of all Nodes.
@@ -684,7 +674,7 @@ public class Lattice {
         }
     }
 
-    public void dumpSlf(Writer w) throws IOException {
+    void dumpSlf(Writer w) throws IOException {
         w.write("VERSION=1.1\n");
         w.write("UTTERANCE=test\n");
         w.write("base=1.0001\n");
@@ -739,9 +729,8 @@ public class Lattice {
      * Dump the Lattice as a .LAT file
      * 
      * @param out writer for the lattice
-     * @throws IOException if error occurred
      */
-    protected void dump(PrintWriter out) throws IOException {
+    protected void dump(PrintWriter out) {
         // System.err.println( "Dumping to " + out );
         for (Node node : nodes.values()) {
             node.dump(out);
@@ -775,7 +764,7 @@ public class Lattice {
      * 
      * @param n node to remove
      */
-    protected void removeNodeAndEdges(Node n) {
+    void removeNodeAndEdges(Node n) {
 
         // System.err.println("Removing node " + n + " and associated edges");
         for (Edge e : n.getLeavingEdges()) {
@@ -791,33 +780,33 @@ public class Lattice {
         // System.err.println( "\tRemoving " + n );
         nodes.remove(n.getId());
 
-        assert checkConsistency();
+        //assert checkConsistency();
     }
 
-    /**
-     * Remove a Node and cross connect all Nodes with Edges to it.
-     * <p>
-     * For example given
-     * <p>
-     * Nodes A, B, X, M, N Edges A--&gt;X, B--&gt;X, X--&gt;M, X--&gt;N
-     * <p>
-     * Removing and cross connecting X would result in
-     * <p>
-     * Nodes A, B, M, N Edges A--&gt;M, A--&gt;N, B--&gt;M, B--&gt;N
-     * 
-     * @param n node to remove
-     */
-    protected void removeNodeAndCrossConnectEdges(Node n) {
-        System.err.println("Removing node " + n + " and cross connecting edges");
-        for (Edge ei : n.getEnteringEdges()) {
-            for (Edge ej : n.getLeavingEdges()) {
-                addEdge(ei.getFromNode(), ej.getToNode(), ei.getAcousticScore(), ei.getLMScore());
-            }
-        }
-        removeNodeAndEdges(n);
-
-        assert checkConsistency();
-    }
+//    /**
+//     * Remove a Node and cross connect all Nodes with Edges to it.
+//     * <p>
+//     * For example given
+//     * <p>
+//     * Nodes A, B, X, M, N Edges A--&gt;X, B--&gt;X, X--&gt;M, X--&gt;N
+//     * <p>
+//     * Removing and cross connecting X would result in
+//     * <p>
+//     * Nodes A, B, M, N Edges A--&gt;M, A--&gt;N, B--&gt;M, B--&gt;N
+//     *
+//     * @param n node to remove
+//     */
+//    protected void removeNodeAndCrossConnectEdges(Node n) {
+//        System.err.println("Removing node " + n + " and cross connecting edges");
+//        for (Edge ei : n.getEnteringEdges()) {
+//            for (Edge ej : n.getLeavingEdges()) {
+//                addEdge(ei.getFromNode(), ej.getToNode(), ei.getAcousticScore(), ei.getLMScore());
+//            }
+//        }
+//        removeNodeAndEdges(n);
+//
+//        //assert checkConsistency();
+//    }
 
     /**
      * Get the initialNode for this Lattice. This corresponds usually to the &lt;s&gt;
@@ -855,7 +844,7 @@ public class Lattice {
      * 
      * @param terminalNode not to set as terminal
      */
-    public void setTerminalNode(Node terminalNode) {
+    void setTerminalNode(Node terminalNode) {
         this.terminalNode = terminalNode;
     }
 
@@ -871,7 +860,7 @@ public class Lattice {
      * 
      * @return a lists of lists of Nodes
      */
-    public List<String> allPaths() {
+    private List<String> allPaths() {
         return allPathsFrom("", initialNode);
     }
 
@@ -882,7 +871,7 @@ public class Lattice {
      * @param n node to start
      * @return a list of lists of Nodes
      */
-    protected List<String> allPathsFrom(String path, Node n) {
+    private List<String> allPathsFrom(String path, Node n) {
         String p = path + ' ' + n.getWord();
         List<String> l = new LinkedList<>();
         if (n == terminalNode) {
@@ -925,17 +914,14 @@ public class Lattice {
         return true;
     }
 
-    protected static void sortHelper(Node n, List<Node> sorted, Set<Node> visited) {
-        if (visited.contains(n)) {
+    private static void sortHelper(Node n, List<Node> sorted, Set<Node> visited) {
+        assert(n!=null);
+        if (!visited.add(n))
             return;
-        }
-        visited.add(n);
-        if (n == null) {
-            throw new Error("Node is null");
-        }
-        for (Edge e : n.getLeavingEdges()) {
+
+        for (Edge e : n.getLeavingEdges())
             sortHelper(e.getToNode(), sorted, visited);
-        }
+
         sorted.add(n);
     }
 
@@ -944,7 +930,7 @@ public class Lattice {
      * 
      * @return Topologically sorted list of nodes in this lattice.
      */
-    public List<Node> sortNodes() {
+    private List<Node> sortNodes() {
         List<Node> sorted = new ArrayList<>(nodes.size());
         sortHelper(initialNode, sorted, new HashSet<>());
         Collections.reverse(sorted);
@@ -984,7 +970,7 @@ public class Lattice {
      *            use only the acoustic scores to compute the posteriors, ignore
      *            the language weight and scores
      */
-    public void computeNodePosteriors(float languageModelWeightAdjustment, boolean useAcousticScoresOnly) {
+    private void computeNodePosteriors(float languageModelWeightAdjustment, boolean useAcousticScoresOnly) {
         if (initialNode == null)
             return;
         // forward
@@ -1036,7 +1022,7 @@ public class Lattice {
      * 
      * @return a list of nodes representing the MAP path.
      */
-    public List<Node> getViterbiPath() {
+    private List<Node> getViterbiPath() {
         LinkedList<Node> path = new LinkedList<>();
         Node n = terminalNode;
         while (n!=null && n != initialNode) {

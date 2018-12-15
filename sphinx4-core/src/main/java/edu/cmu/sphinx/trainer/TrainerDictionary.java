@@ -78,7 +78,7 @@ public class TrainerDictionary extends TextDictionary {
         }
         for (Unit unit : units) {
             // create a new node for the next unit
-            wordNode = new Node(NodeType.PHONE, unit.getName());
+            wordNode = new Node(NodeType.PHONE, unit.name);
             if (prevNode == null) {
                 wordGraph.addNode(wordNode);
                 wordGraph.setInitialNode(wordNode);

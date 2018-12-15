@@ -212,7 +212,7 @@ public class AutoCepstrum extends BaseDataProcessor {
                 selectedDataProcessors.add(lifter);
             }
             logger.info("Cepstrum component auto-configured as follows: "
-                    + toString());
+                    + this);
         } catch (NoSuchFieldException exc) {
             throw new RuntimeException(exc);
         }

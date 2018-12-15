@@ -44,8 +44,7 @@ public class OVector implements Cloneable, Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof OVector && Arrays.equals(values, ((OVector) obj).values);
-
+        return this == obj || (obj instanceof OVector && Arrays.equals(values, ((OVector) obj).values));
     }
 
 

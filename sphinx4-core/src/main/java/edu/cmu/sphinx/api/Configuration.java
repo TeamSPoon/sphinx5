@@ -35,7 +35,7 @@ public class Configuration {
     /**
      * @return path to acoustic model
      */
-    public String getAcousticModelPath() {
+    String getAcousticModelPath() {
         return acousticModelPath;
     }
 
@@ -50,7 +50,7 @@ public class Configuration {
     /**
      * @return path to dictionary.
      */
-    public String getDictionaryPath() {
+    String getDictionaryPath() {
         return dictionaryPath;
     }
 
@@ -65,7 +65,7 @@ public class Configuration {
     /**
      * @return path to the language model
      */
-    public String getLanguageModelPath() {
+    String getLanguageModelPath() {
         return languageModelPath;
     }
 
@@ -80,7 +80,7 @@ public class Configuration {
     /**
      * @return grammar path
      */
-    public String getGrammarPath() {
+    String getGrammarPath() {
         return grammarPath;
     }
 
@@ -95,7 +95,7 @@ public class Configuration {
     /**
      * @return grammar name
      */
-    public String getGrammarName() {
+    String getGrammarName() {
         return grammarName;
     }
 
@@ -110,7 +110,7 @@ public class Configuration {
     /**
      * @return whether fixed grammar should be used instead of language model.
      */
-    public boolean getUseGrammar() {
+    boolean getUseGrammar() {
         return useGrammar;
     }
 

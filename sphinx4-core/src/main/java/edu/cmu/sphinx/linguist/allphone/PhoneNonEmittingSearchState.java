@@ -73,13 +73,13 @@ public class PhoneNonEmittingSearchState implements SearchState, SearchStateArc 
     public boolean equals(Object obj) {
         if (!(obj instanceof PhoneNonEmittingSearchState))
             return false;
-        boolean haveSameBaseId = ((PhoneNonEmittingSearchState)obj).unit.getBaseID() == unit.getBaseID();
-        boolean haveSameContex = ((PhoneNonEmittingSearchState)obj).unit.getContext().equals(unit.getContext());
+        boolean haveSameBaseId = ((PhoneNonEmittingSearchState) obj).unit.baseID == unit.baseID;
+        boolean haveSameContex = ((PhoneNonEmittingSearchState) obj).unit.context.equals(unit.context);
         return haveSameBaseId && haveSameContex;
     }
     
     @Override
     public int hashCode() {
-        return unit.getContext().hashCode() * 91 + unit.getBaseID();
+        return unit.context.hashCode() * 91 + unit.baseID;
     }
 }

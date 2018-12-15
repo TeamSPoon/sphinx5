@@ -22,6 +22,7 @@ import java.util.List;
 public class LatticeOptimizer {
 
     protected final Lattice lattice;
+    static final private Edge[] EmptyEdgeArray = new Edge[0];
 
 
     /**
@@ -71,7 +72,7 @@ public class LatticeOptimizer {
      * <p>
      * B and B' would not be equivalent because the incomming edges are different
      */
-    protected void optimizeForward() {
+    private void optimizeForward() {
         //System.err.println("*** Optimizing forward ***");
 
         boolean moreChanges = true;
@@ -102,7 +103,7 @@ public class LatticeOptimizer {
      * @param n node
      * @return true if Node n required an optimize forward
      */
-    protected boolean optimizeNodeForward(Node n) {
+    private boolean optimizeNodeForward(Node n) {
         assert lattice.hasNode(n);
 
         List<Edge> leavingEdges = new ArrayList<>(n.getLeavingEdges());
@@ -137,18 +138,16 @@ public class LatticeOptimizer {
      * @param n2 second node
      * @return true if n1 and n2 are "equivalent forwards"
      */
-    protected boolean equivalentNodesForward(Node n1, Node n2) {
+    private boolean equivalentNodesForward(Node n1, Node n2) {
 
-        assert lattice.hasNode(n1);
-        assert lattice.hasNode(n2);
+        //assert lattice.hasNode(n1) && lattice.hasNode(n2);
 
         // do the labels match?
-        if (!equivalentNodeLabels(n1, n2)) return false;
-
+        //    and
         // if they have different number of "from" edges they are not equivalent
         // or if there is a "from" edge with no match then the nodes are not
         // equivalent
-        return n1.hasEquivalentEnteringEdges(n2);
+        return equivalentNodeLabels(n1, n2) && n1.hasEquivalentEnteringEdges(n2);
     }
 
 
@@ -163,26 +162,26 @@ public class LatticeOptimizer {
      * @param e1 first edge
      * @param e2 second edge
      */
-    protected void mergeNodesAndEdgesForward(Edge e1, Edge e2) {
-        assert lattice.hasNode(e1.getFromNode());
-        assert lattice.hasEdge(e1);
-        assert lattice.hasEdge(e2);
-        assert e1.getFromNode() == e2.getFromNode();
+    private void mergeNodesAndEdgesForward(Edge e1, Edge e2) {
+//        assert lattice.hasNode(e1.getFromNode());
+//        assert lattice.hasEdge(e1);
+//        assert lattice.hasEdge(e2);
+//        assert e1.getFromNode() == e2.getFromNode();
 
-        Node n1 = e1.getToNode();
-        Node n2 = e2.getToNode();
+        Node n1 = e1.getToNode(), n2 = e2.getToNode();
 
-        assert n1.hasEquivalentEnteringEdges(n2);
-        assert n1.getWord().equals(n2.getWord());
+//        assert n1.hasEquivalentEnteringEdges(n2);
+//        assert n1.getWord().equals(n2.getWord());
         
         for (Edge edge : n2.getEnteringEdges()) {
             Edge anotherEdge = n1.getEdgeFromNode(edge.getFromNode());
             assert anotherEdge != null;
-            anotherEdge.setAcousticScore
-                    (mergeAcousticScores(edge.getAcousticScore(), 
+            anotherEdge.setAcousticScore(
+                    mergeAcousticScores(edge.getAcousticScore(),
                             anotherEdge.getAcousticScore()));
-            anotherEdge.setLMScore(mergeLanguageScores(edge.getLMScore(),
-                    anotherEdge.getLMScore()));
+            anotherEdge.setLMScore(
+                    mergeLanguageScores(edge.getLMScore(),
+                            anotherEdge.getLMScore()));
         }
 
         // add n2's edges to n1
@@ -194,11 +193,12 @@ public class LatticeOptimizer {
             } else {
                 // if we got here then n1 and n2 had edges to the same node
                 // choose the edge with best score
-                anotherEdge.setAcousticScore
-                        (mergeAcousticScores(edge.getAcousticScore(), 
+                anotherEdge.setAcousticScore(
+                        mergeAcousticScores(edge.getAcousticScore(),
                                 anotherEdge.getAcousticScore()));
-                anotherEdge.setLMScore(mergeLanguageScores(edge.getLMScore(),
-                        anotherEdge.getLMScore()));
+                anotherEdge.setLMScore(
+                        mergeLanguageScores(edge.getLMScore(),
+                            anotherEdge.getLMScore()));
             }
         }
 
@@ -229,7 +229,7 @@ public class LatticeOptimizer {
      * <p>
      * A and A' would not be equivalent because the outgoing edges are different
      */
-    protected void optimizeBackward() {
+    private void optimizeBackward() {
         //System.err.println("*** Optimizing backward ***");
 
         boolean moreChanges = true;
@@ -257,21 +257,21 @@ public class LatticeOptimizer {
      * @param n node
      * @return true if Node n required optimizing backwards
      */
-    protected boolean optimizeNodeBackward(Node n) {
-        List<Edge> enteringEdges = new ArrayList<>(n.getEnteringEdges());
-        for (int j = 0; j < enteringEdges.size(); j++) {
-            Edge e = enteringEdges.get(j);
-            for (int k = j + 1; k < n.getEnteringEdges().size(); k++) {
-                Edge e2 = enteringEdges.get(k);
+    private boolean optimizeNodeBackward(Node n) {
+        Edge[] enteringEdges = n.getEnteringEdges().toArray(EmptyEdgeArray);
+        int es = enteringEdges.length;
+        for (int j = 0; j < es; j++) {
+            Edge jj = enteringEdges[j];
+            for (int k = j + 1; k < es; k++) {
+                Edge kk = enteringEdges[k];
 
                 /*
                  * If these are not the same edge, and they point to
                  * equivalent nodes, we have a hit, return true
                  */
-                assert e != e2;
-                if (equivalentNodesBackward(e.getFromNode(),
-                        e2.getFromNode())) {
-                    mergeNodesAndEdgesBackward(e, e2);
+                assert jj != kk;
+                if (equivalentNodesBackward(jj.getFromNode(), kk.getFromNode())) {
+                    mergeNodesAndEdgesBackward(jj, kk);
                     return true;
                 }
             }
@@ -291,7 +291,7 @@ public class LatticeOptimizer {
      * @param n2 second node
      * @return true if n1 and n2 are "equivalent backwards"
      */
-    protected boolean equivalentNodesBackward(Node n1, Node n2) {
+    private boolean equivalentNodesBackward(Node n1, Node n2) {
 
         assert lattice.hasNode(n1);
         assert lattice.hasNode(n2);
@@ -312,7 +312,7 @@ public class LatticeOptimizer {
      * @param n2 second node
      * @return true if n1 and n2 have "equivalent labels"
      */
-    protected static boolean equivalentNodeLabels(Node n1, Node n2) {
+    private static boolean equivalentNodeLabels(Node n1, Node n2) {
         return (n1.getWord().equals(n2.getWord()) &&
                 (n1.getBeginTime() == n2.getBeginTime() &&
                         n1.getEndTime() == n2.getEndTime()));
@@ -330,7 +330,7 @@ public class LatticeOptimizer {
      * @param e1 first edge
      * @param e2 second edge
      */
-    protected void mergeNodesAndEdgesBackward(Edge e1, Edge e2) {
+    private void mergeNodesAndEdgesBackward(Edge e1, Edge e2) {
         assert lattice.hasNode(e1.getToNode());
         assert lattice.hasEdge(e1);
         assert lattice.hasEdge(e2);
@@ -375,7 +375,7 @@ public class LatticeOptimizer {
 
 
     /** Remove all Nodes that have no Edges to them (but not &lt;s&gt;) */
-    protected void removeHangingNodes() {
+    private void removeHangingNodes() {
         for (Node n : lattice.getCopyOfNodes()) {
             if (lattice.hasNode(n)) {
                 if (n == lattice.getInitialNode()) {

@@ -23,7 +23,6 @@ import edu.cmu.sphinx.util.props.S4Double;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Slices up a Data object into a number of overlapping windows (usually referred to as "frames" in the speech world). In
@@ -177,9 +176,9 @@ public class RaisedCosineWindower extends BaseDataProcessor {
 			
                 	// attach the frame-length and the shift-length to the start-signal to allow
 			// detection of incorrect frontend settings
-                        Map<String, Object> props = startSignal.getProps();
-                        props.put(WINDOW_SHIFT_SAMPLES, windowShift);
-                        props.put(WINDOW_SIZE_SAMPLES, cosineWindow.length);
+//                        Map<String, Object> props = startSignal.getProps();
+//                        props.put(WINDOW_SHIFT_SAMPLES, windowShift);
+//                        props.put(WINDOW_SIZE_SAMPLES, cosineWindow.length);
 
                         // reset the current first sample number
                         currentFirstSampleNumber = -1;
@@ -198,10 +197,7 @@ public class RaisedCosineWindower extends BaseDataProcessor {
 
         if (!outputQueue.isEmpty()) {
             Data output = outputQueue.remove(0);
-            if (output instanceof DoubleData) {
-                assert ((DoubleData) output).getValues().length ==
-                        cosineWindow.length;
-            }
+            assert !(output instanceof DoubleData) || ((DoubleData) output).getValues().length == cosineWindow.length;
             return output;
         } else {
             return null;
@@ -380,25 +376,25 @@ public class RaisedCosineWindower extends BaseDataProcessor {
     }
 
 
-    /**
-     * Rounds a given sample-number to the number of samples will be processed by this instance including the padding
-     * samples at the end..
-     * @param samples samples to round to
-     * @return rounded result
-     */
-    public long roundToFrames(long samples) {
-        int windowSize = DataUtil.getSamplesPerWindow(sampleRate, windowSizeInMs);
-        int windowShift = DataUtil.getSamplesPerShift(sampleRate, windowShiftInMs);
-
-        long mxNumShifts = samples / windowShift;
-
-        for (int i = (int) mxNumShifts; ; i--) {
-            long remainingSamples = samples - windowShift * i;
-
-            if (remainingSamples > windowSize)
-                return windowShift * (i + 1) + windowSize;
-        }
-    }
+//    /**
+//     * Rounds a given sample-number to the number of samples will be processed by this instance including the padding
+//     * samples at the end..
+//     * @param samples samples to round to
+//     * @return rounded result
+//     */
+//    public long roundToFrames(long samples) {
+//        int windowSize = DataUtil.getSamplesPerWindow(sampleRate, windowSizeInMs);
+//        int windowShift = DataUtil.getSamplesPerShift(sampleRate, windowShiftInMs);
+//
+//        long mxNumShifts = samples / windowShift;
+//
+//        for (int i = (int) mxNumShifts; ; i--) {
+//            long remainingSamples = samples - windowShift * i;
+//
+//            if (remainingSamples > windowSize)
+//                return windowShift * (i + 1) + windowSize;
+//        }
+//    }
 }
 
 

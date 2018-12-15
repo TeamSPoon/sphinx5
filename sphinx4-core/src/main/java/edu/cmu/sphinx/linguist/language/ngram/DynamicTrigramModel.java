@@ -8,7 +8,6 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 import org.eclipse.collections.impl.map.mutable.primitive.ObjectFloatHashMap;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -47,7 +46,7 @@ public class DynamicTrigramModel implements LanguageModel {
         unigramWeight = ps.getFloat(PROP_UNIGRAM_WEIGHT);
     }
 
-    public void allocate() throws IOException {
+    public void allocate() {
         vocabulary.clear();
         logProbs.clear();
         logBackoffs.clear();
@@ -174,7 +173,7 @@ public class DynamicTrigramModel implements LanguageModel {
         }
     }
 
-    public void deallocate() throws IOException {
+    public void deallocate() {
     }
 
     public float getProbability(WordSequence wordSequence) {

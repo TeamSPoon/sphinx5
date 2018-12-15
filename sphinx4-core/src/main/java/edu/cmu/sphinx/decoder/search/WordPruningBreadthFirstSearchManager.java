@@ -21,7 +21,10 @@ import edu.cmu.sphinx.linguist.*;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.LogMath;
 import edu.cmu.sphinx.util.StatisticsVariable;
+import edu.cmu.sphinx.util.Timer;
+import edu.cmu.sphinx.util.TimerPool;
 import edu.cmu.sphinx.util.props.*;
+import org.eclipse.collections.impl.list.mutable.FastList;
 
 import java.io.IOException;
 import java.util.*;
@@ -137,9 +140,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     // -----------------------------------
     // Instrumentation
     // -----------------------------------
-    //protected Timer scoreTimer;
-    //protected Timer pruneTimer;
-    //protected Timer growTimer;
+    protected edu.cmu.sphinx.util.Timer scoreTimer;
+    protected edu.cmu.sphinx.util.Timer pruneTimer;
+    protected Timer growTimer;
     protected StatisticsVariable totalTokensScored;
     protected StatisticsVariable curTokensScored;
     protected StatisticsVariable tokensCreated;
@@ -152,7 +155,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected int currentFrameNumber; // the current frame number
     protected long currentCollectTime; // the current frame number
     protected ActiveList activeList; // the list of active tokens
-    protected List<Token> resultList; // the current set of results
+    protected final List<Token> resultList = new FastList(); // the current set of results
     protected final Map<SearchState, Token> bestTokens = new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);;
     protected AlternateHypothesisManager loserManager;
     private int numStateOrder;
@@ -176,9 +179,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * @param keepAllTokens keep tokens including emitting tokens
      */
     public WordPruningBreadthFirstSearchManager(Linguist linguist, Pruner pruner, AcousticScorer scorer,
-            ActiveListManager activeListManager, boolean showTokenCount, double relativeWordBeamWidth, int growSkipInterval,
-            boolean checkStateOrder, boolean buildWordLattice, int maxLatticeEdges, float acousticLookaheadFrames,
-            boolean keepAllTokens) {
+                                         ActiveListManager activeListManager, boolean showTokenCount, double relativeWordBeamWidth, int growSkipInterval,
+                                         boolean checkStateOrder, boolean buildWordLattice, int maxLatticeEdges, float acousticLookaheadFrames,
+                                         boolean keepAllTokens) {
 
         this.logger = Logger.getLogger(getClass().getName());
         
@@ -237,9 +240,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
         // tokenTracker = new TokenTracker();
         // tokenTypeTracker = new TokenTypeTracker();
 
-        //scoreTimer = TimerPool.getTimer(this, "Score");
-        //pruneTimer = TimerPool.getTimer(this, "Prune");
-        //growTimer = TimerPool.getTimer(this, "Grow");
+        scoreTimer = TimerPool.getTimer(this, "Score");
+        pruneTimer = TimerPool.getTimer(this, "Prune");
+        growTimer = TimerPool.getTimer(this, "Grow");
 
         totalTokensScored = StatisticsVariable.the("totalTokensScored");
         curTokensScored = StatisticsVariable.the("curTokensScored");
@@ -336,9 +339,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * Clears lists and maps before next expansion stage
      */
     private void clearCollectors() {
-        resultList = Collections.synchronizedList( new LinkedList<>() );
+        resultList.clear();// = /*Collections.synchronizedList*/( new LinkedList<>() );
         bestTokens.clear(); //=
-                new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
+                //new ConcurrentHashMap<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
                 //new ConcurrentHashMapUnsafe<>(DEFAULT_BESTTOKENMAP_SIZE);//, 0.3F);
                 //new UnifiedMap<>(DEFAULT_BESTTOKENMAP_SIZE);
 
@@ -368,10 +371,8 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             loserManager = new AlternateHypothesisManager(maxLatticeEdges);
         }
 
-        SearchState state = searchGraph.getInitialState();
-
         activeList = activeListManager.getEmittingList();
-        activeList.add(new Token(state, -1));
+        activeList.add(new Token(searchGraph.getInitialState(), -1));
 
         clearCollectors();
 
@@ -392,7 +393,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
      * tokens.
      */
     protected void growBranches() {
-        //growTimer.start();
+        growTimer.start();
         //float relativeBeamThreshold = activeList.getBeamThreshold();
 //        if (logger.isLoggable(Level.FINE)) {
 //            logger.fine("Frame: " + currentFrameNumber + " thresh : " + relativeBeamThreshold + " bs "
@@ -411,7 +412,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
                     }
 
                 });
-        //growTimer.stop();
+        growTimer.stop();
     }
 
     /**
@@ -424,7 +425,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
             return;
         }
 
-        //growTimer.start();
+        growTimer.start();
         final float[] bestScore = {-Float.MAX_VALUE};
 
         activeList.forEach( (Token t) -> {
@@ -444,7 +445,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
 //        for (Token t : activeList) {
 //        }
-        //growTimer.stop();
+        growTimer.stop();
     }
 
     /**
@@ -471,9 +472,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
     protected boolean scoreTokens() {
         boolean moreTokens;
 
-        //scoreTimer.start();
+        scoreTimer.start();
         Data data = scorer.calculateScores(activeList);
-        //scoreTimer.stop();
+        scoreTimer.stop();
 
 
         Token bestToken = null;
@@ -560,9 +561,9 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
     /** Removes unpromising branches from the active list */
     protected void pruneBranches() {
-        //pruneTimer.start();
+        pruneTimer.start();
         activeList = activeList.commit();
-        //pruneTimer.stop();
+        pruneTimer.stop();
     }
 
     /**
@@ -688,7 +689,7 @@ public class WordPruningBreadthFirstSearchManager extends TokenSearchManager {
 
         while (t != null && !t.isEmitting()) {
             if (curState.equals(t.getSearchState())) {
-                System.out.println("CS " + curState + " match " + t.getSearchState());
+                //System.out.println("CS " + curState + " match " + t.getSearchState());
                 return true;
             }
             t = t.predecessor();

@@ -96,7 +96,7 @@ public class KaldiLoader implements Loader {
 
         for (String phone : symbolTable.keySet()) {
             Unit unit = unitManager.getUnit(phone, "SIL".equals(phone));
-            contextIndependentUnits.put(unit.getName(), unit);
+            contextIndependentUnits.put(unit.name, unit);
             // Ensure monophone HMMs are created.
             hmmManager.get(HMMPosition.UNDEFINED, unit);
         }

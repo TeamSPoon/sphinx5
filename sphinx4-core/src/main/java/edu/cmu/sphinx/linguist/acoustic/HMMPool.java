@@ -67,8 +67,8 @@ public class HMMPool {
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("CI unit " + unit);
             }
-            if (unit.getBaseID() > maxCIUnits) {
-                maxCIUnits = unit.getBaseID();
+            if (unit.baseID > maxCIUnits) {
+                maxCIUnits = unit.baseID;
             }
         }
 
@@ -81,9 +81,9 @@ public class HMMPool {
             Unit unit = hmm.getUnit();
             int id = getID(unit);
             unitTable[id] = unit;
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer("Unit " + unit + " id " + id);
-            }
+//            if (logger.isLoggable(Level.FINER)) {
+//                logger.finer("Unit " + unit + " id " + id);
+//            }
         }
 
         // build up the hmm table to allow quick access to the hmms
@@ -140,7 +140,7 @@ public class HMMPool {
         LeftRightContext context = LeftRightContext.get(lc, rc);
 
         Unit unit = unitManager.unit(
-                centralUnit.getName(), centralUnit.isFiller(),
+                centralUnit.name, centralUnit.filler,
                 context);
 
         if (logger.isLoggable(Level.FINER)) {
@@ -193,7 +193,7 @@ public class HMMPool {
      */
     public int getID(Unit unit) {
         if (unit.isContextDependent()) {
-            LeftRightContext context = (LeftRightContext) unit.getContext();
+            LeftRightContext context = (LeftRightContext) unit.context;
             assert context.left.length == 1;
             assert context.right.length == 1;
             return buildID(getSimpleUnitID(unit),
@@ -212,7 +212,7 @@ public class HMMPool {
      * @return the ID of the central unit (ignoring any context)
      */
     private static int getSimpleUnitID(Unit unit) {
-        return unit.getBaseID();
+        return unit.baseID;
     }
 
 
@@ -240,7 +240,7 @@ public class HMMPool {
             return -1;
 
         int id;
-        if (unitTable[unitID].isFiller()) {
+        if (unitTable[unitID].filler) {
             id = unitID;
         } else {
             id = unitID * (numCIUnits * numCIUnits)
@@ -329,27 +329,27 @@ public class HMMPool {
         int rid = getID(rc);
 
         if (!isValidID(bid)) {
-            logger.severe("Bad HMM Unit: " + base.getName());
+            logger.severe("Bad HMM Unit: " + base.name);
             return null;
         }
         if (!isValidID(lid)) {
-            logger.severe("Bad HMM Unit: " + lc.getName());
+            logger.severe("Bad HMM Unit: " + lc.name);
             return null;
         }
         if (!isValidID(rid)) {
-            logger.severe("Bad HMM Unit: " + rc.getName());
+            logger.severe("Bad HMM Unit: " + rc.name);
             return null;
         }
         id = buildID(bid, lid, rid);
         if (id < 0) {
-            logger.severe("Unable to build HMM Unit ID for " + base.getName()
-                    + " lc=" + lc.getName() + " rc=" + rc.getName());
+            logger.severe("Unable to build HMM Unit ID for " + base.name
+                    + " lc=" + lc.name + " rc=" + rc.name);
             return null;
         }
         HMM hmm = getHMM(id, pos);
         if (hmm == null) {
-            logger.severe("Missing HMM Unit for " + base.getName() + " lc="
-                    + lc.getName() + " rc=" + rc.getName());
+            logger.severe("Missing HMM Unit for " + base.name + " lc="
+                    + lc.name + " rc=" + rc.name);
         }
 
         return hmm;

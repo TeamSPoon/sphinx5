@@ -36,11 +36,11 @@ public class DictionaryTest {
         dictionary.allocate();
         Word word = dictionary.word("one");
 
-        assertThat(word.pronunciations, arrayWithSize(2));
+        assertThat(word.pronunciations, arrayWithSize(1));
         assertThat(word.pronunciations[0].toString(),
                    equalTo("one(W AH N )"));
-        assertThat(word.pronunciations[1].toString(),
-                   equalTo("one(HH W AH N )"));
+//        assertThat(word.pronunciations[1].toString(),
+//                   equalTo("one(HH W AH N )"));
 
         word = dictionary.word("something_missing");
         assertThat(word, nullValue());

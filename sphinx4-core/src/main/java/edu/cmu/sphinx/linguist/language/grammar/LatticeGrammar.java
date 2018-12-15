@@ -17,6 +17,7 @@ import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -54,16 +55,18 @@ public class LatticeGrammar extends Grammar {
      * @return the initial grammar node
      */
     @Override
-    protected GrammarNode createGrammar() throws IOException {
+    protected GrammarNode createGrammar() {
         if (lattice == null) {
             return createGrammarNode("<s>");
         }
         
         GrammarNode firstNode = null;
-        HashMap<Node, GrammarNode> nodeMap = new HashMap<>();
-        for (Node n : lattice.getNodes()) { 
-            String word = n.getWord().toString();
-            GrammarNode node = createGrammarNode(word);
+
+        Collection<Node> ln = lattice.getNodes();
+        HashMap<Node, GrammarNode> nodeMap = new HashMap<>(ln.size());
+
+        for (Node n : ln) {
+            GrammarNode node = createGrammarNode(n.getWord().toString());
             if (n.equals(lattice.getInitialNode()))
                 firstNode = node;
             if (n.equals(lattice.getTerminalNode()))
@@ -75,10 +78,9 @@ public class LatticeGrammar extends Grammar {
         }
 
         for (Edge e : lattice.getEdges()) {
-            float logProbability = (float)e.getLMScore();           
             GrammarNode prevNode = nodeMap.get(e.getFromNode());
-            GrammarNode toNode = nodeMap.get(e.getToNode());            
-            prevNode.add(toNode, logProbability);
+            GrammarNode toNode = nodeMap.get(e.getToNode());
+            prevNode.add(toNode, (float)e.getLMScore());
         }
 
         return firstNode;

@@ -91,7 +91,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
                                              // lookahead matching
     protected ActiveList fastmatchActiveList; // the list of active tokens for
                                               // fast match
-    protected Map<SearchState, Token> fastMatchBestTokenMap;
+    protected final Map<SearchState, Token> fastMatchBestTokenMap = new HashMap();
     private boolean fastmatchStreamEnd;
 
     /**
@@ -219,7 +219,8 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
      */
     protected void createFastMatchBestTokenMap() {
         int mapSize = Math.max(1, fastmatchActiveList.size() * 2);
-        fastMatchBestTokenMap = new HashMap<>(mapSize);
+        //fastMatchBestTokenMap = new HashMap<>(mapSize);
+        fastMatchBestTokenMap.clear();
     }
 
     /**
@@ -231,8 +232,10 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
         currentFastMatchFrameNumber = 0;
         if (loader instanceof Sphinx3Loader && ((Sphinx3Loader) loader).hasTiedMixtures())
             ((Sphinx3Loader) loader).clearGauScores();
+
         // prepare fast match active list
         fastmatchActiveList = fastmatchActiveListFactory.newInstance();
+
         SearchState fmInitState = fastmatchLinguist.getSearchGraph().getInitialState();
         fastmatchActiveList.add(new Token(fmInitState, currentFastMatchFrameNumber));
         createFastMatchBestTokenMap();
@@ -431,7 +434,7 @@ public class WordPruningBreadthFirstLookaheadSearchManager extends WordPruningBr
             if (stateProducesPhoneHmms) {
                 if (nextState instanceof LexTreeHMMState) {
                     float penalty;
-                    int baseId = ((LexTreeHMMState) nextState).getHMMState().getHMM().getBaseUnit().getBaseID();
+                    int baseId = ((LexTreeHMMState) nextState).getHMMState().getHMM().getBaseUnit().baseID;
                     if ((penalty = penalties.getIfAbsent(baseId, Float.NEGATIVE_INFINITY)) == Float.NEGATIVE_INFINITY)
                         penalty = updateLookaheadPenalty(baseId);
                     if ((tokenScore + lookaheadWeight * penalty) < beamThreshold)

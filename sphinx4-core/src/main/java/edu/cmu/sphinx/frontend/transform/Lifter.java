@@ -64,7 +64,7 @@ public class Lifter extends BaseDataProcessor {
     @Override
     public Data getData() throws DataProcessingException {
         Data data = getPredecessor().getData(); // get the cepstrum
-        if (data != null && data instanceof DoubleData) {
+        if (data instanceof DoubleData) {
             liftCepstrum((DoubleData) data);
         }
         return data;
